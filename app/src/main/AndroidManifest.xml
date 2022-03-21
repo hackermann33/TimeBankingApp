@@ -10,6 +10,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TimeBankingApp">
         <activity
+            android:name=".CongratulationsActivity"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
