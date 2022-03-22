@@ -1,15 +1,24 @@
 package it.polito.timebankingapp
 
-import androidx.appcompat.app.AppCompatActivity
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+
+
+class User( var userId: Int, var picPath:String, var fullName: String, var nick: String, var email: String,
+            var location: String, var skills: List<String>) {
+
+} {/**/}
 
 class ShowProfileActivity : AppCompatActivity() {
-    var count = 0
+    var picPath = "/sdcard/test2.png" /* insert a real image path -> image should be in drawable */
     var fullName = "Name Surname"
     var nick = "example"
     var email = "example@test.com"
@@ -22,12 +31,17 @@ class ShowProfileActivity : AppCompatActivity() {
     lateinit var emailView: TextView
     lateinit var locationView: TextView
     lateinit var balanceView: TextView
-
+    lateinit var picView: ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_showprofileactivity)
+
+        picView = findViewById(R.id.test_image)
+        val bMap: Bitmap = BitmapFactory.decodeFile(picPath)
+        picView.setImageBitmap(bMap);
+
         nameView = findViewById<TextView>(R.id.fullName)
         nameView.text = fullName
 
@@ -72,7 +86,14 @@ class ShowProfileActivity : AppCompatActivity() {
             }
             else -> super.onOptionsItemSelected(item)
         }
+        //editProfile()
     }
+
+    private fun editProfile() {
+        //to-do
+        //intent.putExtra()
+    }
+
 
     /*override fun onSaveInstanceState(outState: Bundle) {
        *//* super.onSaveInstanceState(outState)
