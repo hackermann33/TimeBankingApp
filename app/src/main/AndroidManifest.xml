@@ -10,10 +10,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TimeBankingApp">
         <activity
-            android:name=".CongratulationsActivity"
+            android:name=".EditProfileActivity"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".ShowProfileActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
