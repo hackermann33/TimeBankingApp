@@ -7,4 +7,7 @@
     <string name="description">Description</string>
     <string name="balance">Balance</string>
     <string name="avatar">avatar</string>
+    <string name="item">Item</string>
+    <string name="string_item" />
+    <string name="edit_profile">Edit profile</string>
 </resources>

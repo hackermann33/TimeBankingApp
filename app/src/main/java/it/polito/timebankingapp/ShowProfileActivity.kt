@@ -2,7 +2,11 @@ package it.polito.timebankingapp
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.widget.TextView
+import android.widget.Toast
 
 class ShowProfileActivity : AppCompatActivity() {
     var count = 0
@@ -39,17 +43,6 @@ class ShowProfileActivity : AppCompatActivity() {
         balanceView = findViewById<TextView>(R.id.balance)
         balanceView.text = "$balance"
 
-
-
-
-
-
-
-
-
-
-
-
         /*b.setOnClickListener{
             count++
             tv.text = "$count"
@@ -60,6 +53,25 @@ class ShowProfileActivity : AppCompatActivity() {
                 //we want the message receives something from here
             }
         }*/
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        val inflater: MenuInflater = menuInflater
+        inflater.inflate(R.menu.menu_showprofileactivity, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.option1 -> {
+                Toast.makeText(
+                    applicationContext, "Edit profile",
+                    Toast.LENGTH_SHORT
+                ).show()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 
     /*override fun onSaveInstanceState(outState: Bundle) {
