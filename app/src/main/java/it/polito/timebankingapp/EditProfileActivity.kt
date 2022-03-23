@@ -1,58 +1,50 @@
 package it.polito.timebankingapp
 
+import android.app.Activity
 import android.content.ActivityNotFoundException
+import android.content.ContentValues
 import android.content.Intent
 import android.graphics.Bitmap
-import androidx.appcompat.app.AppCompatActivity
+import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
 import android.provider.MediaStore
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.ImageView
-
-
-lateinit var nameEdit: EditText
-lateinit var nickEdit: EditText
-lateinit var emailEdit: EditText
-lateinit var locationEdit: EditText
-lateinit var balanceEdit: EditText
-lateinit var picEdit: ImageView
-lateinit var picBox : ImageView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.FileProvider
+import androidx.core.graphics.drawable.toBitmap
+import androidx.core.view.drawToBitmap
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
+import java.io.OutputStream
+import java.util.*
 
 
 class EditProfileActivity : AppCompatActivity() {
+
+    lateinit var picBox: ImageView
+    lateinit var usr: User
+    lateinit var currentPhotoPath: String
+
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_editprofileactivity)
 
-        /*
-        val i = intent //automatically initialized when the activity is created
-        val v = i.getIntExtra("threshold", 0)
-        tv3.text = "You reached $v"
-         */
-        picBox = findViewById(R.id.profile_pic)
+        val i = intent
+        usr = intent.getSerializableExtra("user") as User
 
+        val picEdit: ImageView
+        picBox = findViewById(R.id.profile_pic)
         picEdit = findViewById<ImageButton>(R.id.uploadProfilePicButton)
         picEdit.setOnClickListener {
             dispatchTakePictureIntent()
         }
+        displayUser(usr)
 
-        nameEdit = findViewById<EditText>(R.id.editFullName)
-        // nameEdit = quello che mi arriva da show profile
-        //per recuperare il valore strValue = nameEdit.getText().toString();
-
-        nickEdit = findViewById<EditText>(R.id.editNickname)
-        // nickEdit = ...
-
-        //emailEdit = findViewById<EditText>(R.id.editEmail) ??
-        emailEdit = findViewById<EditText>(R.id.editEmail)
-        // emailEdit = ...
-
-        locationEdit = findViewById<EditText>(R.id.editLocation)
-        // locationEdit = ...
-
-        balanceEdit = findViewById<EditText>(R.id.editBalance)
-        //balanceEdit.text = ...
     }
 
     private val REQUEST_IMAGE_CAPTURE = 1
@@ -65,6 +57,26 @@ class EditProfileActivity : AppCompatActivity() {
         }
     }
 
+
+    @Throws(IOException::class)
+    private fun createImageFile(): File {
+        // Create an image file name
+        val df: java.text.DateFormat? =
+            android.text.format.DateFormat.getDateFormat(getApplicationContext());
+        val timeStamp: String =
+            android.text.format.DateFormat.format("yyyy-MM-dd hh:mm:ss a", Date()).toString()
+
+        val storageDir: File? = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+        return storageDir ?: File.createTempFile(
+            "JPEG_${timeStamp}_", /* prefix */
+            ".jpg", /* suffix */
+            storageDir /* directory */
+        ).apply {
+            // Save a file: path for use with ACTION_VIEW intents
+            currentPhotoPath = absolutePath
+        }
+    }
+
     private fun dispatchTakePictureIntent() {
         val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         try {
@@ -74,13 +86,65 @@ class EditProfileActivity : AppCompatActivity() {
         }
     }
 
+    /*Save the */
+    private fun saveProfilePicture(pic: ImageView) {
+
+        val resolver = applicationContext.contentResolver
+        // Create the File where the photo should go
+        val photoFile: File? = try {
+            createImageFile()
+        } catch (ex: IOException) {
+            // Error occurred while creating the File
+
+            null
+        }
+
+        val out: FileOutputStream = FileOutputStream(photoFile)
+        pic.drawable.toBitmap().compress(Bitmap.CompressFormat.PNG, 100, out)
+        // Continue only if the File was successfully created
+        photoFile?.also {
+            val photoURI: Uri = FileProvider.getUriForFile(
+                this,
+                "com.example.android.fileprovider",
+                it
+            )
+
+            val newImageDetails = ContentValues().apply{
+                put(MediaStore.Images.Media.DISPLAY_NAME, "new pic details")
+            }
+
+            resolver.insert(photoURI, newImageDetails)
+        }
+    }
+
+
     /*To trigger back button pressed */
     override fun onBackPressed() {
         super.onBackPressed();
         // Intent in order to save state and send it to showprofile
 
-        //setResult(...) //????
+        if(usr.isGood()){
+            val returnIntent : Intent = Intent()
+            returnIntent.putExtra("user", "prova Bundle")
+            setResult(RESULT_OK,returnIntent);
+        }
+
         return
+    }
+
+    fun displayUser(usr: User) {
+        val nameEdit = findViewById<EditText>(R.id.editFullName)
+        nameEdit.setText(usr.fullName)
+
+        val nickEdit = findViewById<EditText>(R.id.editNickname)
+        nickEdit.setText(usr.nick)
+
+        val emailEdit = findViewById<EditText>(R.id.editEmail)
+        emailEdit.setText(usr.email)
+
+        val locationEdit = findViewById<EditText>(R.id.editLocation)
+        locationEdit.setText(usr.location)
+
     }
 
 
