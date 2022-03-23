@@ -16,10 +16,10 @@ import androidx.appcompat.app.AppCompatActivity
 class User( var userId: Int, var picPath:String, var fullName: String, var nick: String, var email: String,
             var location: String, var skills: List<String>) {
 
-} {/**/}
+}
 
 class ShowProfileActivity : AppCompatActivity() {
-    var picPath = "/sdcard/test2.png" /* insert a real image path -> image should be in drawable */
+    var picPath = "/storage/emulated/0/Pictures/IMG_20220323_091733.jpg" /* insert a real image path -> image should be in drawable */
     var fullName = "Name Surname"
     var nick = "example"
     var email = "example@test.com"
@@ -39,9 +39,11 @@ class ShowProfileActivity : AppCompatActivity() {
 
         setContentView(R.layout.activity_showprofileactivity)
 
-        picView = findViewById(R.id.test_image)
+        /*
+        picView = findViewById(R.id.profile_pic)
         val bMap: Bitmap = BitmapFactory.decodeFile(picPath)
         picView.setImageBitmap(bMap);
+        */
 
         nameView = findViewById<TextView>(R.id.fullName)
         nameView.text = fullName
@@ -79,10 +81,8 @@ class ShowProfileActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.option1 -> {
-                Toast.makeText(
-                    applicationContext, "Edit profile",
-                    Toast.LENGTH_SHORT
-                ).show()
+                val intent = Intent(this, EditProfileActivity::class.java)
+                startActivity(intent)
                 true
             }
             else -> super.onOptionsItemSelected(item)

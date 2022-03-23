@@ -5,53 +5,96 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FFFFFF"
+    android:padding="16dp"
     tools:context=".EditProfileActivity">
 
-    <ImageView
-        android:id="@+id/profile_pic"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:contentDescription="@string/avatar"
-        app:layout_constraintBottom_toTopOf="@+id/scrollView2"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_weight="1"
-        app:srcCompat="@drawable/default_avatar"
-        tools:srcCompat="@tools:sample/avatars" />
-
     <ScrollView
-        android:id="@+id/scrollView2"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/profile_pic"
-        app:layout_constraintVertical_weight="2">
+        android:layout_height="match_parent">
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/wholeContentEdit"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="wrap_content">
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/materialCardViewEdit"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:layout_marginBottom="50dp"
+                app:cardCornerRadius="100dp"
+                app:layout_constraintBottom_toTopOf="@+id/editFullName"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/editFullName"
+                app:layout_constraintTop_toTopOf="parent"
+                app:strokeColor="@color/black"
+                app:strokeWidth="1dp">
+
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <!--
+                    <ImageView
+                        android:id="@+id/profile_pic"
+                        android:layout_width="200dp"
+                        android:layout_height="200dp"
+                        android:contentDescription="@string/avatar"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintHorizontal_weight="1"
+                        app:srcCompat="@drawable/default_avatar"
+                        tools:srcCompat="@tools:sample/avatars" />
+                    -->
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/profile_pic"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/default_avatar" />
+
+                    <ImageButton
+                        android:id="@+id/uploadProfilePicButton"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_gravity="center"
+                        android:background="#00FFFFFF"
+                        android:contentDescription="@string/upload_button"
+                        android:minHeight="48dp"
+                        app:srcCompat="@android:drawable/ic_menu_camera"
+                        tools:ignore="SpeakableTextPresentCheck,RedundantDescriptionCheck,ImageContrastCheck" />
+                </FrameLayout>
+
+
+            </com.google.android.material.card.MaterialCardView>
+
 
             <EditText
                 android:id="@+id/editFullName"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:autofillHints=""
                 android:ems="10"
+                android:hint="@string/full_name"
                 android:inputType="textPersonName"
                 android:minHeight="48dp"
-                android:text="New name" />
+                android:text="@string/full_name"
+                android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+                app:layout_constraintBottom_toTopOf="@+id/nicknameLabel"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/materialCardViewEdit" />
 
             <TextView
                 android:id="@+id/nicknameLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="1dp"
                 android:paddingTop="10dp"
-                android:text="Nickname: "
-                android:textColor="@color/black" />
+                android:text="@string/nickname"
+                android:textColor="@color/black"
+                app:layout_constraintBottom_toTopOf="@+id/editNickname"
+                app:layout_constraintStart_toStartOf="@+id/editFullName"
+                app:layout_constraintTop_toBottomOf="@+id/editFullName" />
 
             <EditText
                 android:id="@+id/editNickname"
@@ -61,7 +104,11 @@
                 android:ems="10"
                 android:inputType="textPersonName"
                 android:minHeight="48dp"
-                android:text="New nickname" />
+                android:text="@string/nickname"
+                app:layout_constraintBottom_toTopOf="@+id/emailLabel"
+                app:layout_constraintStart_toStartOf="@+id/nicknameLabel"
+                app:layout_constraintTop_toBottomOf="@+id/nicknameLabel"
+                tools:ignore="DuplicateSpeakableTextCheck" />
 
             <TextView
                 android:id="@+id/emailLabel"
@@ -69,8 +116,11 @@
                 android:layout_height="wrap_content"
                 android:labelFor="@id/editEmail"
                 android:paddingTop="10dp"
-                android:text="E-mail:"
-                android:textColor="@color/black" />
+                android:text="@string/e_mail"
+                android:textColor="@color/black"
+                app:layout_constraintBottom_toTopOf="@+id/editEmail"
+                app:layout_constraintStart_toStartOf="@+id/editNickname"
+                app:layout_constraintTop_toBottomOf="@+id/editNickname" />
 
             <EditText
                 android:id="@+id/editEmail"
@@ -80,15 +130,22 @@
                 android:ems="10"
                 android:inputType="textEmailAddress"
                 android:minHeight="48dp"
-                android:text="New e-mail" />
+                android:text="@string/e_mail"
+                app:layout_constraintBottom_toTopOf="@+id/locationLabel"
+                app:layout_constraintStart_toStartOf="@+id/emailLabel"
+                app:layout_constraintTop_toBottomOf="@+id/emailLabel"
+                tools:ignore="DuplicateSpeakableTextCheck" />
 
             <TextView
                 android:id="@+id/locationLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingTop="10dp"
-                android:text="Location:"
-                android:textColor="@color/black" />
+                android:text="@string/location"
+                android:textColor="@color/black"
+                app:layout_constraintBottom_toTopOf="@+id/editLocation"
+                app:layout_constraintStart_toStartOf="@+id/editEmail"
+                app:layout_constraintTop_toBottomOf="@+id/editEmail" />
 
             <EditText
                 android:id="@+id/editLocation"
@@ -98,15 +155,23 @@
                 android:ems="10"
                 android:inputType="textPersonName"
                 android:minHeight="48dp"
-                android:text="New position" />
+                android:text="@string/location"
+                app:layout_constraintBottom_toTopOf="@+id/balanceLabel"
+                app:layout_constraintStart_toStartOf="@+id/locationLabel"
+                app:layout_constraintTop_toBottomOf="@+id/locationLabel"
+                tools:ignore="DuplicateSpeakableTextCheck" />
 
             <TextView
                 android:id="@+id/balanceLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="1dp"
                 android:paddingTop="10dp"
-                android:text="Balance:"
-                android:textColor="@color/black" />
+                android:text="@string/balance"
+                android:textColor="@color/black"
+                app:layout_constraintBottom_toTopOf="@+id/editBalance"
+                app:layout_constraintStart_toStartOf="@+id/editLocation"
+                app:layout_constraintTop_toBottomOf="@+id/editLocation" />
 
             <EditText
                 android:id="@+id/editBalance"
@@ -116,39 +181,40 @@
                 android:ems="10"
                 android:inputType="textPersonName"
                 android:minHeight="48dp"
-                android:text="New balance" />
+                android:text="@string/balance"
+                app:layout_constraintBottom_toTopOf="@+id/descriptionLabel"
+                app:layout_constraintStart_toStartOf="@+id/balanceLabel"
+                app:layout_constraintTop_toBottomOf="@+id/balanceLabel"
+                tools:ignore="DuplicateSpeakableTextCheck" />
 
             <TextView
                 android:id="@+id/descriptionLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingTop="10dp"
-                android:text="Description:"
-                android:textColor="@color/black" />
+                android:text="@string/description"
+                android:textColor="@color/black"
+                app:layout_constraintBottom_toTopOf="@+id/editDescription"
+                app:layout_constraintStart_toStartOf="@+id/editBalance"
+                app:layout_constraintTop_toBottomOf="@+id/editBalance" />
 
             <EditText
                 android:id="@+id/editDescription"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:autofillHints=""
                 android:ems="10"
                 android:inputType="textPersonName"
                 android:minHeight="48dp"
-                android:text="New description" />
+                android:text="@string/description"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/descriptionLabel"
+                app:layout_constraintTop_toBottomOf="@+id/descriptionLabel"
+                tools:ignore="DuplicateSpeakableTextCheck" />
 
-        </LinearLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
-
-    <ImageButton
-        android:id="@+id/uploadProfilePicButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="92dp"
-        app:layout_constraintEnd_toEndOf="@+id/profile_pic"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="@+id/profile_pic"
-        app:layout_constraintTop_toTopOf="@+id/profile_pic"
-        app:srcCompat="@android:drawable/ic_menu_upload" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

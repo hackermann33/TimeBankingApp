@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.widget.EditText
 import android.widget.ImageButton
+import android.widget.ImageView
 
 
 lateinit var nameEdit: EditText
@@ -15,8 +16,8 @@ lateinit var nickEdit: EditText
 lateinit var emailEdit: EditText
 lateinit var locationEdit: EditText
 lateinit var balanceEdit: EditText
-lateinit var picEdit: ImageEdit
-
+lateinit var picEdit: ImageView
+lateinit var picBox : ImageView
 
 
 class EditProfileActivity : AppCompatActivity() {
@@ -29,6 +30,7 @@ class EditProfileActivity : AppCompatActivity() {
         val v = i.getIntExtra("threshold", 0)
         tv3.text = "You reached $v"
          */
+        picBox = findViewById(R.id.profile_pic)
 
         picEdit = findViewById<ImageButton>(R.id.uploadProfilePicButton)
         picEdit.setOnClickListener {
@@ -59,14 +61,14 @@ class EditProfileActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             val imageBitmap = data?.extras?.get("data") as Bitmap
-            imgEdit.setImageBitmap(imageBitmap)
+            picBox.setImageBitmap(imageBitmap)
         }
     }
 
     private fun dispatchTakePictureIntent() {
         val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         try {
-            val takePic = startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
+            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
         } catch (e: ActivityNotFoundException) {
             // display error state to the user
         }

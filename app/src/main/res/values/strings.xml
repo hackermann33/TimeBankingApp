@@ -10,4 +10,5 @@
     <string name="item">Item</string>
     <string name="string_item" />
     <string name="edit_profile">Edit profile</string>
+    <string name="upload_button">Upload Button</string>
 </resources>
