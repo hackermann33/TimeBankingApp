@@ -1,5 +1,6 @@
 package it.polito.timebankingapp
 
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
@@ -86,14 +87,20 @@ class ShowProfileActivity : AppCompatActivity() {
             }
             else -> super.onOptionsItemSelected(item)
         }
-        //editProfile()
+        //editProfile() //evoked when the pencil button is pressed
     }
 
     private fun editProfile() {
-        //to-do
-        //intent.putExtra()
+        //to-do explicit intent targeting the editprofileactivity class
+        //intent.putExtra("group13.lab.VAR_NAME", var_name)
+
+        //startActivityForResult(intent, ....)
+
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+    }
 
     /*override fun onSaveInstanceState(outState: Bundle) {
        *//* super.onSaveInstanceState(outState)
