@@ -10,13 +10,17 @@ import android.view.MenuItem
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import de.hdodenhof.circleimageview.CircleImageView
+import java.io.File
+import java.io.FileInputStream
+import java.io.FileNotFoundException
 import java.io.Serializable
 
 
-class User(var pic:String, var fullName: String = "", var nick: String="", var email: String="",
+class User(var pic:String?, var fullName: String = "", var nick: String="", var email: String="",
            var location: String="", var skills: List<String> = emptyList(), var balance: Int = 0) : Serializable{
     fun isGood(): Boolean {
-        return pic.isNotEmpty() && fullName.isNotEmpty() && nick.isNotEmpty() && email.isNotEmpty() && location.isNotEmpty()
+        return (pic?.isNotEmpty() ?: false) && fullName.isNotEmpty() && nick.isNotEmpty() && email.isNotEmpty() && location.isNotEmpty()
 
     }
     /*{ }*/
@@ -58,6 +62,18 @@ class ShowProfileActivity : AppCompatActivity() {
     }
 
     private fun displayUser(){
+
+        val profilePic = findViewById<CircleImageView>(R.id.profile_pic)
+        try {
+            val f = File(usr.pic, "profile.jpg")
+            val bitmap = BitmapFactory.decodeStream(FileInputStream(f))
+            profilePic.setImageBitmap(bitmap)
+        }
+        catch (e : FileNotFoundException){
+            e.printStackTrace()
+        }
+        //profilePic.setImageBitmap()
+
         val nameView = findViewById<TextView>(R.id.fullName)
         nameView.text = usr.fullName
 
@@ -88,7 +104,6 @@ class ShowProfileActivity : AppCompatActivity() {
                     Toast.LENGTH_SHORT
                 ).show()
                 editProfile() //evoked when the pencil button is pressed
-
                 true
             }
             else -> super.onOptionsItemSelected(item)

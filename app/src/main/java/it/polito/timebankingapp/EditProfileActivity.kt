@@ -1,28 +1,23 @@
 package it.polito.timebankingapp
 
-import android.content.ActivityNotFoundException
-import android.content.ContentValues
-import android.content.Intent
+import android.content.*
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
-import android.os.Environment
 import android.provider.MediaStore
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.FileProvider
-import androidx.core.graphics.drawable.toBitmap
-import java.io.File
-import java.io.FileOutputStream
-import java.io.IOException
-import java.util.*
-
+import androidx.core.view.drawToBitmap
+import de.hdodenhof.circleimageview.CircleImageView
+import java.io.*
+import java.net.URI
 
 class EditProfileActivity : AppCompatActivity() {
 
-    lateinit var picBox: ImageView
+    lateinit var profilePic: CircleImageView
     lateinit var usr: User
     lateinit var currentPhotoPath: String
 
@@ -34,27 +29,52 @@ class EditProfileActivity : AppCompatActivity() {
         val i = intent
         usr = intent.getSerializableExtra("it.polito.timebankingapp.ShowProfileActivity.user") as User
 
-        val picEdit: ImageView
-        picBox = findViewById(R.id.profile_pic)
-        picEdit = findViewById<ImageButton>(R.id.uploadProfilePicButton)
+
+        profilePic = findViewById(R.id.profile_pic)
+        try {
+            val f = File(usr.pic, "profile.jpg")
+            val bitmap = BitmapFactory.decodeStream(FileInputStream(f))
+            profilePic.setImageBitmap(bitmap)
+        }
+        catch (e : FileNotFoundException){
+            e.printStackTrace()
+        }
+
+
+        val picEdit = findViewById<ImageButton>(R.id.uploadProfilePicButton)
         picEdit.setOnClickListener {
-            dispatchTakePictureIntent()
+            val intent = Intent(Intent.ACTION_PICK)
+            intent.type = "image/*"
+            startActivityForResult(intent, PICK_IMAGE)
+            //dispatchTakePictureIntent()
         }
         displayUser(usr)
 
     }
 
+    private val PICK_IMAGE = 2
     private val REQUEST_IMAGE_CAPTURE = 1
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             val imageBitmap = data?.extras?.get("data") as Bitmap
-            picBox.setImageBitmap(imageBitmap)
+            profilePic.setImageBitmap(imageBitmap)
+        }
+        if(requestCode == PICK_IMAGE && resultCode == RESULT_OK){
+            try{
+                val image_uri : Uri = data?.data as Uri
+                val ins = contentResolver.openInputStream(image_uri)
+                val bitmap = BitmapFactory.decodeStream(ins)
+                profilePic.setImageBitmap(bitmap)
+            }
+            catch(e : Exception){
+                e.printStackTrace()
+            }
         }
     }
 
-
+    /*
     @Throws(IOException::class)
     private fun createImageFile(): File {
         // Create an image file name
@@ -73,6 +93,7 @@ class EditProfileActivity : AppCompatActivity() {
             currentPhotoPath = absolutePath
         }
     }
+    */
 
     private fun dispatchTakePictureIntent() {
         val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
@@ -84,6 +105,7 @@ class EditProfileActivity : AppCompatActivity() {
     }
 
     /*Save the */
+    /*
     private fun saveProfilePicture(pic: ImageView) {
 
         val resolver = applicationContext.contentResolver
@@ -113,7 +135,7 @@ class EditProfileActivity : AppCompatActivity() {
             resolver.insert(photoURI, newImageDetails)
         }
     }
-
+    */
 
     /*To trigger back button pressed */
     override fun onBackPressed() {
@@ -124,11 +146,35 @@ class EditProfileActivity : AppCompatActivity() {
 
         if(usr.isGood()){
             val returnIntent : Intent = Intent()
+            usr.pic = saveToInternalStorage(profilePic.drawToBitmap())
             returnIntent.putExtra("it.polito.timebankingapp.EditProfileActivity.user", usr)
             setResult(RESULT_OK,returnIntent)
         }
         super.onBackPressed()
         return
+    }
+
+    private fun saveToInternalStorage(bitmapImage: Bitmap): String? {
+        val cw = ContextWrapper(applicationContext)
+        // path to /data/data/yourapp/app_data/imageDir
+        val directory = cw.getDir("imageDir", Context.MODE_PRIVATE)
+        // Create imageDir
+        val mypath = File(directory, "profile.jpg")
+        var fos: FileOutputStream? = null
+        try {
+            fos = FileOutputStream(mypath)
+            // Use the compress method on the BitMap object to write image to the OutputStream
+            bitmapImage.compress(Bitmap.CompressFormat.PNG, 100, fos)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        } finally {
+            try {
+                fos!!.close()
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
+        }
+        return directory.absolutePath
     }
 
     private fun displayUser(usr: User) {
@@ -147,6 +193,7 @@ class EditProfileActivity : AppCompatActivity() {
     }
 
     private fun retrieveUserData() {
+
         val nameEdit = findViewById<EditText>(R.id.editFullName)
         this.usr.fullName = nameEdit.text.toString()
 
