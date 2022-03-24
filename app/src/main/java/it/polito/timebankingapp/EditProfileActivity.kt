@@ -1,6 +1,5 @@
 package it.polito.timebankingapp
 
-import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.ContentValues
 import android.content.Intent
@@ -15,11 +14,9 @@ import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
 import androidx.core.graphics.drawable.toBitmap
-import androidx.core.view.drawToBitmap
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
-import java.io.OutputStream
 import java.util.*
 
 
@@ -35,7 +32,7 @@ class EditProfileActivity : AppCompatActivity() {
         setContentView(R.layout.activity_editprofileactivity)
 
         val i = intent
-        usr = intent.getSerializableExtra("user") as User
+        usr = intent.getSerializableExtra("it.polito.timebankingapp.ShowProfileActivity.user") as User
 
         val picEdit: ImageView
         picBox = findViewById(R.id.profile_pic)
@@ -62,7 +59,7 @@ class EditProfileActivity : AppCompatActivity() {
     private fun createImageFile(): File {
         // Create an image file name
         val df: java.text.DateFormat? =
-            android.text.format.DateFormat.getDateFormat(getApplicationContext());
+            android.text.format.DateFormat.getDateFormat(applicationContext)
         val timeStamp: String =
             android.text.format.DateFormat.format("yyyy-MM-dd hh:mm:ss a", Date()).toString()
 
@@ -120,19 +117,21 @@ class EditProfileActivity : AppCompatActivity() {
 
     /*To trigger back button pressed */
     override fun onBackPressed() {
-        super.onBackPressed();
+
         // Intent in order to save state and send it to showprofile
+
+        retrieveUserData()
 
         if(usr.isGood()){
             val returnIntent : Intent = Intent()
-            returnIntent.putExtra("user", "prova Bundle")
-            setResult(RESULT_OK,returnIntent);
+            returnIntent.putExtra("it.polito.timebankingapp.EditProfileActivity.user", usr)
+            setResult(RESULT_OK,returnIntent)
         }
-
+        super.onBackPressed()
         return
     }
 
-    fun displayUser(usr: User) {
+    private fun displayUser(usr: User) {
         val nameEdit = findViewById<EditText>(R.id.editFullName)
         nameEdit.setText(usr.fullName)
 
@@ -147,5 +146,19 @@ class EditProfileActivity : AppCompatActivity() {
 
     }
 
+    private fun retrieveUserData() {
+        val nameEdit = findViewById<EditText>(R.id.editFullName)
+        this.usr.fullName = nameEdit.text.toString()
+
+        val nickEdit = findViewById<EditText>(R.id.editNickname)
+        usr.nick = nickEdit.text.toString()
+
+        val emailEdit = findViewById<EditText>(R.id.editEmail)
+        usr.email = emailEdit.text.toString()
+
+        val locationEdit = findViewById<EditText>(R.id.editLocation)
+        usr.location = locationEdit.text.toString()
+
+    }
 
 }

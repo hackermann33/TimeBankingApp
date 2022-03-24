@@ -1,13 +1,12 @@
 package it.polito.timebankingapp
 
+import android.app.Activity
 import android.content.Intent
-import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
-import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -54,13 +53,11 @@ class ShowProfileActivity : AppCompatActivity() {
         val bMap: Bitmap = BitmapFactory.decodeFile(picPath)
         picView.setImageBitmap(bMap);*/
 
-        displayUser(usr)
+        displayUser()
 
     }
 
-    fun displayUser(usr: User){
-
-
+    private fun displayUser(){
         val nameView = findViewById<TextView>(R.id.fullName)
         nameView.text = usr.fullName
 
@@ -84,7 +81,7 @@ class ShowProfileActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
+        return when (item.itemId) {
             R.id.option1 -> {
                 Toast.makeText(
                     applicationContext, "Edit profile",
@@ -92,26 +89,25 @@ class ShowProfileActivity : AppCompatActivity() {
                 ).show()
                 editProfile() //evoked when the pencil button is pressed
 
-                return true
+                true
             }
-            else -> return super.onOptionsItemSelected(item)
+            else -> super.onOptionsItemSelected(item)
         }
 
     }
 
     private fun editProfile() {
         val i = Intent(this, EditProfileActivity::class.java)
-        i.putExtra("user", usr)
+        i.putExtra("it.polito.timebankingapp.ShowProfileActivity.user", usr)
         startActivityForResult(i, LAUNCH_EDIT_ACTIVITY)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         println("result code: $resultCode")
-        if(resultCode >  -1000) {
-            when(requestCode){
-                LAUNCH_EDIT_ACTIVITY  -> usr.fullName = data?.getStringExtra("user").toString()
-            }
+        if (requestCode == LAUNCH_EDIT_ACTIVITY && resultCode == Activity.RESULT_OK){
+            usr = data?.getSerializableExtra("it.polito.timebankingapp.EditProfileActivity.user") as User
+            displayUser()
         }
     }
 
@@ -124,7 +120,7 @@ class ShowProfileActivity : AppCompatActivity() {
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
         usr = savedInstanceState.getSerializable("user") as User
-        displayUser(usr)
+        displayUser()
     }
 
 }
