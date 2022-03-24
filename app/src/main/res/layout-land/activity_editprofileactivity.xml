@@ -9,158 +9,183 @@
     android:padding="16dp"
     tools:context=".ShowProfileActivity">
 
-    <com.google.android.material.card.MaterialCardView
-        android:layout_width="75dp"
-        android:layout_height="75dp"
-        app:cardCornerRadius="50dp"
-        app:strokeWidth="1dp"
-        app:strokeColor="@color/black"
-        tools:ignore="MissingConstraints">
-        <ImageView
-            android:id="@+id/profile_pic"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:contentDescription="@string/avatar"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/scrollView2"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintHorizontal_weight="1"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/default_avatar"
-            tools:srcCompat="@tools:sample/avatars" />
-    </com.google.android.material.card.MaterialCardView>
-
-    <ScrollView
-        android:id="@+id/scrollView2"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintHorizontal_weight="2"
-        app:layout_constraintStart_toEndOf="@+id/profile_pic"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <FrameLayout
+            android:id="@+id/frameLayout"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_gravity="center"
+            android:layout_marginEnd="16dp"
+            android:layout_weight="1">
 
-            <EditText
-                android:id="@+id/editFullName"
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/materialCardViewEdit"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center">
+
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <!--
+                <ImageView
+                    android:id="@+id/profile_pic"
+                    android:layout_width="200dp"
+                    android:layout_height="200dp"
+                    android:contentDescription="@string/avatar"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintHorizontal_weight="1"
+                    app:srcCompat="@drawable/default_avatar"
+                    tools:srcCompat="@tools:sample/avatars" />
+                -->
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/profile_pic"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/default_avatar" />
+
+                    <ImageButton
+                        android:id="@+id/uploadProfilePicButton"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_gravity="center"
+                        android:background="#00FFFFFF"
+                        android:contentDescription="@string/upload_button"
+                        android:minHeight="48dp"
+                        app:srcCompat="@android:drawable/ic_menu_camera"
+                        tools:ignore="SpeakableTextPresentCheck,RedundantDescriptionCheck,ImageContrastCheck" />
+                </FrameLayout>
+
+
+            </com.google.android.material.card.MaterialCardView>
+        </FrameLayout>
+
+        <ScrollView
+            android:id="@+id/scrollView2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2">
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:autofillHints=""
-                android:ems="10"
-                android:inputType="textPersonName"
-                android:minHeight="48dp"
-                android:text="New name" />
+                android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/nicknameLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingTop="10dp"
-                android:text="Nickname: "
-                android:textColor="@color/black" />
+                <EditText
+                    android:id="@+id/editFullName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:autofillHints=""
+                    android:ems="10"
+                    android:inputType="textPersonName"
+                    android:minHeight="48dp"
+                    android:text="New name" />
 
-            <EditText
-                android:id="@+id/editNickname"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:autofillHints=""
-                android:ems="10"
-                android:inputType="textPersonName"
-                android:minHeight="48dp"
-                android:text="New nickname" />
+                <TextView
+                    android:id="@+id/nicknameLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="10dp"
+                    android:text="Nickname: "
+                    android:textColor="@color/black" />
 
-            <TextView
-                android:id="@+id/emailLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:labelFor="@id/editEmail"
-                android:paddingTop="10dp"
-                android:text="E-mail:"
-                android:textColor="@color/black" />
+                <EditText
+                    android:id="@+id/editNickname"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:autofillHints=""
+                    android:ems="10"
+                    android:inputType="textPersonName"
+                    android:minHeight="48dp"
+                    android:text="New nickname" />
 
-            <EditText
-                android:id="@+id/editEmail"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:autofillHints=""
-                android:ems="10"
-                android:inputType="textEmailAddress"
-                android:minHeight="48dp"
-                android:text="New e-mail" />
+                <TextView
+                    android:id="@+id/emailLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:labelFor="@id/editEmail"
+                    android:paddingTop="10dp"
+                    android:text="E-mail:"
+                    android:textColor="@color/black" />
 
-            <TextView
-                android:id="@+id/locationLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingTop="10dp"
-                android:text="Location:"
-                android:textColor="@color/black" />
+                <EditText
+                    android:id="@+id/editEmail"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:autofillHints=""
+                    android:ems="10"
+                    android:inputType="textEmailAddress"
+                    android:minHeight="48dp"
+                    android:text="New e-mail" />
 
-            <EditText
-                android:id="@+id/editLocation"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:autofillHints=""
-                android:ems="10"
-                android:inputType="textPersonName"
-                android:minHeight="48dp"
-                android:text="New position" />
+                <TextView
+                    android:id="@+id/locationLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="10dp"
+                    android:text="Location:"
+                    android:textColor="@color/black" />
 
-            <TextView
-                android:id="@+id/balanceLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingTop="10dp"
-                android:text="Balance:"
-                android:textColor="@color/black" />
+                <EditText
+                    android:id="@+id/editLocation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:autofillHints=""
+                    android:ems="10"
+                    android:inputType="textPersonName"
+                    android:minHeight="48dp"
+                    android:text="New position" />
 
-            <EditText
-                android:id="@+id/editBalance"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:autofillHints=""
-                android:ems="10"
-                android:inputType="textPersonName"
-                android:minHeight="48dp"
-                android:text="New balance" />
+                <TextView
+                    android:id="@+id/descriptionLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="10dp"
+                    android:text="Description:"
+                    android:textColor="@color/black" />
 
-            <TextView
-                android:id="@+id/descriptionLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingTop="10dp"
-                android:text="Description:"
-                android:textColor="@color/black" />
+                <EditText
+                    android:id="@+id/editDescription"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:autofillHints=""
+                    android:ems="10"
+                    android:inputType="textPersonName"
+                    android:minHeight="48dp"
+                    android:text="New description" />
 
-            <EditText
-                android:id="@+id/editDescription"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:autofillHints=""
-                android:ems="10"
-                android:inputType="textPersonName"
-                android:minHeight="48dp"
-                android:text="New description" />
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
 
-        </LinearLayout>
-    </ScrollView>
 
-    <ImageButton
-        android:id="@+id/uploadProfilePicButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="164dp"
-        app:layout_constraintEnd_toEndOf="@+id/profile_pic"
-        app:layout_constraintHorizontal_bias="0.482"
-        app:layout_constraintStart_toStartOf="@+id/profile_pic"
-        app:layout_constraintTop_toTopOf="@+id/profile_pic"
-        app:srcCompat="@android:drawable/ic_menu_upload" />
+    <!--<ImageView
+        android:id="@+id/profile_pic"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginRight="16dp"
+        android:contentDescription="@string/avatar"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/scrollView2"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_weight="1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/default_avatar"
+        tools:srcCompat="@tools:sample/avatars" />-->
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
