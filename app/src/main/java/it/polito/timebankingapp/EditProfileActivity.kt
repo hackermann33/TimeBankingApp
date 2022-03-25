@@ -39,31 +39,29 @@ class EditProfileActivity : AppCompatActivity() {
 
         val picEdit = findViewById<ImageButton>(R.id.uploadProfilePicButton)
         picEdit.setOnClickListener {
-            var selectFromGallery = true
 
-            /*val sw = findViewById<Switch>(R.id.selectFromGallerySwitch)
-            selectFromGallery = sw.isChecked*/
+            val galleryIntent = Intent(Intent.ACTION_PICK)
+            galleryIntent.type = "image/*"
+            val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
 
-            when(selectFromGallery){
-                true -> {
-                    val intent = Intent(Intent.ACTION_PICK)
-                    intent.type = "image/*"
-                    startActivityForResult(intent, PICK_IMAGE)
-                }
-                false -> {
-                    dispatchTakePictureIntent()
-                }
-            }
+            val chooser = Intent(Intent.ACTION_CHOOSER)
+            chooser.putExtra(Intent.EXTRA_INTENT, galleryIntent)
+            chooser.putExtra(Intent.EXTRA_TITLE, "Select from:")
+
+            val intentArray = arrayOf(cameraIntent)
+            chooser.putExtra(Intent.EXTRA_INITIAL_INTENTS, intentArray)
+            startActivityForResult(chooser, REQUEST_PIC)
         }
         displayUser(usr)
     }
 
-    private val PICK_IMAGE = 2
+    private val REQUEST_PIC = 1
+    /*private val PICK_IMAGE = 2
     private val REQUEST_IMAGE_CAPTURE = 1
-
+    */
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+        /*if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             val imageBitmap = data?.extras?.get("data") as Bitmap
             profilePic.setImageBitmap(imageBitmap)
         }
@@ -78,6 +76,41 @@ class EditProfileActivity : AppCompatActivity() {
                 e.printStackTrace()
             }
         }
+        */
+        if(requestCode == REQUEST_PIC && resultCode == RESULT_OK) {
+            val imageBitmap = data?.extras?.get("data") as Bitmap?
+            if(imageBitmap != null){
+                profilePic.setImageBitmap(imageBitmap)
+            }
+            else{
+                try{
+                    val imageUri : Uri = data?.data as Uri
+                    val ins = contentResolver.openInputStream(imageUri)
+                    val bitmap = BitmapFactory.decodeStream(ins)
+                    profilePic.setImageBitmap(bitmap)
+                }
+                catch(e : Exception){
+                    e.printStackTrace()
+                }
+            }
+        }
+        /*
+        if(requestCode == REQUEST_PIC && resultCode == RESULT_OK){
+            var selectFromGallery = true
+
+            when(selectFromGallery){
+                true -> {
+                    val intent = Intent(Intent.ACTION_PICK)
+                    intent.type = "image/*"
+                    startActivityForResult(intent, PICK_IMAGE)
+                }
+                false -> {
+                    dispatchTakePictureIntent()
+                }
+            }
+        }
+        */
+         */
     }
 
     /*
@@ -100,7 +133,7 @@ class EditProfileActivity : AppCompatActivity() {
         }
     }
     */
-
+    /*
     private fun dispatchTakePictureIntent() {
         val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         try {
@@ -109,7 +142,7 @@ class EditProfileActivity : AppCompatActivity() {
             // display error state to the user
         }
     }
-
+*/
     /*Save the */
     /*
     private fun saveProfilePicture(pic: ImageView) {
