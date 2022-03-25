@@ -52,7 +52,8 @@
                         android:id="@+id/profile_pic"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:src="@drawable/default_avatar" />
+                        android:src="@drawable/default_avatar"
+                        tools:ignore="ImageContrastCheck" />
 
                     <ImageButton
                         android:id="@+id/uploadProfilePicButton"
@@ -83,20 +84,21 @@
 
                 <EditText
                     android:id="@+id/editFullName"
+                    android:hint="@string/full_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:autofillHints=""
                     android:ems="10"
                     android:inputType="textPersonName"
                     android:minHeight="48dp"
-                    android:text="New name" />
+                    android:text="@string/full_name" />
 
                 <TextView
                     android:id="@+id/nicknameLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingTop="10dp"
-                    android:text="Nickname: "
+                    android:text="@string/nickname"
                     android:textColor="@color/black" />
 
                 <EditText
@@ -107,7 +109,8 @@
                     android:ems="10"
                     android:inputType="textPersonName"
                     android:minHeight="48dp"
-                    android:text="New nickname" />
+                    android:text="@string/nickname"
+                    tools:ignore="DuplicateSpeakableTextCheck" />
 
                 <TextView
                     android:id="@+id/emailLabel"
@@ -115,7 +118,7 @@
                     android:layout_height="wrap_content"
                     android:labelFor="@id/editEmail"
                     android:paddingTop="10dp"
-                    android:text="E-mail:"
+                    android:text="@string/e_mail"
                     android:textColor="@color/black" />
 
                 <EditText
@@ -126,14 +129,15 @@
                     android:ems="10"
                     android:inputType="textEmailAddress"
                     android:minHeight="48dp"
-                    android:text="New e-mail" />
+                    android:text="@string/e_mail"
+                    tools:ignore="DuplicateSpeakableTextCheck" />
 
                 <TextView
                     android:id="@+id/locationLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingTop="10dp"
-                    android:text="Location:"
+                    android:text="@string/location"
                     android:textColor="@color/black" />
 
                 <EditText
@@ -144,14 +148,15 @@
                     android:ems="10"
                     android:inputType="textPersonName"
                     android:minHeight="48dp"
-                    android:text="New position" />
+                    android:text="@string/location"
+                    tools:ignore="DuplicateSpeakableTextCheck" />
 
                 <TextView
                     android:id="@+id/descriptionLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingTop="10dp"
-                    android:text="Description:"
+                    android:text="@string/description"
                     android:textColor="@color/black" />
 
                 <EditText
@@ -162,7 +167,8 @@
                     android:ems="10"
                     android:inputType="textPersonName"
                     android:minHeight="48dp"
-                    android:text="New description" />
+                    android:text="@string/description"
+                    tools:ignore="DuplicateSpeakableTextCheck" />
 
             </LinearLayout>
         </ScrollView>

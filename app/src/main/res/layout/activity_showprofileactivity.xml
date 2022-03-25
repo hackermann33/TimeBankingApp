@@ -29,7 +29,8 @@
                 android:id="@+id/materialCardViewEdit"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_gravity="center">
+                android:layout_gravity="center"
+                app:checkedIconMargin="8dp">
 
 
                 <FrameLayout
@@ -52,7 +53,8 @@
                         android:id="@+id/profile_pic"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:src="@drawable/default_avatar" />
+                        android:src="@drawable/default_avatar"
+                        tools:ignore="ImageContrastCheck" />
 
                 </FrameLayout>
 

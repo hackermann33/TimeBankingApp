@@ -1,5 +1,6 @@
 package it.polito.timebankingapp
 
+import android.app.Dialog
 import android.content.*
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -9,6 +10,8 @@ import android.provider.MediaStore
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.ImageView
+import android.widget.Switch
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.drawToBitmap
 import de.hdodenhof.circleimageview.CircleImageView
@@ -26,7 +29,6 @@ class EditProfileActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_editprofileactivity)
 
-        val i = intent
         usr = intent.getSerializableExtra("it.polito.timebankingapp.ShowProfileActivity.user") as User
 
 
@@ -43,13 +45,23 @@ class EditProfileActivity : AppCompatActivity() {
 
         val picEdit = findViewById<ImageButton>(R.id.uploadProfilePicButton)
         picEdit.setOnClickListener {
-            val intent = Intent(Intent.ACTION_PICK)
-            intent.type = "image/*"
-            startActivityForResult(intent, PICK_IMAGE)
-            //dispatchTakePictureIntent()
+            var selectFromGallery = false
+
+            /*val sw = findViewById<Switch>(R.id.selectFromGallerySwitch)
+            selectFromGallery = sw.isChecked*/
+
+            when(selectFromGallery){
+                true -> {
+                    val intent = Intent(Intent.ACTION_PICK)
+                    intent.type = "image/*"
+                    startActivityForResult(intent, PICK_IMAGE)
+                }
+                false -> {
+                    dispatchTakePictureIntent()
+                }
+            }
         }
         displayUser(usr)
-
     }
 
     private val PICK_IMAGE = 2
@@ -145,7 +157,7 @@ class EditProfileActivity : AppCompatActivity() {
         retrieveUserData()
 
         if(usr.isGood()){
-            val returnIntent : Intent = Intent()
+            val returnIntent = Intent()
             usr.pic = saveToInternalStorage(profilePic.drawToBitmap())
             returnIntent.putExtra("it.polito.timebankingapp.EditProfileActivity.user", usr)
             setResult(RESULT_OK,returnIntent)
