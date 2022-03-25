@@ -1,6 +1,5 @@
 package it.polito.timebankingapp
 
-import android.app.Dialog
 import android.content.*
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -9,20 +8,15 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.widget.EditText
 import android.widget.ImageButton
-import android.widget.ImageView
-import android.widget.Switch
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.drawToBitmap
 import de.hdodenhof.circleimageview.CircleImageView
 import java.io.*
-import java.net.URI
 
 class EditProfileActivity : AppCompatActivity() {
 
-    lateinit var profilePic: CircleImageView
-    lateinit var usr: User
-    lateinit var currentPhotoPath: String
+    private lateinit var profilePic: CircleImageView
+    private lateinit var usr: User
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -45,7 +39,7 @@ class EditProfileActivity : AppCompatActivity() {
 
         val picEdit = findViewById<ImageButton>(R.id.uploadProfilePicButton)
         picEdit.setOnClickListener {
-            var selectFromGallery = false
+            var selectFromGallery = true
 
             /*val sw = findViewById<Switch>(R.id.selectFromGallerySwitch)
             selectFromGallery = sw.isChecked*/
@@ -75,8 +69,8 @@ class EditProfileActivity : AppCompatActivity() {
         }
         if(requestCode == PICK_IMAGE && resultCode == RESULT_OK){
             try{
-                val image_uri : Uri = data?.data as Uri
-                val ins = contentResolver.openInputStream(image_uri)
+                val imageUri : Uri = data?.data as Uri
+                val ins = contentResolver.openInputStream(imageUri)
                 val bitmap = BitmapFactory.decodeStream(ins)
                 profilePic.setImageBitmap(bitmap)
             }

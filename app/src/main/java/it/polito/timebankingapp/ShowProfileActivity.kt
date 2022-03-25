@@ -30,8 +30,8 @@ class User(var pic:String?, var fullName: String = "", var nick: String="", var 
 
 class ShowProfileActivity : AppCompatActivity() {
 
-    lateinit var usr: User
-    val LAUNCH_EDIT_ACTIVITY = 1
+    private lateinit var usr: User
+    private val LAUNCH_EDIT_ACTIVITY = 1
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
