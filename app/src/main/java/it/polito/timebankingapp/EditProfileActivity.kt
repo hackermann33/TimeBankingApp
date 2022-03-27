@@ -55,6 +55,18 @@ class EditProfileActivity : AppCompatActivity() {
         displayUser(usr)
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putSerializable("user", usr)
+    }
+
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        usr = savedInstanceState.getSerializable("user") as User
+        displayUser(usr)
+    }
+
     private val REQUEST_PIC = 1
     /*private val PICK_IMAGE = 2
     private val REQUEST_IMAGE_CAPTURE = 1
@@ -81,6 +93,7 @@ class EditProfileActivity : AppCompatActivity() {
             val imageBitmap = data?.extras?.get("data") as Bitmap?
             if(imageBitmap != null){
                 profilePic.setImageBitmap(imageBitmap)
+                usr.pic = saveToInternalStorage(imageBitmap)
             }
             else{
                 try{
@@ -88,6 +101,7 @@ class EditProfileActivity : AppCompatActivity() {
                     val ins = contentResolver.openInputStream(imageUri)
                     val bitmap = BitmapFactory.decodeStream(ins)
                     profilePic.setImageBitmap(bitmap)
+                    usr.pic = saveToInternalStorage(bitmap)
                 }
                 catch(e : Exception){
                     e.printStackTrace()
