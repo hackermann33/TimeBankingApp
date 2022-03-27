@@ -1,7 +1,9 @@
 package it.polito.timebankingapp
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.view.Menu
@@ -15,6 +17,8 @@ import java.io.File
 import java.io.FileInputStream
 import java.io.FileNotFoundException
 import java.io.Serializable
+import com.google.gson.GsonBuilder
+
 
 
 class User(var pic:String?, var fullName: String = "", var nick: String="", var email: String="",
@@ -33,10 +37,12 @@ class ShowProfileActivity : AppCompatActivity() {
     private lateinit var usr: User
     private val LAUNCH_EDIT_ACTIVITY = 1
 
+    private lateinit var sharedPref: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        sharedPref = getPreferences(android.content.Context.MODE_PRIVATE)
 
         /* All these info will be retrieved from server */
         val proPic = BitmapFactory.decodeResource(baseContext.resources, R.drawable.default_avatar)
@@ -47,8 +53,12 @@ class ShowProfileActivity : AppCompatActivity() {
         val skills: List<String> = mutableListOf()
         val balance = 3
 
-        usr = User(" ", fullName, nick, email, location, skills)
-
+        val profile = sharedPref.getString("profile", "")
+        if (sharedPref.contains("profile")) {
+            usr = GsonBuilder().create().fromJson(profile, User::class.java)
+        } else {
+            usr = User(" ", fullName, nick, email, location, skills)
+        }
 
         setContentView(R.layout.activity_showprofileactivity)
 
@@ -123,6 +133,11 @@ class ShowProfileActivity : AppCompatActivity() {
         if (requestCode == LAUNCH_EDIT_ACTIVITY && resultCode == Activity.RESULT_OK){
             usr = data?.getSerializableExtra("it.polito.timebankingapp.EditProfileActivity.user") as User
             displayUser()
+            val jsonString = GsonBuilder().create().toJson(usr)
+            with (sharedPref.edit()) {
+                putString("profile", jsonString)
+                apply()
+            }
         }
     }
 
