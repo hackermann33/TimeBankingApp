@@ -84,14 +84,14 @@
 
                 <EditText
                     android:id="@+id/editFullName"
-                    android:hint="@string/full_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:autofillHints=""
                     android:ems="10"
+                    android:hint="@string/full_name"
                     android:inputType="textPersonName"
                     android:minHeight="48dp"
-                    android:text="@string/full_name" />
+                    android:textColorHint="#757575" />
 
                 <TextView
                     android:id="@+id/nicknameLabel"
@@ -107,9 +107,10 @@
                     android:layout_height="wrap_content"
                     android:autofillHints=""
                     android:ems="10"
+                    android:hint="@string/nickname"
                     android:inputType="textPersonName"
                     android:minHeight="48dp"
-                    android:text="@string/nickname"
+                    android:textColorHint="#757575"
                     tools:ignore="DuplicateSpeakableTextCheck" />
 
                 <TextView
@@ -127,9 +128,10 @@
                     android:layout_height="wrap_content"
                     android:autofillHints=""
                     android:ems="10"
+                    android:hint="@string/e_mail"
                     android:inputType="textEmailAddress"
                     android:minHeight="48dp"
-                    android:text="@string/e_mail"
+                    android:textColorHint="#757575"
                     tools:ignore="DuplicateSpeakableTextCheck" />
 
                 <TextView
@@ -146,9 +148,10 @@
                     android:layout_height="wrap_content"
                     android:autofillHints=""
                     android:ems="10"
+                    android:hint="@string/location"
                     android:inputType="textPersonName"
                     android:minHeight="48dp"
-                    android:text="@string/location"
+                    android:textColorHint="#757575"
                     tools:ignore="DuplicateSpeakableTextCheck" />
 
                 <TextView
@@ -165,9 +168,10 @@
                     android:layout_height="wrap_content"
                     android:autofillHints=""
                     android:ems="10"
+                    android:hint="@string/description"
                     android:inputType="textPersonName"
                     android:minHeight="48dp"
-                    android:text="@string/description"
+                    android:textColorHint="#757575"
                     tools:ignore="DuplicateSpeakableTextCheck" />
 
             </LinearLayout>

@@ -1,6 +1,7 @@
 package it.polito.timebankingapp
 
 import android.content.*
+import android.content.res.ColorStateList
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
@@ -8,6 +9,7 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.widget.EditText
 import android.widget.ImageButton
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.drawToBitmap
 import de.hdodenhof.circleimageview.CircleImageView
@@ -52,11 +54,15 @@ class EditProfileActivity : AppCompatActivity() {
             chooser.putExtra(Intent.EXTRA_INITIAL_INTENTS, intentArray)
             startActivityForResult(chooser, REQUEST_PIC)
         }
-        displayUser(usr)
+
+        when(usr.init){
+            true -> displayUser(usr)
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
+        retrieveUserData()
         outState.putSerializable("user", usr)
     }
 
@@ -198,13 +204,55 @@ class EditProfileActivity : AppCompatActivity() {
         retrieveUserData()
 
         if(usr.isGood()){
+            usr.init = true
             val returnIntent = Intent()
             usr.pic = saveToInternalStorage(profilePic.drawToBitmap())
             returnIntent.putExtra("it.polito.timebankingapp.EditProfileActivity.user", usr)
             setResult(RESULT_OK,returnIntent)
+            super.onBackPressed()
         }
-        super.onBackPressed()
+        else{
+
+            val errorDialog = AlertDialog.Builder(this)
+                .setTitle("Review Your Data")
+                .setMessage("Fields cannot be empty!")
+                .setPositiveButton("Ok") { dialogInterface, i ->
+                    evidenceWrongFields()
+                }
+                .show()
+
+            //evidenceWrongFields()
+        }
         return
+    }
+
+    private fun evidenceWrongFields() {
+
+        val nameEdit = findViewById<EditText>(R.id.editFullName)
+        if(nameEdit.text?.isEmpty() == true)
+            nameEdit.backgroundTintList = resources.getColorStateList(R.color.error_red)
+        else
+            nameEdit.backgroundTintList = resources.getColorStateList(R.color.teal_200)
+
+        val nickEdit = findViewById<EditText>(R.id.editNickname)
+        if(nickEdit.text?.isEmpty() == true)
+            nickEdit.backgroundTintList = resources.getColorStateList(R.color.error_red)
+        else
+            nickEdit.backgroundTintList = resources.getColorStateList(R.color.teal_200)
+
+        val emailEdit = findViewById<EditText>(R.id.editEmail)
+        if(emailEdit.text?.isEmpty() == true)
+            emailEdit.backgroundTintList = resources.getColorStateList(R.color.error_red)
+        else
+            emailEdit.backgroundTintList = resources.getColorStateList(R.color.teal_200)
+
+        val locationEdit = findViewById<EditText>(R.id.editLocation)
+        if(locationEdit.text?.isEmpty() == true)
+            locationEdit.backgroundTintList = resources.getColorStateList(R.color.error_red)
+        else
+            locationEdit.backgroundTintList = resources.getColorStateList(R.color.teal_200)
+
+
     }
 
     private fun saveToInternalStorage(bitmapImage: Bitmap): String? {
@@ -262,3 +310,4 @@ class EditProfileActivity : AppCompatActivity() {
     }
 
 }
+
