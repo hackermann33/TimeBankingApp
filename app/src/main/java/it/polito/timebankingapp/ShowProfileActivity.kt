@@ -22,17 +22,17 @@ import java.io.Serializable
 import com.google.gson.GsonBuilder
 
 
-
+/*
 class User(var pic:String?, var fullName: String = "", var nick: String="", var email: String="",
            var location: String="", var description: String="", var skills: List<String> = emptyList(), var balance: Int = 0, var init : Boolean = false) : Serializable{
     fun isGood(): Boolean {
         return (pic?.isNotEmpty() ?: false) && fullName.isNotEmpty() && nick.isNotEmpty() && email.isNotEmpty() && location.isNotEmpty()
 
     }
-    /*{ }*/
 
 
-}
+
+} */
 
 class ShowProfileActivity : AppCompatActivity() {
 
@@ -59,9 +59,8 @@ class ShowProfileActivity : AppCompatActivity() {
         val profile = sharedPref.getString("profile", "")
         if (sharedPref.contains("profile")) {
             usr = GsonBuilder().create().fromJson(profile, User::class.java)
-            usr.init = true
         } else {
-            usr = User(" ", fullName, nick, email, location, description, skills)
+            usr = User(" ", fullName, nick, email, location, skills, description)
         }
 
         setContentView(R.layout.activity_showprofileactivity)

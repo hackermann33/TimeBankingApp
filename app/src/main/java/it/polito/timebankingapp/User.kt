@@ -11,9 +11,8 @@ class User( var pic : String?,
             var email: String = "",
             var location: String = "",
             var skills: List<String> = emptyList(),
-            var balance: Int = 0,
             var description: String = "",
-            var init : Boolean = false
+            var balance: Int = 0
     ) : Serializable {
 
     fun isGood(): Boolean {

@@ -59,8 +59,8 @@ class EditProfileActivity : AppCompatActivity() {
             startActivityForResult(chooser, REQUEST_PIC)
         }
 
-        when(usr.init){
-            true -> displayUser(usr)
+        if(usr.isGood()){
+            displayUser(usr)
         }
     }
 
@@ -208,7 +208,6 @@ class EditProfileActivity : AppCompatActivity() {
         retrieveUserData()
 
         if(usr.isGood()){
-            usr.init = true
             val returnIntent = Intent()
             usr.pic = saveToInternalStorage(profilePic.drawToBitmap())
             returnIntent.putExtra("it.polito.timebankingapp.EditProfileActivity.user", usr)
