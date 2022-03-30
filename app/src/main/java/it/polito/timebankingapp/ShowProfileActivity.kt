@@ -20,18 +20,6 @@ import java.io.Serializable
 import com.google.gson.GsonBuilder
 
 
-
-class User(var pic:String?, var fullName: String = "", var nick: String="", var email: String="",
-           var location: String="", var skills: List<String> = emptyList(), var balance: Int = 0, var init : Boolean = false) : Serializable{
-    fun isGood(): Boolean {
-        return (pic?.isNotEmpty() ?: false) && fullName.isNotEmpty() && nick.isNotEmpty() && email.isNotEmpty() && location.isNotEmpty()
-
-    }
-    /*{ }*/
-
-
-}
-
 class ShowProfileActivity : AppCompatActivity() {
 
     private lateinit var usr: User
@@ -52,13 +40,14 @@ class ShowProfileActivity : AppCompatActivity() {
         val location = "45.070312, 7.6868565"
         val skills: List<String> = mutableListOf()
         val balance = 3
+        val description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
 
         val profile = sharedPref.getString("profile", "")
         if (sharedPref.contains("profile")) {
             usr = GsonBuilder().create().fromJson(profile, User::class.java)
             usr.init = true
         } else {
-            usr = User(" ", fullName, nick, email, location, skills)
+            usr = User(" ", fullName, nick, email, location, skills, balance, description)
         }
 
         setContentView(R.layout.activity_showprofileactivity)
@@ -99,6 +88,9 @@ class ShowProfileActivity : AppCompatActivity() {
 
         val balanceView = findViewById<TextView>(R.id.balance)
         balanceView.text = usr.balance.toString()
+
+        val descriptionView = findViewById<TextView>(R.id.description)
+        descriptionView.text = usr.description
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

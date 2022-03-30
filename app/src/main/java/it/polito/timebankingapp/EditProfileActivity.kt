@@ -7,8 +7,10 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Patterns
 import android.widget.EditText
 import android.widget.ImageButton
+import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.drawToBitmap
@@ -55,9 +57,7 @@ class EditProfileActivity : AppCompatActivity() {
             startActivityForResult(chooser, REQUEST_PIC)
         }
 
-        when(usr.init){
-            true -> displayUser(usr)
-        }
+        if (usr.init) displayUser(usr)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -213,10 +213,10 @@ class EditProfileActivity : AppCompatActivity() {
         }
         else{
 
-            val errorDialog = AlertDialog.Builder(this)
+            AlertDialog.Builder(this)
                 .setTitle("Review Your Data")
-                .setMessage("Fields cannot be empty!")
-                .setPositiveButton("Ok") { dialogInterface, i ->
+                .setMessage("Fields cannot be empty or invalid!")
+                .setPositiveButton("Ok") { _, _ ->
                     evidenceWrongFields()
                 }
                 .show()
@@ -247,12 +247,16 @@ class EditProfileActivity : AppCompatActivity() {
             emailEdit.backgroundTintList = resources.getColorStateList(R.color.teal_200)
 
         val locationEdit = findViewById<EditText>(R.id.editLocation)
-        if(locationEdit.text?.isEmpty() == true)
+        if(Patterns.EMAIL_ADDRESS.matcher(locationEdit.text).matches())
             locationEdit.backgroundTintList = resources.getColorStateList(R.color.error_red)
         else
             locationEdit.backgroundTintList = resources.getColorStateList(R.color.teal_200)
 
-
+        val descriptionEdit = findViewById<EditText>(R.id.editDescription)
+        if(descriptionEdit.text?.isEmpty() == true)
+            descriptionEdit.backgroundTintList = resources.getColorStateList(R.color.error_red)
+        else
+            descriptionEdit.backgroundTintList = resources.getColorStateList(R.color.teal_200)
     }
 
     private fun saveToInternalStorage(bitmapImage: Bitmap): String? {
@@ -291,6 +295,9 @@ class EditProfileActivity : AppCompatActivity() {
         val locationEdit = findViewById<EditText>(R.id.editLocation)
         locationEdit.setText(usr.location)
 
+        val descriptionEdit = findViewById<EditText>(R.id.editDescription)
+        descriptionEdit.setText(usr.description)
+
     }
 
     private fun retrieveUserData() {
@@ -306,6 +313,9 @@ class EditProfileActivity : AppCompatActivity() {
 
         val locationEdit = findViewById<EditText>(R.id.editLocation)
         usr.location = locationEdit.text.toString()
+
+        val descriptionEdit = findViewById<EditText>(R.id.editDescription)
+        usr.description = descriptionEdit.text.toString()
 
     }
 
