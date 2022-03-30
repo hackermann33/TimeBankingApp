@@ -1,6 +1,7 @@
 package it.polito.timebankingapp
 
 import android.app.Activity
+import android.content.ClipDescription
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -9,6 +10,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
+import android.widget.ScrollView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -22,7 +24,7 @@ import com.google.gson.GsonBuilder
 
 
 class User(var pic:String?, var fullName: String = "", var nick: String="", var email: String="",
-           var location: String="", var skills: List<String> = emptyList(), var balance: Int = 0, var init : Boolean = false) : Serializable{
+           var location: String="", var description: String="", var skills: List<String> = emptyList(), var balance: Int = 0, var init : Boolean = false) : Serializable{
     fun isGood(): Boolean {
         return (pic?.isNotEmpty() ?: false) && fullName.isNotEmpty() && nick.isNotEmpty() && email.isNotEmpty() && location.isNotEmpty()
 
@@ -50,6 +52,7 @@ class ShowProfileActivity : AppCompatActivity() {
         val nick = "example"
         val email = "example@test.com"
         val location = "45.070312, 7.6868565"
+        val description = "Description sample"
         val skills: List<String> = mutableListOf()
         val balance = 3
 
@@ -58,7 +61,7 @@ class ShowProfileActivity : AppCompatActivity() {
             usr = GsonBuilder().create().fromJson(profile, User::class.java)
             usr.init = true
         } else {
-            usr = User(" ", fullName, nick, email, location, skills)
+            usr = User(" ", fullName, nick, email, location, description, skills)
         }
 
         setContentView(R.layout.activity_showprofileactivity)
@@ -99,6 +102,10 @@ class ShowProfileActivity : AppCompatActivity() {
 
         val balanceView = findViewById<TextView>(R.id.balance)
         balanceView.text = usr.balance.toString()
+
+        val descriptionView = findViewById<TextView>(R.id.description)
+        descriptionView.text = usr.description
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -130,7 +137,6 @@ class ShowProfileActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        println("result code: $resultCode")
         if (requestCode == LAUNCH_EDIT_ACTIVITY && resultCode == Activity.RESULT_OK){
             usr = data?.getSerializableExtra("it.polito.timebankingapp.EditProfileActivity.user") as User
             displayUser()

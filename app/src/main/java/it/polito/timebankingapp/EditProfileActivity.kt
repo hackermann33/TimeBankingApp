@@ -4,6 +4,7 @@ import android.content.*
 import android.content.res.ColorStateList
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
@@ -11,7 +12,10 @@ import android.widget.EditText
 import android.widget.ImageButton
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.graphics.toColor
 import androidx.core.view.drawToBitmap
+import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 import de.hdodenhof.circleimageview.CircleImageView
 import java.io.*
 
@@ -213,21 +217,54 @@ class EditProfileActivity : AppCompatActivity() {
         }
         else{
 
-            val errorDialog = AlertDialog.Builder(this)
+            AlertDialog.Builder(this)
                 .setTitle("Review Your Data")
                 .setMessage("Fields cannot be empty!")
                 .setPositiveButton("Ok") { dialogInterface, i ->
                     evidenceWrongFields()
                 }
                 .show()
-
-            //evidenceWrongFields()
         }
         return
     }
 
     private fun evidenceWrongFields() {
 
+        val nameEditLay = findViewById<TextInputLayout>(R.id.editFullNameLay)
+        val nameEdit = findViewById<TextInputEditText>(R.id.editFullName)
+        if(nameEdit.text?.isEmpty() == true)
+            nameEditLay.error = "Field cannot be empty!"
+        else
+            nameEditLay.error = null
+
+        val nickEditLay = findViewById<TextInputLayout>(R.id.editNicknameLay)
+        val nickEdit = findViewById<TextInputEditText>(R.id.editNickname)
+        if(nickEdit.text?.isEmpty() == true)
+            nickEditLay.error = "Field cannot be empty!"
+        else
+            nickEditLay.error = null
+
+        val emailEditLay = findViewById<TextInputLayout>(R.id.editEmailLay)
+        val emailEdit = findViewById<TextInputEditText>(R.id.editEmail)
+        if(emailEdit.text?.isEmpty() == true)
+            emailEditLay.error = "Field cannot be empty!"
+        else
+            emailEditLay.error = null
+
+        val locationEditLay = findViewById<TextInputLayout>(R.id.editLocationLay)
+        val locationEdit = findViewById<TextInputEditText>(R.id.editLocation)
+        if(locationEdit.text?.isEmpty() == true)
+            locationEditLay.error = "Field cannot be empty!"
+        else
+            locationEditLay.error = null
+
+        val descriptionEditLay = findViewById<TextInputLayout>(R.id.editDescriptionLay)
+        val descriptionEdit = findViewById<TextInputEditText>(R.id.editDescription)
+        if(descriptionEdit.text?.isEmpty() == true)
+            descriptionEditLay.error = "Field cannot be empty!"
+        else
+            descriptionEditLay.error = null
+        /*
         val nameEdit = findViewById<EditText>(R.id.editFullName)
         if(nameEdit.text?.isEmpty() == true)
             nameEdit.backgroundTintList = resources.getColorStateList(R.color.error_red)
@@ -251,7 +288,7 @@ class EditProfileActivity : AppCompatActivity() {
             locationEdit.backgroundTintList = resources.getColorStateList(R.color.error_red)
         else
             locationEdit.backgroundTintList = resources.getColorStateList(R.color.teal_200)
-
+        */
 
     }
 
@@ -291,6 +328,8 @@ class EditProfileActivity : AppCompatActivity() {
         val locationEdit = findViewById<EditText>(R.id.editLocation)
         locationEdit.setText(usr.location)
 
+        val descriptionEdit = findViewById<EditText>(R.id.editDescription)
+        descriptionEdit.setText(usr.description)
     }
 
     private fun retrieveUserData() {
@@ -306,6 +345,9 @@ class EditProfileActivity : AppCompatActivity() {
 
         val locationEdit = findViewById<EditText>(R.id.editLocation)
         usr.location = locationEdit.text.toString()
+
+        val descriptionEdit = findViewById<EditText>(R.id.editDescription)
+        usr.description = descriptionEdit.text.toString()
 
     }
 
