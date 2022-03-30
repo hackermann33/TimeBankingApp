@@ -5,7 +5,6 @@
     android:id="@+id/padd"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF"
     android:padding="16dp"
     tools:context=".ShowProfileActivity">
 
@@ -103,8 +102,7 @@
                     android:layout_height="wrap_content"
                     android:labelFor="@id/editNickname"
                     android:paddingTop="10dp"
-                    android:text="@string/nickname"
-                    android:textColor="@color/black" />
+                    android:text="@string/nickname"  />
 
                 <EditText
                     android:id="@+id/editNickname"
@@ -123,8 +121,7 @@
                     android:layout_height="wrap_content"
                     android:labelFor="@id/editEmail"
                     android:paddingTop="10dp"
-                    android:text="@string/e_mail"
-                    android:textColor="@color/black" />
+                    android:text="@string/e_mail"  />
 
                 <EditText
                     android:id="@+id/editEmail"
@@ -142,8 +139,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingTop="10dp"
-                    android:text="@string/location"
-                    android:textColor="@color/black" />
+                    android:text="@string/location" />
 
                 <EditText
                     android:id="@+id/editLocation"
@@ -161,8 +157,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingTop="10dp"
-                    android:text="@string/description"
-                    android:textColor="@color/black" />
+                    android:text="@string/description" />
 
                 <EditText
                     android:id="@+id/editDescription"

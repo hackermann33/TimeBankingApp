@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF"
     android:padding="16dp"
     tools:context=".EditProfileActivity">
 
@@ -80,7 +79,6 @@
                     android:layout_height="wrap_content"
                     android:text="@string/full_name"
                     android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-                    android:textColor="@color/black"
                     app:layout_constraintBottom_toTopOf="@+id/nicknameLabel"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/materialCardViewShow" />
@@ -91,7 +89,6 @@
                     android:layout_height="wrap_content"
                     android:paddingTop="10dp"
                     android:text="@string/nickname"
-                    android:textColor="@color/black"
                     app:layout_constraintBottom_toTopOf="@+id/nickname"
                     app:layout_constraintStart_toStartOf="@+id/fullName"
                     app:layout_constraintTop_toBottomOf="@+id/fullName" />
@@ -102,7 +99,6 @@
                     android:layout_height="wrap_content"
                     android:text="@string/nickname"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                    android:textColor="@color/black"
                     app:layout_constraintBottom_toTopOf="@+id/emailLabel"
                     app:layout_constraintStart_toStartOf="@+id/nicknameLabel"
                     app:layout_constraintTop_toBottomOf="@+id/nicknameLabel" />
@@ -113,7 +109,6 @@
                     android:layout_height="wrap_content"
                     android:paddingTop="10dp"
                     android:text="@string/e_mail"
-                    android:textColor="@color/black"
                     app:layout_constraintBottom_toTopOf="@+id/email"
                     app:layout_constraintStart_toStartOf="@+id/nickname"
                     app:layout_constraintTop_toBottomOf="@+id/nickname" />
@@ -124,7 +119,6 @@
                     android:layout_height="wrap_content"
                     android:text="@string/e_mail"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                    android:textColor="@color/black"
                     app:layout_constraintBottom_toTopOf="@+id/locationLabel"
                     app:layout_constraintStart_toStartOf="@+id/emailLabel"
                     app:layout_constraintTop_toBottomOf="@+id/emailLabel" />
@@ -135,7 +129,6 @@
                     android:layout_height="wrap_content"
                     android:paddingTop="10dp"
                     android:text="@string/location"
-                    android:textColor="@color/black"
                     app:layout_constraintBottom_toTopOf="@+id/location"
                     app:layout_constraintStart_toStartOf="@+id/email"
                     app:layout_constraintTop_toBottomOf="@+id/email" />
@@ -146,7 +139,6 @@
                     android:layout_height="wrap_content"
                     android:text="@string/location"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                    android:textColor="@color/black"
                     app:layout_constraintBottom_toTopOf="@+id/balanceLabel"
                     app:layout_constraintStart_toStartOf="@+id/locationLabel"
                     app:layout_constraintTop_toBottomOf="@+id/locationLabel" />
@@ -157,7 +149,6 @@
                     android:layout_height="wrap_content"
                     android:paddingTop="10dp"
                     android:text="@string/balance"
-                    android:textColor="@color/black"
                     app:layout_constraintBottom_toTopOf="@+id/balance"
                     app:layout_constraintStart_toStartOf="@+id/location"
                     app:layout_constraintTop_toBottomOf="@+id/location" />
@@ -168,7 +159,6 @@
                     android:layout_height="wrap_content"
                     android:text="@string/balance"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                    android:textColor="@color/black"
                     app:layout_constraintBottom_toTopOf="@+id/descriptionLabel"
                     app:layout_constraintStart_toStartOf="@+id/balanceLabel"
                     app:layout_constraintTop_toBottomOf="@+id/balanceLabel" />
@@ -179,7 +169,6 @@
                     android:layout_height="wrap_content"
                     android:paddingTop="10dp"
                     android:text="@string/description"
-                    android:textColor="@color/black"
                     app:layout_constraintBottom_toTopOf="@+id/description"
                     app:layout_constraintStart_toStartOf="@+id/balance"
                     app:layout_constraintTop_toBottomOf="@+id/balance" />
@@ -190,7 +179,6 @@
                     android:layout_height="wrap_content"
                     android:text="@string/description"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                    android:textColor="@color/black"
                     app:layout_constraintBottom_toTopOf="parent"
                     app:layout_constraintStart_toStartOf="@+id/descriptionLabel"
                     app:layout_constraintTop_toBottomOf="@+id/descriptionLabel" />
