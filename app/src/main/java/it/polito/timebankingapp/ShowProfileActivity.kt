@@ -52,7 +52,7 @@ class ShowProfileActivity : AppCompatActivity() {
         val nick = "example"
         val email = "example@test.com"
         val location = "45.070312, 7.6868565"
-        val description = "Description sample"
+        val description = "This is a very long and detailed example of description about myself."
         val skills: List<String> = mutableListOf()
         val balance = 3
 
@@ -60,7 +60,7 @@ class ShowProfileActivity : AppCompatActivity() {
         if (sharedPref.contains("profile")) {
             usr = GsonBuilder().create().fromJson(profile, User::class.java)
         } else {
-            usr = User(" ", fullName, nick, email, location, skills, description)
+            usr = User(" ", fullName, nick, email, location, skills, description, balance)
         }
 
         setContentView(R.layout.activity_showprofileactivity)

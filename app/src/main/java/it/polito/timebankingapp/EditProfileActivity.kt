@@ -1,18 +1,16 @@
 package it.polito.timebankingapp
 
 import android.content.*
-import android.content.res.ColorStateList
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Patterns
 import android.widget.EditText
 import android.widget.ImageButton
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.graphics.toColor
 import androidx.core.view.drawToBitmap
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
@@ -218,8 +216,8 @@ class EditProfileActivity : AppCompatActivity() {
 
             AlertDialog.Builder(this)
                 .setTitle("Review Your Data")
-                .setMessage("Fields cannot be empty!")
-                .setPositiveButton("Ok") { dialogInterface, i ->
+                .setMessage("Please, check again the fields that have not been correctly filled.")
+                .setPositiveButton("Ok") { _, _ ->
                     evidenceWrongFields()
                 }
                 .show()
@@ -247,6 +245,8 @@ class EditProfileActivity : AppCompatActivity() {
         val emailEdit = findViewById<TextInputEditText>(R.id.editEmail)
         if(emailEdit.text?.isEmpty() == true)
             emailEditLay.error = "Field cannot be empty!"
+        else if(!Patterns.EMAIL_ADDRESS.matcher(emailEdit.text.toString()).matches())
+            emailEditLay.error = "Insert a valid e-mail!"
         else
             emailEditLay.error = null
 
