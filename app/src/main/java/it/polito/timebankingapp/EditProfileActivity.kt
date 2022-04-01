@@ -86,6 +86,7 @@ class EditProfileActivity : AppCompatActivity() {
                     addSkillChip(skillStr)
                 }
                 newSkillView.text.clear()
+                updateSkillsHints()
             }
         }
         addSkillButton.textSize = (4 * resources.displayMetrics.density)
