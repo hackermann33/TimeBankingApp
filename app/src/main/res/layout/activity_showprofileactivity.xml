@@ -59,6 +59,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:orientation="vertical">
 
             <TextView
@@ -191,7 +192,10 @@
             <com.google.android.material.chip.ChipGroup
                 android:id="@+id/skillsGroup"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="30dp"
+                app:chipSpacingVertical="4dp">
 
             </com.google.android.material.chip.ChipGroup>
         </LinearLayout>

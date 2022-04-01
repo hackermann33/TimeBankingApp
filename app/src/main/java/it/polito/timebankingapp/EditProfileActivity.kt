@@ -1,7 +1,10 @@
 package it.polito.timebankingapp
 
+
 import android.R.attr
-import android.content.*
+import android.content.Context
+import android.content.ContextWrapper
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Matrix
@@ -10,9 +13,9 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Patterns
+import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
-import android.widget.ImageButton
+import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.drawToBitmap
@@ -24,10 +27,15 @@ import de.hdodenhof.circleimageview.CircleImageView
 import java.io.*
 
 
+private var SKILLS = arrayOf(
+    "Tutoring", "C Developer", "Baby Sitting", "Grocery Shopping", "Cleaning and Organization", "Cooking"
+)
+
 class EditProfileActivity : AppCompatActivity() {
 
     private lateinit var profilePic: CircleImageView
-    private lateinit var usr: User
+    private lateinit var usr:User
+    private lateinit var skillsGroup: ChipGroup
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -35,7 +43,6 @@ class EditProfileActivity : AppCompatActivity() {
         setContentView(R.layout.activity_editprofileactivity)
 
         usr = intent.getSerializableExtra("it.polito.timebankingapp.ShowProfileActivity.user") as User
-
 
         profilePic = findViewById(R.id.profile_pic)
         try {
@@ -46,7 +53,6 @@ class EditProfileActivity : AppCompatActivity() {
         catch (e : FileNotFoundException){
             e.printStackTrace()
         }
-
 
         val picEdit = findViewById<ImageButton>(R.id.uploadProfilePicButton)
         picEdit.setOnClickListener {
@@ -64,9 +70,41 @@ class EditProfileActivity : AppCompatActivity() {
             startActivityForResult(chooser, REQUEST_PIC)
         }
 
+        val addSkillButton = findViewById<Button>(R.id.addSkillButton)
+        skillsGroup = findViewById(R.id.editSkillsGroup)
+
+        val newSkillView = updateSkillsHints()
+
+        addSkillButton.setOnClickListener {
+            val skillStr = newSkillView.text.toString()
+            if(skillStr.isNotEmpty()) {
+                /*Aggiungo alla lista globale dei suggerimenti */
+                if (!SKILLS.contains(skillStr))
+                    SKILLS = SKILLS.plus(skillStr)
+                if (!usr.skills.contains(skillStr)) {
+                    usr.skills.add(skillStr)
+                    addSkillChip(skillStr)
+                }
+                newSkillView.text.clear()
+            }
+        }
+        addSkillButton.textSize = (4 * resources.displayMetrics.density)
+
+
         if(usr.isGood()){
             displayUser()
         }
+    }
+
+    private fun updateSkillsHints(): AutoCompleteTextView {
+        val adapter: ArrayAdapter<String> = ArrayAdapter<String>(
+            this,
+            android.R.layout.simple_dropdown_item_1line,
+            SKILLS.filter { sk -> !usr.skills.contains(sk) }
+        )
+        val newSkillView = findViewById<View>(R.id.editNewSkill) as AutoCompleteTextView
+        newSkillView.setAdapter(adapter)
+        return newSkillView
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -79,7 +117,6 @@ class EditProfileActivity : AppCompatActivity() {
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
         usr = savedInstanceState.getSerializable("user") as User
-        displayUser()
     }
 
     private val REQUEST_PIC = 1
@@ -240,23 +277,23 @@ class EditProfileActivity : AppCompatActivity() {
         val descriptionEdit = findViewById<EditText>(R.id.editDescription)
         descriptionEdit.setText(usr.description)
 
-        val chipGroup = findViewById<ChipGroup>(R.id.editSkillsGroup)
-
         usr.skills.forEach{
-            skill -> val chip= layoutInflater.inflate(R.layout.chip_layout_editprofile, chipGroup!!.parent.parent as ViewGroup, false) as Chip
-            chip.text = skill
-            chip.setOnCloseIconClickListener {
-                val ch = it as Chip
-
-                usr.skills.remove(ch.text)
-                chipGroup.removeView(ch)
-
-            }
-            chipGroup.addView(chip)
-
+            skill -> addSkillChip(skill)
         }
 
 
+    }
+
+    private fun addSkillChip(text: String){
+        val chip= layoutInflater.inflate(R.layout.chip_layout_editprofile, skillsGroup.parent.parent as ViewGroup, false) as Chip
+        chip.text = text
+        chip.setOnCloseIconClickListener {
+            val ch = it as Chip
+            usr.skills.remove(ch.text)
+            skillsGroup.removeView(ch)
+            updateSkillsHints()
+        }
+        skillsGroup.addView(chip)
     }
 
     private fun retrieveUserData() {

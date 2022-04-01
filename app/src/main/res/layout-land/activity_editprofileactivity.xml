@@ -154,6 +154,12 @@
                     tools:ignore="TextContrastCheck" />
             </com.google.android.material.textfield.TextInputLayout>
 
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/editSkillsGroup"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:chipSpacingVertical="4dp" />
+
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/linearLayout"
                 android:layout_width="match_parent"
@@ -202,11 +208,6 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <com.google.android.material.chip.ChipGroup
-                android:id="@+id/editSkillsGroup"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
 
         </LinearLayout>
     </ScrollView>

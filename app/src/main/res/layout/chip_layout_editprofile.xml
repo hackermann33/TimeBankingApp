@@ -4,10 +4,10 @@
     style="@style/Widget.MaterialComponents.Chip.Filter"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:textColor="@color/white"
     android:checkable="false"
-    app:closeIconEnabled="true"
-    app:closeIconVisible="true"
-    app:closeIconTint="@color/white"
+    android:textColor="@color/white"
     app:chipBackgroundColor="@color/blue"
-    />
+    app:closeIconEnabled="true"
+    app:closeIconTint="@color/white"
+    app:closeIconVisible="true"
+    app:ensureMinTouchTargetSize="false"/>

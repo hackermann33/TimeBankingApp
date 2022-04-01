@@ -3,14 +3,9 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Users/fifi9/GitHub Repos/TimeBankingApp/app/src/main/res/layout-land/activity_editprofileactivity.xml" value="0.24342105263157895" />
-        <entry key="..\:/Users/fifi9/GitHub Repos/TimeBankingApp/app/src/main/res/layout-land/activity_showprofileactivity.xml" value="0.17183098591549295" />
         <entry key="..\:/Users/fifi9/GitHub Repos/TimeBankingApp/app/src/main/res/layout/activity_congratulations.xml" value="0.17831813576494426" />
-        <entry key="..\:/Users/fifi9/GitHub Repos/TimeBankingApp/app/src/main/res/layout/activity_editprofileactivity.xml" value="0.33" />
         <entry key="..\:/Users/fifi9/GitHub Repos/TimeBankingApp/app/src/main/res/layout/activity_main.xml" value="0.5" />
-        <entry key="..\:/Users/fifi9/GitHub Repos/TimeBankingApp/app/src/main/res/layout/activity_showprofileactivity.xml" value="0.25" />
-        <entry key="..\:/Users/fifi9/GitHub Repos/TimeBankingApp/app/src/main/res/layout/chip_layout.xml" value="0.3087719298245614" />
-        <entry key="..\:/Users/fifi9/GitHub Repos/TimeBankingApp/app/src/main/res/layout/chip_layout_editprofile.xml" value="0.3087719298245614" />
+        <entry key="..\:/Users/fifi9/GitHub Repos/TimeBankingApp/app/src/main/res/layout/activity_showprofileactivity.xml" value="0.5" />
         <entry key="..\:/Users/loren/StudioProjects/TimeBankingApp/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.15" />
         <entry key="..\:/Users/loren/StudioProjects/TimeBankingApp/app/src/main/res/drawable/bg_circle.xml" value="0.1145" />
         <entry key="..\:/Users/loren/StudioProjects/TimeBankingApp/app/src/main/res/drawable/ic_launcher_background.xml" value="0.15" />
@@ -22,7 +17,13 @@
         <entry key="..\:/Users/loren/StudioProjects/TimeBankingApp/app/src/main/res/layout/layout.xml" value="0.10989583333333333" />
         <entry key="..\:/Users/loren/StudioProjects/TimeBankingApp/app/src/main/res/layout/round_outline.xml" value="0.1" />
         <entry key="..\:/Users/loren/StudioProjects/TimeBankingApp/app/src/main/res/menu/menu_showprofileactivity.xml" value="0.16218721037998146" />
+        <entry key="app/src/main/res/layout-land/activity_editprofileactivity.xml" value="0.15564373897707232" />
+        <entry key="app/src/main/res/layout-land/activity_showprofileactivity.xml" value="0.17552083333333332" />
         <entry key="app/src/main/res/layout/activity_congratulations.xml" value="0.14492753623188406" />
+        <entry key="app/src/main/res/layout/activity_editprofileactivity.xml" value="0.5" />
+        <entry key="app/src/main/res/layout/activity_showprofileactivity.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/chip_layout_editprofile.xml" value="0.5" />
+        <entry key="app/src/main/res/layout/chip_layout_showprofile.xml" value="0.17426545086119555" />
       </map>
     </option>
   </component>
