@@ -81,6 +81,7 @@ class EditProfileActivity : AppCompatActivity() {
                 skillStr = skillStr.lowercase()
                                     .replace("\n", " ")
                                     .trim()
+                                    .replace("\\s+".toRegex(), " ")
                                     .replaceFirstChar {
                                         if (it.isLowerCase())
                                             it.titlecase(Locale.getDefault())
