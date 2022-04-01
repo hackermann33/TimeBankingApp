@@ -97,6 +97,7 @@ class EditProfileActivity : AppCompatActivity() {
                     addSkillChip(skillStr)
                 }
                 newSkillView.text.clear()
+                updateSkillsHints()
             }
         }
 
