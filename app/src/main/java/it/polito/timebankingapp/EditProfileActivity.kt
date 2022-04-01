@@ -25,6 +25,7 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import de.hdodenhof.circleimageview.CircleImageView
 import java.io.*
+import java.util.*
 
 
 private var SKILLS = arrayOf(
@@ -76,7 +77,17 @@ class EditProfileActivity : AppCompatActivity() {
         val newSkillView = updateSkillsHints()
 
         addSkillButton.setOnClickListener {
-            val skillStr = newSkillView.text.toString()
+            var skillStr = newSkillView.text.toString()
+                skillStr = skillStr.lowercase()
+                                    .replace("\n", " ")
+                                    .trim()
+                                    .replaceFirstChar {
+                                        if (it.isLowerCase())
+                                            it.titlecase(Locale.getDefault())
+                                        else
+                                            it.toString()
+                                    }
+
             if(skillStr.isNotEmpty()) {
                 /*Aggiungo alla lista globale dei suggerimenti */
                 if (!SKILLS.contains(skillStr))
@@ -88,6 +99,7 @@ class EditProfileActivity : AppCompatActivity() {
                 newSkillView.text.clear()
             }
         }
+
         addSkillButton.textSize = (4 * resources.displayMetrics.density)
 
 
