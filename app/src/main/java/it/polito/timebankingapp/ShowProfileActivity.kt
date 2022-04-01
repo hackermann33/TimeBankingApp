@@ -1,8 +1,6 @@
 package it.polito.timebankingapp
 
 import android.app.Activity
-import android.content.ClipDescription
-import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.BitmapFactory
@@ -10,7 +8,6 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
-import android.widget.ScrollView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -18,21 +15,8 @@ import de.hdodenhof.circleimageview.CircleImageView
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileNotFoundException
-import java.io.Serializable
 import com.google.gson.GsonBuilder
 
-
-/*
-class User(var pic:String?, var fullName: String = "", var nick: String="", var email: String="",
-           var location: String="", var description: String="", var skills: List<String> = emptyList(), var balance: Int = 0, var init : Boolean = false) : Serializable{
-    fun isGood(): Boolean {
-        return (pic?.isNotEmpty() ?: false) && fullName.isNotEmpty() && nick.isNotEmpty() && email.isNotEmpty() && location.isNotEmpty()
-
-    }
-
-
-
-} */
 
 class ShowProfileActivity : AppCompatActivity() {
 
@@ -78,7 +62,7 @@ class ShowProfileActivity : AppCompatActivity() {
 
         val profilePic = findViewById<CircleImageView>(R.id.profile_pic)
         try {
-            val f = File(usr.pic, "profile.jpg")
+            val f = File(usr.pic)
             val bitmap = BitmapFactory.decodeStream(FileInputStream(f))
             profilePic.setImageBitmap(bitmap)
         }
