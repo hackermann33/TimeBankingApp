@@ -154,7 +154,8 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/linearLayout"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:layout_marginBottom="10dp">
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/editNewSkillLay"
@@ -166,7 +167,7 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/addSkillButton"
                     app:layout_constraintHorizontal_chainStyle="packed"
-                    app:layout_constraintHorizontal_weight="2"
+                    app:layout_constraintHorizontal_weight="4"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
 
@@ -188,6 +189,7 @@
                     android:id="@+id/addSkillButton"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
+                    android:layout_marginStart="10dp"
                     android:layout_marginTop="10dp"
                     android:text="@string/add_new_skill"
                     app:layout_constraintBottom_toBottomOf="parent"

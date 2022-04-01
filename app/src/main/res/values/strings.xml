@@ -13,6 +13,6 @@
     <string name="edit_profile">Edit profile</string>
     <string name="upload_button">Upload Button</string>
     <string name="new_skill">New skill</string>
-    <string name="add_new_skill">Add new skill</string>
+    <string name="add_new_skill">Add</string>
 
 </resources>
