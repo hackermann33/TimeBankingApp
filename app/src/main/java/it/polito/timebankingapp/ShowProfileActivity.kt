@@ -8,9 +8,12 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
+import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.chip.Chip
+import com.google.android.material.chip.ChipGroup
 import de.hdodenhof.circleimageview.CircleImageView
 import java.io.File
 import java.io.FileInputStream
@@ -37,7 +40,7 @@ class ShowProfileActivity : AppCompatActivity() {
         val email = "example@test.com"
         val location = "45.070312, 7.6868565"
         val description = "This is a very long and detailed example of description about myself."
-        val skills: List<String> = mutableListOf()
+        val skills: MutableList<String> = mutableListOf("Gardening", "Developer", "Tutoring", "Babysitting", "Pusher")
         val balance = 3
 
         val profile = sharedPref.getString("profile", "")
@@ -88,6 +91,17 @@ class ShowProfileActivity : AppCompatActivity() {
 
         val descriptionView = findViewById<TextView>(R.id.description)
         descriptionView.text = usr.description
+
+        val chipGroup = findViewById<ChipGroup>(R.id.skillsGroup)
+
+
+        chipGroup.removeAllViews()
+        usr.skills.forEach{
+            skill -> val chip = layoutInflater.inflate(R.layout.chip_layout_showprofile, chipGroup!!.parent.parent as ViewGroup, false) as Chip
+            chip.text = skill
+            chipGroup.addView(chip)
+        }
+
 
     }
 

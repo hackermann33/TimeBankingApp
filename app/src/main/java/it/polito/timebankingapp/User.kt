@@ -5,14 +5,14 @@ import android.util.Patterns
 import java.io.Serializable
 
 
-class User( var pic : String?,
-            var fullName: String = "",
-            var nick: String = "",
-            var email: String = "",
-            var location: String = "",
-            var skills: List<String> = emptyList(),
-            var description: String = "",
-            var balance: Int = 0
+class User(var pic : String?,
+           var fullName: String = "",
+           var nick: String = "",
+           var email: String = "",
+           var location: String = "",
+           var skills: MutableList<String> = mutableListOf(),
+           var description: String = "",
+           var balance: Int = 0
     ) : Serializable {
 
     fun isGood(): Boolean {

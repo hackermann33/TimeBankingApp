@@ -10,11 +10,14 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Patterns
+import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ImageButton
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.drawToBitmap
+import com.google.android.material.chip.Chip
+import com.google.android.material.chip.ChipGroup
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import de.hdodenhof.circleimageview.CircleImageView
@@ -62,7 +65,7 @@ class EditProfileActivity : AppCompatActivity() {
         }
 
         if(usr.isGood()){
-            displayUser(usr)
+            displayUser()
         }
     }
 
@@ -76,7 +79,7 @@ class EditProfileActivity : AppCompatActivity() {
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
         usr = savedInstanceState.getSerializable("user") as User
-        displayUser(usr)
+        displayUser()
     }
 
     private val REQUEST_PIC = 1
@@ -221,7 +224,7 @@ class EditProfileActivity : AppCompatActivity() {
         return directory.absolutePath+"/profile.jpg"
     }
 
-    private fun displayUser(usr: User) {
+    private fun displayUser() {
         val nameEdit = findViewById<EditText>(R.id.editFullName)
         nameEdit.setText(usr.fullName)
 
@@ -236,6 +239,24 @@ class EditProfileActivity : AppCompatActivity() {
 
         val descriptionEdit = findViewById<EditText>(R.id.editDescription)
         descriptionEdit.setText(usr.description)
+
+        val chipGroup = findViewById<ChipGroup>(R.id.editSkillsGroup)
+
+        usr.skills.forEach{
+            skill -> val chip= layoutInflater.inflate(R.layout.chip_layout_editprofile, chipGroup!!.parent.parent as ViewGroup, false) as Chip
+            chip.text = skill
+            chip.setOnCloseIconClickListener {
+                val ch = it as Chip
+
+                usr.skills.remove(ch.text)
+                chipGroup.removeView(ch)
+
+            }
+            chipGroup.addView(chip)
+
+        }
+
+
     }
 
     private fun retrieveUserData() {

@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:layout_marginLeft="16dp"
     android:layout_marginRight="16dp"
+    app:layout_constraintHorizontal_weight="2"
     tools:context=".EditProfileActivity">
 
     <LinearLayout
@@ -22,8 +23,8 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:padding="16dp"
-            android:background="@android:color/transparent">
+            android:background="@android:color/transparent"
+            android:padding="16dp">
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/materialCardViewEdit"
@@ -165,16 +166,57 @@
                         tools:ignore="TextContrastCheck" />
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <!--  <EditText
-                      android:id="@+id/editFullName"
-                      android:layout_width="match_parent"
-                      android:layout_height="wrap_content"
-                      android:autofillHints=""
-                      android:ems="10"
-                      android:hint="@string/full_name"
-                      android:inputType="textPersonName"
-                      android:minHeight="48dp"
-                      android:textColorHint="#757575" />-->
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/linearLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/editNewSkillLay"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="6dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/addSkillButton"
+                        app:layout_constraintHorizontal_chainStyle="packed"
+                        app:layout_constraintHorizontal_weight="2"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                            android:id="@+id/editNewSkill"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:hint="@string/new_skill"
+                            android:paddingStart="16dp"
+                            android:paddingLeft="16dp"
+                            android:paddingTop="17dp"
+                            android:paddingEnd="16dp"
+                            android:paddingRight="16dp"
+                            android:paddingBottom="17dp"
+                            tools:ignore="TextContrastCheck,TouchTargetSizeCheck" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <Button
+                        android:id="@+id/addSkillButton"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_marginTop="10dp"
+                        android:text="@string/add_new_skill"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_weight="1"
+                        app:layout_constraintStart_toEndOf="@+id/editNewSkillLay"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/editSkillsGroup"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"></com.google.android.material.chip.ChipGroup>
 
             </LinearLayout>
         </ScrollView>

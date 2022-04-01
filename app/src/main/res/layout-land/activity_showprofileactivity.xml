@@ -163,6 +163,22 @@
                     android:text="@string/description"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/skillsGroup"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <!--<com.google.android.material.chip.Chip
+                        android:id="@+id/chip4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Gardening"
+                        android:textColor="@color/white"
+                        app:chipBackgroundColor="@color/blue"
+                        app:closeIconEnabled="false"
+                        app:closeIconTint="@color/white" />-->
+                </com.google.android.material.chip.ChipGroup>
+
             </LinearLayout>
         </ScrollView>
     </LinearLayout>
