@@ -1,8 +1,11 @@
 package it.polito.timebankingapp
 
+import android.R.attr
 import android.content.*
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Matrix
+import android.media.ExifInterface
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
@@ -16,6 +19,7 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import de.hdodenhof.circleimageview.CircleImageView
 import java.io.*
+
 
 class EditProfileActivity : AppCompatActivity() {
 
@@ -32,7 +36,7 @@ class EditProfileActivity : AppCompatActivity() {
 
         profilePic = findViewById(R.id.profile_pic)
         try {
-            val f = File(usr.pic, "profile.jpg")
+            val f = File(usr.pic)
             val bitmap = BitmapFactory.decodeStream(FileInputStream(f))
             profilePic.setImageBitmap(bitmap)
         }
@@ -76,127 +80,55 @@ class EditProfileActivity : AppCompatActivity() {
     }
 
     private val REQUEST_PIC = 1
-    /*private val PICK_IMAGE = 2
-    private val REQUEST_IMAGE_CAPTURE = 1
-    */
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        /*if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            val imageBitmap = data?.extras?.get("data") as Bitmap
-            profilePic.setImageBitmap(imageBitmap)
-        }
-        if(requestCode == PICK_IMAGE && resultCode == RESULT_OK){
-            try{
-                val imageUri : Uri = data?.data as Uri
-                val ins = contentResolver.openInputStream(imageUri)
-                val bitmap = BitmapFactory.decodeStream(ins)
-                profilePic.setImageBitmap(bitmap)
-            }
-            catch(e : Exception){
-                e.printStackTrace()
-            }
-        }
-        */
+
         if(requestCode == REQUEST_PIC && resultCode == RESULT_OK) {
-            val imageBitmap = data?.extras?.get("data") as Bitmap?
+            var imageBitmap = data?.extras?.get("data") as Bitmap?
             if(imageBitmap != null){
-                profilePic.setImageBitmap(imageBitmap)
                 usr.pic = saveToInternalStorage(imageBitmap)
             }
             else{
                 try{
                     val imageUri : Uri = data?.data as Uri
                     val ins = contentResolver.openInputStream(imageUri)
-                    val bitmap = BitmapFactory.decodeStream(ins)
-                    profilePic.setImageBitmap(bitmap)
-                    usr.pic = saveToInternalStorage(bitmap)
+                    imageBitmap = BitmapFactory.decodeStream(ins)
+                    usr.pic = saveToInternalStorage(imageBitmap)
                 }
                 catch(e : Exception){
                     e.printStackTrace()
                 }
             }
-        }
-        /*
-        if(requestCode == REQUEST_PIC && resultCode == RESULT_OK){
-            var selectFromGallery = true
 
-            when(selectFromGallery){
-                true -> {
-                    val intent = Intent(Intent.ACTION_PICK)
-                    intent.type = "image/*"
-                    startActivityForResult(intent, PICK_IMAGE)
-                }
-                false -> {
-                    dispatchTakePictureIntent()
-                }
-            }
-        }
-        */
-         */
-    }
-
-    /*
-    @Throws(IOException::class)
-    private fun createImageFile(): File {
-        // Create an image file name
-        val df: java.text.DateFormat? =
-            android.text.format.DateFormat.getDateFormat(applicationContext)
-        val timeStamp: String =
-            android.text.format.DateFormat.format("yyyy-MM-dd hh:mm:ss a", Date()).toString()
-
-        val storageDir: File? = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
-        return storageDir ?: File.createTempFile(
-            "JPEG_${timeStamp}_", /* prefix */
-            ".jpg", /* suffix */
-            storageDir /* directory */
-        ).apply {
-            // Save a file: path for use with ACTION_VIEW intents
-            currentPhotoPath = absolutePath
-        }
-    }
-    */
-    /*
-    private fun dispatchTakePictureIntent() {
-        val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        try {
-            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
-        } catch (e: ActivityNotFoundException) {
-            // display error state to the user
-        }
-    }
-*/
-    /*Save the */
-    /*
-    private fun saveProfilePicture(pic: ImageView) {
-
-        val resolver = applicationContext.contentResolver
-        // Create the File where the photo should go
-        val photoFile: File? = try {
-            createImageFile()
-        } catch (ex: IOException) {
-            // Error occurred while creating the File
-
-            null
-        }
-
-        val out: FileOutputStream = FileOutputStream(photoFile)
-        pic.drawable.toBitmap().compress(Bitmap.CompressFormat.PNG, 100, out)
-        // Continue only if the File was successfully created
-        photoFile?.also {
-            val photoURI: Uri = FileProvider.getUriForFile(
-                this,
-                "com.example.android.fileprovider",
-                it
+            val ei = usr.pic?.let { ExifInterface(it) }
+            val orientation: Int = ei!!.getAttributeInt(
+                ExifInterface.TAG_ORIENTATION,
+                ExifInterface.ORIENTATION_UNDEFINED
             )
 
-            val newImageDetails = ContentValues().apply{
-                put(MediaStore.Images.Media.DISPLAY_NAME, "new pic details")
+            var rotatedBitmap: Bitmap? = null
+            rotatedBitmap = when (attr.orientation) {
+                ExifInterface.ORIENTATION_ROTATE_90 -> rotateImage(imageBitmap!!, 90)
+                ExifInterface.ORIENTATION_ROTATE_180 -> rotateImage(imageBitmap!!, 180)
+                ExifInterface.ORIENTATION_ROTATE_270 -> rotateImage(imageBitmap!!, 270)
+                ExifInterface.ORIENTATION_NORMAL -> imageBitmap
+                else -> imageBitmap
             }
-
-            resolver.insert(photoURI, newImageDetails)
+            profilePic.setImageBitmap(rotatedBitmap)
         }
     }
-    */
+
+    private fun rotateImage(source: Bitmap, angle: Int): Bitmap? {
+        val matrix = Matrix()
+        matrix.postRotate(angle.toFloat())
+        return Bitmap.createBitmap(
+            source, 0, 0, source.width, source.height,
+            matrix, true
+        )
+    }
+
+
 
     /*To trigger back button pressed */
     override fun onBackPressed() {
@@ -263,31 +195,6 @@ class EditProfileActivity : AppCompatActivity() {
             descriptionEditLay.error = "Field cannot be empty!"
         else
             descriptionEditLay.error = null
-        /*
-        val nameEdit = findViewById<EditText>(R.id.editFullName)
-        if(nameEdit.text?.isEmpty() == true)
-            nameEdit.backgroundTintList = resources.getColorStateList(R.color.error_red)
-        else
-            nameEdit.backgroundTintList = resources.getColorStateList(R.color.teal_200)
-
-        val nickEdit = findViewById<EditText>(R.id.editNickname)
-        if(nickEdit.text?.isEmpty() == true)
-            nickEdit.backgroundTintList = resources.getColorStateList(R.color.error_red)
-        else
-            nickEdit.backgroundTintList = resources.getColorStateList(R.color.teal_200)
-
-        val emailEdit = findViewById<EditText>(R.id.editEmail)
-        if(emailEdit.text?.isEmpty() == true)
-            emailEdit.backgroundTintList = resources.getColorStateList(R.color.error_red)
-        else
-            emailEdit.backgroundTintList = resources.getColorStateList(R.color.teal_200)
-
-        val locationEdit = findViewById<EditText>(R.id.editLocation)
-        if(locationEdit.text?.isEmpty() == true)
-            locationEdit.backgroundTintList = resources.getColorStateList(R.color.error_red)
-        else
-            locationEdit.backgroundTintList = resources.getColorStateList(R.color.teal_200)
-        */
 
     }
 
@@ -311,7 +218,7 @@ class EditProfileActivity : AppCompatActivity() {
                 e.printStackTrace()
             }
         }
-        return directory.absolutePath
+        return directory.absolutePath+"/profile.jpg"
     }
 
     private fun displayUser(usr: User) {
