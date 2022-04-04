@@ -5,6 +5,7 @@ import android.R.attr
 import android.content.Context
 import android.content.ContextWrapper
 import android.content.Intent
+import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Matrix
@@ -15,9 +16,11 @@ import android.provider.MediaStore
 import android.util.Patterns
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewTreeObserver
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.graphics.drawable.toBitmap
 import androidx.core.view.drawToBitmap
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
@@ -46,6 +49,21 @@ class EditProfileActivity : AppCompatActivity() {
         usr = intent.getSerializableExtra("it.polito.timebankingapp.ShowProfileActivity.user") as User
 
         profilePic = findViewById(R.id.profile_pic)
+        val sv = findViewById<ScrollView>(R.id.editScrollView2)
+        val editPic = findViewById<FrameLayout>(R.id.editPic)
+
+        if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
+            sv.viewTreeObserver.addOnGlobalLayoutListener(object :
+                ViewTreeObserver.OnGlobalLayoutListener {
+                override fun onGlobalLayout() {
+                    val h = sv.height
+                    val w = sv.width
+                    editPic.post { editPic.layoutParams = LinearLayout.LayoutParams(w, h / 3) }
+                    sv.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                }
+            })
+        }
+
         try {
             val f = File(usr.pic)
             val bitmap = BitmapFactory.decodeStream(FileInputStream(f))
@@ -193,7 +211,7 @@ class EditProfileActivity : AppCompatActivity() {
 
         if(usr.isGood()){
             val returnIntent = Intent()
-            usr.pic = saveToInternalStorage(profilePic.drawToBitmap())
+            usr.pic = saveToInternalStorage(profilePic.drawable.toBitmap())
             returnIntent.putExtra("it.polito.timebankingapp.EditProfileActivity.user", usr)
             setResult(RESULT_OK,returnIntent)
             super.onBackPressed()
@@ -252,7 +270,7 @@ class EditProfileActivity : AppCompatActivity() {
 
     }
 
-    private fun saveToInternalStorage(bitmapImage: Bitmap): String? {
+    private fun saveToInternalStorage(bitmapImage: Bitmap): String {
         val cw = ContextWrapper(applicationContext)
         // path to /data/data/yourapp/app_data/imageDir
         val directory = cw.getDir("imageDir", Context.MODE_PRIVATE)

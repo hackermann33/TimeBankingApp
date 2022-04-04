@@ -3,12 +3,12 @@ package it.polito.timebankingapp
 import android.app.Activity
 import android.content.Intent
 import android.content.SharedPreferences
+import android.content.res.Configuration
 import android.graphics.BitmapFactory
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
-import android.view.ViewGroup
+import android.view.*
+import android.widget.LinearLayout
+import android.widget.ScrollView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -34,7 +34,7 @@ class ShowProfileActivity : AppCompatActivity() {
         sharedPref = getPreferences(android.content.Context.MODE_PRIVATE)
 
         /* All these info will be retrieved from server */
-        val proPic = BitmapFactory.decodeResource(baseContext.resources, R.drawable.default_avatar)
+        val proPic = BitmapFactory.decodeResource(baseContext.resources, R.drawable.ic_launcher_background)
         val fullName = "Name Surname"
         val nick = "example"
         val email = "example@test.com"
@@ -64,6 +64,20 @@ class ShowProfileActivity : AppCompatActivity() {
     private fun displayUser(){
 
         val profilePic = findViewById<CircleImageView>(R.id.profile_pic)
+        val sv = findViewById<ScrollView>(R.id.scrollView2)
+
+        if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
+            // Do some stuff
+                sv.viewTreeObserver.addOnGlobalLayoutListener (object:
+            ViewTreeObserver.OnGlobalLayoutListener {
+            override fun onGlobalLayout() {
+                val h = sv.height
+                val w = sv.width
+                profilePic.post{profilePic.layoutParams = LinearLayout.LayoutParams(w, h/3) }
+                sv.viewTreeObserver.removeOnGlobalLayoutListener( this )
+            }
+        })
+        }
         try {
             val f = File(usr.pic)
             val bitmap = BitmapFactory.decodeStream(FileInputStream(f))

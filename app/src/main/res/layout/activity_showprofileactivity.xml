@@ -6,198 +6,132 @@
     android:layout_height="match_parent"
     android:layout_marginLeft="16dp"
     android:layout_marginRight="16dp"
-    app:layout_constraintHorizontal_weight="2"
     tools:context=".EditProfileActivity">
 
-    <FrameLayout
-        android:id="@+id/frameLayout"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:background="@android:color/transparent"
-        android:padding="16dp"
-        app:layout_constraintBottom_toTopOf="@+id/scrollView2"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_weight="1">
-
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/materialCardViewEdit"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            app:cardBackgroundColor="@android:color/transparent"
-            app:cardElevation="0dp"
-            app:checkedIconMargin="8dp">
-
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@android:color/transparent">
-
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/profile_pic"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:src="@drawable/default_avatar"
-                    tools:ignore="ImageContrastCheck" />
-
-            </FrameLayout>
-        </com.google.android.material.card.MaterialCardView>
-    </FrameLayout>
 
     <ScrollView
         android:id="@+id/scrollView2"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/frameLayout"
-        app:layout_constraintVertical_weight="2">
+        app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:weightSum="3">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/profile_pic"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:padding="10dp"
+                android:src="@mipmap/ic_launcher"
+                app:civ_border_color="@color/opaque_black"
+                app:civ_border_width="2dp" />
 
             <TextView
                 android:id="@+id/fullName"
-                style="@style/Widget.MaterialComponents.TextView"
+                style="@style/Widget.AppCompat.TextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/roboto_medium"
                 android:text="@string/full_name"
-                android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-                app:layout_constraintBottom_toTopOf="@+id/nicknameLabel"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/materialCardViewShow" />
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:textColor="@color/opaque_black" />
 
             <TextView
                 android:id="@+id/nicknameLabel"
+                style="@style/ItemLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingTop="10dp"
-                android:text="@string/nickname"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toTopOf="@+id/nickname"
-                app:layout_constraintStart_toStartOf="@+id/fullName"
-                app:layout_constraintTop_toBottomOf="@+id/fullName" />
+                android:text="@string/nickname" />
 
             <TextView
                 android:id="@+id/nickname"
+                style="@style/Item"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/nickname"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                app:layout_constraintBottom_toTopOf="@+id/emailLabel"
-                app:layout_constraintStart_toStartOf="@+id/nicknameLabel"
-                app:layout_constraintTop_toBottomOf="@+id/nicknameLabel" />
+                android:layout_height="wrap_content" />
 
             <TextView
                 android:id="@+id/emailLabel"
+                style="@style/ItemLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingTop="10dp"
-                android:text="@string/e_mail"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toTopOf="@+id/email"
-                app:layout_constraintStart_toStartOf="@+id/nickname"
-                app:layout_constraintTop_toBottomOf="@+id/nickname" />
+                android:text="@string/e_mail" />
 
             <TextView
                 android:id="@+id/email"
+                style="@style/Item"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/e_mail"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                app:layout_constraintBottom_toTopOf="@+id/locationLabel"
-                app:layout_constraintStart_toStartOf="@+id/emailLabel"
-                app:layout_constraintTop_toBottomOf="@+id/emailLabel" />
+                android:text="@string/e_mail" />
 
             <TextView
                 android:id="@+id/locationLabel"
+                style="@style/ItemLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingTop="10dp"
-                android:text="@string/location"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toTopOf="@+id/location"
-                app:layout_constraintStart_toStartOf="@+id/email"
-                app:layout_constraintTop_toBottomOf="@+id/email" />
+                android:text="@string/location" />
 
             <TextView
                 android:id="@+id/location"
+                style="@style/Item"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/location"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                app:layout_constraintBottom_toTopOf="@+id/balanceLabel"
-                app:layout_constraintStart_toStartOf="@+id/locationLabel"
-                app:layout_constraintTop_toBottomOf="@+id/locationLabel" />
+                android:text="@string/location" />
 
             <TextView
                 android:id="@+id/balanceLabel"
+                style="@style/ItemLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingTop="10dp"
-                android:text="@string/balance"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toTopOf="@+id/balance"
-                app:layout_constraintStart_toStartOf="@+id/location"
-                app:layout_constraintTop_toBottomOf="@+id/location" />
+                android:text="@string/balance" />
 
             <TextView
                 android:id="@+id/balance"
+                style="@style/Item"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/balance"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                app:layout_constraintBottom_toTopOf="@+id/descriptionLabel"
-                app:layout_constraintStart_toStartOf="@+id/balanceLabel"
-                app:layout_constraintTop_toBottomOf="@+id/balanceLabel" />
+                android:text="@string/balance" />
 
             <TextView
                 android:id="@+id/descriptionLabel"
+                style="@style/ItemLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingTop="10dp"
-                android:text="@string/description"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toTopOf="@+id/description"
-                app:layout_constraintStart_toStartOf="@+id/balance"
-                app:layout_constraintTop_toBottomOf="@+id/balance" />
+                android:text="@string/description" />
 
             <TextView
                 android:id="@+id/description"
+                style="@style/Item"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/description"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                app:layout_constraintBottom_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/descriptionLabel"
-                app:layout_constraintTop_toBottomOf="@+id/descriptionLabel" />
+                android:text="@string/description" />
 
             <TextView
                 android:id="@+id/skillsLabel"
+                style="@style/ItemLabel"
                 android:layout_width="match_parent"
+
                 android:layout_height="wrap_content"
-                android:paddingTop="10dp"
-                android:text="@string/skills"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toTopOf="@+id/description"
-                app:layout_constraintStart_toStartOf="@+id/balance"
-                app:layout_constraintTop_toBottomOf="@+id/balance" />
+                android:text="@string/skills" />
 
             <com.google.android.material.chip.ChipGroup
                 android:id="@+id/skillsGroup"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="10dp"
-                android:layout_marginBottom="30dp"
+                android:layout_marginBottom="20dp"
                 app:chipSpacingVertical="4dp">
 
             </com.google.android.material.chip.ChipGroup>
+
         </LinearLayout>
     </ScrollView>
 

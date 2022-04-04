@@ -17,13 +17,17 @@
         <entry key="..\:/Users/loren/StudioProjects/TimeBankingApp/app/src/main/res/layout/layout.xml" value="0.10989583333333333" />
         <entry key="..\:/Users/loren/StudioProjects/TimeBankingApp/app/src/main/res/layout/round_outline.xml" value="0.1" />
         <entry key="..\:/Users/loren/StudioProjects/TimeBankingApp/app/src/main/res/menu/menu_showprofileactivity.xml" value="0.16218721037998146" />
-        <entry key="app/src/main/res/layout-land/activity_editprofileactivity.xml" value="0.15564373897707232" />
-        <entry key="app/src/main/res/layout-land/activity_showprofileactivity.xml" value="0.17552083333333332" />
+        <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.359" />
+        <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.359" />
+        <entry key="app/src/main/res/layout-land/activity_editprofileactivity.xml" value="0.25" />
+        <entry key="app/src/main/res/layout-land/activity_showprofileactivity.xml" value="0.33" />
         <entry key="app/src/main/res/layout/activity_congratulations.xml" value="0.14492753623188406" />
-        <entry key="app/src/main/res/layout/activity_editprofileactivity.xml" value="0.5" />
+        <entry key="app/src/main/res/layout/activity_editprofileactivity.xml" value="0.33" />
         <entry key="app/src/main/res/layout/activity_showprofileactivity.xml" value="0.25" />
         <entry key="app/src/main/res/layout/chip_layout_editprofile.xml" value="0.5" />
         <entry key="app/src/main/res/layout/chip_layout_showprofile.xml" value="0.17426545086119555" />
+        <entry key="app/src/main/res/menu/menu_showprofileactivity.xml" value="0.16574074074074074" />
+        <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.359" />
       </map>
     </option>
   </component>
