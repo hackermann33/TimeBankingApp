@@ -32,7 +32,7 @@ import java.util.*
 
 
 private var SKILLS = arrayOf(
-    "Tutoring", "C Developer", "Baby Sitting", "Grocery Shopping", "Cleaning and Organization", "Cooking"
+    "Tutoring", "C developer", "Baby sitting", "Grocery shopping", "Cleaning and organization", "Cooking"
 )
 
 class EditProfileActivity : AppCompatActivity() {
@@ -99,13 +99,9 @@ class EditProfileActivity : AppCompatActivity() {
                 skillStr = skillStr.lowercase()
                                     .replace("\n", " ")
                                     .trim()
+                                    .replaceFirstChar { it.uppercase() }
                                     .replace("\\s+".toRegex(), " ")
-                                    .replaceFirstChar {
-                                        if (it.isLowerCase())
-                                            it.titlecase(Locale.getDefault())
-                                        else
-                                            it.toString()
-                                    }
+                                    .replaceFirstChar { it.uppercase() }
 
             if(skillStr.isNotEmpty()) {
                 /*Aggiungo alla lista globale dei suggerimenti */
