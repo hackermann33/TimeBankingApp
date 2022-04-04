@@ -40,7 +40,7 @@ class ShowProfileActivity : AppCompatActivity() {
         val email = "example@test.com"
         val location = "45.070312, 7.6868565"
         val description = "This is a very long and detailed example of description about myself."
-        val skills: MutableList<String> = mutableListOf("Gardening", "Developer", "Tutoring", "Babysitting", "Pusher")
+        val skills: MutableList<String> = mutableListOf("Gardening", "C developer", "Tutoring", "Baby sitting", "Driver")
         val balance = 3
 
         val profile = sharedPref.getString("profile", "")
