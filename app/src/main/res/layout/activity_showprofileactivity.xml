@@ -32,6 +32,7 @@
                 android:layout_weight="1"
                 android:padding="10dp"
                 android:src="@drawable/default_avatar"
+                app:civ_border_color="@color/text_standard"
                 app:civ_border_width="2dp" />
 
             <TextView
