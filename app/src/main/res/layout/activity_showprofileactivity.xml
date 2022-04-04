@@ -42,8 +42,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/roboto_medium"
                 android:text="@string/full_name"
-                android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                />
+                android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
             <TextView
                 android:id="@+id/nicknameLabel"

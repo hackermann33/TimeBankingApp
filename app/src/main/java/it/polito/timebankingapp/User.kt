@@ -5,7 +5,7 @@ import android.util.Patterns
 import java.io.Serializable
 
 
-class User(var pic : String?,
+class User(var pic : String = "",
            var fullName: String = "",
            var nick: String = "",
            var email: String = "",
@@ -15,8 +15,9 @@ class User(var pic : String?,
            var balance: Int = 0
     ) : Serializable {
 
-    fun isGood(): Boolean {
-        return (pic?.isNotEmpty() ?: false) && fullName.isNotEmpty() && nick.isNotEmpty() && isValidEmail() && location.isNotEmpty() && description.isNotEmpty()
+    /*Here, I'm not checking that String is not empty, because if it's empty it will be used default image*/
+    fun isValid(): Boolean {
+        return fullName.isNotEmpty() && nick.isNotEmpty() && isValidEmail() && location.isNotEmpty() && description.isNotEmpty()
     }
 
     private fun isValidEmail(): Boolean {
@@ -26,6 +27,4 @@ class User(var pic : String?,
             Patterns.EMAIL_ADDRESS.matcher(email).matches()
         }
     }
-
-    /*{ }*/
 }

@@ -10,7 +10,7 @@
     tools:context=".ShowProfileActivity">
 
     <FrameLayout
-        android:id="@+id/frameLayout2"
+        android:id="@+id/editPic"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_marginEnd="16dp"

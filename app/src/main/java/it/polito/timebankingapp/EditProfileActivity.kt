@@ -21,16 +21,16 @@ import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.graphics.drawable.toBitmap
-import androidx.core.view.drawToBitmap
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import de.hdodenhof.circleimageview.CircleImageView
 import java.io.*
-import java.util.*
 
 
+/* Global lists of skills,
+   Every-time a user add a new skill in his profile, if not present in this list, it will be added!  */
 private var SKILLS = arrayOf(
     "Gardening",
     "Tutoring",
@@ -39,13 +39,17 @@ private var SKILLS = arrayOf(
     "C developer",
     "Grocery shopping",
     "Cleaning and organization",
-    "Cooking"
+    "Cooking",
+    "Data analytics",
+    "Microsoft Excel",
 )
+
+const val REQUEST_PIC = 1
 
 class EditProfileActivity : AppCompatActivity() {
 
     private lateinit var profilePic: CircleImageView
-    private lateinit var usr:User
+    private lateinit var usr: User
     private lateinit var skillsGroup: ChipGroup
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,7 +57,9 @@ class EditProfileActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_editprofileactivity)
 
-        usr = intent.getSerializableExtra("it.polito.timebankingapp.ShowProfileActivity.user") as User
+        usr =
+            intent.getSerializableExtra("it.polito.timebankingapp.ShowProfileActivity.user") as User
+
 
         profilePic = findViewById(R.id.profile_pic)
         val sv = findViewById<ScrollView>(R.id.editScrollView2)
@@ -75,8 +81,7 @@ class EditProfileActivity : AppCompatActivity() {
             val f = File(usr.pic)
             val bitmap = BitmapFactory.decodeStream(FileInputStream(f))
             profilePic.setImageBitmap(bitmap)
-        }
-        catch (e : FileNotFoundException){
+        } catch (e: FileNotFoundException) {
             e.printStackTrace()
         }
 
@@ -103,15 +108,15 @@ class EditProfileActivity : AppCompatActivity() {
 
         addSkillButton.setOnClickListener {
             var skillStr = newSkillView.text.toString()
-                skillStr = skillStr.lowercase()
-                                    .replace("\n", " ")
-                                    .trim()
-                                    .replaceFirstChar { it.uppercase() }
-                                    .replace("\\s+".toRegex(), " ")
-                                    .replaceFirstChar { it.uppercase() }
+            skillStr = skillStr.lowercase()
+                .replace("\n", " ")
+                .trim()
+                .replaceFirstChar { it.uppercase() }
+                .replace("\\s+".toRegex(), " ")
+                .replaceFirstChar { it.uppercase() }
 
-            if(skillStr.isNotEmpty()) {
-                /*Aggiungo alla lista globale dei suggerimenti */
+            if (skillStr.isNotEmpty()) {
+                /*Adding to the global list of skill hints*/
                 if (!SKILLS.contains(skillStr))
                     SKILLS = SKILLS.plus(skillStr)
                 if (!usr.skills.contains(skillStr)) {
@@ -125,8 +130,7 @@ class EditProfileActivity : AppCompatActivity() {
 
         addSkillButton.textSize = (4 * resources.displayMetrics.density)
 
-
-        if(usr.isGood()){
+        if (usr.isValid()) {
             displayUser()
         }
     }
@@ -154,36 +158,32 @@ class EditProfileActivity : AppCompatActivity() {
         usr = savedInstanceState.getSerializable("user") as User
     }
 
-    private val REQUEST_PIC = 1
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if(requestCode == REQUEST_PIC && resultCode == RESULT_OK) {
+        if (requestCode == REQUEST_PIC && resultCode == RESULT_OK) {
             var imageBitmap = data?.extras?.get("data") as Bitmap?
-            if(imageBitmap != null){
+            if (imageBitmap != null) {
                 usr.pic = saveToInternalStorage(imageBitmap)
-            }
-            else{
-                try{
-                    val imageUri : Uri = data?.data as Uri
+            } else {
+                try {
+                    val imageUri: Uri = data?.data as Uri
                     val ins = contentResolver.openInputStream(imageUri)
                     imageBitmap = BitmapFactory.decodeStream(ins)
                     usr.pic = saveToInternalStorage(imageBitmap)
-                }
-                catch(e : Exception){
+                } catch (e: Exception) {
                     e.printStackTrace()
                 }
             }
 
-            val ei = usr.pic?.let { ExifInterface(it) }
-            val orientation: Int = ei!!.getAttributeInt(
+            val ei = ExifInterface(usr.pic)
+            ei.getAttributeInt(
                 ExifInterface.TAG_ORIENTATION,
                 ExifInterface.ORIENTATION_UNDEFINED
             )
 
-            var rotatedBitmap: Bitmap? = null
-            rotatedBitmap = when (attr.orientation) {
+            val rotatedBitmap: Bitmap? = when (attr.orientation) {
                 ExifInterface.ORIENTATION_ROTATE_90 -> rotateImage(imageBitmap!!, 90)
                 ExifInterface.ORIENTATION_ROTATE_180 -> rotateImage(imageBitmap!!, 180)
                 ExifInterface.ORIENTATION_ROTATE_270 -> rotateImage(imageBitmap!!, 270)
@@ -204,22 +204,19 @@ class EditProfileActivity : AppCompatActivity() {
     }
 
 
-
     /*To trigger back button pressed */
     override fun onBackPressed() {
 
-        // Intent in order to save state and send it to showprofile
-
+        /* Intent in order to save state and send it to showprofile*/
         retrieveUserData()
 
-        if(usr.isGood()){
+        if (usr.isValid()) {
             val returnIntent = Intent()
             usr.pic = saveToInternalStorage(profilePic.drawable.toBitmap())
             returnIntent.putExtra("it.polito.timebankingapp.EditProfileActivity.user", usr)
-            setResult(RESULT_OK,returnIntent)
+            setResult(RESULT_OK, returnIntent)
             super.onBackPressed()
-        }
-        else{
+        } else {
 
             AlertDialog.Builder(this)
                 .setTitle("Review Your Data")
@@ -236,37 +233,37 @@ class EditProfileActivity : AppCompatActivity() {
 
         val nameEditLay = findViewById<TextInputLayout>(R.id.editFullNameLay)
         val nameEdit = findViewById<TextInputEditText>(R.id.editFullName)
-        if(nameEdit.text?.isEmpty() == true)
+        if (nameEdit.text?.isEmpty() == true)
             nameEditLay.error = "Field cannot be empty!"
         else
             nameEditLay.error = null
 
         val nickEditLay = findViewById<TextInputLayout>(R.id.editNicknameLay)
         val nickEdit = findViewById<TextInputEditText>(R.id.editNickname)
-        if(nickEdit.text?.isEmpty() == true)
+        if (nickEdit.text?.isEmpty() == true)
             nickEditLay.error = "Field cannot be empty!"
         else
             nickEditLay.error = null
 
         val emailEditLay = findViewById<TextInputLayout>(R.id.editEmailLay)
         val emailEdit = findViewById<TextInputEditText>(R.id.editEmail)
-        if(emailEdit.text?.isEmpty() == true)
+        if (emailEdit.text?.isEmpty() == true)
             emailEditLay.error = "Field cannot be empty!"
-        else if(!Patterns.EMAIL_ADDRESS.matcher(emailEdit.text.toString()).matches())
+        else if (!Patterns.EMAIL_ADDRESS.matcher(emailEdit.text.toString()).matches())
             emailEditLay.error = "Insert a valid e-mail!"
         else
             emailEditLay.error = null
 
         val locationEditLay = findViewById<TextInputLayout>(R.id.editLocationLay)
         val locationEdit = findViewById<TextInputEditText>(R.id.editLocation)
-        if(locationEdit.text?.isEmpty() == true)
+        if (locationEdit.text?.isEmpty() == true)
             locationEditLay.error = "Field cannot be empty!"
         else
             locationEditLay.error = null
 
         val descriptionEditLay = findViewById<TextInputLayout>(R.id.editDescriptionLay)
         val descriptionEdit = findViewById<TextInputEditText>(R.id.editDescription)
-        if(descriptionEdit.text?.isEmpty() == true)
+        if (descriptionEdit.text?.isEmpty() == true)
             descriptionEditLay.error = "Field cannot be empty!"
         else
             descriptionEditLay.error = null
@@ -293,7 +290,7 @@ class EditProfileActivity : AppCompatActivity() {
                 e.printStackTrace()
             }
         }
-        return directory.absolutePath+"/profile.jpg"
+        return directory.absolutePath + "/profile.jpg"
     }
 
     private fun displayUser() {
@@ -312,15 +309,19 @@ class EditProfileActivity : AppCompatActivity() {
         val descriptionEdit = findViewById<EditText>(R.id.editDescription)
         descriptionEdit.setText(usr.description)
 
-        usr.skills.forEach{
-            skill -> addSkillChip(skill)
+        usr.skills.forEach { skill ->
+            addSkillChip(skill)
         }
 
 
     }
 
-    private fun addSkillChip(text: String){
-        val chip= layoutInflater.inflate(R.layout.chip_layout_editprofile, skillsGroup.parent.parent as ViewGroup, false) as Chip
+    private fun addSkillChip(text: String) {
+        val chip = layoutInflater.inflate(
+            R.layout.chip_layout_editprofile,
+            skillsGroup.parent.parent as ViewGroup,
+            false
+        ) as Chip
         chip.text = text
         chip.setOnCloseIconClickListener {
             val ch = it as Chip

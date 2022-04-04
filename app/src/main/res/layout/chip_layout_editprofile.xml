@@ -5,9 +5,9 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:checkable="false"
-    android:textColor="@color/white"
+    android:textColor="@color/dark_white"
     app:chipBackgroundColor="@color/blue"
     app:closeIconEnabled="true"
-    app:closeIconTint="@color/white"
+    app:closeIconTint="@color/dark_white"
     app:closeIconVisible="true"
     app:ensureMinTouchTargetSize="false"/>
