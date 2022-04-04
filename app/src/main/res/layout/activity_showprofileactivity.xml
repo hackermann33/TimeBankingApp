@@ -55,7 +55,8 @@
                 android:id="@+id/nickname"
                 style="@style/Item"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:text="@string/nickname" />
 
             <TextView
                 android:id="@+id/emailLabel"
