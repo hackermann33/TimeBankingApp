@@ -9,38 +9,36 @@
     app:layout_constraintHorizontal_weight="2"
     tools:context=".EditProfileActivity">
 
-    <FrameLayout
-        android:id="@+id/frameLayout"
+    <ScrollView
+        android:id="@+id/editScrollView2"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="@android:color/transparent"
-        android:padding="16dp"
-        app:layout_constraintBottom_toTopOf="@+id/scrollView2"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_weight="1">
+        app:layout_constraintVertical_weight="2">
 
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/materialCardViewEdit"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:background="@android:color/transparent"
-            app:cardBackgroundColor="@android:color/transparent"
-            app:cardElevation="0dp">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
             <FrameLayout
+                android:id="@+id/editPic"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@android:color/transparent">
+                android:layout_height="200dp"
+                android:background="@android:color/transparent"
+                android:padding="10dp">
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/profile_pic"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_gravity="center|center_horizontal"
                     android:src="@drawable/default_avatar"
-                    tools:ignore="ImageContrastCheck" />
+                    app:civ_border_width="2dp" />
 
                 <ImageButton
                     android:id="@+id/uploadProfilePicButton"
@@ -53,24 +51,6 @@
                     app:srcCompat="@android:drawable/ic_menu_camera"
                     tools:ignore="SpeakableTextPresentCheck,RedundantDescriptionCheck,ImageContrastCheck" />
             </FrameLayout>
-        </com.google.android.material.card.MaterialCardView>
-    </FrameLayout>
-
-    <ScrollView
-        android:id="@+id/scrollView2"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/frameLayout"
-        app:layout_constraintVertical_weight="2">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/editFullNameLay"
@@ -185,13 +165,13 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:hint="@string/new_skill"
-                        android:singleLine="true"
                         android:paddingStart="16dp"
                         android:paddingLeft="16dp"
                         android:paddingTop="17dp"
                         android:paddingEnd="16dp"
                         android:paddingRight="16dp"
                         android:paddingBottom="17dp"
+                        android:singleLine="true"
                         tools:ignore="TextContrastCheck,TouchTargetSizeCheck" />
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -199,7 +179,6 @@
                     android:id="@+id/addSkillButton"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
-                    android:layout_marginStart="10dp"
                     android:layout_marginTop="10dp"
                     android:singleLine="true"
                     android:text="@string/add_new_skill"
