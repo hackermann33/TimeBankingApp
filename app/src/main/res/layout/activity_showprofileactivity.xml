@@ -45,7 +45,6 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
             <TextView
-                android:id="@+id/nicknameLabel"
                 style="@style/ItemLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -59,7 +58,6 @@
                 android:text="@string/nickname" />
 
             <TextView
-                android:id="@+id/emailLabel"
                 style="@style/ItemLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -73,7 +71,6 @@
                 android:text="@string/e_mail" />
 
             <TextView
-                android:id="@+id/locationLabel"
                 style="@style/ItemLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -87,7 +84,6 @@
                 android:text="@string/location" />
 
             <TextView
-                android:id="@+id/balanceLabel"
                 style="@style/ItemLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -101,7 +97,6 @@
                 android:text="@string/balance" />
 
             <TextView
-                android:id="@+id/descriptionLabel"
                 style="@style/ItemLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -115,7 +110,6 @@
                 android:text="@string/description" />
 
             <TextView
-                android:id="@+id/skillsLabel"
                 style="@style/ItemLabel"
                 android:layout_width="match_parent"
 
