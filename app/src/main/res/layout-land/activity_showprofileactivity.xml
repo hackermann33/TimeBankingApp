@@ -46,8 +46,6 @@
                 android:fontFamily="@font/roboto_medium"
                 android:text="@string/full_name"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                android:textColor="@color/opaque_black"
-
                 />
 
             <TextView

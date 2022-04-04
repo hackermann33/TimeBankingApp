@@ -9,7 +9,7 @@
     <color name="teal_700">#FF018786</color>
     <color name="opaque_black">#D9000000</color>
     <color name="white">#FFFFFF</color>
-    <color name="dark_white">#F2FFFFFF</color>
+    <color name="dark_white">#EEEEEE</color>
     <color name="blue">#2A3A91</color>
     <color name="dark_blue">#192574</color>
     <color name="light_blue">#8991BB</color>
