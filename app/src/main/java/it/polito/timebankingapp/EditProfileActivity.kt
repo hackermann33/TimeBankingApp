@@ -29,7 +29,14 @@ import java.util.*
 
 
 private var SKILLS = arrayOf(
-    "Tutoring", "C Developer", "Baby Sitting", "Grocery Shopping", "Cleaning and Organization", "Cooking"
+    "Gardening",
+    "Tutoring",
+    "Baby sitting",
+    "Driver",
+    "C developer",
+    "Grocery shopping",
+    "Cleaning and organization",
+    "Cooking"
 )
 
 class EditProfileActivity : AppCompatActivity() {
