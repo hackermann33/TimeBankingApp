@@ -28,6 +28,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:src="@drawable/default_avatar"
+            app:civ_border_color="@color/text_standard"
             tools:ignore="ImageContrastCheck" />
 
         <ImageButton

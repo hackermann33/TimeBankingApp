@@ -16,6 +16,7 @@
         android:layout_marginEnd="16dp"
         android:padding="10dp"
         android:src="@drawable/default_avatar"
+        app:civ_border_color="@color/text_standard"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/scrollView2"
