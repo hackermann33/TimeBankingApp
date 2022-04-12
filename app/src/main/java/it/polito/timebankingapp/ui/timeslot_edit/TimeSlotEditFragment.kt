@@ -18,20 +18,30 @@ import java.util.*
 
 class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
 
+    //private val vm by viewModels<TimeSlotViewModel>()
 
-    /*override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-    }*/
 
     override fun onViewCreated(
         view: View, savedInstanceState: Bundle?) {
         // Inflate the layout for this fragment
 
+        /*
+        istanzia prima i diversi components con findViewById
+        val titleET = view.findViewById<TextInputEditText>(R.id.edit_timeslot_Title)
+        ...
+        
+        vm.timeSlot.observe(this) {
+            titleET.setText(it.title) //popola i components con i dati della TimeSlotViewModel
+            ...
+        }
+
+         */
+
         val temp: TimeSlot = arguments?.getSerializable("timeslot") as TimeSlot
 
         val titleET = view.findViewById<TextInputEditText>(R.id.edit_timeslot_Title)
         titleET.setText(temp.title)
+
 
         val dateET = view.findViewById<TextInputEditText>(R.id.edit_timeslot_Date)
         dateET.setText(temp.date)

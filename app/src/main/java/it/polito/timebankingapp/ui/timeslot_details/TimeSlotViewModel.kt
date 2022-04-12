@@ -5,25 +5,19 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
 class TimeSlotViewModel : ViewModel() {
-/*
-    private var _counter = 0;
 
-    /*private val _value = MutableLiveData<Int>().apply() {
-         value = _counter
-     }*/
+    //NOTA: la ViewModel dovrebbe essere strutturata in modo che essa ritorni dati ad entrambe TimeSlotDetails e TimeSlotEdit
+    //cioè forse sostituire tutto il sistema del passaggio del bundle, idk (da investigare meglio
+    private val _privateTimeSlot = TimeSlot("test1","test2","test3","test4","test5","test6")
 
-    //val value: LiveData<Int> = _value
-
-    private val _timeSlot
-
-     = MutableLiveData<TimeSlot>().apply {
-        value = "This is a Fragment"
+    private val _mutableTimeSlot = MutableLiveData<TimeSlot>().apply {
+        value = _privateTimeSlot
     }
 
-    val timeSlot: LiveData<TimeSlot> =
-    //val text: LiveData<String> = _text
+    val timeSlot: LiveData<TimeSlot> =_mutableTimeSlot
 
-
- */
+    fun saveEdits(newTimeSlot: TimeSlot) {
+        _mutableTimeSlot.value = newTimeSlot
+    }
 
 }
