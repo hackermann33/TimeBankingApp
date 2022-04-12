@@ -77,6 +77,10 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/timeslot_time"
                     android:inputType="time"
+                    android:clickable="false"
+                    android:cursorVisible="false"
+                    android:focusable="false"
+                    android:focusableInTouchMode="true"
                     tools:ignore="TextContrastCheck" />
             </com.google.android.material.textfield.TextInputLayout>
 
