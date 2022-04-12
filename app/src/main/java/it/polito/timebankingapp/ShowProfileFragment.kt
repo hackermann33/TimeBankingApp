@@ -107,7 +107,7 @@ class ShowProfileActivity : AppCompatActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         val inflater: MenuInflater = menuInflater
-        inflater.inflate(R.menu.menu_showprofileactivity, menu)
+        inflater.inflate(R.menu.menu_editpencil, menu)
         return true
     }
 

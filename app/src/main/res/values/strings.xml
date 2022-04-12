@@ -11,5 +11,26 @@
     <string name="upload_button">Upload Button</string>
     <string name="new_skill">New skill</string>
     <string name="add_new_skill">Add</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="menu_home">Home</string>
+    <string name="menu_gallery">Gallery</string>
+    <string name="menu_slideshow">Slideshow</string>
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="timeslot_description">Description</string>
+    <string name="timeslot_title">Title</string>
+    <string name="timeslot_date" >Date</string>
+    <string name="timeslot_time">Time</string>
+    <string name="timeslot_duration">Duration</string>
+    <string name="timeslot_location">Location</string>
+    <string name="edit_timeslot">Edit Timeslot</string>
+    <string name="edit">Edit</string>
 
 </resources>
