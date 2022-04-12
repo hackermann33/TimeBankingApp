@@ -3,33 +3,23 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Users/fifi9/GitHub Repos/TimeBankingApp/app/src/main/res/layout-land/activity_showprofileactivity.xml" value="0.3105263157894737" />
-        <entry key="..\:/Users/fifi9/GitHub Repos/TimeBankingApp/app/src/main/res/layout-land/fragment_time_slot_details.xml" value="0.381140350877193" />
-        <entry key="..\:/Users/fifi9/GitHub Repos/TimeBankingApp/app/src/main/res/layout-land/fragment_time_slot_edit.xml" value="0.3105263157894737" />
         <entry key="..\:/Users/fifi9/GitHub Repos/TimeBankingApp/app/src/main/res/layout/activity_congratulations.xml" value="0.17831813576494426" />
-        <entry key="..\:/Users/fifi9/GitHub Repos/TimeBankingApp/app/src/main/res/layout/activity_main.xml" value="0.3087719298245614" />
-        <entry key="..\:/Users/fifi9/GitHub Repos/TimeBankingApp/app/src/main/res/layout/activity_main2.xml" value="0.2490740740740741" />
+        <entry key="..\:/Users/fifi9/GitHub Repos/TimeBankingApp/app/src/main/res/layout/activity_main.xml" value="0.5" />
         <entry key="..\:/Users/fifi9/GitHub Repos/TimeBankingApp/app/src/main/res/layout/activity_showprofileactivity.xml" value="0.5" />
-        <entry key="..\:/Users/fifi9/GitHub Repos/TimeBankingApp/app/src/main/res/layout/app_bar_main.xml" value="0.3087719298245614" />
-        <entry key="..\:/Users/fifi9/GitHub Repos/TimeBankingApp/app/src/main/res/layout/content_main.xml" value="0.2490740740740741" />
-        <entry key="..\:/Users/fifi9/GitHub Repos/TimeBankingApp/app/src/main/res/layout/fragment_gallery.xml" value="0.3087719298245614" />
-        <entry key="..\:/Users/fifi9/GitHub Repos/TimeBankingApp/app/src/main/res/layout/fragment_home.xml" value="0.11574074074074074" />
-        <entry key="..\:/Users/fifi9/GitHub Repos/TimeBankingApp/app/src/main/res/layout/fragment_time_slot_details.xml" value="0.3047619047619048" />
-        <entry key="..\:/Users/fifi9/GitHub Repos/TimeBankingApp/app/src/main/res/layout/fragment_time_slot_edit.xml" value="0.33" />
-        <entry key="..\:/Users/fifi9/GitHub Repos/TimeBankingApp/app/src/main/res/layout/nav_header_main.xml" value="0.2490740740740741" />
-        <entry key="..\:/Users/fifi9/GitHub Repos/TimeBankingApp/app/src/main/res/menu/activity_main_drawer.xml" value="0.18728070175438596" />
-        <entry key="..\:/Users/fifi9/GitHub Repos/TimeBankingApp/app/src/main/res/menu/main.xml" value="0.3087719298245614" />
-        <entry key="..\:/Users/fifi9/GitHub Repos/TimeBankingApp/app/src/main/res/menu/menu_editpencil.xml" value="0.3087719298245614" />
-        <entry key="..\:/Users/fifi9/GitHub Repos/TimeBankingApp/app/src/main/res/menu/menu_showprofileactivity.xml" value="0.3087719298245614" />
-        <entry key="..\:/Users/fifi9/GitHub Repos/TimeBankingApp/app/src/main/res/menu/menu_timeslotdetailsfragment.xml" value="0.3087719298245614" />
         <entry key="..\:/Users/loren/StudioProjects/TimeBankingApp/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.15" />
         <entry key="..\:/Users/loren/StudioProjects/TimeBankingApp/app/src/main/res/drawable/bg_circle.xml" value="0.1145" />
         <entry key="..\:/Users/loren/StudioProjects/TimeBankingApp/app/src/main/res/drawable/ic_launcher_background.xml" value="0.15" />
         <entry key="..\:/Users/loren/StudioProjects/TimeBankingApp/app/src/main/res/drawable/profile_picture.xml" value="0.128" />
+        <entry key="..\:/Users/loren/StudioProjects/TimeBankingApp/app/src/main/res/font/roboto.xml" value="0.15940685820203893" />
         <entry key="..\:/Users/loren/StudioProjects/TimeBankingApp/app/src/main/res/layout-land/activity_editprofileactivity.xml" value="0.16" />
         <entry key="..\:/Users/loren/StudioProjects/TimeBankingApp/app/src/main/res/layout-land/activity_showprofileactivity.xml" value="0.16" />
         <entry key="..\:/Users/loren/StudioProjects/TimeBankingApp/app/src/main/res/layout/activity_editprofileactivity.xml" value="0.2" />
+        <entry key="..\:/Users/loren/StudioProjects/TimeBankingApp/app/src/main/res/layout/activity_main.xml" value="0.1" />
         <entry key="..\:/Users/loren/StudioProjects/TimeBankingApp/app/src/main/res/layout/activity_showprofileactivity.xml" value="0.2085222121486854" />
+        <entry key="..\:/Users/loren/StudioProjects/TimeBankingApp/app/src/main/res/layout/chip_layout_editprofile.xml" value="0.20521590423257802" />
+        <entry key="..\:/Users/loren/StudioProjects/TimeBankingApp/app/src/main/res/layout/chip_layout_showprofile.xml" value="0.20521590423257802" />
+        <entry key="..\:/Users/loren/StudioProjects/TimeBankingApp/app/src/main/res/layout/content_main.xml" value="0.1" />
+        <entry key="..\:/Users/loren/StudioProjects/TimeBankingApp/app/src/main/res/layout/fragment_time_slot_edit.xml" value="0.264" />
         <entry key="..\:/Users/loren/StudioProjects/TimeBankingApp/app/src/main/res/layout/layout.xml" value="0.10989583333333333" />
         <entry key="..\:/Users/loren/StudioProjects/TimeBankingApp/app/src/main/res/layout/round_outline.xml" value="0.1" />
         <entry key="..\:/Users/loren/StudioProjects/TimeBankingApp/app/src/main/res/menu/menu_showprofileactivity.xml" value="0.16218721037998146" />

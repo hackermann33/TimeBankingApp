@@ -54,6 +54,8 @@ class TimeSlotDetailsFragment : Fragment() {
         var temp: TimeSlot = TimeSlot("title_temp", "wow", "12/01/2022", "13:43","32", "Palermo")
         var bundle: Bundle = bundleOf("timeslot" to temp)
         */
-        findNavController().navigate(R.id.action_nav_timeSlotDetails_to_timeSlotEditFragment, )
+        val ts = TimeSlot("TitleTrial", "Descr trial", "2022/26/18", "14:15", "56", "Turin")
+        val b = bundleOf("timeslot" to ts)
+        findNavController().navigate(R.id.action_nav_timeSlotDetails_to_timeSlotEditFragment, b)
     }
 }
