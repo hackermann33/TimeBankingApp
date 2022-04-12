@@ -17,7 +17,7 @@ import it.polito.timebankingapp.ui.timeslot_details.TimeSlot
 import java.util.*
 
 
-class TimeSlotEditFragment : Fragment() {
+class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
 
 
     /*override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,10 +25,8 @@ class TimeSlotEditFragment : Fragment() {
 
     }*/
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+    override fun onViewCreated(
+        view: View, savedInstanceState: Bundle?) {
         // Inflate the layout for this fragment
 
         val temp: TimeSlot = arguments?.getSerializable("timeslot") as TimeSlot
