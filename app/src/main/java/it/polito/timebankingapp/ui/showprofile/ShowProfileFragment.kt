@@ -1,4 +1,4 @@
-package it.polito.timebankingapp
+package it.polito.timebankingapp.ui.showprofile
 
 import android.app.Activity
 import android.content.Intent
@@ -19,6 +19,9 @@ import java.io.File
 import java.io.FileInputStream
 import java.io.FileNotFoundException
 import com.google.gson.GsonBuilder
+import it.polito.timebankingapp.R
+import it.polito.timebankingapp.User
+import it.polito.timebankingapp.ui.editprofile.EditProfileActivity
 
 
 const val LAUNCH_EDIT_ACTIVITY = 1

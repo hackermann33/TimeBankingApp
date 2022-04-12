@@ -22,11 +22,11 @@
     <string name="menu_home">Home</string>
     <string name="menu_gallery">Gallery</string>
     <string name="menu_slideshow">Slideshow</string>
-<!-- TODO: Remove or change this placeholder text -->
+    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="timeslot_description">Description</string>
     <string name="timeslot_title">Title</string>
-    <string name="timeslot_date" >Date</string>
+    <string name="timeslot_date">Date</string>
     <string name="timeslot_time">Time</string>
     <string name="timeslot_duration">Duration</string>
     <string name="timeslot_location">Location</string>

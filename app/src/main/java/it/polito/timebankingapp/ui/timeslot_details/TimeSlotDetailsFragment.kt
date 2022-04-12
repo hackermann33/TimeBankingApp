@@ -5,7 +5,9 @@ import android.content.Context
 import android.os.Bundle
 import android.view.*
 import android.widget.Toast
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import it.polito.timebankingapp.R
 
 
@@ -48,5 +50,10 @@ class TimeSlotDetailsFragment : Fragment() {
 
     private fun editTimeslot() {
         //launch edit timeslot fragment
+        /*
+        var temp: TimeSlot = TimeSlot("title_temp", "wow", "12/01/2022", "13:43","32", "Palermo")
+        var bundle: Bundle = bundleOf("timeslot" to temp)
+        */
+        findNavController().navigate(R.id.action_nav_timeSlotDetails_to_timeSlotEditFragment, )
     }
 }

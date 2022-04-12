@@ -8,7 +8,11 @@
         android:id="@+id/nav_timeSlotDetails"
         android:name="it.polito.timebankingapp.ui.timeslot_details.TimeSlotDetailsFragment"
         android:label="fragment_time_slot_details"
-        tools:layout="@layout/fragment_time_slot_details" />
+        tools:layout="@layout/fragment_time_slot_details" >
+        <action
+            android:id="@+id/action_nav_timeSlotDetails_to_timeSlotEditFragment"
+            app:destination="@id/nav_timeSlotEdit" />
+    </fragment>
     <fragment
         android:id="@+id/nav_home"
         android:name="it.polito.timebankingapp.ui.home.HomeFragment"
@@ -26,5 +30,14 @@
         android:name="it.polito.timebankingapp.ui.slideshow.SlideshowFragment"
         android:label="@string/menu_slideshow"
         tools:layout="@layout/fragment_slideshow" />
+    <fragment
+        android:id="@+id/nav_timeSlotEdit"
+        android:name="it.polito.timebankingapp.ui.timeslot_edit.TimeSlotEditFragment"
+        android:label="fragment_time_slot_edit"
+        tools:layout="@layout/fragment_time_slot_edit" >
+        <action
+            android:id="@+id/action_timeSlotEditFragment_to_nav_timeSlotDetails"
+            app:destination="@id/nav_timeSlotDetails" />
+    </fragment>
 
 </navigation>

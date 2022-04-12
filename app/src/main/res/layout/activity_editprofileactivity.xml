@@ -7,7 +7,7 @@
     android:layout_marginLeft="16dp"
     android:layout_marginRight="16dp"
     app:layout_constraintHorizontal_weight="2"
-    tools:context=".EditProfileActivity">
+    tools:context=".ui.editprofile.EditProfileActivity">
 
     <ScrollView
         android:id="@+id/editScrollView2"
