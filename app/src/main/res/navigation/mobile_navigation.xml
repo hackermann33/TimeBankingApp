@@ -3,9 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/timeSlotDetailsFragment">
+    app:startDestination="@+id/nav_timeSlotDetails">
     <fragment
-        android:id="@+id/timeSlotDetailsFragment"
+        android:id="@+id/nav_timeSlotDetails"
         android:name="it.polito.timebankingapp.ui.timeslot_details.TimeSlotDetailsFragment"
         android:label="fragment_time_slot_details"
         tools:layout="@layout/fragment_time_slot_details" />

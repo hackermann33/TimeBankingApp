@@ -32,5 +32,6 @@
     <string name="timeslot_location">Location</string>
     <string name="edit_timeslot">Edit Timeslot</string>
     <string name="edit">Edit</string>
+    <string name="menu_timeslots">TimeSlots</string>
 
 </resources>
