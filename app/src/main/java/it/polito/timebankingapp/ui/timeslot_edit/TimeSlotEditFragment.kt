@@ -11,6 +11,8 @@ import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
 import it.polito.timebankingapp.R
 import it.polito.timebankingapp.ui.timeslot_details.TimeSlot
+import java.util.Date
+import java.text.SimpleDateFormat
 import java.util.*
 
 
@@ -34,6 +36,9 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
         val dateET = view.findViewById<TextInputEditText>(R.id.edit_timeslot_Date)
         dateET.setText(temp.date)
 
+        var date : Date?
+
+
         val datePicker : MaterialDatePicker<Long> = MaterialDatePicker.Builder.datePicker()
             .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
             .setTitleText("Select date").build()
@@ -43,14 +48,12 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
         }
 
         datePicker.addOnPositiveButtonClickListener {
-            // Respond to positive button click.
+            date = SimpleDateFormat("MMM d, yyyy", Locale.getDefault()).parse(datePicker.headerText)
+            val df = SimpleDateFormat("dd / MM / yyyy", Locale.getDefault())
 
-
+            dateET.setText(df.format(date!!))
+            Log.d("Date picked = " , "Saved date: $date")
         }
-
-        // now handle the positive button click from the
-        // material design date picker
-        datePicker.addOnPositiveButtonClickListener {  }
 
         val timeET = view.findViewById<TextInputEditText>(R.id.edit_timeslot_Time)
         timeET.setText(temp.time)
