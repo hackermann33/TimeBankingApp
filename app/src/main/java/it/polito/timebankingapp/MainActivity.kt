@@ -1,6 +1,7 @@
 package it.polito.timebankingapp
 
 import android.os.Bundle
+import androidx.activity.viewModels
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.navigation.NavigationView
 import androidx.navigation.findNavController
@@ -10,9 +11,16 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.viewModels
 import it.polito.timebankingapp.databinding.ActivityMainBinding
+import it.polito.timebankingapp.ui.timeslot_details.SharedViewModel
+import it.polito.timebankingapp.ui.timeslot_details.TimeSlot
+import it.polito.timebankingapp.ui.timeslot_details.TimeSlotViewModel
 
 class MainActivity : AppCompatActivity() {
+    val vm by viewModels<TimeSlotViewModel>()
+    val sharedModel by viewModels<SharedViewModel>()
+
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
@@ -42,6 +50,11 @@ class MainActivity : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+
+        sharedModel.select(TimeSlot().also {
+            it.title = "TitleTrial"; it.description = "Descr trial"; it.date = "2022/12/18"; it.time = "14:15"; it.duration = "56"; it.location = "Turin"
+        })
+
     }
 
     override fun onSupportNavigateUp(): Boolean {

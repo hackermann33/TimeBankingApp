@@ -1,14 +1,37 @@
 package it.polito.timebankingapp.ui.timeslot_details
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import kotlin.concurrent.thread
 
-class TimeSlotViewModel : ViewModel() {
+class TimeSlotViewModel(application: Application): AndroidViewModel(application) {
+
+
+    val repo = TimeSlotRepository(application)
 
     //NOTA: la ViewModel dovrebbe essere strutturata in modo che essa ritorni dati ad entrambe TimeSlotDetails e TimeSlotEdit
     //cioè forse sostituire tutto il sistema del passaggio del bundle, idk (da investigare meglio
-    private val _privateTimeSlot = TimeSlot("test1","test2","test3","test4","test5","test6")
+
+    val timeSlotsNumber: LiveData<Int> = repo.count()
+    val timeSlots: LiveData<List<TimeSlot>> = repo.timeSlots()
+
+    fun addTimeSlot(ts: TimeSlot) {
+        thread {
+            repo.addTimeSlot(ts)
+        }
+    }
+
+    fun clear() {
+        thread {
+            repo.clear()
+        }
+    }
+
+
+
+    /*private val _privateTimeSlot = TimeSlot("test1","test2","test3","test4","test5","test6")
 
     private val _mutableTimeSlot = MutableLiveData<TimeSlot>().apply {
         value = _privateTimeSlot
@@ -18,6 +41,6 @@ class TimeSlotViewModel : ViewModel() {
 
     fun saveEdits(newTimeSlot: TimeSlot) {
         _mutableTimeSlot.value = newTimeSlot
-    }
+    }*/
 
 }

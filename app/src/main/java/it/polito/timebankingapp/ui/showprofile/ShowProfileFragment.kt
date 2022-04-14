@@ -84,7 +84,7 @@ class ShowProfileActivity : AppCompatActivity() {
         val emailView = findViewById<TextView>(R.id.email)
         emailView.text = usr.email
 
-        val locationView = findViewById<TextView>(R.id.location)
+        val locationView = findViewById<TextView>(R.id.time_slot_time)
         locationView.text = usr.location
 
         val balanceView = findViewById<TextView>(R.id.balance)

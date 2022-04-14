@@ -1,17 +1,25 @@
 package it.polito.timebankingapp.ui.timeslot_details
 
-import android.text.TextUtils
-import android.util.Patterns
+import androidx.room.Entity
+import androidx.room.Index
+import androidx.room.PrimaryKey
 import java.io.Serializable
 
+@Entity(tableName = "time_slots", indices = [Index("title")])
+class TimeSlot(
+) : Serializable {
+    @PrimaryKey(autoGenerate = true)
+    var id: Int = 0
+    var title: String = ""
+    var description: String = ""
+    var date: String = ""
+    var time: String = ""
+    var duration: String = ""
+    var location: String = ""
 
-class TimeSlot(var title : String = "",
-               var description: String = "",
-               var date: String = "",
-               var time: String = "",
-               var duration: String = "",
-               var location: String = ""
-    ) : Serializable {
+
+
+    override fun toString(): String = "{ title:$title, description: $description, date: $date, time: $time, duration: $duration, location: $location"
 
     /*Here, I'm not checking that String is not empty, because if it's empty it will be used default image*/
     /*fun isValid(): Boolean {

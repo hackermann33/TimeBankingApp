@@ -25,7 +25,7 @@
             android:weightSum="3">
 
             <TextView
-                android:id="@+id/title"
+                android:id="@+id/time_slot_title"
                 style="@style/Widget.AppCompat.TextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -40,7 +40,7 @@
                 android:text="@string/timeslot_date" />
 
             <TextView
-                android:id="@+id/email"
+                android:id="@+id/time_slot_date"
                 style="@style/Item"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -53,7 +53,7 @@
                 android:text="@string/timeslot_time" />
 
             <TextView
-                android:id="@+id/location"
+                android:id="@+id/time_slot_time"
                 style="@style/Item"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -66,7 +66,7 @@
                 android:text="@string/timeslot_duration" />
 
             <TextView
-                android:id="@+id/balance"
+                android:id="@+id/time_slot_duration"
                 style="@style/Item"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -79,7 +79,7 @@
                 android:text="@string/timeslot_location" />
 
             <TextView
-                android:id="@+id/description"
+                android:id="@+id/time_slot_location"
                 style="@style/Item"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -92,7 +92,7 @@
                 android:text="@string/timeslot_description" />
 
             <TextView
-                android:id="@+id/nickname"
+                android:id="@+id/time_slot_description"
                 style="@style/Item"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

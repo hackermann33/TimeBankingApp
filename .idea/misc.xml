@@ -3,9 +3,6 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Users/fifi9/GitHub Repos/TimeBankingApp/app/src/main/res/drawable/ic_menu_camera.xml" value="0.1615" />
-        <entry key="..\:/Users/fifi9/GitHub Repos/TimeBankingApp/app/src/main/res/drawable/ic_menu_gallery.xml" value="0.1615" />
-        <entry key="..\:/Users/fifi9/GitHub Repos/TimeBankingApp/app/src/main/res/drawable/ic_menu_slideshow.xml" value="0.1615" />
         <entry key="..\:/Users/fifi9/GitHub Repos/TimeBankingApp/app/src/main/res/layout-land/activity_showprofileactivity.xml" value="0.3105263157894737" />
         <entry key="..\:/Users/fifi9/GitHub Repos/TimeBankingApp/app/src/main/res/layout-land/fragment_time_slot_details.xml" value="0.381140350877193" />
         <entry key="..\:/Users/fifi9/GitHub Repos/TimeBankingApp/app/src/main/res/layout-land/fragment_time_slot_edit.xml" value="0.3105263157894737" />
@@ -25,8 +22,6 @@
         <entry key="..\:/Users/fifi9/GitHub Repos/TimeBankingApp/app/src/main/res/menu/menu_editpencil.xml" value="0.3087719298245614" />
         <entry key="..\:/Users/fifi9/GitHub Repos/TimeBankingApp/app/src/main/res/menu/menu_showprofileactivity.xml" value="0.3087719298245614" />
         <entry key="..\:/Users/fifi9/GitHub Repos/TimeBankingApp/app/src/main/res/menu/menu_timeslotdetailsfragment.xml" value="0.3087719298245614" />
-        <entry key="..\:/Users/fifi9/GitHub Repos/TimeBankingApp/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.1615" />
-        <entry key="..\:/Users/fifi9/GitHub Repos/TimeBankingApp/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.1615" />
         <entry key="..\:/Users/loren/StudioProjects/TimeBankingApp/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.15" />
         <entry key="..\:/Users/loren/StudioProjects/TimeBankingApp/app/src/main/res/drawable/bg_circle.xml" value="0.1145" />
         <entry key="..\:/Users/loren/StudioProjects/TimeBankingApp/app/src/main/res/drawable/ic_launcher_background.xml" value="0.15" />
@@ -49,6 +44,8 @@
         <entry key="app/src/main/res/layout/activity_showprofileactivity.xml" value="0.1" />
         <entry key="app/src/main/res/layout/chip_layout_editprofile.xml" value="0.25" />
         <entry key="app/src/main/res/layout/chip_layout_showprofile.xml" value="0.17426545086119555" />
+        <entry key="app/src/main/res/layout/fragment_time_slot_details.xml" value="0.22" />
+        <entry key="app/src/main/res/layout/fragment_time_slot_edit.xml" value="0.17401215805471124" />
         <entry key="app/src/main/res/menu/menu_showprofileactivity.xml" value="0.16574074074074074" />
         <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.359" />
         <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.192" />
