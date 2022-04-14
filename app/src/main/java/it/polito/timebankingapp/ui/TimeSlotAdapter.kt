@@ -7,12 +7,16 @@ import android.view.ViewGroup
 import android.widget.TextView
 import android.view.View
 import android.widget.ImageView
+import android.view.*
+
+import androidx.activity.viewModels
 
 
 //import it.polito.timebankingapp.ui.placeholder.PlaceholderContent.PlaceholderItem
 //import it.polito.timebankingapp.ui.databinding.FragmentItemBinding
 import it.polito.timebankingapp.ui.timeslot_details.TimeSlot
 import it.polito.timebankingapp.R
+import it.polito.timebankingapp.ui.timeslot_details.SharedViewModel
 
 
 class TimeSlotAdapter(
