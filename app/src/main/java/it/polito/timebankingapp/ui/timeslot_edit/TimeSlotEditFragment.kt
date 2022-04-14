@@ -1,6 +1,7 @@
 package it.polito.timebankingapp.ui.timeslot_edit
 
 import android.os.Bundle
+import android.text.InputType
 import android.text.format.DateFormat.is24HourFormat
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -15,6 +16,9 @@ import java.util.Date
 import java.text.SimpleDateFormat
 import java.util.*
 
+/** TODO: When edit is confirmed, global view model should be updated (DB)
+ **/
+
 
 class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
 
@@ -22,7 +26,8 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
 
 
     override fun onViewCreated(
-        view: View, savedInstanceState: Bundle?) {
+        view: View, savedInstanceState: Bundle?
+    ) {
         // Inflate the layout for this fragment
 
         /*
@@ -46,13 +51,19 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
         val dateET = view.findViewById<TextInputEditText>(R.id.edit_timeslot_Date)
         dateET.setText(temp.date)
 
-        var date : Date?
+        var date: Date?
 
 
-        val datePicker : MaterialDatePicker<Long> = MaterialDatePicker.Builder.datePicker()
+        val datePicker: MaterialDatePicker<Long> = MaterialDatePicker.Builder.datePicker()
             .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
             .setTitleText("Select date").build()
 
+        /* Added this line, to prevent keyboard opens */
+        dateET.inputType = InputType.TYPE_NULL
+        dateET.setOnFocusChangeListener { _, focus ->
+            if (focus)
+                datePicker.show(parentFragmentManager, "datePicker")
+        }
         dateET.setOnClickListener {
             datePicker.show(parentFragmentManager, "datePicker")
         }
@@ -62,7 +73,7 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
             val df = SimpleDateFormat("dd / MM / yyyy", Locale.getDefault())
 
             dateET.setText(df.format(date!!))
-            Log.d("Date picked = " , "Saved date: $date")
+            Log.d("Date picked = ", "Saved date: $date")
         }
 
         val timeET = view.findViewById<TextInputEditText>(R.id.edit_timeslot_Time)
@@ -77,12 +88,21 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
         val timePicker = MaterialTimePicker.Builder()
             .setTimeFormat(clockFormat)
             .setHour(timeFormatter.format(System.currentTimeMillis()).split(":").first().toInt())
-            .setMinute(timeFormatter.format(System.currentTimeMillis()).split(":").elementAt(1).toInt())
+            .setMinute(
+                timeFormatter.format(System.currentTimeMillis()).split(":").elementAt(1).toInt()
+            )
             .setTitleText("Select slot hour").build()
+
+        timeET.inputType = InputType.TYPE_NULL
+        timeET.setOnFocusChangeListener { _, focus ->
+            if (focus)
+                timePicker.show(parentFragmentManager, "time picker")
+        }
 
         timeET.setOnClickListener {
             timePicker.show(parentFragmentManager, "time picker")
         }
+
 
         timePicker.addOnPositiveButtonClickListener {
             val t = "${timePicker.hour}:${timePicker.minute}"

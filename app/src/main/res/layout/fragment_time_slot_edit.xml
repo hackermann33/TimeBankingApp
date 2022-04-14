@@ -56,11 +56,8 @@
                     android:id="@+id/edit_timeslot_Date"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/timeslot_date"
-                    android:clickable="false"
                     android:cursorVisible="false"
-                    android:focusable="false"
-                    android:focusableInTouchMode="true"
+                    android:hint="@string/timeslot_date"
                     tools:ignore="TextContrastCheck" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -75,12 +72,9 @@
                     android:id="@+id/edit_timeslot_Time"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:cursorVisible="false"
                     android:hint="@string/timeslot_time"
                     android:inputType="time"
-                    android:clickable="false"
-                    android:cursorVisible="false"
-                    android:focusable="false"
-                    android:focusableInTouchMode="true"
                     tools:ignore="TextContrastCheck" />
             </com.google.android.material.textfield.TextInputLayout>
 
