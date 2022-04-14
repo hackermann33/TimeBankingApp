@@ -12,13 +12,13 @@ import androidx.navigation.ui.setupWithNavController
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.appcompat.app.AppCompatActivity
 import it.polito.timebankingapp.databinding.ActivityMainBinding
-import it.polito.timebankingapp.ui.timeslot_details.SharedViewModel
-import it.polito.timebankingapp.ui.timeslot_details.TimeSlot
-import it.polito.timebankingapp.ui.timeslot_details.TimeSlotViewModel
+import it.polito.timebankingapp.ui.timeslot_details.TimeSlotSharedViewModel
+import it.polito.timebankingapp.model.timeslot.TimeSlot
+import it.polito.timebankingapp.ui.timeslots_list.TimeSlotsListViewModel
 
 class MainActivity : AppCompatActivity() {
-    val vm by viewModels<TimeSlotViewModel>()
-    private val sharedModel by viewModels<SharedViewModel>()
+    val vm by viewModels<TimeSlotsListViewModel>()
+    private val sharedModel by viewModels<TimeSlotSharedViewModel>()
 
 
     private lateinit var appBarConfiguration: AppBarConfiguration
@@ -44,7 +44,7 @@ class MainActivity : AppCompatActivity() {
         // menu should be considered as top level destinations.
         appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.nav_timeSlotsList, R.id.nav_timeSlotDetails, R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow
+                R.id.nav_timeSlotsList, R.id.nav_timeSlotDetails
             ), drawerLayout
         )
         setupActionBarWithNavController(navController, appBarConfiguration)

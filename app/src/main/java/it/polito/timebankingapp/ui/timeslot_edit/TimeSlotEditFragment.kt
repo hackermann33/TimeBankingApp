@@ -12,8 +12,8 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
 import it.polito.timebankingapp.R
-import it.polito.timebankingapp.ui.timeslot_details.TimeSlot
-import it.polito.timebankingapp.ui.timeslot_details.TimeSlotViewModel
+import it.polito.timebankingapp.model.timeslot.TimeSlot
+import it.polito.timebankingapp.ui.timeslots_list.TimeSlotsListViewModel
 import java.util.Date
 import java.text.SimpleDateFormat
 import java.util.*
@@ -24,7 +24,7 @@ import java.util.*
 
 class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
 
-    private val vm by viewModels<TimeSlotViewModel>()
+    private val vm by viewModels<TimeSlotsListViewModel>()
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

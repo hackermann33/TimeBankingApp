@@ -123,9 +123,11 @@
                 android:text="3h"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body2"
                 app:layout_constraintBottom_toBottomOf="@+id/durationLabel"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toEndOf="@+id/durationLabel"
                 app:layout_constraintTop_toTopOf="@+id/durationLabel"
-                app:layout_constraintVertical_bias="0.619" />
+                app:layout_constraintVertical_bias="0.4" />
 
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guideline10"

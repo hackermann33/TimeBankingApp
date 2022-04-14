@@ -1,4 +1,4 @@
-package it.polito.timebankingapp.ui.timeslot_details
+package it.polito.timebankingapp.model.timeslot
 
 import androidx.lifecycle.LiveData
 import androidx.room.Dao

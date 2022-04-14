@@ -1,6 +1,5 @@
-package it.polito.timebankingapp.ui
+package it.polito.timebankingapp.ui.timeslots_list
 
-import android.os.Bundle
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.DiffUtil
 import android.view.LayoutInflater
@@ -8,20 +7,12 @@ import android.view.ViewGroup
 import android.widget.TextView
 import android.view.View
 import android.widget.ImageView
-import android.view.*
 
-import androidx.activity.viewModels
 import androidx.core.os.bundleOf
-import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
-import androidx.navigation.fragment.NavHostFragment.Companion.findNavController
-import androidx.navigation.fragment.findNavController
 
-import it.polito.timebankingapp.ui.timeslot_details.TimeSlot
+import it.polito.timebankingapp.model.timeslot.TimeSlot
 import it.polito.timebankingapp.R
-import it.polito.timebankingapp.ui.timeslot_details.SharedViewModel
 
 
 class TimeSlotAdapter(
@@ -58,7 +49,7 @@ class TimeSlotAdapter(
 
         val vg = LayoutInflater
             .from(parent.context)
-            .inflate(R.layout.time_slot_layout, parent, false) //attachToRoot: take all you measures
+            .inflate(R.layout.timeslots_item_layout, parent, false) //attachToRoot: take all you measures
         //but do not attach it immediately to the ViewHolder tree of components (could be a ghost item)
 
         return ItemViewHolder(vg)
@@ -81,7 +72,8 @@ class TimeSlotAdapter(
                     notifyItemRemoved(pos1)
                 }*/
 
-                Navigation.findNavController(it).navigate(R.id.action_timeSlotListFragment_to_nav_timeSlotEdit, bundleOf(Pair("pos",position)))
+                Navigation.findNavController(it).navigate(R.id.action_timeSlotListFragment_to_nav_timeSlotEdit, bundleOf(
+                    Pair("pos",position)))
             //findNavController().navigate(R.id.action_timeSlotListFragment_to_nav_timeSlotEdit, oggetto opzionale da passare)
             }
         }

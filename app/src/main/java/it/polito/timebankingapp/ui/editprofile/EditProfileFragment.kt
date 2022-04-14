@@ -27,7 +27,7 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import de.hdodenhof.circleimageview.CircleImageView
 import it.polito.timebankingapp.R
-import it.polito.timebankingapp.User
+import it.polito.timebankingapp.model.user.User
 import java.io.*
 
 

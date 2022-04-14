@@ -20,7 +20,7 @@ import java.io.FileInputStream
 import java.io.FileNotFoundException
 import com.google.gson.GsonBuilder
 import it.polito.timebankingapp.R
-import it.polito.timebankingapp.User
+import it.polito.timebankingapp.model.user.User
 import it.polito.timebankingapp.ui.editprofile.EditProfileActivity
 
 

@@ -9,5 +9,5 @@
     android:layout_marginLeft="16dp"
     android:layout_marginRight="16dp"
     app:layoutManager="LinearLayoutManager"
-    tools:context=".ui.TimeSlotListFragment"
-    tools:listitem="@layout/time_slot_layout" />
+    tools:context=".ui.timeslots_list.TimeSlotListFragment"
+    tools:listitem="@layout/timeslots_item_layout" />

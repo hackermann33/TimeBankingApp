@@ -1,4 +1,4 @@
-package it.polito.timebankingapp
+package it.polito.timebankingapp.model.user
 
 import android.text.TextUtils
 import android.util.Patterns

@@ -1,26 +1,22 @@
-package it.polito.timebankingapp.ui
+package it.polito.timebankingapp.ui.timeslots_list
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import android.view.View
-import androidx.activity.viewModels
 import androidx.fragment.app.viewModels
 import it.polito.timebankingapp.R
-import it.polito.timebankingapp.ui.placeholder.PlaceholderContent
-import it.polito.timebankingapp.ui.timeslot_details.TimeSlot
-import it.polito.timebankingapp.ui.timeslot_details.TimeSlotViewModel
+import it.polito.timebankingapp.model.timeslot.TimeSlot
 
 /**
  * A fragment representing a list of Items.
  */
-class TimeSlotListFragment : Fragment(R.layout.fragment_item_list) {
+class TimeSlotListFragment : Fragment(R.layout.fragment_timeslots_list) {
 
     private var columnCount = 1 //credo sia da rimuovere
 
-    val vm by viewModels<TimeSlotViewModel>()
+    val vm by viewModels<TimeSlotsListViewModel>()
 
 
     private fun createItems(n: Int): MutableList<TimeSlot> {
