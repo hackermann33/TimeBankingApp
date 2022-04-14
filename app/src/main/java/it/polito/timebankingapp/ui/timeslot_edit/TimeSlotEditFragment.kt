@@ -25,9 +25,7 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
     //private val vm by viewModels<TimeSlotViewModel>()
 
 
-    override fun onViewCreated(
-        view: View, savedInstanceState: Bundle?
-    ) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         // Inflate the layout for this fragment
 
         /*

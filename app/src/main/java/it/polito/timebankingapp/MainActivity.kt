@@ -19,7 +19,7 @@ import it.polito.timebankingapp.ui.timeslot_details.TimeSlotViewModel
 
 class MainActivity : AppCompatActivity() {
     val vm by viewModels<TimeSlotViewModel>()
-    val sharedModel by viewModels<SharedViewModel>()
+    private val sharedModel by viewModels<SharedViewModel>()
 
 
     private lateinit var appBarConfiguration: AppBarConfiguration
@@ -45,7 +45,7 @@ class MainActivity : AppCompatActivity() {
         // menu should be considered as top level destinations.
         appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.nav_timeSlotDetails, R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow
+                R.id.timeSlotListFragment, R.id.nav_timeSlotDetails, R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow
             ), drawerLayout
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
