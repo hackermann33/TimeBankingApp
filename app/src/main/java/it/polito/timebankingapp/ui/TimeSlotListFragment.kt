@@ -27,8 +27,16 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_item_list) {
         val l = mutableListOf<TimeSlot>()
         for (i in 1..n) {
             TimeSlot()
-            val ts = TimeSlot().also{  it.title = "TitleTrial $i"; it.description= "Descr trial $i";  it.date = "2022/12/18";  it.time = "14:15"; it.duration = "56"; it.location = "Turin";}
+            val ts = TimeSlot().also{
+                it.title = "TitleTrial $i";
+                it.description= "Descr trial $i";
+                it.date = "2022/12/18";
+                it.time = "14:15";
+                it.duration = "56";
+                it.location = "Turin";
+            }
             l.add(ts)
+            vm.addTimeSlot(ts)
         }
         return l
     }

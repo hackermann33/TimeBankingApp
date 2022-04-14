@@ -6,12 +6,14 @@ import android.text.format.DateFormat.is24HourFormat
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.View
+import androidx.fragment.app.viewModels
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
 import it.polito.timebankingapp.R
 import it.polito.timebankingapp.ui.timeslot_details.TimeSlot
+import it.polito.timebankingapp.ui.timeslot_details.TimeSlotViewModel
 import java.util.Date
 import java.text.SimpleDateFormat
 import java.util.*
@@ -22,7 +24,7 @@ import java.util.*
 
 class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
 
-    //private val vm by viewModels<TimeSlotViewModel>()
+    private val vm by viewModels<TimeSlotViewModel>()
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -40,7 +42,9 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
 
          */
 
-        val temp: TimeSlot = arguments?.getSerializable("timeslot") as TimeSlot
+
+        val temp: TimeSlot = arguments?.getInt("pos")?.let { vm.timeSlots.value?.elementAt(it) }!!
+        //val temp: TimeSlot = arguments?.getSerializable("timeslot") as TimeSlot
 
         val titleET = view.findViewById<TextInputEditText>(R.id.edit_timeslot_Title)
         titleET.setText(temp.title)

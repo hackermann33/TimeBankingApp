@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@id/timeSlotListFragment">
+    app:startDestination="@id/nav_timeSlotsList">
     <fragment
         android:id="@+id/nav_timeSlotDetails"
         android:name="it.polito.timebankingapp.ui.timeslot_details.TimeSlotDetailsFragment"
@@ -40,7 +40,7 @@
             app:destination="@id/nav_timeSlotDetails" />
     </fragment>
     <fragment
-        android:id="@+id/timeSlotListFragment"
+        android:id="@+id/nav_timeSlotsList"
         android:name="it.polito.timebankingapp.ui.TimeSlotListFragment"
         android:label="fragment_item_list"
         tools:layout="@layout/fragment_item_list" >

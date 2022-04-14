@@ -1,5 +1,6 @@
 package it.polito.timebankingapp.ui
 
+import android.os.Bundle
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.DiffUtil
 import android.view.LayoutInflater
@@ -10,9 +11,13 @@ import android.widget.ImageView
 import android.view.*
 
 import androidx.activity.viewModels
+import androidx.core.os.bundleOf
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.Navigation
+import androidx.navigation.fragment.NavHostFragment.Companion.findNavController
+import androidx.navigation.fragment.findNavController
 
 import it.polito.timebankingapp.ui.timeslot_details.TimeSlot
 import it.polito.timebankingapp.R
@@ -41,7 +46,6 @@ class TimeSlotAdapter(
             start.text = ts.date +" "+ts.time
             duration.text = ts.duration
             editButton.setOnClickListener(action)
-            //editButton.setOnClickListener(action) //???
         }
 
         fun unbind() {
@@ -77,9 +81,12 @@ class TimeSlotAdapter(
                     notifyItemRemoved(pos1)
                 }*/
 
-                //findNavController().navigate(R.id.action_timeSlotListFragment_to_nav_timeSlotEdit, oggetto opzionale da passare)
+                Navigation.findNavController(it).navigate(R.id.action_timeSlotListFragment_to_nav_timeSlotEdit, bundleOf(Pair("pos",position)))
+            //findNavController().navigate(R.id.action_timeSlotListFragment_to_nav_timeSlotEdit, oggetto opzionale da passare)
             }
         }
+
+        holder.itemView.setOnClickListener( Navigation.createNavigateOnClickListener(R.id.action_timeSlotListFragment_to_nav_timeSlotDetails) )
     }
 
     //how many items?
