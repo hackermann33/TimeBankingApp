@@ -11,9 +11,6 @@ import android.view.*
 
 import androidx.activity.viewModels
 
-
-//import it.polito.timebankingapp.ui.placeholder.PlaceholderContent.PlaceholderItem
-//import it.polito.timebankingapp.ui.databinding.FragmentItemBinding
 import it.polito.timebankingapp.ui.timeslot_details.TimeSlot
 import it.polito.timebankingapp.R
 import it.polito.timebankingapp.ui.timeslot_details.SharedViewModel
@@ -28,10 +25,6 @@ class TimeSlotAdapter(
 
 
     class ItemViewHolder(v: View) : RecyclerView.ViewHolder(v) {
-        //private val name: TextView = v.findViewById(R.id.name)
-        //private val role: TextView = v.findViewById(R.id.role)
-        //private val delete: ImageView = v.findViewById(R.id.delete)
-
         private val title: TextView = v.findViewById(R.id.time_slots_item_title)
         private val location: TextView = v.findViewById(R.id.time_slots_item_location)
         private val start: TextView = v.findViewById(R.id.time_slots_item_start)
@@ -44,8 +37,6 @@ class TimeSlotAdapter(
             start.text = ts.date +" "+ts.time
             duration.text = ts.duration
             editButton.setOnClickListener(action)
-            //name.text = ts.name
-            ///role.text = ts.role
             editButton.setOnClickListener(action) //???
         }
 
@@ -87,8 +78,6 @@ class TimeSlotAdapter(
 
     //how many items?
     override fun getItemCount(): Int = displayData.size
-
-
 }
 
 
