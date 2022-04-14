@@ -10,6 +10,9 @@ import android.widget.ImageView
 import android.view.*
 
 import androidx.activity.viewModels
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 
 import it.polito.timebankingapp.ui.timeslot_details.TimeSlot
 import it.polito.timebankingapp.R
@@ -22,6 +25,7 @@ class TimeSlotAdapter(
 
     //private var filter: Boolean = false
     private var displayData = data.toMutableList()
+
 
 
     class ItemViewHolder(v: View) : RecyclerView.ViewHolder(v) {
@@ -37,7 +41,7 @@ class TimeSlotAdapter(
             start.text = ts.date +" "+ts.time
             duration.text = ts.duration
             editButton.setOnClickListener(action)
-            editButton.setOnClickListener(action) //???
+            //editButton.setOnClickListener(action) //???
         }
 
         fun unbind() {
@@ -67,11 +71,13 @@ class TimeSlotAdapter(
             if (pos != -1) {
                 //data.removeAt(pos)
                 //lancio edit
-                val pos1 = displayData.indexOf(item)
+                /*val pos1 = displayData.indexOf(item)
                 if (pos1 != -1) {
                     displayData.removeAt(pos1)
                     notifyItemRemoved(pos1)
-                }
+                }*/
+
+                //findNavController().navigate(R.id.action_timeSlotListFragment_to_nav_timeSlotEdit, oggetto opzionale da passare)
             }
         }
     }
