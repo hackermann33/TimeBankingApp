@@ -24,10 +24,14 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        showTimeSlot(view, arguments?.getSerializable("timeslot") as TimeSlot?) //temp
+        /* da decommentare quando si userà decentemente la viewmodel
         model.selected.observe(viewLifecycleOwner, Observer<TimeSlot> { ts ->
             // Update the UI
             showTimeSlot(view, ts)
         })
+        */
     }
 
 

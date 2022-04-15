@@ -74,7 +74,7 @@ class TimeSlotAdapter(
             }
         }
         //click generico su cardview
-        holder.itemView.setOnClickListener( Navigation.createNavigateOnClickListener(R.id.action_timeSlotListFragment_to_nav_timeSlotDetails) )
+        holder.itemView.setOnClickListener( Navigation.createNavigateOnClickListener(R.id.action_timeSlotListFragment_to_nav_timeSlotDetails, bundleOf("timeslot" to item)) )
     }
 
     //how many items?
@@ -97,105 +97,3 @@ class MyDiffCallback(private val old: List<TimeSlot>, private val new: List<Time
         return old[oldItemPosition] == new[newItemPosition]
     }
 }
-
-
-
-
-
-
-/*
-
-data class Item(val id: Int, val name:String, val role:String )
-
-
-
-//Presented items are managed by an Adapter , which is responsible for
-//providing and filling views with relevant content from the data set
-
-//Each item in the data set is presented in a recyclable visual hierarchy
-//which is managed by a ViewHolder
-
-
-class ItemAdapter(val data:MutableList<Item>): RecyclerView.Adapter<ItemAdapter.ItemViewHolder>() {
-    var filter: Boolean = false
-    var displayData = data.toMutableList()
-
-
-    class ItemViewHolder(v:View): RecyclerView.ViewHolder(v) {
-        private val name: TextView = v.findViewById(R.id.name)
-        private val role: TextView = v.findViewById(R.id.role)
-        private val delete: ImageView = v.findViewById(R.id.delete)
-
-        fun bind(item:Item, action: (v:View)->Unit) {
-            name.text = item.name
-            role.text = item.role
-            delete.setOnClickListener(action)
-        }
-        fun unbind() {
-            delete.setOnClickListener(null)
-        }
-    }
-
-    var vhCount = 0
-
-
-    //inflate the item_layout-based structure inside each ViewHolder
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
-        vhCount++ // max 14 or 15 ViewHolders while executing
-        Log.d("ItemAdapter", "$vhCount")
-        val vg = LayoutInflater
-            .from(parent.context)
-            .inflate(R.layout.item_layout,parent, false) //attachToRoot: take all you measures
-        //but do not attach it immediately to the viewholder tree of components (could be a ghost item)
-
-        return ItemViewHolder(vg)
-    }
-
-    //populate data for each infalted viewholder
-    override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
-        //holder.name.text = data[position].name
-        //holder.role.text = data[position].role
-
-        val item = displayData[position]
-        holder.bind(item) {//1:17:00
-            val pos = data.indexOf(item)
-            if (pos!=-1) {
-                data.removeAt(pos)
-                val pos1 = displayData.indexOf(item)
-                if (pos1!= -1) {
-                    displayData.removeAt(pos1)
-                    notifyItemRemoved(pos1)
-                }
-            }
-        }
-    }
-
-    //how many items?
-    override fun getItemCount(): Int = displayData.size
-
-    fun addFilter(on: Boolean) {
-        filter = on
-        val newData = if (filter) {
-            data.filter { it.id % 2 == 0 }.toMutableList()
-        } else
-            data.toMutableList()
-        val diffs = DiffUtil.calculateDiff(MyDiffCallback(displayData, newData))
-        displayData = newData
-        diffs.dispatchUpdatesTo(this)
-    }
-}
-
-class MyDiffCallback(val old: List<Item>, val new: List<Item>): DiffUtil.Callback() {
-    override fun getOldListSize(): Int = old.size
-
-    override fun getNewListSize(): Int = new.size
-
-    override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        return old[oldItemPosition] === new[newItemPosition]
-    }
-
-    override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        return old[oldItemPosition] == new[newItemPosition]
-    }
-}
-*/
