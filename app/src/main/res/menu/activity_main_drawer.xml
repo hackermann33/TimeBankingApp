@@ -8,5 +8,9 @@
             android:id="@+id/nav_timeSlotDetails"
             android:icon="@drawable/ic_menu_slideshow"
             android:title="@string/menu_drawer_timeslots_list" />
+        <item
+            android:id="@+id/nav_showProfileActivity"
+            android:icon="@drawable/pencil_edit_icon_18"
+            android:title="@string/menu_drawer_show_profile" />
     </group>
 </menu>

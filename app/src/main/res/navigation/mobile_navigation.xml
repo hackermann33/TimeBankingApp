@@ -35,5 +35,10 @@
             android:id="@+id/action_timeSlotListFragment_to_nav_timeSlotEdit"
             app:destination="@id/nav_timeSlotEdit" />
     </fragment>
+    <activity
+        android:id="@+id/nav_showProfileActivity"
+        android:name="it.polito.timebankingapp.ui.showprofile.ShowProfileActivity"
+        android:label="Your profile"
+        tools:layout="@layout/activity_showprofileactivity" />
 
 </navigation>
