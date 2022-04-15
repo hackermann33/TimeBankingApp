@@ -42,9 +42,9 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
 
          */
 
-
-        val temp: TimeSlot = arguments?.getInt("pos")?.let { vm.timeSlots.value?.elementAt(it) }!!
-        //val temp: TimeSlot = arguments?.getSerializable("timeslot") as TimeSlot
+        //da fixare la prossima volta appena si aggiunge la shared activity viewmodel
+        //val temp: TimeSlot = arguments?.getInt("id")?.let { vm.timeSlots.value?.elementAt(it) }!!
+        val temp: TimeSlot = arguments?.getSerializable("timeslot") as TimeSlot //temp
 
         val titleET = view.findViewById<TextInputEditText>(R.id.edit_timeslot_Title)
         titleET.setText(temp.title)

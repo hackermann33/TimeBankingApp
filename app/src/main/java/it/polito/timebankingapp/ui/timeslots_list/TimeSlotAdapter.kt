@@ -64,20 +64,16 @@ class TimeSlotAdapter(
         holder.bind(item) {//1:17:00
             val pos = data.indexOf(item)
             if (pos != -1) {
-                //data.removeAt(pos)
-                //lancio edit
-                /*val pos1 = displayData.indexOf(item)
-                if (pos1 != -1) {
-                    displayData.removeAt(pos1)
-                    notifyItemRemoved(pos1)
-                }*/
+                //click su bottone
 
-                Navigation.findNavController(it).navigate(R.id.action_timeSlotListFragment_to_nav_timeSlotEdit, bundleOf(
-                    Pair("pos",position)))
-            //findNavController().navigate(R.id.action_timeSlotListFragment_to_nav_timeSlotEdit, oggetto opzionale da passare)
+                Navigation.findNavController(it).navigate(
+                    R.id.action_timeSlotListFragment_to_nav_timeSlotEdit,
+                    //bundleOf( Pair("id",item.id)) //da fixare la prossima volta appena si aggiunge la shared activity viewmodel
+                    bundleOf("timeslot" to item) //temp
+                )
             }
         }
-
+        //click generico su cardview
         holder.itemView.setOnClickListener( Navigation.createNavigateOnClickListener(R.id.action_timeSlotListFragment_to_nav_timeSlotDetails) )
     }
 
