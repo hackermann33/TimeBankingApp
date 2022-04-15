@@ -28,7 +28,7 @@ class TimeSlotAdapter(
         private val title: TextView = v.findViewById(R.id.time_slots_item_title)
         private val location: TextView = v.findViewById(R.id.time_slots_item_location)
         private val start: TextView = v.findViewById(R.id.time_slots_item_start)
-        private val duration: TextView = v.findViewById(R.id.time_slots_item_durata)
+        private val duration: TextView = v.findViewById(R.id.time_slots_item_duration)
         private val editButton: ImageView = v.findViewById(R.id.time_slots_edit_button)
 
         fun bind(ts: TimeSlot, action: (v: View) -> Unit) {
