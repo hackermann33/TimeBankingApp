@@ -39,7 +39,7 @@
                     android:layout_height="wrap_content"
                     android:autofillHints=""
                     android:ems="10"
-                    android:hint="@string/timeslot_title"
+                    android:hint="@string/fragment_timeslot_title"
                     android:inputType="textPersonName"
                     android:minHeight="48dp"
                     tools:ignore="TextContrastCheck,TextContrastCheck" />
@@ -56,7 +56,7 @@
                     android:id="@+id/edit_timeslot_Date"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/timeslot_date"
+                    android:hint="@string/fragment_timeslot_date"
                     android:inputType="textEmailAddress"
                     tools:ignore="TextContrastCheck" />
             </com.google.android.material.textfield.TextInputLayout>
@@ -72,7 +72,7 @@
                     android:id="@+id/edit_timeslot_Time"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/timeslot_time"
+                    android:hint="@string/fragment_timeslot_time"
                     tools:ignore="TextContrastCheck" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -87,7 +87,7 @@
                     android:id="@+id/edit_timeslot_Duration"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/timeslot_duration"
+                    android:hint="@string/fragment_timeslot_duration"
                     tools:ignore="TextContrastCheck" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -102,7 +102,7 @@
                     android:id="@+id/edit_timeslot_Location"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/timeslot_location"
+                    android:hint="@string/fragment_timeslot_location"
                     tools:ignore="TextContrastCheck" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -117,7 +117,7 @@
                     android:id="@+id/edit_timeslot_Description"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/timeslot_description"
+                    android:hint="@string/fragment_timeslot_description"
                     tools:ignore="TextContrastCheck" />
             </com.google.android.material.textfield.TextInputLayout>
 

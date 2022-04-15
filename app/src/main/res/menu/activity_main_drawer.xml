@@ -7,6 +7,6 @@
         <item
             android:id="@+id/nav_timeSlotDetails"
             android:icon="@drawable/ic_menu_slideshow"
-            android:title="@string/menu_timeslots" />
+            android:title="@string/menu_drawer_timeslots_list" />
     </group>
 </menu>

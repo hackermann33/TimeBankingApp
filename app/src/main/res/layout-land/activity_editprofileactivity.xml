@@ -36,7 +36,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:background="#00FFFFFF"
-            android:contentDescription="@string/upload_button"
+            android:contentDescription="@string/fragment_profile_upload_button"
             android:minHeight="48dp"
             android:padding="10dp"
             app:srcCompat="@android:drawable/ic_menu_camera"
@@ -71,7 +71,7 @@
                     android:layout_height="wrap_content"
                     android:autofillHints=""
                     android:ems="10"
-                    android:hint="@string/full_name"
+                    android:hint="@string/fragment_profile_full_name"
                     android:inputType="textPersonName"
                     android:minHeight="48dp"
                     tools:ignore="TextContrastCheck,TextContrastCheck" />
@@ -88,7 +88,7 @@
                     android:id="@+id/editNickname"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/nickname"
+                    android:hint="@string/fragment_profile_nickname"
                     tools:ignore="TextContrastCheck" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -103,7 +103,7 @@
                     android:id="@+id/editEmail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/e_mail"
+                    android:hint="@string/fragment_profile_email"
                     android:inputType="textEmailAddress"
                     tools:ignore="TextContrastCheck" />
             </com.google.android.material.textfield.TextInputLayout>
@@ -119,7 +119,7 @@
                     android:id="@+id/editLocation"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/location"
+                    android:hint="@string/fragment_profile_location"
                     tools:ignore="TextContrastCheck" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -134,7 +134,7 @@
                     android:id="@+id/editDescription"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/description"
+                    android:hint="@string/fragment_profile_description"
                     tools:ignore="TextContrastCheck" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -168,7 +168,7 @@
                         android:id="@+id/editNewSkill"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:hint="@string/new_skill"
+                        android:hint="@string/fragment_profile_new_skill"
                         android:paddingStart="16dp"
                         android:paddingLeft="16dp"
                         android:paddingTop="17dp"
@@ -185,7 +185,7 @@
                     android:layout_height="0dp"
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="10dp"
-                    android:text="@string/add_new_skill"
+                    android:text="@string/fragment_profile_add_new_skill"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_weight="1"

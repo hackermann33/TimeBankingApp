@@ -30,73 +30,73 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/roboto_medium"
-                android:text="@string/timeslot_title"
+                android:text="@string/fragment_timeslot_title"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
             <TextView
                 style="@style/ItemLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/timeslot_date" />
+                android:text="@string/fragment_timeslot_date" />
 
             <TextView
                 android:id="@+id/time_slot_date"
                 style="@style/Item"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/timeslot_date" />
+                android:text="@string/fragment_timeslot_date" />
 
             <TextView
                 style="@style/ItemLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/timeslot_time" />
+                android:text="@string/fragment_timeslot_time" />
 
             <TextView
                 android:id="@+id/time_slot_time"
                 style="@style/Item"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/timeslot_time" />
+                android:text="@string/fragment_timeslot_time" />
 
             <TextView
                 style="@style/ItemLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/timeslot_duration" />
+                android:text="@string/fragment_timeslot_duration" />
 
             <TextView
                 android:id="@+id/time_slot_duration"
                 style="@style/Item"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/timeslot_duration" />
+                android:text="@string/fragment_timeslot_duration" />
 
             <TextView
                 style="@style/ItemLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/timeslot_location" />
+                android:text="@string/fragment_timeslot_location" />
 
             <TextView
                 android:id="@+id/time_slot_location"
                 style="@style/Item"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/timeslot_location" />
+                android:text="@string/fragment_timeslot_location" />
 
             <TextView
                 style="@style/ItemLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/timeslot_description" />
+                android:text="@string/fragment_timeslot_description" />
 
             <TextView
                 android:id="@+id/time_slot_description"
                 style="@style/Item"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/timeslot_description" />
+                android:text="@string/fragment_timeslot_description" />
         </LinearLayout>
     </ScrollView>
 

@@ -1,38 +1,29 @@
 <resources>
     <string name="app_name">TimeBankingApp</string>
-    <string name="location">Location</string>
-    <string name="e_mail">E-mail</string>
-    <string name="nickname">Nickname</string>
-    <string name="full_name">Full Name</string>
-    <string name="description">Description</string>
-    <string name="balance">Balance</string>
-    <string name="skills">Skills</string>
-    <string name="edit_profile">Edit profile</string>
-    <string name="upload_button">Upload Button</string>
-    <string name="new_skill">New skill</string>
-    <string name="add_new_skill">Add</string>
+    <string name="fragment_profile_location">Location</string>
+    <string name="fragment_profile_email">E-mail</string>
+    <string name="fragment_profile_nickname">Nickname</string>
+    <string name="fragment_profile_full_name">Full Name</string>
+    <string name="fragment_profile_description">Description</string>
+    <string name="fragment_profile_balance">Balance</string>
+    <string name="fragment_profile_skills">Skills</string>
+    <string name="fragment_profile_upload_button">Upload Button</string>
+    <string name="fragment_profile_new_skill">New skill</string>
+    <string name="fragment_profile_add_new_skill">Add</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title">Android Studio</string>
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
-    <string name="action_settings">Settings</string>
-
-    <string name="menu_home">Home</string>
-    <string name="menu_gallery">Gallery</string>
-    <string name="menu_slideshow">Slideshow</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="timeslot_description">Description</string>
-    <string name="timeslot_title">Title</string>
-    <string name="timeslot_date">Date</string>
-    <string name="timeslot_time">Time</string>
-    <string name="timeslot_duration">Duration</string>
-    <string name="timeslot_location">Location</string>
-    <string name="edit_timeslot">Edit Timeslot</string>
-    <string name="edit">Edit</string>
-    <string name="menu_timeslots">TimeSlots</string>
+    <string name="fragment_timeslot_description">Description</string>
+    <string name="fragment_timeslot_title">Title</string>
+    <string name="fragment_timeslot_date">Date</string>
+    <string name="fragment_timeslot_time">Time</string>
+    <string name="fragment_timeslot_duration">Duration</string>
+    <string name="fragment_timeslot_location">Location</string>
+    <string name="menu_edit_button">Edit</string>
+    <string name="menu_drawer_timeslots_list">Timeslots list</string>
     <string name="time_slots_item_title">Title</string>
     <string name="time_slots_edit_icon">timeSlotEditIcon</string>
     <string name="time_slots_item_duration">3h</string>
@@ -40,5 +31,4 @@
     <string name="time_slots_item_start">01/01/2022 -00:00</string>
     <string name="time_slots_item_start_label">START:</string>
     <string name="time_slots_item_location">Location</string>
-
 </resources>

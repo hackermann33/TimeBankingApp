@@ -41,80 +41,80 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/roboto_medium"
-                android:text="@string/full_name"
+                android:text="@string/fragment_profile_full_name"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
             <TextView
                 style="@style/ItemLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/nickname" />
+                android:text="@string/fragment_profile_nickname" />
 
             <TextView
                 android:id="@+id/nickname"
                 style="@style/Item"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/nickname" />
+                android:text="@string/fragment_profile_nickname" />
 
             <TextView
                 style="@style/ItemLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/e_mail" />
+                android:text="@string/fragment_profile_email" />
 
             <TextView
                 android:id="@+id/email"
                 style="@style/Item"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/e_mail" />
+                android:text="@string/fragment_profile_email" />
 
             <TextView
                 style="@style/ItemLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/location" />
+                android:text="@string/fragment_profile_location" />
 
             <TextView
                 android:id="@+id/location"
                 style="@style/Item"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/location" />
+                android:text="@string/fragment_profile_location" />
 
             <TextView
                 style="@style/ItemLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/balance" />
+                android:text="@string/fragment_profile_balance" />
 
             <TextView
                 android:id="@+id/balance"
                 style="@style/Item"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/balance" />
+                android:text="@string/fragment_profile_balance" />
 
             <TextView
                 style="@style/ItemLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/description" />
+                android:text="@string/fragment_profile_description" />
 
             <TextView
                 android:id="@+id/description"
                 style="@style/Item"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/description" />
+                android:text="@string/fragment_profile_description" />
 
             <TextView
                 style="@style/ItemLabel"
                 android:layout_width="match_parent"
 
                 android:layout_height="wrap_content"
-                android:text="@string/skills" />
+                android:text="@string/fragment_profile_skills" />
 
             <com.google.android.material.chip.ChipGroup
                 android:id="@+id/skillsGroup"
