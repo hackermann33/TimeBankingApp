@@ -28,6 +28,18 @@ class TimeSlot(
 
     override fun toString(): String = "{ title:$title, description: $description, date: $date, time: $time, duration: $duration, location: $location"
 
+    fun isValid() : Boolean{
+        return title != "" && description != "" && date != "" && time != "" && duration != "" && location != ""
+    }
+
+    fun clone(ts : TimeSlot){
+        this.title = ts.title
+        this.description = ts.description
+        this.date = ts.date
+        this.time = ts.time
+        this.duration = ts.duration
+        this.location = ts.location
+    }
     /*Here, I'm not checking that String is not empty, because if it's empty it will be used default image*/
     /*fun isValid(): Boolean {
         return fullName.isNotEmpty() && nick.isNotEmpty() && isValidEmail() && location.isNotEmpty() && description.isNotEmpty()

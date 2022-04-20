@@ -6,9 +6,16 @@ import android.text.format.DateFormat.is24HourFormat
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.View
+import android.widget.Button
+import androidx.activity.OnBackPressedCallback
+import androidx.appcompat.app.AlertDialog
+import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
+import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
 import it.polito.timebankingapp.R
@@ -25,7 +32,6 @@ import java.util.*
 class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
 
     private val vm by viewModels<TimeSlotsListViewModel>()
-    //private val pos = arguments?.getInt("position")
     private var temp: TimeSlot? = TimeSlot()
 
     private lateinit var v : View
@@ -129,38 +135,144 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
 
         val descriptionET = view.findViewById<TextInputEditText>(R.id.edit_timeslot_Description)
         descriptionET.setText(temp?.description ?: "")
+
+        val addButton = view.findViewById<Button>(R.id.addTimeSlotButton)
+        addButton.isVisible = arguments?.getSerializable("timeslot") == null
+        addButton.setOnClickListener {
+            val ts = retrieveTimeSlotData()
+            if(ts.isValid()) {
+                temp?.clone(ts)
+                vm.addTimeSlot(temp!!)
+                AlertDialog.Builder(requireActivity())
+                    .setTitle("TimeSlot correctly created!")
+                    .setMessage("Your TimeSlot was correctly created. You can now find it with the others in your list!")
+                    .setPositiveButton("Ok"){ _, _ ->
+                        cleanFields()
+                    }
+                    .show()
+            }
+            else{
+                AlertDialog.Builder(requireActivity())
+                    .setTitle("TimeSlot not created!")
+                    .setMessage("Your TimeSlot was not created. Make sure to not leave empty fields")
+                    .setPositiveButton("Ok") { _, _ ->
+                        evidenceWrongFields()
+                    }
+                    .show()
+            }
+        }
     }
 
+    private fun cleanFields() {
+        val titleET = v.findViewById<TextInputEditText>(R.id.edit_timeslot_Title)
+        titleET.setText("")
+
+        val dateET = v.findViewById<TextInputEditText>(R.id.edit_timeslot_Date)
+        dateET.setText("")
+
+        val timeET = v.findViewById<TextInputEditText>(R.id.edit_timeslot_Time)
+        timeET.setText("")
+
+        val durationET = v.findViewById<TextInputEditText>(R.id.edit_timeslot_Duration)
+        durationET.setText("")
+
+        val locationET = v.findViewById<TextInputEditText>(R.id.edit_timeslot_Location)
+        locationET.setText("")
+
+        val descriptionET = v.findViewById<TextInputEditText>(R.id.edit_timeslot_Description)
+        descriptionET.setText("")
+
+
+    }
+
+
     override fun onDetach() {
-        if(arguments?.getSerializable("timeslot") == null){
-            retrieveTimeSlotData()
-            vm.addTimeSlot(temp!!)
-        }
-        else {
-            retrieveTimeSlotData()
-            vm.editTimeSlot(temp!!)
+        if(arguments?.getSerializable("timeslot") != null) {
+            //was in edit mode, not creation
+            val ts = retrieveTimeSlotData()
+            if (ts.isValid()) {
+                temp?.clone(ts)
+                vm.editTimeSlot(temp!!)
+            } else {
+                AlertDialog.Builder(requireActivity())
+                    .setTitle("TimeSlot not modified!")
+                    .setMessage("Your TimeSlot was not modified. Make sure to not leave empty fields.")
+                    .setPositiveButton("Ok") { _, _ ->
+                        evidenceWrongFields()
+                    }
+                    .show()
+            }
         }
         super.onDetach()
     }
 
-    private fun retrieveTimeSlotData(){
+    private fun evidenceWrongFields() {
+        val titleLay = v.findViewById<TextInputLayout>(R.id.edit_timeslot_TitleLay)
+        val titleET = v.findViewById<TextInputEditText>(R.id.edit_timeslot_Title)
+        if(titleET.text?.isEmpty() == true)
+            titleLay.error = "Field cannot be empty!"
+        else
+            titleLay.error = null
+
+        val dateLay = v.findViewById<TextInputLayout>(R.id.edit_timeslot_DateLay)
+        val dateET = v.findViewById<TextInputEditText>(R.id.edit_timeslot_Date)
+        if(dateET.text?.isEmpty() == true)
+            dateLay.error = "Field cannot be empty!"
+        else
+            dateLay.error = null
+
+        val timeLay = v.findViewById<TextInputLayout>(R.id.edit_timeslot_TimeLay)
+        val timeET = v.findViewById<TextInputEditText>(R.id.edit_timeslot_Time)
+        if(timeET.text?.isEmpty() == true)
+            timeLay.error = "Field cannot be empty!"
+        else
+            timeLay.error = null
+
+        val durationLay = v.findViewById<TextInputLayout>(R.id.edit_timeslot_DurationLay)
+        val durationET = v.findViewById<TextInputEditText>(R.id.edit_timeslot_Duration)
+        if(durationET.text?.isEmpty() == true)
+            durationLay.error = "Field cannot be empty!"
+        else
+            durationLay.error = null
+
+        val locationLay = v.findViewById<TextInputLayout>(R.id.edit_timeslot_LocationLay)
+        val locationET = v.findViewById<TextInputEditText>(R.id.edit_timeslot_Location)
+        if(locationET.text?.isEmpty() == true)
+            locationLay.error = "Field cannot be empty!"
+        else
+            locationLay.error = null
+
+        val descriptionLay = v.findViewById<TextInputLayout>(R.id.edit_timeslot_DescriptionLay)
+        val descriptionET = v.findViewById<TextInputEditText>(R.id.edit_timeslot_Description)
+        if(descriptionET.text?.isEmpty() == true)
+            descriptionLay.error = "Field cannot be empty!"
+        else
+            descriptionLay.error = null
+
+    }
+
+    private fun retrieveTimeSlotData() : TimeSlot{
+
+        val ts = TimeSlot()
 
         val titleET = v.findViewById<TextInputEditText>(R.id.edit_timeslot_Title)
-        temp?.title = titleET.text.toString()
+        ts?.title = titleET.text.toString()
 
         val dateET = v.findViewById<TextInputEditText>(R.id.edit_timeslot_Date)
-        temp?.date = dateET.text.toString()
+        ts?.date = dateET.text.toString()
 
         val timeET = v.findViewById<TextInputEditText>(R.id.edit_timeslot_Time)
-        temp?.time = timeET.text.toString()
+        ts?.time = timeET.text.toString()
 
         val durationET = v.findViewById<TextInputEditText>(R.id.edit_timeslot_Duration)
-        temp?.duration = durationET.text.toString()
+        ts?.duration = durationET.text.toString()
 
         val locationET = v.findViewById<TextInputEditText>(R.id.edit_timeslot_Location)
-        temp?.location = locationET.text.toString()
+        ts?.location = locationET.text.toString()
 
         val descriptionET = v.findViewById<TextInputEditText>(R.id.edit_timeslot_Description)
-        temp?.description = descriptionET.text.toString()
+        ts?.description = descriptionET.text.toString()
+
+        return ts
     }
 }
