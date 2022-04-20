@@ -11,9 +11,12 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.viewModels
+import androidx.navigation.Navigation
 import it.polito.timebankingapp.databinding.ActivityMainBinding
 import it.polito.timebankingapp.ui.timeslot_details.TimeSlotSharedViewModel
 import it.polito.timebankingapp.model.timeslot.TimeSlot
+import it.polito.timebankingapp.ui.timeslot_edit.TimeSlotEditFragment
 import it.polito.timebankingapp.ui.timeslots_list.TimeSlotsListViewModel
 
 class MainActivity : AppCompatActivity() {
@@ -32,9 +35,12 @@ class MainActivity : AppCompatActivity() {
 
         setSupportActionBar(binding.appBarMain.toolbar)
 
-        binding.appBarMain.fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+        binding.appBarMain.addTimeSlotButton.setOnClickListener { view ->
+/*            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                 .setAction("Action", null)
+
+ */
+            findNavController(R.id.nav_host_fragment_content_main).navigate(R.id.action_timeSlotListFragment_to_nav_timeSlotEdit)
         }
         val drawerLayout: DrawerLayout = binding.drawerLayout
         val navView: NavigationView = binding.navView
@@ -54,10 +60,39 @@ class MainActivity : AppCompatActivity() {
             it.title = "TitleTrial"; it.description = "Descr trial"; it.date = "2022/12/18"; it.time = "14:15"; it.duration = "56"; it.location = "Turin"
         })
 
+        //createItems(10)
+
+    }
+
+
+    private fun createItems(n: Int): MutableList<TimeSlot> {
+        val l = mutableListOf<TimeSlot>()
+        for (i in 1..n) {
+            TimeSlot()
+            val ts = TimeSlot().also{
+                it.title = "TitleTrial $i";
+                it.description= "Descr trial $i";
+                it.date = "2022/12/18";
+                it.time = "14:15";
+                it.duration = "56";
+                it.location = "Turin";
+            }
+            l.add(ts)
+            vm.addTimeSlot(ts)
+        }
+        return l
     }
 
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment_content_main)
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
+
+    override fun finish() {
+        vm.clear()
+        super.finish()
+    }
+
+
+
 }

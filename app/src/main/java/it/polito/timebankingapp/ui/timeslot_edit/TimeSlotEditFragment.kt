@@ -25,7 +25,10 @@ import java.util.*
 class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
 
     private val vm by viewModels<TimeSlotsListViewModel>()
+    //private val pos = arguments?.getInt("position")
+    private var temp: TimeSlot? = TimeSlot()
 
+    private lateinit var v : View
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         // Inflate the layout for this fragment
@@ -44,14 +47,18 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
 
         //da fixare la prossima volta appena si aggiunge la shared activity viewmodel
         //val temp: TimeSlot = arguments?.getInt("id")?.let { vm.timeSlots.value?.elementAt(it) }!!
-        val temp: TimeSlot = arguments?.getSerializable("timeslot") as TimeSlot //temp
+
+        v = view
+
+        temp = arguments?.getSerializable("timeslot") as TimeSlot? ?: TimeSlot()
+
 
         val titleET = view.findViewById<TextInputEditText>(R.id.edit_timeslot_Title)
-        titleET.setText(temp.title)
+        titleET.setText(temp?.title ?: "")
 
 
         val dateET = view.findViewById<TextInputEditText>(R.id.edit_timeslot_Date)
-        dateET.setText(temp.date)
+        dateET.setText(temp?.date ?: "")
 
         var date: Date?
 
@@ -79,7 +86,7 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
         }
 
         val timeET = view.findViewById<TextInputEditText>(R.id.edit_timeslot_Time)
-        timeET.setText(temp.time)
+        timeET.setText(temp?.time ?: "")
 
         val isSystem24Hour = is24HourFormat(activity)
         val clockFormat = if (isSystem24Hour) TimeFormat.CLOCK_24H else TimeFormat.CLOCK_12H
@@ -115,13 +122,45 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
         }
 
         val durationET = view.findViewById<TextInputEditText>(R.id.edit_timeslot_Duration)
-        durationET.setText(temp.duration)
+        durationET.setText(temp?.duration ?: "")
 
         val locationET = view.findViewById<TextInputEditText>(R.id.edit_timeslot_Location)
-        locationET.setText(temp.location)
+        locationET.setText(temp?.location ?: "")
 
         val descriptionET = view.findViewById<TextInputEditText>(R.id.edit_timeslot_Description)
-        descriptionET.setText(temp.description)
+        descriptionET.setText(temp?.description ?: "")
     }
 
+    override fun onDetach() {
+        if(arguments?.getSerializable("timeslot") == null){
+            retrieveTimeSlotData()
+            vm.addTimeSlot(temp!!)
+        }
+        else {
+            retrieveTimeSlotData()
+            vm.editTimeSlot(temp!!)
+        }
+        super.onDetach()
+    }
+
+    private fun retrieveTimeSlotData(){
+
+        val titleET = v.findViewById<TextInputEditText>(R.id.edit_timeslot_Title)
+        temp?.title = titleET.text.toString()
+
+        val dateET = v.findViewById<TextInputEditText>(R.id.edit_timeslot_Date)
+        temp?.date = dateET.text.toString()
+
+        val timeET = v.findViewById<TextInputEditText>(R.id.edit_timeslot_Time)
+        temp?.time = timeET.text.toString()
+
+        val durationET = v.findViewById<TextInputEditText>(R.id.edit_timeslot_Duration)
+        temp?.duration = durationET.text.toString()
+
+        val locationET = v.findViewById<TextInputEditText>(R.id.edit_timeslot_Location)
+        temp?.location = locationET.text.toString()
+
+        val descriptionET = v.findViewById<TextInputEditText>(R.id.edit_timeslot_Description)
+        temp?.description = descriptionET.text.toString()
+    }
 }

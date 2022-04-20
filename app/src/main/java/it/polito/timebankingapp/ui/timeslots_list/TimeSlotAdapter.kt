@@ -64,12 +64,13 @@ class TimeSlotAdapter(
         holder.bind(item) {//1:17:00
             val pos = data.indexOf(item)
             if (pos != -1) {
-                //click su bottone
+                //click on edit button
 
                 Navigation.findNavController(it).navigate(
                     R.id.action_timeSlotListFragment_to_nav_timeSlotEdit,
                     //bundleOf( Pair("id",item.id)) //da fixare la prossima volta appena si aggiunge la shared activity viewmodel
-                    bundleOf("timeslot" to item) //temp
+                    bundleOf("timeslot" to item, "position" to position) //temp
+
                 )
             }
         }

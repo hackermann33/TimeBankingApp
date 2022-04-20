@@ -10,6 +10,10 @@ class TimeSlotRepository (application: Application){
         timeSlotDao.addTimeSlot(ts)
     }
 
+    fun editTimeSlot(ts: TimeSlot){
+        timeSlotDao.updateTimeSlot(ts)
+    }
+
     fun count(): LiveData<Int> = timeSlotDao.count()
 
     fun timeSlots(): LiveData<List<TimeSlot>> = timeSlotDao.findAll()

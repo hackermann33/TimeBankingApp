@@ -18,7 +18,7 @@ interface TimeSlotDao {
     @Insert
     fun addTimeSlot(ts: TimeSlot)
 
-    @Update
+    @Update(entity = TimeSlot::class)
     fun updateTimeSlot(ts: TimeSlot)
 
     /*can't do w/ a delete, because I don't have an Item (but a String) */

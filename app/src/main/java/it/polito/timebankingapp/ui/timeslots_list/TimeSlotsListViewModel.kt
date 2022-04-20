@@ -24,6 +24,12 @@ class TimeSlotsListViewModel(application: Application): AndroidViewModel(applica
         }
     }
 
+    fun editTimeSlot(ts: TimeSlot){
+        thread {
+            repo.editTimeSlot(ts)
+        }
+    }
+
     fun clear() {
         thread {
             repo.clear()

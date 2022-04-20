@@ -18,7 +18,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_timeslots_list) {
 
     val vm by viewModels<TimeSlotsListViewModel>()
 
-
+    /*
     private fun createItems(n: Int): MutableList<TimeSlot> {
         val l = mutableListOf<TimeSlot>()
         for (i in 1..n) {
@@ -37,13 +37,21 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_timeslots_list) {
         return l
     }
 
+     */
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         val rv = view.findViewById<RecyclerView>(R.id.time_slot_list)
         rv.layoutManager = LinearLayoutManager(context)
 
-        val adapter= TimeSlotAdapter(createItems(100))
+        vm.timeSlots.observe(viewLifecycleOwner){
+            rv.adapter = TimeSlotAdapter(it.toMutableList())
+        }
+
+        /*
+        val adapter= TimeSlotAdapter(l)
         rv.adapter = adapter
+        */
     }
 
 
