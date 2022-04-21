@@ -7,13 +7,10 @@ import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.View
 import android.widget.Button
-import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
-import androidx.navigation.Navigation
-import androidx.navigation.fragment.findNavController
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
@@ -36,6 +33,7 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
     private var temp: TimeSlot? = TimeSlot()
 
     private lateinit var v : View
+    private var isNew : Boolean = false
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         // Inflate the layout for this fragment
@@ -54,7 +52,7 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
 
         //da fixare la prossima volta appena si aggiunge la shared activity viewmodel
         //val temp: TimeSlot = arguments?.getInt("id")?.let { vm.timeSlots.value?.elementAt(it) }!!
-
+        isNew = arguments?.getSerializable("timeslot") == null
         v = view
 
         temp = arguments?.getSerializable("timeslot") as TimeSlot? ?: TimeSlot()
@@ -63,18 +61,17 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
         val titleET = view.findViewById<TextInputEditText>(R.id.edit_timeslot_Title)
         titleET.setText(temp?.title ?: "")
 
-
         val dateET = view.findViewById<TextInputEditText>(R.id.edit_timeslot_Date)
         dateET.setText(temp?.date ?: "")
 
-        var date: Date?
+        var dateFromPicker: Date?
 
 
         val datePicker: MaterialDatePicker<Long> = MaterialDatePicker.Builder.datePicker()
             .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
             .setTitleText("Select date").build()
 
-        /* Added this line, to prevent keyboard opens */
+        /* this line is needed in order to prevent keyboard opens when datePicker has been shown */
         dateET.inputType = InputType.TYPE_NULL
         dateET.setOnFocusChangeListener { _, focus ->
             if (focus)
@@ -85,11 +82,11 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
         }
 
         datePicker.addOnPositiveButtonClickListener {
-            date = SimpleDateFormat("MMM d, yyyy", Locale.getDefault()).parse(datePicker.headerText)
-            val df = SimpleDateFormat("dd / MM / yyyy", Locale.getDefault())
+            dateFromPicker = SimpleDateFormat("MMM d, yyyy", Locale.getDefault()).parse(datePicker.headerText)
+            val dateEdit = SimpleDateFormat("dd / MM / yyyy", Locale.getDefault())
 
-            dateET.setText(df.format(date!!))
-            Log.d("Date picked = ", "Saved date: $date")
+            dateET.setText(dateEdit.format(dateFromPicker!!))
+            Log.d("Date picked = ", "Saved date: $dateFromPicker")
         }
 
         val timeET = view.findViewById<TextInputEditText>(R.id.edit_timeslot_Time)
@@ -100,12 +97,22 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
 
         val timeFormatter = SimpleDateFormat("hh:mm", Locale.getDefault())
 
+        /* If the Item is a newItem, the hour shown in the timePicker will be that one of today.*/
+        val hour: Int = if(!isNew) temp!!.time.split(":")[0].trim().toInt()
+        else timeFormatter.format(System.currentTimeMillis()).split(":")[0].toInt()
+        val minute: Int = if(!isNew) temp!!.time.split(":")[1].trim().toInt()
+                        else timeFormatter.format(System.currentTimeMillis()).split(":")[1].toInt()
+
+        /*val hour =
+            timeFormatter.format(System.currentTimeMillis()).split(":").first().toInt()
+            else timeFormatter.format(temp?.time).split(":").first().toInt()
+        */
 
         val timePicker = MaterialTimePicker.Builder()
             .setTimeFormat(clockFormat)
-            .setHour(timeFormatter.format(System.currentTimeMillis()).split(":").first().toInt())
+            .setHour(hour)
             .setMinute(
-                timeFormatter.format(System.currentTimeMillis()).split(":").elementAt(1).toInt()
+                minute
             )
             .setTitleText("Select slot hour").build()
 
@@ -122,10 +129,10 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
 
         timePicker.addOnPositiveButtonClickListener {
             val t = "${timePicker.hour}:${timePicker.minute}"
-            date = SimpleDateFormat("hh:mm", Locale.getDefault()).parse(t)
+            dateFromPicker = SimpleDateFormat("hh:mm", Locale.getDefault()).parse(t)
             val dt = SimpleDateFormat("hh : mm", Locale.getDefault())
 
-            timeET.setText(dt.format(date!!))
+            timeET.setText(dt.format(dateFromPicker!!))
         }
 
         val durationET = view.findViewById<TextInputEditText>(R.id.edit_timeslot_Duration)
@@ -257,22 +264,22 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
         val ts = TimeSlot()
 
         val titleET = v.findViewById<TextInputEditText>(R.id.edit_timeslot_Title)
-        ts?.title = titleET.text.toString()
+        ts.title = titleET.text.toString()
 
         val dateET = v.findViewById<TextInputEditText>(R.id.edit_timeslot_Date)
-        ts?.date = dateET.text.toString()
+        ts.date = dateET.text.toString()
 
         val timeET = v.findViewById<TextInputEditText>(R.id.edit_timeslot_Time)
-        ts?.time = timeET.text.toString()
+        ts.time = timeET.text.toString()
 
         val durationET = v.findViewById<TextInputEditText>(R.id.edit_timeslot_Duration)
-        ts?.duration = durationET.text.toString()
+        ts.duration = durationET.text.toString()
 
         val locationET = v.findViewById<TextInputEditText>(R.id.edit_timeslot_Location)
-        ts?.location = locationET.text.toString()
+        ts.location = locationET.text.toString()
 
         val descriptionET = v.findViewById<TextInputEditText>(R.id.edit_timeslot_Description)
-        ts?.description = descriptionET.text.toString()
+        ts.description = descriptionET.text.toString()
 
         return ts
     }
