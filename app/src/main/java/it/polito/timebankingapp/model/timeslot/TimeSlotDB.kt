@@ -3,6 +3,7 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import it.polito.timebankingapp.model.user.User
 
 
 @Database(entities = [TimeSlot::class], version = 1)

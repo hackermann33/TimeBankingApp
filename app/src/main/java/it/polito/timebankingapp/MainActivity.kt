@@ -1,28 +1,25 @@
 package it.polito.timebankingapp
 
 import android.os.Bundle
-import androidx.activity.viewModels
-import com.google.android.material.snackbar.Snackbar
-import com.google.android.material.navigation.NavigationView
+import android.view.MenuItem
+import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import androidx.drawerlayout.widget.DrawerLayout
-import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.viewModels
-import androidx.navigation.Navigation
+import com.google.android.material.navigation.NavigationView
 import it.polito.timebankingapp.databinding.ActivityMainBinding
-import it.polito.timebankingapp.ui.timeslot_details.TimeSlotSharedViewModel
-import it.polito.timebankingapp.model.timeslot.TimeSlot
-import it.polito.timebankingapp.ui.timeslot_edit.TimeSlotEditFragment
-import it.polito.timebankingapp.ui.timeslots_list.TimeSlotsListViewModel
+
 
 class MainActivity : AppCompatActivity() {
+    /*
     val vm by viewModels<TimeSlotsListViewModel>()
     private val sharedModel by viewModels<TimeSlotSharedViewModel>()
-
+     */
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
@@ -35,7 +32,7 @@ class MainActivity : AppCompatActivity() {
 
         setSupportActionBar(binding.appBarMain.toolbar)
 
-        binding.appBarMain.addTimeSlotButton.setOnClickListener { view ->
+        binding.appBarMain.addTimeSlotButton.setOnClickListener { _ ->
 /*            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                 .setAction("Action", null)
 
@@ -50,21 +47,26 @@ class MainActivity : AppCompatActivity() {
         // menu should be considered as top level destinations.
         appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.nav_timeSlotsList /*, R.id.nav_timeSlotDetails*/
-            ), drawerLayout
+                R.id.nav_timeSlotsList, /*, R.id.nav_timeSlotDetails*/
+                R.id.nav_showProfile
+            ),
+            drawerLayout
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
-
+/*
         sharedModel.select(TimeSlot().also {
             it.title = "TitleTrial"; it.description = "Descr trial"; it.date = "2022/12/18"; it.time = "14:15"; it.duration = "56"; it.location = "Turin"
         })
+
+ */
 
         //createItems(10)
 
     }
 
 
+/*
     private fun createItems(n: Int): MutableList<TimeSlot> {
         val l = mutableListOf<TimeSlot>()
         for (i in 1..n) {
@@ -82,11 +84,10 @@ class MainActivity : AppCompatActivity() {
         }
         return l
     }
-
+ */
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment_content_main)
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
-
 
 }

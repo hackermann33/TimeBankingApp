@@ -12,9 +12,6 @@
         <action
             android:id="@+id/action_nav_timeSlotDetails_to_timeSlotEditFragment"
             app:destination="@id/nav_timeSlotEdit" />
-        <action
-            android:id="@+id/action_nav_timeSlotDetails_to_nav_timeSlotsList"
-            app:destination="@id/nav_timeSlotsList" />
     </fragment>
 
     <fragment
@@ -37,11 +34,23 @@
         <action
             android:id="@+id/action_timeSlotListFragment_to_nav_timeSlotEdit"
             app:destination="@id/nav_timeSlotEdit" />
+        <action
+            android:id="@+id/action_nav_timeSlotsList_to_showProfileActivity"
+            app:destination="@id/nav_showProfile" />
     </fragment>
-    <activity
-        android:id="@+id/nav_showProfileActivity"
+    <fragment
+        android:id="@+id/nav_showProfile"
         android:name="it.polito.timebankingapp.ui.showprofile.ShowProfileActivity"
-        android:label="Your profile"
-        tools:layout="@layout/activity_showprofileactivity" />
+        android:label="fragment_showprofile"
+        tools:layout="@layout/fragment_showprofile" >
+        <action
+            android:id="@+id/action_showProfileFragment_to_editProfileActivity"
+            app:destination="@id/editProfileFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/editProfileFragment"
+        android:name="it.polito.timebankingapp.ui.editprofile.EditProfileActivity"
+        android:label="fragment_editprofile"
+        tools:layout="@layout/fragment_editprofile" />
 
 </navigation>

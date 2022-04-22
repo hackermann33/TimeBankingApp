@@ -1,7 +1,5 @@
 package it.polito.timebankingapp.ui.showprofile
 
-import android.app.Activity
-import android.content.Intent
 import android.content.SharedPreferences
 import android.content.res.Configuration
 import android.graphics.BitmapFactory
@@ -11,7 +9,10 @@ import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
+import androidx.core.os.bundleOf
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.setFragmentResultListener
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import de.hdodenhof.circleimageview.CircleImageView
@@ -21,38 +22,47 @@ import java.io.FileNotFoundException
 import com.google.gson.GsonBuilder
 import it.polito.timebankingapp.R
 import it.polito.timebankingapp.model.user.User
-import it.polito.timebankingapp.ui.editprofile.EditProfileActivity
 
+class ShowProfileActivity : Fragment(R.layout.fragment_showprofile) {
 
-const val LAUNCH_EDIT_ACTIVITY = 1
-
-
-class ShowProfileActivity : AppCompatActivity() {
     private lateinit var usr: User
-
     private lateinit var sharedPref: SharedPreferences
+    private lateinit var v : View
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+    }
 
-        sharedPref = getPreferences(android.content.Context.MODE_PRIVATE)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        v = view
 
+        sharedPref = requireActivity().getPreferences(android.content.Context.MODE_PRIVATE)
 
         val profile = sharedPref.getString("profile", "")
         usr = if (sharedPref.contains("profile")) GsonBuilder().create()
             .fromJson(profile, User::class.java)
         else User()
 
-        setContentView(R.layout.activity_showprofileactivity)
+        //usr = savedInstanceState?.getSerializable("user") as User
 
-        displayUser()
+        setFragmentResultListener("profile") { requestKey, bundle ->
+            usr = bundle.getSerializable("user") as User
+            showProfile(view)
+            val jsonString = GsonBuilder().create().toJson(usr)
+            with(sharedPref.edit()) {
+                putString("profile", jsonString)
+                apply()
+            }
+        }
 
+        showProfile(view)
     }
 
-    private fun displayUser() {
-
-        val profilePic = findViewById<CircleImageView>(R.id.profile_pic)
-        val sv = findViewById<ScrollView>(R.id.scrollView2)
+    private fun showProfile(view: View) {
+        val profilePic = view.findViewById<CircleImageView>(R.id.profile_pic)
+        val sv = view.findViewById<ScrollView>(R.id.scrollView2)
 
         if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
             sv.viewTreeObserver.addOnGlobalLayoutListener(object :
@@ -75,25 +85,25 @@ class ShowProfileActivity : AppCompatActivity() {
             e.printStackTrace()
         }
 
-        val nameView = findViewById<TextView>(R.id.fullName)
+        val nameView = view.findViewById<TextView>(R.id.fullName)
         nameView.text = usr.fullName
 
-        val nickView = findViewById<TextView>(R.id.nickname)
+        val nickView = view.findViewById<TextView>(R.id.nickname)
         nickView.text = usr.nick
 
-        val emailView = findViewById<TextView>(R.id.email)
+        val emailView = view.findViewById<TextView>(R.id.email)
         emailView.text = usr.email
 
-        val locationView = findViewById<TextView>(R.id.location)
+        val locationView = view.findViewById<TextView>(R.id.location)
         locationView.text = usr.location
 
-        val balanceView = findViewById<TextView>(R.id.balance)
+        val balanceView = view.findViewById<TextView>(R.id.balance)
         balanceView.text = usr.balance.toString()
 
-        val descriptionView = findViewById<TextView>(R.id.description)
+        val descriptionView = view.findViewById<TextView>(R.id.description)
         descriptionView.text = usr.description
 
-        val chipGroup = findViewById<ChipGroup>(R.id.skillsGroup)
+        val chipGroup = view.findViewById<ChipGroup>(R.id.skillsGroup)
 
         chipGroup.removeAllViews()
         usr.skills.forEach { skill ->
@@ -105,20 +115,18 @@ class ShowProfileActivity : AppCompatActivity() {
             chip.text = skill
             chipGroup.addView(chip)
         }
-
     }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        val inflater: MenuInflater = menuInflater
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_editpencil, menu)
-        return true
+        super.onCreateOptionsMenu(menu, inflater)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.option1 -> {
                 Toast.makeText(
-                    applicationContext, "Edit profile",
+                    context, "Edit TimeSlot",
                     Toast.LENGTH_SHORT
                 ).show()
                 editProfile() //evoked when the pencil button is pressed
@@ -126,39 +134,12 @@ class ShowProfileActivity : AppCompatActivity() {
             }
             else -> super.onOptionsItemSelected(item)
         }
-
     }
 
     private fun editProfile() {
-        val i = Intent(this, EditProfileActivity::class.java)
-        i.putExtra("it.polito.timebankingapp.ShowProfileActivity.user", usr)
-        startActivityForResult(i, LAUNCH_EDIT_ACTIVITY)
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == LAUNCH_EDIT_ACTIVITY && resultCode == Activity.RESULT_OK) {
-            usr =
-                data?.getSerializableExtra("it.polito.timebankingapp.EditProfileActivity.user") as User
-            displayUser()
-            val jsonString = GsonBuilder().create().toJson(usr)
-            with(sharedPref.edit()) {
-                putString("profile", jsonString)
-                apply()
-            }
-        }
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putSerializable("user", usr)
-    }
-
-
-    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-        super.onRestoreInstanceState(savedInstanceState)
-        usr = savedInstanceState.getSerializable("user") as User
-        displayUser()
+        //launch edit profile fragment
+        val b = bundleOf("profile" to usr)
+        findNavController().navigate(R.id.action_showProfileFragment_to_editProfileActivity, b)
     }
 
 }

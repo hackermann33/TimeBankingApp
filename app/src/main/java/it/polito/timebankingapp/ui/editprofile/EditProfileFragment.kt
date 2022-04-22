@@ -2,6 +2,7 @@ package it.polito.timebankingapp.ui.editprofile
 
 
 import android.R.attr
+import android.app.Activity.RESULT_OK
 import android.content.Context
 import android.content.ContextWrapper
 import android.content.Intent
@@ -19,8 +20,9 @@ import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.graphics.drawable.toBitmap
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.setFragmentResult
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.google.android.material.textfield.TextInputEditText
@@ -48,24 +50,30 @@ private var SKILLS = arrayOf(
 
 const val REQUEST_PIC = 1
 
-class EditProfileActivity : AppCompatActivity() {
+class EditProfileActivity : Fragment(R.layout.fragment_editprofile) {
 
     private lateinit var profilePic: CircleImageView
-    private lateinit var usr: User
+    private var usr: User = User()
     private lateinit var skillsGroup: ChipGroup
 
+    private lateinit var v : View
+
     override fun onCreate(savedInstanceState: Bundle?) {
-
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_editprofileactivity)
+        setHasOptionsMenu(true)
+    }
 
-        usr =
-            intent.getSerializableExtra("it.polito.timebankingapp.ShowProfileActivity.user") as User
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        v = view
+        usr = arguments?.getSerializable("profile") as User? ?: User()
 
 
-        profilePic = findViewById(R.id.profile_pic)
-        val sv = findViewById<ScrollView>(R.id.editScrollView2)
-        val editPic = findViewById<FrameLayout>(R.id.editPic)
+
+        profilePic = view.findViewById(R.id.profile_pic)
+        val sv = view.findViewById<ScrollView>(R.id.editScrollView2)
+        val editPic = view.findViewById<FrameLayout>(R.id.editPic)
 
         if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
             sv.viewTreeObserver.addOnGlobalLayoutListener(object :
@@ -87,7 +95,7 @@ class EditProfileActivity : AppCompatActivity() {
             e.printStackTrace()
         }
 
-        val picEdit = findViewById<ImageButton>(R.id.uploadProfilePicButton)
+        val picEdit = view.findViewById<ImageButton>(R.id.uploadProfilePicButton)
         picEdit.setOnClickListener {
 
             val galleryIntent = Intent(Intent.ACTION_PICK)
@@ -103,8 +111,8 @@ class EditProfileActivity : AppCompatActivity() {
             startActivityForResult(chooser, REQUEST_PIC)
         }
 
-        val addSkillButton = findViewById<Button>(R.id.addSkillButton)
-        skillsGroup = findViewById(R.id.editSkillsGroup)
+        val addSkillButton = view.findViewById<Button>(R.id.addSkillButton)
+        skillsGroup = view.findViewById(R.id.editSkillsGroup)
 
         val newSkillView = updateSkillsHints()
 
@@ -132,34 +140,58 @@ class EditProfileActivity : AppCompatActivity() {
 
         addSkillButton.textSize = (4 * resources.displayMetrics.density)
 
-        if (usr.isValid()) {
-            displayUser()
+        showProfile(view)
+
+
+    }
+
+    private fun showProfile(view: View) {
+        val nameEdit = view.findViewById<EditText>(R.id.editFullName)
+        nameEdit.setText(usr.fullName)
+
+        val nickEdit = view.findViewById<EditText>(R.id.editNickname)
+        nickEdit.setText(usr.nick)
+
+        val emailEdit = view.findViewById<EditText>(R.id.editEmail)
+        emailEdit.setText(usr.email)
+
+        val locationEdit = view.findViewById<EditText>(R.id.editLocation)
+        locationEdit.setText(usr.location)
+
+        val descriptionEdit = view.findViewById<EditText>(R.id.editDescription)
+        descriptionEdit.setText(usr.description)
+
+        usr.skills.forEach { skill ->
+            addSkillChip(skill)
         }
+    }
+
+    private fun addSkillChip(text: String) {
+        val chip = layoutInflater.inflate(
+            R.layout.chip_layout_editprofile,
+            skillsGroup.parent.parent as ViewGroup,
+            false
+        ) as Chip
+        chip.text = text
+        chip.setOnCloseIconClickListener {
+            val ch = it as Chip
+            usr.skills.remove(ch.text)
+            skillsGroup.removeView(ch)
+            updateSkillsHints()
+        }
+        skillsGroup.addView(chip)
     }
 
     private fun updateSkillsHints(): AutoCompleteTextView {
         val adapter: ArrayAdapter<String> = ArrayAdapter<String>(
-            this,
+            this.requireContext(),
             android.R.layout.simple_dropdown_item_1line,
             SKILLS.filter { sk -> !usr.skills.contains(sk) }
         )
-        val newSkillView = findViewById<View>(R.id.editNewSkill) as AutoCompleteTextView
+        val newSkillView = v.findViewById<View>(R.id.editNewSkill) as AutoCompleteTextView
         newSkillView.setAdapter(adapter)
         return newSkillView
     }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        retrieveUserData()
-        outState.putSerializable("user", usr)
-    }
-
-
-    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-        super.onRestoreInstanceState(savedInstanceState)
-        usr = savedInstanceState.getSerializable("user") as User
-    }
-
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -171,7 +203,7 @@ class EditProfileActivity : AppCompatActivity() {
             } else {
                 try {
                     val imageUri: Uri = data?.data as Uri
-                    val ins = contentResolver.openInputStream(imageUri)
+                    val ins = requireActivity().contentResolver.openInputStream(imageUri)
                     imageBitmap = BitmapFactory.decodeStream(ins)
                     usr.pic = saveToInternalStorage(imageBitmap)
                 } catch (e: Exception) {
@@ -196,84 +228,8 @@ class EditProfileActivity : AppCompatActivity() {
         }
     }
 
-    private fun rotateImage(source: Bitmap, angle: Int): Bitmap? {
-        val matrix = Matrix()
-        matrix.postRotate(angle.toFloat())
-        return Bitmap.createBitmap(
-            source, 0, 0, source.width, source.height,
-            matrix, true
-        )
-    }
-
-
-    /*To trigger back button pressed */
-    override fun onBackPressed() {
-
-        /* Intent in order to save state and send it to showprofile*/
-        retrieveUserData()
-
-        if (usr.isValid()) {
-            val returnIntent = Intent()
-            usr.pic = saveToInternalStorage(profilePic.drawable.toBitmap())
-            returnIntent.putExtra("it.polito.timebankingapp.EditProfileActivity.user", usr)
-            setResult(RESULT_OK, returnIntent)
-            super.onBackPressed()
-        } else {
-
-            AlertDialog.Builder(this)
-                .setTitle("Review Your Data")
-                .setMessage("Please, check again the fields that have not been correctly filled.")
-                .setPositiveButton("Ok") { _, _ ->
-                    evidenceWrongFields()
-                }
-                .show()
-        }
-        return
-    }
-
-    private fun evidenceWrongFields() {
-
-        val nameEditLay = findViewById<TextInputLayout>(R.id.editFullNameLay)
-        val nameEdit = findViewById<TextInputEditText>(R.id.editFullName)
-        if (nameEdit.text?.isEmpty() == true)
-            nameEditLay.error = "Field cannot be empty!"
-        else
-            nameEditLay.error = null
-
-        val nickEditLay = findViewById<TextInputLayout>(R.id.editNicknameLay)
-        val nickEdit = findViewById<TextInputEditText>(R.id.editNickname)
-        if (nickEdit.text?.isEmpty() == true)
-            nickEditLay.error = "Field cannot be empty!"
-        else
-            nickEditLay.error = null
-
-        val emailEditLay = findViewById<TextInputLayout>(R.id.editEmailLay)
-        val emailEdit = findViewById<TextInputEditText>(R.id.editEmail)
-        if (emailEdit.text?.isEmpty() == true)
-            emailEditLay.error = "Field cannot be empty!"
-        else if (!Patterns.EMAIL_ADDRESS.matcher(emailEdit.text.toString()).matches())
-            emailEditLay.error = "Insert a valid e-mail!"
-        else
-            emailEditLay.error = null
-
-        val locationEditLay = findViewById<TextInputLayout>(R.id.editLocationLay)
-        val locationEdit = findViewById<TextInputEditText>(R.id.editLocation)
-        if (locationEdit.text?.isEmpty() == true)
-            locationEditLay.error = "Field cannot be empty!"
-        else
-            locationEditLay.error = null
-
-        val descriptionEditLay = findViewById<TextInputLayout>(R.id.editDescriptionLay)
-        val descriptionEdit = findViewById<TextInputEditText>(R.id.editDescription)
-        if (descriptionEdit.text?.isEmpty() == true)
-            descriptionEditLay.error = "Field cannot be empty!"
-        else
-            descriptionEditLay.error = null
-
-    }
-
     private fun saveToInternalStorage(bitmapImage: Bitmap): String {
-        val cw = ContextWrapper(applicationContext)
+        val cw = ContextWrapper(requireContext())
         // path to /data/data/yourapp/app_data/imageDir
         val directory = cw.getDir("imageDir", Context.MODE_PRIVATE)
         // Create imageDir
@@ -295,61 +251,100 @@ class EditProfileActivity : AppCompatActivity() {
         return directory.absolutePath + "/profile.jpg"
     }
 
-    private fun displayUser() {
-        val nameEdit = findViewById<EditText>(R.id.editFullName)
-        nameEdit.setText(usr.fullName)
-
-        val nickEdit = findViewById<EditText>(R.id.editNickname)
-        nickEdit.setText(usr.nick)
-
-        val emailEdit = findViewById<EditText>(R.id.editEmail)
-        emailEdit.setText(usr.email)
-
-        val locationEdit = findViewById<EditText>(R.id.editLocation)
-        locationEdit.setText(usr.location)
-
-        val descriptionEdit = findViewById<EditText>(R.id.editDescription)
-        descriptionEdit.setText(usr.description)
-
-        usr.skills.forEach { skill ->
-            addSkillChip(skill)
-        }
-
-
-    }
-
-    private fun addSkillChip(text: String) {
-        val chip = layoutInflater.inflate(
-            R.layout.chip_layout_editprofile,
-            skillsGroup.parent.parent as ViewGroup,
-            false
-        ) as Chip
-        chip.text = text
-        chip.setOnCloseIconClickListener {
-            val ch = it as Chip
-            usr.skills.remove(ch.text)
-            skillsGroup.removeView(ch)
-            updateSkillsHints()
-        }
-        skillsGroup.addView(chip)
+    private fun rotateImage(source: Bitmap, angle: Int): Bitmap? {
+        val matrix = Matrix()
+        matrix.postRotate(angle.toFloat())
+        return Bitmap.createBitmap(
+            source, 0, 0, source.width, source.height,
+            matrix, true
+        )
     }
 
     private fun retrieveUserData() {
 
-        val nameEdit = findViewById<EditText>(R.id.editFullName)
+        val nameEdit = v.findViewById<EditText>(R.id.editFullName)
         this.usr.fullName = nameEdit.text.toString()
 
-        val nickEdit = findViewById<EditText>(R.id.editNickname)
+        val nickEdit = v.findViewById<EditText>(R.id.editNickname)
         usr.nick = nickEdit.text.toString()
 
-        val emailEdit = findViewById<EditText>(R.id.editEmail)
+        val emailEdit = v.findViewById<EditText>(R.id.editEmail)
         usr.email = emailEdit.text.toString()
 
-        val locationEdit = findViewById<EditText>(R.id.editLocation)
+        val locationEdit = v.findViewById<EditText>(R.id.editLocation)
         usr.location = locationEdit.text.toString()
 
-        val descriptionEdit = findViewById<EditText>(R.id.editDescription)
+        val descriptionEdit = v.findViewById<EditText>(R.id.editDescription)
         usr.description = descriptionEdit.text.toString()
+
+    }
+
+    override fun onDetach() {
+
+        /* Intent in order to save state and send it to showprofile*/
+        retrieveUserData()
+
+        if (usr.isValid()) {
+            retrieveUserData()
+            usr.pic = saveToInternalStorage(profilePic.drawable.toBitmap())
+            val b = Bundle()
+            b.putSerializable("user", usr)
+            setFragmentResult("profile", b)
+            //returnIntent.putExtra("it.polito.timebankingapp.EditProfileActivity.user", usr)
+
+        } else {
+            AlertDialog.Builder(requireContext())
+                .setTitle("Profile NOT edited!")
+                .setMessage("Profile modification was not performed because some fields were not correctly filled. Please, try again.")
+                .setPositiveButton("Ok") { _, _ ->
+                    evidenceWrongFields()
+                }
+                .show()
+
+        }
+
+        super.onDetach()
+        return
+    }
+
+    private fun evidenceWrongFields() {
+
+        val nameEditLay = v.findViewById<TextInputLayout>(R.id.editFullNameLay)
+        val nameEdit = v.findViewById<TextInputEditText>(R.id.editFullName)
+        if (nameEdit.text?.isEmpty() == true)
+            nameEditLay.error = "Field cannot be empty!"
+        else
+            nameEditLay.error = null
+
+        val nickEditLay = v.findViewById<TextInputLayout>(R.id.editNicknameLay)
+        val nickEdit = v.findViewById<TextInputEditText>(R.id.editNickname)
+        if (nickEdit.text?.isEmpty() == true)
+            nickEditLay.error = "Field cannot be empty!"
+        else
+            nickEditLay.error = null
+
+        val emailEditLay = v.findViewById<TextInputLayout>(R.id.editEmailLay)
+        val emailEdit = v.findViewById<TextInputEditText>(R.id.editEmail)
+        if (emailEdit.text?.isEmpty() == true)
+            emailEditLay.error = "Field cannot be empty!"
+        else if (!Patterns.EMAIL_ADDRESS.matcher(emailEdit.text.toString()).matches())
+            emailEditLay.error = "Insert a valid e-mail!"
+        else
+            emailEditLay.error = null
+
+        val locationEditLay = v.findViewById<TextInputLayout>(R.id.editLocationLay)
+        val locationEdit = v.findViewById<TextInputEditText>(R.id.editLocation)
+        if (locationEdit.text?.isEmpty() == true)
+            locationEditLay.error = "Field cannot be empty!"
+        else
+            locationEditLay.error = null
+
+        val descriptionEditLay = v.findViewById<TextInputLayout>(R.id.editDescriptionLay)
+        val descriptionEdit = v.findViewById<TextInputEditText>(R.id.editDescription)
+        if (descriptionEdit.text?.isEmpty() == true)
+            descriptionEditLay.error = "Field cannot be empty!"
+        else
+            descriptionEditLay.error = null
 
     }
 

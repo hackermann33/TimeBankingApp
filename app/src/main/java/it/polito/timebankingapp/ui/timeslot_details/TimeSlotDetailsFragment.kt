@@ -73,7 +73,7 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
         /*val ts = TimeSlot().also {
             it.title = "TitleTrial"; it.description = "Descr trial"; it.date = "2022/12/18"; it.time = "14:15"; it.duration = "56"; it.location = "Turin"
         }*/
-        val b = bundleOf("timeslot" to model.selected.value)
+        val b = bundleOf("timeslot" to arguments?.getSerializable("timeslot") as TimeSlot?)
         findNavController().navigate(R.id.action_nav_timeSlotDetails_to_timeSlotEditFragment, b)
     }
 }
