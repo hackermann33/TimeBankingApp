@@ -4,9 +4,11 @@ import android.os.Bundle
 import android.text.InputType
 import android.text.format.DateFormat.is24HourFormat
 import android.util.Log
+import android.view.KeyEvent
 import androidx.fragment.app.Fragment
 import android.view.View
 import android.widget.Button
+import androidx.activity.addCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
@@ -26,7 +28,7 @@ import java.util.*
 /** TODO: When edit is confirmed, global view model should be updated (DB)
  **/
 
-val DEBUG = false
+val DEBUG = true
 
 class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
 
@@ -61,59 +63,58 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
         dateEditText = view.findViewById(R.id.edit_timeslot_Date)
         timeEditText = view.findViewById(R.id.edit_timeslot_Time)
 
-        durationEditText = view.findViewById<TextInputEditText>(R.id.edit_timeslot_Duration)
-        locationEditText = view.findViewById<TextInputEditText>(R.id.edit_timeslot_Location)
-        descriptionEditText = view.findViewById<TextInputEditText>(R.id.edit_timeslot_Description)
+        durationEditText = view.findViewById(R.id.edit_timeslot_Duration)
+        locationEditText = view.findViewById(R.id.edit_timeslot_Location)
+        descriptionEditText = view.findViewById(R.id.edit_timeslot_Description)
 
         buildDatePicker()
         buildTimePicker()
 
         showTimeSlot()
 
-
-
-        val addButton = view.findViewById<Button>(R.id.addTimeSlotButton)
-        addButton.isVisible = addMode
-        addButton.setOnClickListener {
-            val ts = retrieveTimeSlotData()
-            if(ts.isValid()) {
-                tsToEdit.clone(ts)
-                vm.addTimeSlot(tsToEdit)
-                findNavController().navigateUp()
-                /*AlertDialog.Builder(requireActivity())
-                    .setTitle("TimeSlot correctly created!")
-                    .setMessage("Your TimeSlot was correctly created. You can now find it with the others in your list!")
-                    .setPositiveButton("Ok"){ _, _ ->
-                        cleanFields()
-                    }
-                    .show()*/
-                //getActivity().getFragmentManager().popBackStack();
-                //val id = parentFragmentManager.getBackStackEntryAt(R.id.nav_timeSlotEdit).id
-            //findNavController().navigate(R.id.action_nav_timeSlotEdit_to_nav_timeSlotsList)
+        if(!addMode) {
+            requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+                handleTimeSlotConfirmation()
+                }
+        }else {
+            val addButton = view.findViewById<Button>(R.id.addTimeSlotButton)
+            addButton.isVisible = addMode
+            addButton.setOnClickListener {
+                handleTimeSlotConfirmation()
             }
-            else{
-                AlertDialog.Builder(requireActivity())
-                    .setTitle("TimeSlot not created!")
-                    .setMessage("Your TimeSlot was not created. Make sure to not leave empty fields")
-                    .setPositiveButton("Ok") { _, _ ->
-                        evidenceWrongFields()
-                    }
-                    .show()
-            }
+        }
+    }
+
+    private fun handleTimeSlotConfirmation() {
+
+        val ts = retrieveTimeSlotData()
+        if(ts.isValid()) {
+            tsToEdit.clone(ts)
+            vm.addTimeSlot(tsToEdit)
+            findNavController().navigateUp()
+        }
+        else{
+            AlertDialog.Builder(requireActivity())
+                .setTitle("TimeSlot not created!")
+                .setMessage("Your TimeSlot was not created. Make sure to not leave empty fields")
+                .setPositiveButton("Ok") { _, _ ->
+                    evidenceWrongFields()
+                }
+                .show()
         }
     }
 
     private fun showTimeSlot() {
 
-        titleEditText.setText(tsToEdit?.title)
-        dateEditText.setText(tsToEdit?.date ?: "")
+        titleEditText.setText(tsToEdit.title)
+        dateEditText.setText(tsToEdit.date )
         timeEditText.setText(tsToEdit.time)
 
-        durationEditText.setText(tsToEdit?.duration ?: "")
+        durationEditText.setText(tsToEdit.duration )
 
-        locationEditText.setText(tsToEdit?.location ?: "")
+        locationEditText.setText(tsToEdit.location )
 
-        descriptionEditText.setText(tsToEdit?.description ?: "")
+        descriptionEditText.setText(tsToEdit.description )
 
         if(addMode && DEBUG) {
             titleEditText.setText("titleTmp")
@@ -189,30 +190,8 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
 
     }
 
-    private fun cleanFields() {
-        val titleEditText = v.findViewById<TextInputEditText>(R.id.edit_timeslot_Title)
-        titleEditText.setText("")
 
-        val dateEditText = v.findViewById<TextInputEditText>(R.id.edit_timeslot_Date)
-        dateEditText.setText("")
-
-        val timeEditText = v.findViewById<TextInputEditText>(R.id.edit_timeslot_Time)
-        timeEditText.setText("")
-
-        val durationEditText = v.findViewById<TextInputEditText>(R.id.edit_timeslot_Duration)
-        durationEditText.setText("")
-
-        val locationEditText = v.findViewById<TextInputEditText>(R.id.edit_timeslot_Location)
-        locationEditText.setText("")
-
-        val descriptionEditText = v.findViewById<TextInputEditText>(R.id.edit_timeslot_Description)
-        descriptionEditText.setText("")
-
-
-    }
-
-
-    override fun onDetach() {
+    /*override fun onDetach() {
         if(arguments?.getSerializable("timeslot") != null) {
             //was in edit mode, not creation
             val ts = retrieveTimeSlotData()
@@ -230,7 +209,7 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
             }
         }
         super.onDetach()
-    }
+    }*/
 
     private fun evidenceWrongFields() {
 
