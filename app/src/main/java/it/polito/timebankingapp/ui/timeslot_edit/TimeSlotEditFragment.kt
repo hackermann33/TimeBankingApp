@@ -71,14 +71,14 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
         buildTimePicker()
 
         showTimeSlot()
+        val addButton = view.findViewById<Button>(R.id.addTimeSlotButton)
+        addButton.isVisible = addMode
 
         if(!addMode) {
             requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
                 handleTimeSlotConfirmation()
                 }
         }else {
-            val addButton = view.findViewById<Button>(R.id.addTimeSlotButton)
-            addButton.isVisible = addMode
             addButton.setOnClickListener {
                 handleTimeSlotConfirmation()
             }
@@ -90,7 +90,10 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
         val ts = retrieveTimeSlotData()
         if(ts.isValid()) {
             tsToEdit.clone(ts)
-            vm.addTimeSlot(tsToEdit)
+            if(addMode)
+                vm.addTimeSlot(tsToEdit)
+            else
+                vm.editTimeSlot(tsToEdit)
             findNavController().navigateUp()
         }
         else{
