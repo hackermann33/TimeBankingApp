@@ -7,15 +7,18 @@ import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import it.polito.timebankingapp.R
 import it.polito.timebankingapp.model.timeslot.TimeSlot
+import it.polito.timebankingapp.ui.timeslots_list.TimeSlotsListViewModel
 
 
 class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
 
     private val model: TimeSlotSharedViewModel by activityViewModels()
+    val globalModel : TimeSlotsListViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,7 +28,12 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        showTimeSlot(view, arguments?.getSerializable("timeslot") as TimeSlot?) //temp
+        val ts = globalModel.selectedTimeSlot.value
+        globalModel.selectedTimeSlot.observe(viewLifecycleOwner) {
+            showTimeSlot(view, it)
+        }
+
+        //showTimeSlot(view, arguments?.getSerializable("timeslot") as TimeSlot?) //temp
         /* da decommentare quando si userà decentemente la viewmodel
         model.selected.observe(viewLifecycleOwner, Observer<TimeSlot> { ts ->
             // Update the UI
