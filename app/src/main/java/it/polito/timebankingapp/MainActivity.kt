@@ -32,13 +32,7 @@ class MainActivity : AppCompatActivity() {
 
         setSupportActionBar(binding.appBarMain.toolbar)
 
-        binding.appBarMain.addTimeSlotButton.setOnClickListener { _ ->
-/*            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null)
 
- */
-            findNavController(R.id.nav_host_fragment_content_main).navigate(R.id.action_timeSlotListFragment_to_nav_timeSlotEdit)
-        }
         val drawerLayout: DrawerLayout = binding.drawerLayout
         val navView: NavigationView = binding.navView
         val navController = findNavController(R.id.nav_host_fragment_content_main)
