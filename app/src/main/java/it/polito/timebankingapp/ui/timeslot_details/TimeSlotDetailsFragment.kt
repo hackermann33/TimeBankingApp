@@ -7,8 +7,6 @@ import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import it.polito.timebankingapp.R
 import it.polito.timebankingapp.model.timeslot.TimeSlot
@@ -17,8 +15,8 @@ import it.polito.timebankingapp.ui.timeslots_list.TimeSlotsListViewModel
 
 class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
 
-    private val model: TimeSlotSharedViewModel by activityViewModels()
     val globalModel : TimeSlotsListViewModel by activityViewModels()
+    private lateinit var timeSlotToEdit: TimeSlot
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,6 +28,7 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
 
         val ts = globalModel.selectedTimeSlot.value
         globalModel.selectedTimeSlot.observe(viewLifecycleOwner) {
+            timeSlotToEdit = ts?: TimeSlot()
             showTimeSlot(view, it)
         }
 
@@ -81,7 +80,7 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
         /*val ts = TimeSlot().also {
             it.title = "TitleTrial"; it.description = "Descr trial"; it.date = "2022/12/18"; it.time = "14:15"; it.duration = "56"; it.location = "Turin"
         }*/
-        val b = bundleOf("timeslot" to arguments?.getSerializable("timeslot") as TimeSlot?)
+        val b = bundleOf("timeslot" to timeSlotToEdit)
         findNavController().navigate(R.id.action_nav_timeSlotDetails_to_timeSlotEditFragment, b)
     }
 }
