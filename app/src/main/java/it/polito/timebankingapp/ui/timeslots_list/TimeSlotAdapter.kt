@@ -1,5 +1,7 @@
 package it.polito.timebankingapp.ui.timeslots_list
 
+import android.os.Bundle
+import android.util.Log
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.DiffUtil
 import android.view.LayoutInflater
@@ -7,8 +9,10 @@ import android.view.ViewGroup
 import android.widget.TextView
 import android.view.View
 import android.widget.ImageView
+import androidx.annotation.IdRes
 
 import androidx.core.os.bundleOf
+import androidx.navigation.NavController
 import androidx.navigation.Navigation
 
 import it.polito.timebankingapp.model.timeslot.TimeSlot
@@ -16,27 +20,30 @@ import it.polito.timebankingapp.R
 
 
 class TimeSlotAdapter(
-    private val data: MutableList<TimeSlot>
-    ) : RecyclerView.Adapter<TimeSlotAdapter.ItemViewHolder>() {
+    var data: MutableList<TimeSlot>,
+    val selectTimeSlot: (Int) -> Unit
+) : RecyclerView.Adapter<TimeSlotAdapter.ItemViewHolder>() {
 
     //private var filter: Boolean = false
     private var displayData = data.toMutableList()
 
 
 
-    class ItemViewHolder(v: View) : RecyclerView.ViewHolder(v) {
-        private val title: TextView = v.findViewById(R.id.time_slots_item_title)
-        private val location: TextView = v.findViewById(R.id.time_slots_item_location)
-        private val start: TextView = v.findViewById(R.id.time_slots_item_start)
-        private val duration: TextView = v.findViewById(R.id.time_slots_item_duration)
-        private val editButton: ImageView = v.findViewById(R.id.time_slots_edit_button)
+    class ItemViewHolder(val mainView: View) : RecyclerView.ViewHolder(mainView) {
+        private val title: TextView = mainView.findViewById(R.id.time_slots_item_title)
+        private val location: TextView = mainView.findViewById(R.id.time_slots_item_location)
+        private val start: TextView = mainView.findViewById(R.id.time_slots_item_start)
+        private val duration: TextView = mainView.findViewById(R.id.time_slots_item_duration)
+        private val editButton: ImageView = mainView.findViewById(R.id.time_slots_edit_button)
 
-        fun bind(ts: TimeSlot, action: (v: View) -> Unit) {
+
+        fun bind(ts: TimeSlot, editAction: (v: View) -> Unit, detailAction: (v: View) -> Unit) {
             title.text = ts.title
             location.text = ts.location
             start.text = ts.date +" "+ts.time
             duration.text = ts.duration
-            editButton.setOnClickListener(action)
+            editButton.setOnClickListener(editAction)
+            this.mainView.setOnClickListener(detailAction)
         }
 
         fun unbind() {
@@ -46,7 +53,6 @@ class TimeSlotAdapter(
 
     //inflate the item_layout-based structure inside each ViewHolder
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
-
         val vg = LayoutInflater
             .from(parent.context)
             .inflate(R.layout.timeslots_item_layout, parent, false) //attachToRoot: take all you measures
@@ -61,7 +67,7 @@ class TimeSlotAdapter(
         //holder.role.text = data[position].role
 
         val item = displayData[position]
-        holder.bind(item) {//1:17:00
+        holder.bind(item, editAction =  {//1:17:00
             val pos = data.indexOf(item)
             if (pos != -1) {
                 //click on edit button
@@ -73,9 +79,14 @@ class TimeSlotAdapter(
 
                 )
             }
-        }
-        //click generico su cardview
-        holder.itemView.setOnClickListener( Navigation.createNavigateOnClickListener(R.id.action_timeSlotListFragment_to_nav_timeSlotDetails, bundleOf("timeslot" to item)) )
+        }, detailAction = {
+            selectTimeSlot(position)
+            Navigation.findNavController(it).navigate(R.id.action_timeSlotListFragment_to_nav_timeSlotDetails)
+        });
+
+
+
+            //Navigation.createNavigateOnClickListener(R.id.action_timeSlotListFragment_to_nav_timeSlotDetails, bundleOf("timeslot" to item)) )
     }
 
     //how many items?

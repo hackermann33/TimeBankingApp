@@ -3,6 +3,7 @@ package it.polito.timebankingapp.ui.timeslots_list
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import it.polito.timebankingapp.model.timeslot.TimeSlot
 import it.polito.timebankingapp.model.timeslot.TimeSlotRepository
 import kotlin.concurrent.thread
@@ -17,6 +18,7 @@ class TimeSlotsListViewModel(application: Application): AndroidViewModel(applica
 
     val timeSlotsNumber: LiveData<Int> = repo.count()
     val timeSlots: LiveData<List<TimeSlot>> = repo.timeSlots()
+    val selectedTimeSlot =  MutableLiveData<TimeSlot>()
 
     fun addTimeSlot(ts: TimeSlot) {
         thread {
@@ -35,6 +37,14 @@ class TimeSlotsListViewModel(application: Application): AndroidViewModel(applica
             repo.clear()
         }
     }
+
+    fun setSelectedTimeSlot(pos: Int){
+        val ts = timeSlots.value?.get(pos) ?: TimeSlot()
+        selectedTimeSlot.value = ts
+    }
+
+
+
 
 
 

@@ -5,9 +5,9 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import android.view.View
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import it.polito.timebankingapp.R
-import it.polito.timebankingapp.model.timeslot.TimeSlot
 
 /**
  * A fragment representing a list of Items.
@@ -16,7 +16,8 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_timeslots_list) {
 
     private var columnCount = 1 //credo sia da rimuovere
 
-    val vm by viewModels<TimeSlotsListViewModel>()
+    val vm : TimeSlotsListViewModel by activityViewModels()
+    private lateinit var rv:RecyclerView
 
     /*
     private fun createItems(n: Int): MutableList<TimeSlot> {
@@ -41,17 +42,28 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_timeslots_list) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
-        val rv = view.findViewById<RecyclerView>(R.id.time_slot_list)
+        rv = view.findViewById<RecyclerView>(R.id.time_slot_list)
         rv.layoutManager = LinearLayoutManager(context)
 
+        var adTmp = TimeSlotAdapter(vm.timeSlots.value?.toMutableList() ?: mutableListOf(), ::selectTimeSlot)
+        rv.adapter = adTmp
         vm.timeSlots.observe(viewLifecycleOwner){
-            rv.adapter = TimeSlotAdapter(it.toMutableList())
+            if(it.isNotEmpty()){
+                adTmp = TimeSlotAdapter(it.toMutableList(), ::selectTimeSlot)
+                adTmp.data = it.toMutableList()
+                rv.adapter = adTmp
+            }
         }
 
         /*
         val adapter= TimeSlotAdapter(l)
         rv.adapter = adapter
         */
+    }
+
+    private fun selectTimeSlot(pos: Int) {
+        vm.setSelectedTimeSlot(pos)
+
     }
 
 
