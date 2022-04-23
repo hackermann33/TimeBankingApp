@@ -1,16 +1,10 @@
 package it.polito.timebankingapp.model.timeslot
 
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
-import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import java.io.Serializable
+import java.util.*
 
 @Entity(tableName = "time_slots", indices = [Index("title")])
 class TimeSlot(
@@ -52,5 +46,34 @@ class TimeSlot(
             Patterns.EMAIL_ADDRESS.matcher(email).matches()
         }
     }*/
+    fun getDay(): Int {
+        return date.split("/")[0].trim().toInt()
+    }
+    fun getMonth(): Int {
+        return date.split("/")[1].trim().toInt()
+    }
+    fun getYear(): Int {
+        return date.split("/")[2].trim().toInt()
+    }
+    fun getHour(): Int {
+        return time.split(":")[0].trim().toInt()
+    }
+    fun getMinute(): Int {
+        return time.split(":")[1].trim().toInt()
+    }
+
+    fun getCalendar(): Calendar {
+        val calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
+
+        if(date.isNotEmpty()) {
+            calendar[Calendar.YEAR] = getYear()
+            calendar[Calendar.MONTH] = getMonth()
+            calendar[Calendar.DAY_OF_MONTH] = getDay()
+            calendar[Calendar.HOUR] = getHour()
+            calendar[Calendar.MINUTE] = getMinute()
+
+        }
+        return calendar
+    }
 }
 
