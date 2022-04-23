@@ -10,7 +10,9 @@ import android.widget.Button
 import androidx.appcompat.app.AlertDialog
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
+import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
@@ -26,11 +28,12 @@ import java.util.*
 /** TODO: When edit is confirmed, global view model should be updated (DB)
  **/
 
+val DEBUG = true
 
 class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
 
     private val vm by viewModels<TimeSlotsListViewModel>()
-    private var temp: TimeSlot? = TimeSlot()
+    private var tsTmp: TimeSlot? = TimeSlot()
 
     private lateinit var v : View
     private var isNew : Boolean = false
@@ -55,17 +58,15 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
         isNew = arguments?.getSerializable("timeslot") == null
         v = view
 
-        temp = arguments?.getSerializable("timeslot") as TimeSlot? ?: TimeSlot()
-
+        tsTmp = arguments?.getSerializable("timeslot") as TimeSlot? ?: TimeSlot()
 
         val titleET = view.findViewById<TextInputEditText>(R.id.edit_timeslot_Title)
-        titleET.setText(temp?.title ?: "")
+        titleET.setText(tsTmp?.title ?: "")
 
         val dateET = view.findViewById<TextInputEditText>(R.id.edit_timeslot_Date)
-        dateET.setText(temp?.date ?: "")
+        dateET.setText(tsTmp?.date ?: "")
 
         var dateFromPicker: Date?
-
 
         val datePicker: MaterialDatePicker<Long> = MaterialDatePicker.Builder.datePicker()
             .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
@@ -90,7 +91,7 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
         }
 
         val timeET = view.findViewById<TextInputEditText>(R.id.edit_timeslot_Time)
-        timeET.setText(temp?.time ?: "")
+        timeET.setText(tsTmp?.time ?: "")
 
         val isSystem24Hour = is24HourFormat(activity)
         val clockFormat = if (isSystem24Hour) TimeFormat.CLOCK_24H else TimeFormat.CLOCK_12H
@@ -98,9 +99,9 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
         val timeFormatter = SimpleDateFormat("hh:mm", Locale.getDefault())
 
         /* If the Item is a newItem, the hour shown in the timePicker will be that one of today.*/
-        val hour: Int = if(!isNew) temp!!.time.split(":")[0].trim().toInt()
+        val hour: Int = if(!isNew) tsTmp!!.time.split(":")[0].trim().toInt()
         else timeFormatter.format(System.currentTimeMillis()).split(":")[0].toInt()
-        val minute: Int = if(!isNew) temp!!.time.split(":")[1].trim().toInt()
+        val minute: Int = if(!isNew) tsTmp!!.time.split(":")[1].trim().toInt()
                         else timeFormatter.format(System.currentTimeMillis()).split(":")[1].toInt()
 
         /*val hour =
@@ -136,28 +137,43 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
         }
 
         val durationET = view.findViewById<TextInputEditText>(R.id.edit_timeslot_Duration)
-        durationET.setText(temp?.duration ?: "")
+        durationET.setText(tsTmp?.duration ?: "")
 
         val locationET = view.findViewById<TextInputEditText>(R.id.edit_timeslot_Location)
-        locationET.setText(temp?.location ?: "")
+        locationET.setText(tsTmp?.location ?: "")
 
         val descriptionET = view.findViewById<TextInputEditText>(R.id.edit_timeslot_Description)
-        descriptionET.setText(temp?.description ?: "")
+        descriptionET.setText(tsTmp?.description ?: "")
+
+        if(isNew && DEBUG) {
+            titleET.setText("titleTmp")
+            dateET.setText("22 / 02 / 2022")
+            timeET.setText("00:00")
+            durationET.setText("1")
+            locationET.setText("testLocation")
+            descriptionET.setText("testDescription")
+        }
+
 
         val addButton = view.findViewById<Button>(R.id.addTimeSlotButton)
-        addButton.isVisible = arguments?.getSerializable("timeslot") == null
+        addButton.isVisible = isNew
         addButton.setOnClickListener {
             val ts = retrieveTimeSlotData()
             if(ts.isValid()) {
-                temp?.clone(ts)
-                vm.addTimeSlot(temp!!)
-                AlertDialog.Builder(requireActivity())
+                tsTmp?.clone(ts)
+                vm.addTimeSlot(tsTmp!!)
+                findNavController().navigateUp()
+                //parentFragmentManager.popBackStackImmediate("",0)
+                /*AlertDialog.Builder(requireActivity())
                     .setTitle("TimeSlot correctly created!")
                     .setMessage("Your TimeSlot was correctly created. You can now find it with the others in your list!")
                     .setPositiveButton("Ok"){ _, _ ->
                         cleanFields()
                     }
-                    .show()
+                    .show()*/
+                //getActivity().getFragmentManager().popBackStack();
+                //val id = parentFragmentManager.getBackStackEntryAt(R.id.nav_timeSlotEdit).id
+            //findNavController().navigate(R.id.action_nav_timeSlotEdit_to_nav_timeSlotsList)
             }
             else{
                 AlertDialog.Builder(requireActivity())
@@ -199,8 +215,8 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
             //was in edit mode, not creation
             val ts = retrieveTimeSlotData()
             if (ts.isValid()) {
-                temp?.clone(ts)
-                vm.editTimeSlot(temp!!)
+                tsTmp?.clone(ts)
+                vm.editTimeSlot(tsTmp!!)
             } else {
                 AlertDialog.Builder(requireActivity())
                     .setTitle("TimeSlot not modified!")
