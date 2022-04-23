@@ -72,16 +72,14 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
 
 
 
-
         val addButton = view.findViewById<Button>(R.id.addTimeSlotButton)
         addButton.isVisible = addMode
         addButton.setOnClickListener {
             val ts = retrieveTimeSlotData()
             if(ts.isValid()) {
-                tsToEdit?.clone(ts)
-                vm.addTimeSlot(tsToEdit!!)
+                tsToEdit.clone(ts)
+                vm.addTimeSlot(tsToEdit)
                 findNavController().navigateUp()
-                //parentFragmentManager.popBackStackImmediate("",0)
                 /*AlertDialog.Builder(requireActivity())
                     .setTitle("TimeSlot correctly created!")
                     .setMessage("Your TimeSlot was correctly created. You can now find it with the others in your list!")
@@ -120,7 +118,7 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
         if(addMode && DEBUG) {
             titleEditText.setText("titleTmp")
             dateEditText.setText("22 / 02 / 2022")
-            timeEditText.setText("00:00")
+            timeEditText.setText("00 : 00")
             durationEditText.setText("1")
             locationEditText.setText("testLocation")
             descriptionEditText.setText("testDescription")
@@ -235,43 +233,43 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
     }
 
     private fun evidenceWrongFields() {
+
         val titleLay = v.findViewById<TextInputLayout>(R.id.edit_timeslot_TitleLay)
-        val titleEditText = v.findViewById<TextInputEditText>(R.id.edit_timeslot_Title)
         if(titleEditText.text?.isEmpty() == true)
             titleLay.error = "Field cannot be empty!"
         else
             titleLay.error = null
 
         val dateLay = v.findViewById<TextInputLayout>(R.id.edit_timeslot_DateLay)
-        val dateEditText = v.findViewById<TextInputEditText>(R.id.edit_timeslot_Date)
+
         if(dateEditText.text?.isEmpty() == true)
             dateLay.error = "Field cannot be empty!"
         else
             dateLay.error = null
 
         val timeLay = v.findViewById<TextInputLayout>(R.id.edit_timeslot_TimeLay)
-        val timeEditText = v.findViewById<TextInputEditText>(R.id.edit_timeslot_Time)
+
         if(timeEditText.text?.isEmpty() == true)
             timeLay.error = "Field cannot be empty!"
         else
             timeLay.error = null
 
         val durationLay = v.findViewById<TextInputLayout>(R.id.edit_timeslot_DurationLay)
-        val durationEditText = v.findViewById<TextInputEditText>(R.id.edit_timeslot_Duration)
+
         if(durationEditText.text?.isEmpty() == true)
             durationLay.error = "Field cannot be empty!"
         else
             durationLay.error = null
 
         val locationLay = v.findViewById<TextInputLayout>(R.id.edit_timeslot_LocationLay)
-        val locationEditText = v.findViewById<TextInputEditText>(R.id.edit_timeslot_Location)
+
         if(locationEditText.text?.isEmpty() == true)
             locationLay.error = "Field cannot be empty!"
         else
             locationLay.error = null
 
         val descriptionLay = v.findViewById<TextInputLayout>(R.id.edit_timeslot_DescriptionLay)
-        val descriptionEditText = v.findViewById<TextInputEditText>(R.id.edit_timeslot_Description)
+
         if(descriptionEditText.text?.isEmpty() == true)
             descriptionLay.error = "Field cannot be empty!"
         else
@@ -283,22 +281,16 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
 
         val ts = TimeSlot()
 
-        val titleEditText = v.findViewById<TextInputEditText>(R.id.edit_timeslot_Title)
         ts.title = titleEditText.text.toString()
 
-        val dateEditText = v.findViewById<TextInputEditText>(R.id.edit_timeslot_Date)
         ts.date = dateEditText.text.toString()
 
-        val timeEditText = v.findViewById<TextInputEditText>(R.id.edit_timeslot_Time)
         ts.time = timeEditText.text.toString()
 
-        val durationEditText = v.findViewById<TextInputEditText>(R.id.edit_timeslot_Duration)
         ts.duration = durationEditText.text.toString()
 
-        val locationEditText = v.findViewById<TextInputEditText>(R.id.edit_timeslot_Location)
         ts.location = locationEditText.text.toString()
 
-        val descriptionEditText = v.findViewById<TextInputEditText>(R.id.edit_timeslot_Description)
         ts.description = descriptionEditText.text.toString()
 
         return ts
