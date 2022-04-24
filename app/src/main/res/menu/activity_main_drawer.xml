@@ -6,11 +6,11 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_timeSlotsList"
-            android:icon="@drawable/ic_menu_slideshow"
+            android:icon="@drawable/ic_baseline_list_24"
             android:title="@string/menu_drawer_timeslots_list" />
         <item
             android:id="@+id/nav_showProfile"
-            android:icon="@drawable/pencil_edit_icon_18"
+            android:icon="@drawable/ic_baseline_account_box_24"
             android:title="@string/menu_drawer_show_profile" />
     </group>
 </menu>

@@ -40,8 +40,8 @@ class TimeSlotAdapter(
         fun bind(ts: TimeSlot, editAction: (v: View) -> Unit, detailAction: (v: View) -> Unit) {
             title.text = ts.title
             location.text = ts.location
-            start.text = ts.date +" "+ts.time
-            duration.text = ts.duration
+            start.text = ts.date.plus(" ").plus(ts.time)
+            duration.text = ts.duration.plus(" hour(s)")
             editButton.setOnClickListener(editAction)
             this.mainView.setOnClickListener(detailAction)
         }

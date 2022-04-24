@@ -121,8 +121,8 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
 
         if(addMode && DEBUG) {
             titleEditText.setText("titleTmp")
-            dateEditText.setText("22 / 02 / 2022")
-            timeEditText.setText("00 : 00")
+            dateEditText.setText("22/02/2022")
+            timeEditText.setText("00:00")
             durationEditText.setText("1")
             locationEditText.setText("testLocation")
             descriptionEditText.setText("testDescription")
@@ -161,7 +161,7 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
 
 
         timePicker.addOnPositiveButtonClickListener {
-            val t = String.format("%02d : %02d", timePicker.hour,timePicker.minute)
+            val t = String.format("%02d:%02d", timePicker.hour,timePicker.minute)
             timeEditText.setText(t)
         }
     }
@@ -186,7 +186,7 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
         datePicker.addOnPositiveButtonClickListener {
             calendar.timeInMillis = datePicker.selection!!
 
-            val dateFormatToShow = SimpleDateFormat("dd / MM / yyyy", Locale.getDefault())
+            val dateFormatToShow = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
 
             dateEditText.setText(dateFormatToShow.format(calendar.time))
         }
