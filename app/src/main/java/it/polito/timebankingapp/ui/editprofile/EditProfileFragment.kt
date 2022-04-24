@@ -50,7 +50,7 @@ private var SKILLS = arrayOf(
 
 const val REQUEST_PIC = 1
 
-class EditProfileActivity : Fragment(R.layout.fragment_editprofile) {
+class EditProfileFragment : Fragment(R.layout.fragment_editprofile) {
 
     private lateinit var profilePic: CircleImageView
     private var usr: User = User()

@@ -31,10 +31,10 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.editprofile.EditProfileActivity"
+            android:name=".ui.editprofile.EditProfileFragment"
             android:exported="false" />
         <activity
-            android:name=".ui.showprofile.ShowProfileActivity"
+            android:name=".ui.showprofile.ShowProfileFragment"
             android:exported="false"/>
         <meta-data
             android:name="preloaded_fonts"

@@ -40,17 +40,17 @@
     </fragment>
     <fragment
         android:id="@+id/nav_showProfile"
-        android:name="it.polito.timebankingapp.ui.showprofile.ShowProfileActivity"
-        android:label="fragment_showprofile"
+        android:name="it.polito.timebankingapp.ui.showprofile.ShowProfileFragment"
+        android:label="Your Profile"
         tools:layout="@layout/fragment_showprofile" >
         <action
             android:id="@+id/action_showProfileFragment_to_editProfileActivity"
-            app:destination="@id/editProfileFragment" />
+            app:destination="@id/nav_editProfile" />
     </fragment>
     <fragment
-        android:id="@+id/editProfileFragment"
-        android:name="it.polito.timebankingapp.ui.editprofile.EditProfileActivity"
-        android:label="fragment_editprofile"
+        android:id="@+id/nav_editProfile"
+        android:name="it.polito.timebankingapp.ui.editprofile.EditProfileFragment"
+        android:label="Edit profile details"
         tools:layout="@layout/fragment_editprofile" />
 
 </navigation>

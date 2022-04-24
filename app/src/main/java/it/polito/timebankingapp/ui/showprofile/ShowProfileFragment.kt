@@ -23,7 +23,7 @@ import com.google.gson.GsonBuilder
 import it.polito.timebankingapp.R
 import it.polito.timebankingapp.model.user.User
 
-class ShowProfileActivity : Fragment(R.layout.fragment_showprofile) {
+class ShowProfileFragment : Fragment(R.layout.fragment_showprofile) {
 
     private lateinit var usr: User
     private lateinit var sharedPref: SharedPreferences
