@@ -3,8 +3,15 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/fifi9/GitHub Repos/TimeBankingApp/app/src/main/res/drawable/ic_baseline_edit_24.xml" value="0.178" />
+        <entry key="..\:/Users/fifi9/GitHub Repos/TimeBankingApp/app/src/main/res/drawable/ic_menu_camera.xml" value="0.178" />
+        <entry key="..\:/Users/fifi9/GitHub Repos/TimeBankingApp/app/src/main/res/drawable/ic_menu_gallery.xml" value="0.178" />
+        <entry key="..\:/Users/fifi9/GitHub Repos/TimeBankingApp/app/src/main/res/drawable/ic_menu_slideshow.xml" value="0.178" />
+        <entry key="..\:/Users/fifi9/GitHub Repos/TimeBankingApp/app/src/main/res/drawable/pencil.xml" value="0.178" />
+        <entry key="..\:/Users/fifi9/GitHub Repos/TimeBankingApp/app/src/main/res/drawable/test.xml" value="0.178" />
         <entry key="..\:/Users/fifi9/GitHub Repos/TimeBankingApp/app/src/main/res/layout-land/activity_showprofileactivity.xml" value="0.3105263157894737" />
-        <entry key="..\:/Users/fifi9/GitHub Repos/TimeBankingApp/app/src/main/res/layout-land/fragment_time_slot_details.xml" value="0.381140350877193" />
+        <entry key="..\:/Users/fifi9/GitHub Repos/TimeBankingApp/app/src/main/res/layout-land/fragment_showprofile.xml" value="0.3570175438596491" />
+        <entry key="..\:/Users/fifi9/GitHub Repos/TimeBankingApp/app/src/main/res/layout-land/fragment_time_slot_details.xml" value="0.25" />
         <entry key="..\:/Users/fifi9/GitHub Repos/TimeBankingApp/app/src/main/res/layout-land/fragment_time_slot_edit.xml" value="0.3105263157894737" />
         <entry key="..\:/Users/fifi9/GitHub Repos/TimeBankingApp/app/src/main/res/layout/activity_congratulations.xml" value="0.17831813576494426" />
         <entry key="..\:/Users/fifi9/GitHub Repos/TimeBankingApp/app/src/main/res/layout/activity_main.xml" value="0.3087719298245614" />
@@ -14,7 +21,8 @@
         <entry key="..\:/Users/fifi9/GitHub Repos/TimeBankingApp/app/src/main/res/layout/content_main.xml" value="0.2490740740740741" />
         <entry key="..\:/Users/fifi9/GitHub Repos/TimeBankingApp/app/src/main/res/layout/fragment_gallery.xml" value="0.3087719298245614" />
         <entry key="..\:/Users/fifi9/GitHub Repos/TimeBankingApp/app/src/main/res/layout/fragment_home.xml" value="0.11574074074074074" />
-        <entry key="..\:/Users/fifi9/GitHub Repos/TimeBankingApp/app/src/main/res/layout/fragment_time_slot_details.xml" value="0.3047619047619048" />
+        <entry key="..\:/Users/fifi9/GitHub Repos/TimeBankingApp/app/src/main/res/layout/fragment_showprofile.xml" value="0.3087719298245614" />
+        <entry key="..\:/Users/fifi9/GitHub Repos/TimeBankingApp/app/src/main/res/layout/fragment_time_slot_details.xml" value="0.25" />
         <entry key="..\:/Users/fifi9/GitHub Repos/TimeBankingApp/app/src/main/res/layout/fragment_time_slot_edit.xml" value="0.33" />
         <entry key="..\:/Users/fifi9/GitHub Repos/TimeBankingApp/app/src/main/res/layout/nav_header_main.xml" value="0.2490740740740741" />
         <entry key="..\:/Users/fifi9/GitHub Repos/TimeBankingApp/app/src/main/res/menu/activity_main_drawer.xml" value="0.18728070175438596" />
