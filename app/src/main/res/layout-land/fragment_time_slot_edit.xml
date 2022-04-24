@@ -56,8 +56,8 @@
                     android:id="@+id/edit_timeslot_Date"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:cursorVisible="false"
                     android:hint="@string/fragment_timeslot_date"
-                    android:inputType="textEmailAddress"
                     tools:ignore="TextContrastCheck" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -72,7 +72,9 @@
                     android:id="@+id/edit_timeslot_Time"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:cursorVisible="false"
                     android:hint="@string/fragment_timeslot_time"
+                    android:inputType="time"
                     tools:ignore="TextContrastCheck" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -88,6 +90,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/fragment_timeslot_duration"
+                    android:inputType="number"
                     tools:ignore="TextContrastCheck" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -120,6 +123,13 @@
                     android:hint="@string/fragment_timeslot_description"
                     tools:ignore="TextContrastCheck" />
             </com.google.android.material.textfield.TextInputLayout>
+
+            <Button
+                android:layout_marginTop="10dp"
+                android:id="@+id/addTimeSlotButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/add_timeslot" />
 
         </LinearLayout>
     </ScrollView>
