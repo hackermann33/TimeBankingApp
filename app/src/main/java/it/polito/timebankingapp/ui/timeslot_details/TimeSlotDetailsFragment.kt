@@ -67,6 +67,7 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
                 editTimeslot() //evoked when the pencil button is pressed
                 true
             }
+
             else -> super.onOptionsItemSelected(item)
         }
     }

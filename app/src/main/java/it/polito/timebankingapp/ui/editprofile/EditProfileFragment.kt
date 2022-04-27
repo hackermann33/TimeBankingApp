@@ -24,6 +24,7 @@ import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.google.android.material.textfield.TextInputEditText
@@ -296,7 +297,7 @@ class EditProfileFragment : Fragment(R.layout.fragment_editprofile) {
             vm.editUser(usr)
             //setFragmentResult("profile", b)
             //returnIntent.putExtra("it.polito.timebankingapp.EditProfileActivity.user", usr)
-
+            findNavController().navigateUp()
         } else {
             AlertDialog.Builder(requireContext())
                 .setTitle("Profile NOT edited!")
@@ -305,7 +306,6 @@ class EditProfileFragment : Fragment(R.layout.fragment_editprofile) {
                     evidenceWrongFields()
                 }
                 .show()
-
         }
 
         super.onDetach()

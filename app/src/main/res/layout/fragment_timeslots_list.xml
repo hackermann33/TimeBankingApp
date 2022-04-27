@@ -9,6 +9,18 @@
     android:layout_marginRight="16dp"
     tools:context=".ui.timeslots_list.TimeSlotListFragment">
 
+    <TextView
+        android:id="@+id/emptyListMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Timeslot List is empty!"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@+id/time_slot_list"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/time_slot_list"
         android:name="it.polito.timebankingapp.ui.TimeSlotListFragment"

@@ -8,6 +8,7 @@ import android.view.KeyEvent
 import androidx.fragment.app.Fragment
 import android.view.View
 import android.widget.Button
+import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
@@ -77,7 +78,8 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
         if(!addMode) {
             requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
                 handleTimeSlotConfirmation()
-                }
+        }
+
         }else {
             addButton.setOnClickListener {
                 handleTimeSlotConfirmation()
@@ -97,9 +99,20 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
             findNavController().navigateUp()
         }
         else{
+            var dialogTitle : String
+            var dialogBody : String
+            if(addMode){
+                dialogTitle = "TimeSlot not created!"
+                dialogBody = "Your TimeSlot was not created. Make sure to not leave empty fields"
+            }
+            else {
+                dialogTitle = "TimeSlot not edited!"
+                dialogBody = "Your TimeSlot was not edited. Make sure to not leave empty fields"
+
+            }
             AlertDialog.Builder(requireActivity())
-                .setTitle("TimeSlot not created!")
-                .setMessage("Your TimeSlot was not created. Make sure to not leave empty fields")
+                .setTitle(dialogTitle)
+                .setMessage(dialogBody)
                 .setPositiveButton("Ok") { _, _ ->
                     evidenceWrongFields()
                 }
