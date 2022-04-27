@@ -23,6 +23,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
+import androidx.fragment.app.viewModels
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.google.android.material.textfield.TextInputEditText
@@ -30,6 +31,7 @@ import com.google.android.material.textfield.TextInputLayout
 import de.hdodenhof.circleimageview.CircleImageView
 import it.polito.timebankingapp.R
 import it.polito.timebankingapp.model.user.User
+import it.polito.timebankingapp.ui.showprofile.ProfileViewModel
 import java.io.*
 
 
@@ -57,6 +59,8 @@ class EditProfileFragment : Fragment(R.layout.fragment_editprofile) {
     private lateinit var skillsGroup: ChipGroup
 
     private lateinit var v : View
+
+    private val vm by viewModels<ProfileViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

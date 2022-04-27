@@ -2,9 +2,10 @@ package it.polito.timebankingapp.model.timeslot
 
 import android.app.Application
 import androidx.lifecycle.LiveData
+import it.polito.timebankingapp.model.TimeBankingDB
 
 class TimeSlotRepository (application: Application){
-    private val timeSlotDao = TimeSlotDB.getDatabase(application).timeSlotDao()
+    private val timeSlotDao = TimeBankingDB.getDatabase(application).timeSlotDao()
 
     fun addTimeSlot(ts: TimeSlot){
         timeSlotDao.addTimeSlot(ts)

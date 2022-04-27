@@ -11,7 +11,9 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResultListener
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
@@ -22,12 +24,14 @@ import java.io.FileNotFoundException
 import com.google.gson.GsonBuilder
 import it.polito.timebankingapp.R
 import it.polito.timebankingapp.model.user.User
+import it.polito.timebankingapp.ui.timeslots_list.TimeSlotsListViewModel
 
 class ShowProfileFragment : Fragment(R.layout.fragment_showprofile) {
 
     private lateinit var usr: User
-    private lateinit var sharedPref: SharedPreferences
     private lateinit var v : View
+
+    val vm : ProfileViewModel by viewModels<ProfileViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,16 +42,28 @@ class ShowProfileFragment : Fragment(R.layout.fragment_showprofile) {
         super.onViewCreated(view, savedInstanceState)
         v = view
 
-        sharedPref = requireActivity().getPreferences(android.content.Context.MODE_PRIVATE)
+        /*sharedPref = requireActivity().getPreferences(android.content.Context.MODE_PRIVATE)
 
         val profile = sharedPref.getString("profile", "")
         usr = if (sharedPref.contains("profile")) GsonBuilder().create()
             .fromJson(profile, User::class.java)
         else User()
 
+         */
+
         //usr = savedInstanceState?.getSerializable("user") as User
 
-        setFragmentResultListener("profile") { requestKey, bundle ->
+        vm.usr.observe(viewLifecycleOwner){
+            if(it != null)
+                usr = it
+            else{
+                usr = User()
+                vm.addUser(usr)
+            }
+            showProfile(view)
+        }
+
+        /*setFragmentResultListener("profile") { requestKey, bundle ->
             usr = bundle.getSerializable("user") as User
             showProfile(view)
             val jsonString = GsonBuilder().create().toJson(usr)

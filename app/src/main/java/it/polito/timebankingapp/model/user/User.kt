@@ -2,10 +2,21 @@ package it.polito.timebankingapp.model.user
 
 import android.text.TextUtils
 import android.util.Patterns
+import androidx.room.Entity
+import androidx.room.Index
+import androidx.room.PrimaryKey
+import androidx.room.TypeConverter
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import java.io.Serializable
+import java.lang.reflect.Type
+import kotlin.reflect.javaType
+import kotlin.reflect.typeOf
 
-
-class User(var pic : String = "",
+@Entity(tableName = "users", indices = [Index("nick")])
+class User(@PrimaryKey(autoGenerate = true)
+           var id: Int = 0,
+           var pic : String = "",
            var fullName: String = "",
            var nick: String = "",
            var email: String = "",
