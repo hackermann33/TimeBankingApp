@@ -24,6 +24,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_timeslots_list) {
 
     val vm : TimeSlotsListViewModel by activityViewModels()
     private lateinit var rv:RecyclerView
+    private lateinit var voidMessageText: TextView
 
     /*
     private fun createItems(n: Int): MutableList<TimeSlot> {
@@ -51,14 +52,20 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_timeslots_list) {
         rv = view.findViewById<RecyclerView>(R.id.time_slot_list)
         rv.layoutManager = LinearLayoutManager(context)
 
+        voidMessageText = view.findViewById<TextView>(R.id.emptyListMessage)
+
         val addTimeSlotButton = view.findViewById<FloatingActionButton>(R.id.addTimeSlotButton)
         var adTmp = TimeSlotAdapter(vm.timeSlots.value?.toMutableList() ?: mutableListOf(), ::selectTimeSlot)
         rv.adapter = adTmp
         vm.timeSlots.observe(viewLifecycleOwner){
             if(it.isNotEmpty()){
+                voidMessageText.isVisible = false
                 adTmp = TimeSlotAdapter(it.toMutableList(), ::selectTimeSlot)
                 adTmp.data = it.toMutableList()
                 rv.adapter = adTmp
+            }
+            else{
+                voidMessageText.isVisible = true
             }
         }
         addTimeSlotButton.setOnClickListener { _ ->

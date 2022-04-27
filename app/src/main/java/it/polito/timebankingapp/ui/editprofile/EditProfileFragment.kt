@@ -15,10 +15,12 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Patterns
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.widget.*
+import androidx.activity.addCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.Fragment
@@ -145,6 +147,10 @@ class EditProfileFragment : Fragment(R.layout.fragment_editprofile) {
 
         addSkillButton.textSize = (4 * resources.displayMetrics.density)
 
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            handleProfileConfirmation()
+        }
+
         showProfile(view)
 
 
@@ -196,6 +202,16 @@ class EditProfileFragment : Fragment(R.layout.fragment_editprofile) {
         val newSkillView = v.findViewById<View>(R.id.editNewSkill) as AutoCompleteTextView
         newSkillView.setAdapter(adapter)
         return newSkillView
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            android.R.id.home -> {
+                handleProfileConfirmation()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -284,7 +300,7 @@ class EditProfileFragment : Fragment(R.layout.fragment_editprofile) {
 
     }
 
-    override fun onDetach() {
+    fun handleProfileConfirmation() {
 
         /* Intent in order to save state and send it to showprofile*/
         retrieveUserData()
@@ -292,8 +308,7 @@ class EditProfileFragment : Fragment(R.layout.fragment_editprofile) {
         if (usr.isValid()) {
             retrieveUserData()
             usr.pic = saveToInternalStorage(profilePic.drawable.toBitmap())
-            val b = Bundle()
-            b.putSerializable("user", usr)
+
             vm.editUser(usr)
             //setFragmentResult("profile", b)
             //returnIntent.putExtra("it.polito.timebankingapp.EditProfileActivity.user", usr)
@@ -308,7 +323,6 @@ class EditProfileFragment : Fragment(R.layout.fragment_editprofile) {
                 .show()
         }
 
-        super.onDetach()
         return
     }
 

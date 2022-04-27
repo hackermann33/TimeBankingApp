@@ -5,6 +5,7 @@ import android.text.InputType
 import android.text.format.DateFormat.is24HourFormat
 import android.util.Log
 import android.view.KeyEvent
+import android.view.MenuItem
 import androidx.fragment.app.Fragment
 import android.view.View
 import android.widget.Button
@@ -54,6 +55,7 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
         addMode = arguments?.getSerializable("timeslot") == null
         v = view
 
+        setHasOptionsMenu(true)
 
         tsToEdit = if(!addMode) arguments?.getSerializable("timeslot") as TimeSlot
         else TimeSlot()
@@ -84,6 +86,16 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
             addButton.setOnClickListener {
                 handleTimeSlotConfirmation()
             }
+        }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            android.R.id.home -> {
+                handleTimeSlotConfirmation()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
         }
     }
 
