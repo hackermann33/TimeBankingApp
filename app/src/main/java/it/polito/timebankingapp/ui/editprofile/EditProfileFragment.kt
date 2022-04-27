@@ -293,7 +293,8 @@ class EditProfileFragment : Fragment(R.layout.fragment_editprofile) {
             usr.pic = saveToInternalStorage(profilePic.drawable.toBitmap())
             val b = Bundle()
             b.putSerializable("user", usr)
-            setFragmentResult("profile", b)
+            vm.editUser(usr)
+            //setFragmentResult("profile", b)
             //returnIntent.putExtra("it.polito.timebankingapp.EditProfileActivity.user", usr)
 
         } else {

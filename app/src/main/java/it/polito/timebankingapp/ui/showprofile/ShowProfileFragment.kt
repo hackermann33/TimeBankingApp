@@ -73,7 +73,7 @@ class ShowProfileFragment : Fragment(R.layout.fragment_showprofile) {
             }
         }
 
-        showProfile(view)
+        showProfile(view) */
     }
 
     private fun showProfile(view: View) {

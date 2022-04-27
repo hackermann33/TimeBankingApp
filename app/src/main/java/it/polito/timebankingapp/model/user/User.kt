@@ -39,3 +39,19 @@ class User(@PrimaryKey(autoGenerate = true)
         }
     }
 }
+
+
+class Converters {
+    @TypeConverter
+    fun fromString(value : String) : MutableList<String> {
+        val listType : Type = object : TypeToken<List<String>>(){}.type
+        return Gson().fromJson(value, listType);
+    }
+
+    @TypeConverter
+    fun fromArrayList(list: MutableList<String> ): String {
+        val gson: Gson = Gson();
+        val json: String = gson.toJson(list);
+        return json;
+    }
+}
