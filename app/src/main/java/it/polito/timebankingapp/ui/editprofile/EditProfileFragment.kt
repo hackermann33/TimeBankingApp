@@ -23,6 +23,7 @@ import android.widget.*
 import androidx.activity.addCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.core.graphics.drawable.toBitmap
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
@@ -312,6 +313,9 @@ class EditProfileFragment : Fragment(R.layout.fragment_editprofile) {
             vm.editUser(usr)
             //setFragmentResult("profile", b)
             //returnIntent.putExtra("it.polito.timebankingapp.EditProfileActivity.user", usr)
+
+            // Use the Kotlin extension in the fragment-ktx artifact
+            setFragmentResult("editProfile", bundleOf("editProfileConfirm" to true))
             findNavController().navigateUp()
         } else {
             AlertDialog.Builder(requireContext())

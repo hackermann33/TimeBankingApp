@@ -1,6 +1,5 @@
 package it.polito.timebankingapp.ui.showprofile
 
-import android.content.SharedPreferences
 import android.content.res.Configuration
 import android.graphics.BitmapFactory
 import android.os.Bundle
@@ -11,20 +10,18 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
+import com.google.android.material.snackbar.Snackbar
 import de.hdodenhof.circleimageview.CircleImageView
+import it.polito.timebankingapp.R
+import it.polito.timebankingapp.model.user.User
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileNotFoundException
-import com.google.gson.GsonBuilder
-import it.polito.timebankingapp.R
-import it.polito.timebankingapp.model.user.User
-import it.polito.timebankingapp.ui.timeslots_list.TimeSlotsListViewModel
 
 class ShowProfileFragment : Fragment(R.layout.fragment_showprofile) {
 
@@ -36,6 +33,7 @@ class ShowProfileFragment : Fragment(R.layout.fragment_showprofile) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -74,6 +72,15 @@ class ShowProfileFragment : Fragment(R.layout.fragment_showprofile) {
         }
 
         showProfile(view) */
+
+        setFragmentResultListener("editProfile") { _, bundle ->
+            val result = bundle.getBoolean("editProfileConfirm")
+
+            if(result){
+                val snackBar = Snackbar.make(view, "Profile successfully edited.", Snackbar.LENGTH_LONG)
+                snackBar.setAction("DISMISS") { snackBar.dismiss() }.show()
+            }
+        }
     }
 
     private fun showProfile(view: View) {

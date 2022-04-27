@@ -9,10 +9,12 @@ import android.widget.ImageButton
 import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.snackbar.Snackbar
 import it.polito.timebankingapp.R
 
 /**
@@ -79,6 +81,23 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_timeslots_list) {
         val adapter= TimeSlotAdapter(l)
         rv.adapter = adapter
         */
+
+
+        setFragmentResultListener("timeSlot") { _, bundle ->
+            val result = bundle.getInt("timeSlotConfirm")
+
+            if(result == 1){
+                val snackBar = Snackbar.make(view, "New time slot successfully added.", Snackbar.LENGTH_LONG)
+                snackBar.setAction("DISMISS") { snackBar.dismiss() }.show()
+            }
+            else if(result == 2) {
+                val snackBar =
+                    Snackbar.make(view, "Time slot successfully edited.", Snackbar.LENGTH_LONG)
+                snackBar.setAction("DISMISS") { snackBar.dismiss() }.show()
+            }
+        }
+
+        
     }
 
     private fun selectTimeSlot(pos: Int) {

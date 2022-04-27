@@ -12,7 +12,9 @@ import android.widget.Button
 import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.appcompat.app.AlertDialog
+import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
+import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.datepicker.MaterialDatePicker
@@ -104,10 +106,14 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
         val ts = retrieveTimeSlotData()
         if(ts.isValid()) {
             tsToEdit.clone(ts)
-            if(addMode)
+            if(addMode) {
                 vm.addTimeSlot(tsToEdit)
-            else
+                setFragmentResult("timeSlot", bundleOf("timeSlotConfirm" to 1))
+            }else {
                 vm.editTimeSlot(tsToEdit)
+                setFragmentResult("timeSlot", bundleOf("timeSlotConfirm" to 2))
+            }
+
             findNavController().navigateUp()
         }
         else{
