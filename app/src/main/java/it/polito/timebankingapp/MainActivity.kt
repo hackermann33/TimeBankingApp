@@ -1,5 +1,6 @@
 package it.polito.timebankingapp
 
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.view.MenuItem
 import android.widget.TextView
