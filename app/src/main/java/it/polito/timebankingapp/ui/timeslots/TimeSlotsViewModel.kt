@@ -1,4 +1,4 @@
-package it.polito.timebankingapp.ui.timeslots_list
+package it.polito.timebankingapp.ui.timeslots
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
@@ -8,7 +8,7 @@ import it.polito.timebankingapp.model.timeslot.TimeSlot
 import it.polito.timebankingapp.model.timeslot.TimeSlotRepository
 import kotlin.concurrent.thread
 
-class TimeSlotsListViewModel(application: Application): AndroidViewModel(application) {
+class TimeSlotsViewModel(application: Application): AndroidViewModel(application) {
 
 
     val repo = TimeSlotRepository(application)

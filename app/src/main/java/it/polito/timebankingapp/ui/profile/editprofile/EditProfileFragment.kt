@@ -1,4 +1,4 @@
-package it.polito.timebankingapp.ui.editprofile
+package it.polito.timebankingapp.ui.profile.editprofile
 
 
 import android.R.attr
@@ -35,7 +35,7 @@ import com.google.android.material.textfield.TextInputLayout
 import de.hdodenhof.circleimageview.CircleImageView
 import it.polito.timebankingapp.R
 import it.polito.timebankingapp.model.user.User
-import it.polito.timebankingapp.ui.showprofile.ProfileViewModel
+import it.polito.timebankingapp.ui.profile.ProfileViewModel
 import java.io.*
 
 

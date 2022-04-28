@@ -1,7 +1,5 @@
-package it.polito.timebankingapp.ui.timeslots_list
+package it.polito.timebankingapp.ui.timeslots.timeslots_list
 
-import android.os.Bundle
-import android.util.Log
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.DiffUtil
 import android.view.LayoutInflater
@@ -9,10 +7,8 @@ import android.view.ViewGroup
 import android.widget.TextView
 import android.view.View
 import android.widget.ImageView
-import androidx.annotation.IdRes
 
 import androidx.core.os.bundleOf
-import androidx.navigation.NavController
 import androidx.navigation.Navigation
 
 import it.polito.timebankingapp.model.timeslot.TimeSlot

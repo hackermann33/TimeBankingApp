@@ -1,4 +1,4 @@
-package it.polito.timebankingapp.ui.showprofile
+package it.polito.timebankingapp.ui.profile
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel

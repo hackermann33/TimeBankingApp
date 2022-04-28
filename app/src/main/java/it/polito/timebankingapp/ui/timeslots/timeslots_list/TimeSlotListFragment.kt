@@ -1,21 +1,19 @@
-package it.polito.timebankingapp.ui.timeslots_list
+package it.polito.timebankingapp.ui.timeslots.timeslots_list
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import android.view.View
-import android.widget.ImageButton
 import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResultListener
-import androidx.fragment.app.viewModels
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import it.polito.timebankingapp.R
+import it.polito.timebankingapp.ui.timeslots.TimeSlotsViewModel
 
 /**
  * A fragment representing a list of Items.
@@ -24,7 +22,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_timeslots_list) {
 
     private var columnCount = 1 //credo sia da rimuovere
 
-    val vm : TimeSlotsListViewModel by activityViewModels()
+    val vm : TimeSlotsViewModel by activityViewModels()
     private lateinit var rv:RecyclerView
     private lateinit var voidMessageText: TextView
 
@@ -97,7 +95,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_timeslots_list) {
             }
         }
 
-        
+
     }
 
     private fun selectTimeSlot(pos: Int) {

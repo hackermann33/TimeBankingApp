@@ -30,12 +30,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".ui.editprofile.EditProfileFragment"
-            android:exported="false" />
-        <activity
-            android:name=".ui.showprofile.ShowProfileFragment"
-            android:exported="false"/>
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />

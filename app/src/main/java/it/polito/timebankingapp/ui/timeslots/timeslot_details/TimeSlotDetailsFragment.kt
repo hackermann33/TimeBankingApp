@@ -1,4 +1,4 @@
-package it.polito.timebankingapp.ui.timeslot_details
+package it.polito.timebankingapp.ui.timeslots.timeslot_details
 
 import android.os.Bundle
 import android.view.*
@@ -10,12 +10,12 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import it.polito.timebankingapp.R
 import it.polito.timebankingapp.model.timeslot.TimeSlot
-import it.polito.timebankingapp.ui.timeslots_list.TimeSlotsListViewModel
+import it.polito.timebankingapp.ui.timeslots.TimeSlotsViewModel
 
 
 class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
 
-    val globalModel : TimeSlotsListViewModel by activityViewModels()
+    val globalModel : TimeSlotsViewModel by activityViewModels()
     private lateinit var timeSlotToEdit: TimeSlot
 
     override fun onCreate(savedInstanceState: Bundle?) {

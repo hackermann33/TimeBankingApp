@@ -6,7 +6,7 @@
     app:startDestination="@id/nav_timeSlotsList">
     <fragment
         android:id="@+id/nav_timeSlotDetails"
-        android:name="it.polito.timebankingapp.ui.timeslot_details.TimeSlotDetailsFragment"
+        android:name="it.polito.timebankingapp.ui.timeslots.timeslot_details.TimeSlotDetailsFragment"
         android:label="Time slot details"
         tools:layout="@layout/fragment_time_slot_details" >
         <action
@@ -20,7 +20,7 @@
 
     <fragment
         android:id="@+id/nav_timeSlotEdit"
-        android:name="it.polito.timebankingapp.ui.timeslot_edit.TimeSlotEditFragment"
+        android:name="it.polito.timebankingapp.ui.timeslots.timeslot_edit.TimeSlotEditFragment"
         android:label="Edit time slot details"
         tools:layout="@layout/fragment_time_slot_edit" >
         <action
@@ -33,7 +33,7 @@
     </fragment>
     <fragment
         android:id="@+id/nav_timeSlotsList"
-        android:name="it.polito.timebankingapp.ui.timeslots_list.TimeSlotListFragment"
+        android:name="it.polito.timebankingapp.ui.timeslots.timeslots_list.TimeSlotListFragment"
         android:label="Time slots list"
         tools:layout="@layout/fragment_timeslots_list" >
         <action
@@ -60,7 +60,7 @@
     </fragment>
     <fragment
         android:id="@+id/nav_showProfile"
-        android:name="it.polito.timebankingapp.ui.showprofile.ShowProfileFragment"
+        android:name="it.polito.timebankingapp.ui.profile.showprofile.ShowProfileFragment"
         android:label="Your Profile"
         tools:layout="@layout/fragment_showprofile" >
         <action
@@ -73,7 +73,7 @@
     </fragment>
     <fragment
         android:id="@+id/nav_editProfile"
-        android:name="it.polito.timebankingapp.ui.editprofile.EditProfileFragment"
+        android:name="it.polito.timebankingapp.ui.profile.editprofile.EditProfileFragment"
         android:label="Edit profile details"
         tools:layout="@layout/fragment_editprofile" />
 

@@ -1,4 +1,4 @@
-package it.polito.timebankingapp.ui.showprofile
+package it.polito.timebankingapp.ui.profile.showprofile
 
 import android.content.res.Configuration
 import android.graphics.BitmapFactory
@@ -19,6 +19,7 @@ import com.google.android.material.snackbar.Snackbar
 import de.hdodenhof.circleimageview.CircleImageView
 import it.polito.timebankingapp.R
 import it.polito.timebankingapp.model.user.User
+import it.polito.timebankingapp.ui.profile.ProfileViewModel
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileNotFoundException

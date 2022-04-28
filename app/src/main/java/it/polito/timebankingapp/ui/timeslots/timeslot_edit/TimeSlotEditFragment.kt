@@ -1,15 +1,12 @@
-package it.polito.timebankingapp.ui.timeslot_edit
+package it.polito.timebankingapp.ui.timeslots.timeslot_edit
 
 import android.os.Bundle
 import android.text.InputType
 import android.text.format.DateFormat.is24HourFormat
-import android.util.Log
-import android.view.KeyEvent
 import android.view.MenuItem
 import androidx.fragment.app.Fragment
 import android.view.View
 import android.widget.Button
-import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.core.os.bundleOf
@@ -24,8 +21,7 @@ import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
 import it.polito.timebankingapp.R
 import it.polito.timebankingapp.model.timeslot.TimeSlot
-import it.polito.timebankingapp.ui.timeslots_list.TimeSlotsListViewModel
-import java.util.Date
+import it.polito.timebankingapp.ui.timeslots.TimeSlotsViewModel
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -36,7 +32,7 @@ val DEBUG = false
 
 class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
 
-    private val vm by viewModels<TimeSlotsListViewModel>()
+    private val vm by viewModels<TimeSlotsViewModel>()
     private var tsToEdit: TimeSlot = TimeSlot()
 
     private lateinit var v : View

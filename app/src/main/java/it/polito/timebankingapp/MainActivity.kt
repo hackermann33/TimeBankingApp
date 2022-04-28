@@ -2,15 +2,10 @@ package it.polito.timebankingapp
 
 import android.graphics.BitmapFactory
 import android.os.Bundle
-import android.os.PersistableBundle
-import android.view.MenuItem
 import android.widget.TextView
 import androidx.activity.viewModels
-import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
@@ -19,7 +14,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.navigation.NavigationView
 import de.hdodenhof.circleimageview.CircleImageView
 import it.polito.timebankingapp.databinding.ActivityMainBinding
-import it.polito.timebankingapp.ui.showprofile.ProfileViewModel
+import it.polito.timebankingapp.ui.profile.ProfileViewModel
 import java.io.File
 import java.io.FileInputStream
 import java.lang.Exception

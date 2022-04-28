@@ -1,4 +1,21 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <!--
+        Color attributes consist mainly of primary, secondary, error, surface and background colors, along with their respective secondary variants and “on” colors. Some of these have been reused from the AppCompat themes (eg. colorPrimary, colorError and android:colorBackground):
+            - colorPrimary: The primary brand color of your app, used most predominantly in theming
+            - colorPrimaryVariant: A lighter/darker variant of your primary brand color, used sparingly in theming
+            - colorOnPrimary: The color used for elements displayed on top of your primary colors (eg. Text and icons, often white or semi-transparent black depending on accessibility)
+            - colorSecondary: The secondary brand color of your app, used mostly as an accent for certain widgets that need to stand out
+            - colorSecondaryVariant: A lighter/darker variant of your secondary brand color, used sparingly in theming
+            - colorOnSecondary: The color used for elements displayed on top of your secondary colors
+            - colorError: The color used for errors (often a shade of red)
+            - colorOnError: The color used for elements displayed on top of your error color
+            - colorSurface: The color used for surfaces (i.e. Material “sheets”)
+            - colorOnSurface: The color used for elements displayed on top of your surface color
+            - android:colorBackground: The color behind all other screen content
+            - colorOnBackground: The color used for elements displayed on top of your background color
+
+        -->
+
     <!-- Base application theme. -->
     <style name="Theme.TimeBankingApp" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
         <!-- Primary brand color. -->
@@ -7,13 +24,20 @@
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/light_blue</item>
-        <item name="colorSecondaryVariant">@color/light_blue</item>
+        <item name="colorSecondaryVariant">@color/accent</item>
         <item name="colorOnSecondary">@color/white</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
         <item name="android:textColor">@color/opaque_black</item>
-        <item name="android:windowBackground">?android:colorBackground</item>
+        <item name="android:textColorSecondary">@color/secondary_text</item>
+        <item name="android:colorBackground">@color/background</item>
+        <item name="colorOnBackground">#212121</item>
+
+        <item name="colorError">#F44336</item>
+        <item name="colorOnError">#FFFFFF</item>
+        <item name="colorSurface">#FFFFFF</item>
+        <item name="colorOnSurface">#212121</item>
     </style>
 
     <style name="Theme.TimeBankingApp.NoActionBar">
