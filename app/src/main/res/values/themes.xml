@@ -45,6 +45,10 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <style name="Theme.TimeBankingApp.headerNavBar" parent="ThemeOverlay.AppCompat.Dark">
+        <item name="android:background">#EFEFEF</item>
+    </style>
+
     <style name="Theme.TimeBankingApp.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="Theme.TimeBankingApp.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
