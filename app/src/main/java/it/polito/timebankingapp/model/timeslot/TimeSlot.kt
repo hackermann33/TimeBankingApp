@@ -17,13 +17,14 @@ class TimeSlot(
     var time: String = ""
     var duration: String = ""
     var location: String = ""
+    var restrictions: String = ""
 
 
 
     override fun toString(): String = "{ title:$title, description: $description, date: $date, time: $time, duration: $duration, location: $location"
 
     fun isValid() : Boolean{
-        return title != "" && description != "" && date != "" && time != "" && duration != "" && location != ""
+        return title != "" && description != "" && date != "" && time != "" && duration != "" && location != "" && restrictions != ""
     }
 
     fun clone(ts : TimeSlot){
@@ -33,6 +34,7 @@ class TimeSlot(
         this.time = ts.time
         this.duration = ts.duration
         this.location = ts.location
+        this.restrictions = ts.restrictions
     }
     /*Here, I'm not checking that String is not empty, because if it's empty it will be used default image*/
     /*fun isValid(): Boolean {

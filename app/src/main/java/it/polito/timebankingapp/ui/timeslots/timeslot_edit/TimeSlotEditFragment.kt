@@ -43,6 +43,7 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
     private lateinit var durationEditText: TextInputEditText
     private lateinit var descriptionEditText: TextInputEditText
     private lateinit var locationEditText: TextInputEditText
+    private lateinit var restrictionsEditText: TextInputEditText
 
     private var addMode : Boolean = false
 
@@ -67,6 +68,7 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
         durationEditText = view.findViewById(R.id.edit_timeslot_Duration)
         locationEditText = view.findViewById(R.id.edit_timeslot_Location)
         descriptionEditText = view.findViewById(R.id.edit_timeslot_Description)
+        restrictionsEditText = view.findViewById(R.id.edit_timeslot_Restrictions)
 
         buildDatePicker()
         buildTimePicker()
@@ -146,6 +148,8 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
 
         descriptionEditText.setText(tsToEdit.description )
 
+        restrictionsEditText.setText(tsToEdit.restrictions )
+
         if(addMode && DEBUG) {
             titleEditText.setText("titleTmp")
             dateEditText.setText("22/02/2022")
@@ -153,6 +157,7 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
             durationEditText.setText("1")
             locationEditText.setText("testLocation")
             descriptionEditText.setText("testDescription")
+            restrictionsEditText.setText("testRestrictions")
         }
 
     }
@@ -284,6 +289,13 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
         else
             descriptionLay.error = null
 
+        val restrictionsLay = v.findViewById<TextInputLayout>(R.id.edit_timeslot_RestrictionsLay)
+
+        if(restrictionsEditText.text?.isEmpty() == true)
+            restrictionsLay.error = "Field cannot be empty!"
+        else
+            restrictionsLay.error = null
+
     }
 
     private fun retrieveTimeSlotData() : TimeSlot{
@@ -301,6 +313,8 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
         ts.location = locationEditText.text.toString()
 
         ts.description = descriptionEditText.text.toString()
+
+        ts.restrictions = restrictionsEditText.text.toString()
 
         return ts
     }

@@ -10,7 +10,7 @@ import it.polito.timebankingapp.model.user.User
 import it.polito.timebankingapp.model.user.UserDao
 
 
-@Database(entities = [TimeSlot::class, User::class], version = 2)
+@Database(entities = [TimeSlot::class, User::class], version = 3)
 @TypeConverters(Converters::class)
 abstract class TimeBankingDB : RoomDatabase() {
     /**

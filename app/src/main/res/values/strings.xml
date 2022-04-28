@@ -17,13 +17,14 @@
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="fragment_timeslot_description">Description</string>
+    <string name="fragment_timeslot_restrictions">Restrictions</string>
     <string name="fragment_timeslot_title">Title</string>
     <string name="fragment_timeslot_date">Date</string>
     <string name="fragment_timeslot_time">Time</string>
     <string name="fragment_timeslot_duration">Duration (hours)</string>
     <string name="fragment_timeslot_location">Location</string>
     <string name="menu_edit_button">Edit</string>
-    <string name="menu_drawer_timeslots_list">Timeslots list</string>
+    <string name="menu_drawer_timeslots_list">Time slots List</string>
     <string name="time_slots_item_title">Title</string>
     <string name="time_slots_edit_icon">timeSlotEditIcon</string>
     <string name="time_slots_item_duration">3h</string>

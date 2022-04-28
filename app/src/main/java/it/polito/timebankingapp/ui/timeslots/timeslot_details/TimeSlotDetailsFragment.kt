@@ -49,6 +49,7 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
         view.findViewById<TextView>(R.id.time_slot_duration).text = ts?.duration.toString()
         view.findViewById<TextView>(R.id.time_slot_location).text = ts?.location
         view.findViewById<TextView>(R.id.time_slot_description).text = ts?.description
+        view.findViewById<TextView>(R.id.time_slot_restrictions).text = ts?.restrictions
 
     }
 

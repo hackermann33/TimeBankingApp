@@ -149,6 +149,27 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/fragment_timeslot_description" />
+
+                <View
+                    android:id="@+id/divider6"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="8dp"
+                    android:background="?android:attr/listDivider" />
+
+                <TextView
+                    style="@style/ItemLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/fragment_timeslot_restrictions" />
+
+                <TextView
+                    android:id="@+id/time_slot_restrictions"
+                    style="@style/Item"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:text="@string/fragment_timeslot_restrictions" />
             </LinearLayout>
 
         </LinearLayout>
