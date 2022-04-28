@@ -7,7 +7,9 @@ import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.setFragmentResultListener
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.snackbar.Snackbar
 import it.polito.timebankingapp.R
 import it.polito.timebankingapp.model.timeslot.TimeSlot
 import it.polito.timebankingapp.ui.timeslots.TimeSlotsViewModel
@@ -39,6 +41,16 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
             showTimeSlot(view, ts)
         })
         */
+
+        setFragmentResultListener("timeSlot") { _, bundle ->
+            val result = bundle.getInt("timeSlotConfirm")
+
+            if(result == 2) {
+                val snackBar =
+                    Snackbar.make(view, "Time slot successfully edited.", Snackbar.LENGTH_LONG)
+                snackBar.setAction("DISMISS") { snackBar.dismiss() }.show()
+            }
+        }
     }
 
 

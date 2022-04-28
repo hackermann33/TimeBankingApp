@@ -92,7 +92,11 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             android.R.id.home -> {
-                handleTimeSlotConfirmation()
+                if(!addMode)
+                    handleTimeSlotConfirmation()
+                else {
+                    findNavController().navigateUp()
+                }
                 true
             }
             else -> super.onOptionsItemSelected(item)

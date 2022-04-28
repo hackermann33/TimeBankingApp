@@ -36,7 +36,7 @@
 
         <item name="colorError">#F44336</item>
         <item name="colorOnError">#FFFFFF</item>
-        <item name="colorSurface">#FFFFFF</item>
+        <item name="colorSurface">#FaFaFa</item>
         <item name="colorOnSurface">#212121</item>
     </style>
 
