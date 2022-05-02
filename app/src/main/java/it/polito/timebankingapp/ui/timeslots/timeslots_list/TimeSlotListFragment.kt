@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import android.view.View
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
@@ -24,7 +25,6 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_timeslots_list) {
 
     val vm : TimeSlotsViewModel by activityViewModels()
     private lateinit var rv:RecyclerView
-    private lateinit var voidMessageText: TextView
 
     /*
     private fun createItems(n: Int): MutableList<TimeSlot> {
@@ -52,7 +52,10 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_timeslots_list) {
         rv = view.findViewById<RecyclerView>(R.id.time_slot_list)
         rv.layoutManager = LinearLayoutManager(context)
 
-        voidMessageText = view.findViewById<TextView>(R.id.emptyListMessage)
+        val voidMessageImage = view.findViewById<ImageView>(R.id.time_slot_icon)
+        val voidMessageText = view.findViewById<TextView>(R.id.emptyListMessage)
+        val voidMessageSubText = view.findViewById<TextView>(R.id.empty_list_second_message)
+
 
         val addTimeSlotButton = view.findViewById<FloatingActionButton>(R.id.addTimeSlotButton)
         var adTmp = TimeSlotAdapter(vm.timeSlots.value?.toMutableList() ?: mutableListOf(), ::selectTimeSlot)
@@ -60,12 +63,18 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_timeslots_list) {
         vm.timeSlots.observe(viewLifecycleOwner){
             if(it.isNotEmpty()){
                 voidMessageText.isVisible = false
+                voidMessageImage.isVisible = false
+                voidMessageSubText.isVisible = false
+
                 adTmp = TimeSlotAdapter(it.toMutableList(), ::selectTimeSlot)
                 adTmp.data = it.toMutableList()
                 rv.adapter = adTmp
             }
             else{
                 voidMessageText.isVisible = true
+                voidMessageImage.isVisible = true
+                voidMessageSubText.isVisible = true
+
             }
         }
         addTimeSlotButton.setOnClickListener { _ ->
