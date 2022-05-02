@@ -19,6 +19,7 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
+import it.polito.timebankingapp.MainActivity
 import it.polito.timebankingapp.R
 import it.polito.timebankingapp.model.timeslot.TimeSlot
 import it.polito.timebankingapp.ui.timeslots.TimeSlotsViewModel
@@ -52,6 +53,7 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         addMode = arguments?.getSerializable("timeslot") == null
+        (requireActivity() as MainActivity).supportActionBar?.title = if(addMode) "Add new time slot" else "Edit time slot"
         v = view
 
         setHasOptionsMenu(true)
