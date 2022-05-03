@@ -29,7 +29,7 @@ import java.util.*
 /** TODO: When edit is confirmed, global view model should be updated (DB)
  **/
 
-val DEBUG = false
+val DEBUG = true
 
 class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
 

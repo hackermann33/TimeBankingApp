@@ -6,18 +6,16 @@ import androidx.room.PrimaryKey
 import java.io.Serializable
 import java.util.*
 
-@Entity(tableName = "time_slots", indices = [Index("title")])
-class TimeSlot(
-) : Serializable {
-    @PrimaryKey(autoGenerate = true)
-    var id: Int = 0
-    var title: String = ""
-    var description: String = ""
-    var date: String = ""
-    var time: String = ""
-    var duration: String = ""
-    var location: String = ""
+data class TimeSlot(
+    var id: String = "",
+    var title: String = "",
+    var description: String = "",
+    var date: String = "",
+    var time: String = "",
+    var duration: String = "",
+    var location: String = "",
     var restrictions: String = ""
+) : Serializable {
 
 
 

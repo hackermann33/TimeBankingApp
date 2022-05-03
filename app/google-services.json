@@ -1,0 +1,68 @@
+{
+  "project_info": {
+    "project_number": "510398211627",
+    "project_id": "mad22-2db56",
+    "storage_bucket": "mad22-2db56.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:510398211627:android:6890aa056fe182874cec6e",
+        "android_client_info": {
+          "package_name": "it.polito.fsapplication"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "510398211627-j263inmqa31c1jsb9heijasmserrjn4l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDN6LrdiV0BK3E5tBk_HNMJl427FwzO-yQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "510398211627-j263inmqa31c1jsb9heijasmserrjn4l.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:510398211627:android:24e2046f2c765a534cec6e",
+        "android_client_info": {
+          "package_name": "it.polito.timebankingapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "510398211627-j263inmqa31c1jsb9heijasmserrjn4l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDN6LrdiV0BK3E5tBk_HNMJl427FwzO-yQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "510398211627-j263inmqa31c1jsb9heijasmserrjn4l.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
