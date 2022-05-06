@@ -30,7 +30,10 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
 
         val ts = globalModel.selectedTimeSlot.value
         globalModel.selectedTimeSlot.observe(viewLifecycleOwner) {
-            timeSlotToEdit = ts?: TimeSlot()
+            timeSlotToEdit = ts ?: TimeSlot()
+            /*if (ts != null) {
+                if(ts.date.isNotEmpty()) ts.date.replace("_", "/")
+            }*/
             showTimeSlot(view, it)
         }
 

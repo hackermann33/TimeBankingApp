@@ -1,9 +1,12 @@
 package it.polito.timebankingapp.model.timeslot
 
+import android.util.Log
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import com.google.android.material.datepicker.MaterialDatePicker
 import java.io.Serializable
+import java.text.SimpleDateFormat
 import java.util.*
 
 data class TimeSlot(
@@ -16,8 +19,6 @@ data class TimeSlot(
     var location: String = "",
     var restrictions: String = ""
 ) : Serializable {
-
-
 
     override fun toString(): String = "{ title:$title, description: $description, date: $date, time: $time, duration: $duration, location: $location"
 
@@ -46,34 +47,18 @@ data class TimeSlot(
             Patterns.EMAIL_ADDRESS.matcher(email).matches()
         }
     }*/
-    fun getDay(): Int {
-        return date.split("/")[0].trim().toInt()
-    }
-    fun getMonth(): Int {
-        return date.split("/")[1].trim().toInt()
-    }
-    fun getYear(): Int {
-        return date.split("/")[2].trim().toInt()
-    }
-    fun getHour(): Int {
-        return time.split(":")[0].trim().toInt()
-    }
-    fun getMinute(): Int {
-        return time.split(":")[1].trim().toInt()
-    }
-
     fun getCalendar(): Calendar {
-        val calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
+        val cal = Calendar.getInstance(TimeZone.getDefault())
 
-        if(date.isNotEmpty()) {
-            calendar[Calendar.YEAR] = getYear()
-            calendar[Calendar.MONTH] = getMonth()
-            calendar[Calendar.DAY_OF_MONTH] = getDay()
-            calendar[Calendar.HOUR] = getHour()
-            calendar[Calendar.MINUTE] = getMinute()
 
+        if(date.isNotEmpty() && time.isNotEmpty()) {
+            val sdf = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
+            cal.time = sdf.parse(this.date + " " + this.time) as Date // all done
         }
-        return calendar
+
+        Log.d("getCalendar", cal.timeInMillis.toString())
+        return cal
     }
+
 }
 
