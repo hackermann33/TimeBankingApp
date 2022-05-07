@@ -2,6 +2,7 @@ package it.polito.timebankingapp.ui.timeslots.timeslot_details
 
 import android.os.Bundle
 import android.view.*
+import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.os.bundleOf
@@ -9,6 +10,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResultListener
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.chip.Chip
+import com.google.android.material.chip.ChipGroup
 import com.google.android.material.snackbar.Snackbar
 import it.polito.timebankingapp.R
 import it.polito.timebankingapp.model.timeslot.TimeSlot
@@ -65,6 +68,17 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
         view.findViewById<TextView>(R.id.time_slot_location).text = ts?.location
         view.findViewById<TextView>(R.id.time_slot_description).text = ts?.description
         view.findViewById<TextView>(R.id.time_slot_restrictions).text = ts?.restrictions
+
+        val chipGroup = view.findViewById<ChipGroup>(R.id.time_slot_skillsGroup)
+
+        chipGroup.removeAllViews()
+        val chip = layoutInflater.inflate(
+            R.layout.chip_layout_showprofile,
+            chipGroup!!.parent.parent as ViewGroup,
+            false
+        ) as Chip
+        chip.text = ts?.relatedSkill
+        chipGroup.addView(chip)
 
     }
 

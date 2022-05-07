@@ -17,13 +17,14 @@ data class TimeSlot(
     var time: String = "",
     var duration: String = "",
     var location: String = "",
-    var restrictions: String = ""
+    var restrictions: String = "",
+    var relatedSkill: String = ""
 ) : Serializable {
 
     override fun toString(): String = "{ title:$title, description: $description, date: $date, time: $time, duration: $duration, location: $location"
 
     fun isValid() : Boolean{
-        return title != "" && description != "" && date != "" && time != "" && duration != "" && location != "" && restrictions != ""
+        return title != "" && description != "" && date != "" && time != "" && duration != "" && location != "" && restrictions != "" && relatedSkill != ""
     }
 
     fun clone(ts : TimeSlot){
@@ -34,6 +35,7 @@ data class TimeSlot(
         this.duration = ts.duration
         this.location = ts.location
         this.restrictions = ts.restrictions
+        this.relatedSkill = ts.relatedSkill
     }
     /*Here, I'm not checking that String is not empty, because if it's empty it will be used default image*/
     /*fun isValid(): Boolean {

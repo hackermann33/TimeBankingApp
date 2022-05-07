@@ -47,4 +47,5 @@
     <string name="my_web_client_id">1031805806645-6530divvc0r01nm9dhik0kholhtabh8h.apps.googleusercontent.com</string>
     <string name="login_error">Login error</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="fragment_timeslot_related_skill">Related skill</string>
 </resources>

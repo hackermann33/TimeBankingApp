@@ -170,6 +170,22 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
                 android:text="@string/fragment_timeslot_restrictions" />
+
+            <TextView
+                style="@style/ItemLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/fragment_timeslot_related_skill" />
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/time_slot_skillsGroup"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="20dp"
+                app:chipSpacingVertical="4dp">
+
+            </com.google.android.material.chip.ChipGroup>
         </LinearLayout>
     </ScrollView>
 
