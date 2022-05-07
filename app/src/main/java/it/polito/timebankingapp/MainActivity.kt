@@ -7,7 +7,6 @@ import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -69,9 +68,10 @@ class MainActivity : AppCompatActivity()/*, DrawerController */{
         // menu should be considered as top level destinations.
         appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.nav_timeSlotsList, /*, R.id.nav_timeSlotDetails*/
+                R.id.nav_personalTimeSlotsList, /*, R.id.nav_timeSlotDetails*/
                 R.id.nav_showProfile,
-                R.id.nav_login
+                R.id.nav_login,
+                R.id.nav_skillsList //nota bug: la freccia direzionale non torna indietro ma apre il drawer
             ),
             drawerLayout
         )

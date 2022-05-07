@@ -1,10 +1,11 @@
 package it.polito.timebankingapp.ui.skillslist
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import it.polito.timebankingapp.R
@@ -43,13 +44,13 @@ class SkillsListFragment : Fragment(R.layout.fragment_skills_list) {
             chip.text = skill
             chipGroup.addView(chip)
         }
-        for (i in 1..chipGroup.childCount) {
-            //val chip = chipGroup.getChildAt(i) as Chip
-
-            /*chip.setOnTouchListener { v, event ->
-               //inserire navigazione qui
-            }*/
-
+        for (i in 0..chipGroup.childCount-1) {
+            val chip = chipGroup.getChildAt(i) as Chip
+            chip.setOnClickListener { view ->
+                val text = (view as Chip).text.toString()
+                val b = bundleOf("skill" to text)
+                findNavController().navigate(R.id.action_nav_skillsList_to_skillSpecificTimeSlotListFragment, b)
+            }
         }
     }
 }

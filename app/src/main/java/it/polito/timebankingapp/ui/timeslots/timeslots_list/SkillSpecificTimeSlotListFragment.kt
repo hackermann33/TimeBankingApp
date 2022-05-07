@@ -19,7 +19,7 @@ import it.polito.timebankingapp.ui.timeslots.TimeSlotsViewModel
 /**
  * A fragment representing a list of Items.
  */
-class TimeSlotListFragment : Fragment(R.layout.fragment_timeslots_list) {
+class SkillSpecificTimeSlotListFragment : Fragment(R.layout.fragment_skill_specific_timeslots_list) {
 
     private var columnCount = 1 //credo sia da rimuovere
 
@@ -58,15 +58,18 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_timeslots_list) {
 
 
         val addTimeSlotButton = view.findViewById<FloatingActionButton>(R.id.addTimeSlotButton)
-        var adTmp = TimeSlotAdapter(vm.timeSlots.value?.toMutableList() ?: mutableListOf(), ::selectTimeSlot)
+        var adTmp = TimeSlotAdapter(vm.timeSlots.value?.toMutableList() ?: mutableListOf(), ::selectTimeSlot, "skill_specific")
         rv.adapter = adTmp
+
+        var skill = arguments?.getString("skill")
+
         vm.timeSlots.observe(viewLifecycleOwner){
             if(it.isNotEmpty()){
                 voidMessageText.isVisible = false
                 voidMessageImage.isVisible = false
                 voidMessageSubText.isVisible = false
 
-                adTmp = TimeSlotAdapter(it.toMutableList(), ::selectTimeSlot)
+                adTmp = TimeSlotAdapter(it.filter{it.relatedSkill ==  skill || skill == null  }.toMutableList(), ::selectTimeSlot, "skill_specific")
                 adTmp.data = it.toMutableList()
                 rv.adapter = adTmp
             }
