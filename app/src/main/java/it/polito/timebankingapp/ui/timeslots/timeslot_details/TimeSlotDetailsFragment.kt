@@ -2,7 +2,6 @@ package it.polito.timebankingapp.ui.timeslots.timeslot_details
 
 import android.os.Bundle
 import android.view.*
-import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.os.bundleOf
@@ -73,7 +72,7 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
 
         chipGroup.removeAllViews()
         val chip = layoutInflater.inflate(
-            R.layout.chip_layout_showprofile,
+            R.layout.chip_layout_show,
             chipGroup!!.parent.parent as ViewGroup,
             false
         ) as Chip

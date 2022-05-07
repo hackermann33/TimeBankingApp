@@ -180,7 +180,7 @@ class EditProfileFragment : Fragment(R.layout.fragment_editprofile) {
 
     private fun addSkillChip(text: String) {
         val chip = layoutInflater.inflate(
-            R.layout.chip_layout_editprofile,
+            R.layout.chip_layout_edit,
             skillsGroup.parent.parent as ViewGroup,
             false
         ) as Chip

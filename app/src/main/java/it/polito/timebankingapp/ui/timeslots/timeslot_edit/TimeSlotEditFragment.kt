@@ -149,7 +149,7 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
 
     private fun addSkillChip(text: String) {
         val chip = layoutInflater.inflate(
-            R.layout.chip_layout_editprofile,
+            R.layout.chip_layout_edit,
             skillsGroup.parent.parent as ViewGroup,
             false
         ) as Chip
@@ -407,6 +407,13 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
             restrictionsLay.error = "Field cannot be empty!"
         else
             restrictionsLay.error = null
+
+        val relatedSkillLay = v.findViewById<TextInputLayout>(R.id.edit_timeslot_RelatedSkillLay)
+
+        if (tsToEdit.relatedSkill == "")
+            relatedSkillLay.error = "Timeslot needs a related skill!"
+        else
+            relatedSkillLay.error = null
 
     }
 

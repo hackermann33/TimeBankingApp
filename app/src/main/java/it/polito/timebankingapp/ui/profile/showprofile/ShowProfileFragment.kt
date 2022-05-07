@@ -132,7 +132,7 @@ class ShowProfileFragment : Fragment(R.layout.fragment_showprofile) {
         chipGroup.removeAllViews()
         usr.skills.forEach { skill ->
             val chip = layoutInflater.inflate(
-                R.layout.chip_layout_showprofile,
+                R.layout.chip_layout_show,
                 chipGroup!!.parent.parent as ViewGroup,
                 false
             ) as Chip

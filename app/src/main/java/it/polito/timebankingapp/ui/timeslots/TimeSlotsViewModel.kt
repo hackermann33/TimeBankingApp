@@ -105,8 +105,9 @@ private fun QueryDocumentSnapshot.toTimeSlot() : TimeSlot? {
         val duration = get("duration") as String
         val location = get("location") as String
         val restrictions = get("restrictions") as String
+        val relatedSkill = get("relatedSkill") as String
 
-        TimeSlot(id, title, desc, date, time, duration, location, restrictions)
+        TimeSlot(id, title, desc, date, time, duration, location, restrictions, relatedSkill)
     } catch(e: Exception) {
         e.printStackTrace()
         null
