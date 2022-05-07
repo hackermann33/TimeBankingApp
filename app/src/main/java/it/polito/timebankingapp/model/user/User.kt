@@ -13,18 +13,20 @@ import java.lang.reflect.Type
 import kotlin.reflect.javaType
 import kotlin.reflect.typeOf
 
-@Entity(tableName = "users", indices = [Index("nick")])
-class User(@PrimaryKey(autoGenerate = true)
-           var id: Int = 0,
-           var pic : String = "",
-           var fullName: String = "",
-           var nick: String = "",
-           var email: String = "",
-           var location: String = "",
-           var skills: MutableList<String> = mutableListOf(),
-           var description: String = "",
-           var balance: Int = 0
-    ) : Serializable {
+
+
+
+class User(
+    var id: String = "",
+    var pic: String = "",
+    var fullName: String = "",
+    var nick: String = "",
+    var email: String = "",
+    var location: String = "",
+    var description: String = "",
+    var balance: Int = 0,
+    var skills: MutableList<String> = mutableListOf()
+) : Serializable {
 
     /*Here, I'm not checking that String is not empty, because if it's empty it will be used default image*/
     fun isValid(): Boolean {
@@ -41,17 +43,3 @@ class User(@PrimaryKey(autoGenerate = true)
 }
 
 
-class Converters {
-    @TypeConverter
-    fun fromString(value : String) : MutableList<String> {
-        val listType : Type = object : TypeToken<List<String>>(){}.type
-        return Gson().fromJson(value, listType);
-    }
-
-    @TypeConverter
-    fun fromArrayList(list: MutableList<String> ): String {
-        val gson: Gson = Gson();
-        val json: String = gson.toJson(list);
-        return json;
-    }
-}

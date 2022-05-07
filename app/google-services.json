@@ -14,11 +14,27 @@
       },
       "oauth_client": [
         {
-          "client_id": "1031805806645-iq0trttbrr2o3bnld6eknedtain0p8ph.apps.googleusercontent.com",
+          "client_id": "1031805806645-2rop6kb4d3udsbq7v2k00jmeas3l7ti1.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "it.polito.timebankingapp",
             "certificate_hash": "71133376016b08ffd7e3981630f75f1fe6277a58"
+          }
+        },
+        {
+          "client_id": "1031805806645-fik2bebv865tnbn36qppq18sbvj41lbo.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "it.polito.timebankingapp",
+            "certificate_hash": "1d65e61dbbe938485d997037bdad870274786a0f"
+          }
+        },
+        {
+          "client_id": "1031805806645-gonk417h72jvqjvu27f11ks1ooaa1e1u.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "it.polito.timebankingapp",
+            "certificate_hash": "74f0d2ffef58d11c333e4d9ec2483df521c3ed73"
           }
         },
         {

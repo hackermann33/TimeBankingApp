@@ -33,4 +33,12 @@
         android:text="@string/fragment_profile_full_name"
         android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
 
+    <Button
+        android:id="@+id/signOutButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:backgroundTint="@color/accent"
+        android:text="@string/sign_out" />
+
 </LinearLayout>

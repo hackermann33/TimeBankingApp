@@ -1,8 +1,8 @@
 package it.polito.timebankingapp
 
-import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.view.View
+import android.widget.Button
 import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -14,16 +14,15 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.navigation.NavigationView
-import de.hdodenhof.circleimageview.CircleImageView
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import it.polito.timebankingapp.databinding.ActivityMainBinding
 import it.polito.timebankingapp.ui.profile.ProfileViewModel
-import java.io.File
-import java.io.FileInputStream
 
 
 interface DrawerController {
-    fun setDrawerLocked();
-    fun setDrawerUnlocked();
+    fun setDrawerLocked()
+    fun setDrawerUnlocked()
 }
 
 
@@ -60,7 +59,7 @@ class MainActivity : AppCompatActivity()/*, DrawerController */{
 
 
         val drawerLayout: DrawerLayout = binding.drawerLayout
-        var navView: NavigationView = binding.navView
+        val navView: NavigationView = binding.navView
         val navController = findNavController(R.id.nav_host_fragment_content_main)
 
 
@@ -77,7 +76,7 @@ class MainActivity : AppCompatActivity()/*, DrawerController */{
         )
 
         //NON RIMUOVERE ANCHE SE INUTILIZZATA
-        var toggle = ActionBarDrawerToggle(this, drawerLayout, binding.appBarMain.toolbar, R.string.drawer_open, R.string.drawer_close);
+        var toggle = ActionBarDrawerToggle(this, drawerLayout, binding.appBarMain.toolbar, R.string.drawer_open, R.string.drawer_close)
 
         navController.addOnDestinationChangedListener{_, destination, _ ->
             if (destination.id == R.id.nav_login) {
@@ -95,7 +94,23 @@ class MainActivity : AppCompatActivity()/*, DrawerController */{
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
-        vm.usr.observe(this) {
+        val signOutButton = navView.getHeaderView(0).findViewById<Button>(R.id.signOutButton)
+        signOutButton.setOnClickListener{
+            Firebase.auth.signOut()
+            vm.logOut()
+        }
+
+        vm.fireBaseUser.observe(this) {
+            val fullName = navView.getHeaderView(0).findViewById<TextView>(R.id.fullName)
+            if(it!= null)
+                fullName.text = it.displayName
+        }
+
+        if(vm.fireBaseUser.value != null) {
+            val fullName = navView.getHeaderView(0).findViewById<TextView>(R.id.fullName)
+        }
+
+        /*vm.usr.observe(this) {
 
             val profilePic = navView.getHeaderView(0).findViewById<CircleImageView>(R.id.profile_pic)
             val fullName = navView.getHeaderView(0).findViewById<TextView>(R.id.fullName)
@@ -111,7 +126,7 @@ class MainActivity : AppCompatActivity()/*, DrawerController */{
                 }
             }
 
-        }
+        }*/
 
 
 

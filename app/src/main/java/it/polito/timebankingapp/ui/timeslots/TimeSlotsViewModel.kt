@@ -67,12 +67,6 @@ class TimeSlotsViewModel(application: Application): AndroidViewModel(application
         super.onCleared()
         l.remove()
     }
-    /*
-    fun clear() {
-        thread {
-            repo.clear()
-        }
-    }*/
 
     fun setSelectedTimeSlot(pos: Int){
         val ts = timeSlots.value?.get(pos) ?: TimeSlot()

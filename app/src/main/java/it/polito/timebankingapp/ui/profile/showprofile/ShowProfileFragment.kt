@@ -10,12 +10,13 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResultListener
-import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.auth.FirebaseUser
 import de.hdodenhof.circleimageview.CircleImageView
 import it.polito.timebankingapp.R
 import it.polito.timebankingapp.model.user.User
@@ -27,9 +28,11 @@ import java.io.FileNotFoundException
 class ShowProfileFragment : Fragment(R.layout.fragment_showprofile) {
 
     private lateinit var usr: User
+    private lateinit var loggedUser: FirebaseUser
     private lateinit var v : View
 
-    val vm : ProfileViewModel by viewModels<ProfileViewModel>()
+    val vm : ProfileViewModel by activityViewModels()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,6 +43,20 @@ class ShowProfileFragment : Fragment(R.layout.fragment_showprofile) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         v = view
+
+        val navController = findNavController()
+
+
+        vm.fireBaseUser.observe(viewLifecycleOwner){
+            if(it != null) {
+                loggedUser = it
+            }
+            else
+                navController.navigate(R.id.nav_login)
+        }
+
+        //loggedUser = usrVm.userProfile.value!!
+        //showProfile(view)
 
         /*sharedPref = requireActivity().getPreferences(android.content.Context.MODE_PRIVATE)
 
@@ -52,12 +69,11 @@ class ShowProfileFragment : Fragment(R.layout.fragment_showprofile) {
 
         //usr = savedInstanceState?.getSerializable("user") as User
 
-        vm.usr.observe(viewLifecycleOwner){
+        vm.user.observe(viewLifecycleOwner){
             if(it != null)
                 usr = it
             else{
                 usr = User()
-                vm.addUser(usr)
             }
             showProfile(view)
         }
@@ -84,6 +100,10 @@ class ShowProfileFragment : Fragment(R.layout.fragment_showprofile) {
         }
     }
 
+    private fun showWelcomeMessage() {
+        TODO("Not yet implemented")
+    }
+
     private fun showProfile(view: View) {
         val profilePic = view.findViewById<CircleImageView>(R.id.profile_pic)
         val sv = view.findViewById<ScrollView>(R.id.scrollView2)
@@ -102,7 +122,7 @@ class ShowProfileFragment : Fragment(R.layout.fragment_showprofile) {
             })
         }
         try {
-            val f = File(usr.pic)
+            val f = File(usr.pic) //loggedUser.photoUrl
             val bitmap = BitmapFactory.decodeStream(FileInputStream(f))
             profilePic.setImageBitmap(bitmap)
         } catch (e: FileNotFoundException) {
@@ -116,7 +136,7 @@ class ShowProfileFragment : Fragment(R.layout.fragment_showprofile) {
         nickView.text = usr.nick
 
         val emailView = view.findViewById<TextView>(R.id.email)
-        emailView.text = usr.email
+        emailView.text = usr.email//usr.email
 
         val locationView = view.findViewById<TextView>(R.id.location)
         locationView.text = usr.location

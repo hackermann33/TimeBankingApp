@@ -1,15 +1,19 @@
-package it.polito.timebankingapp
+package it.polito.timebankingapp.ui.auth
 
 import android.app.Application
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Button
 import android.widget.TextView
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.*
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.SavedStateHandle
+import androidx.navigation.NavOptions
+import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import com.firebase.ui.auth.data.model.User
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -22,6 +26,10 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import it.polito.timebankingapp.R
+import it.polito.timebankingapp.ui.profile.ProfileViewModel
+import it.polito.timebankingapp.ui.timeslots.timeslots_list.PersonalTimeSlotListFragment
+
 
 class LoginFragment : Fragment(R.layout.fragment_login) {
     // [START declare_auth]
@@ -32,7 +40,9 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
 
     private lateinit var googleSignInClient: GoogleSignInClient
 
-    val vm : LoginViewModel by activityViewModels()
+    val vm : ProfileViewModel by activityViewModels()
+    private lateinit var savedStateHandle: SavedStateHandle
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
@@ -57,6 +67,13 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
         tv = view.findViewById(R.id.textView)
         tv.text = "not logged"
 
+        savedStateHandle = findNavController().previousBackStackEntry!!.savedStateHandle
+        savedStateHandle.set(LOGIN_SUCCESSFUL, false)
+
+        vm.fireBaseUser.observe(viewLifecycleOwner) {
+            updateUI(it)
+         }
+
         // Set the dimensions of the sign-in button.
         // Set the dimensions of the sign-in button.
         val signInButton: SignInButton = view.findViewById(R.id.sign_in_button)
@@ -65,6 +82,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
         signInButton.setOnClickListener {
             signIn()
         }
+
 
 
         //(activity as MainActivity?)?.setDrawerLocked();
@@ -115,18 +133,26 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                         // Sign in success, update UI with the signed-in user's information
                         Log.d(TAG, "signInWithCredential:success")
                         val user = auth.currentUser
+                        //savedStateHandle.set(LOGIN_SUCCESSFUL, true)
                         updateUI(user)
+                        if (user != null) {
+                            vm.logIn(user)
+                        }
 
-                        //here we should put the user into the view model
-                        vm.selectUser(user)
                         findNavController().navigate(R.id.action_loginFragment_to_nav_timeSlotsList)
                     } else {
                         // If sign in fails, display a message to the user.
                         Log.w(TAG, "signInWithCredential:failure", task.exception)
                         updateUI(null)
+                        showErrorMessage()
                     }
                 }
         }
+    }
+
+    private fun showErrorMessage() {
+        //TODO("Not yet implemented")
+        //show snackbar
     }
     // [END auth_with_google]
 
@@ -139,10 +165,10 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
 
     private fun updateUI(user: FirebaseUser?) {
         if(user == null){
-            tv.text = "login failed "
+            tv.text = "Not logged"
         }
         else {
-            tv.text = auth.currentUser?.displayName ?: "BOH "
+            tv.text = auth.currentUser?.displayName ?: ""
         }
 
     }
@@ -150,18 +176,11 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
     companion object {
         private const val TAG = "GoogleActivity"
         private const val RC_SIGN_IN = 9001
+        const val LOGIN_SUCCESSFUL: String = "LOGIN_SUCCESSFUL"
+
     }
 }
 
-class LoginViewModel (application: Application): AndroidViewModel(application)
-{
-
-    private val _userProfile = MutableLiveData<User>()
-    fun selectUser(user: FirebaseUser?) {
 
 
 
-    }
-
-
-}
