@@ -2,9 +2,12 @@ package it.polito.timebankingapp
 
 import android.graphics.BitmapFactory
 import android.os.Bundle
+import android.view.View
 import android.widget.TextView
 import androidx.activity.viewModels
+import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -17,10 +20,24 @@ import it.polito.timebankingapp.databinding.ActivityMainBinding
 import it.polito.timebankingapp.ui.profile.ProfileViewModel
 import java.io.File
 import java.io.FileInputStream
-import java.lang.Exception
 
 
-class MainActivity : AppCompatActivity() {
+interface DrawerController {
+    fun setDrawerLocked();
+    fun setDrawerUnlocked();
+}
+
+
+class MainActivity : AppCompatActivity()/*, DrawerController */{
+    /*
+    override fun setDrawerLocked(){
+        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
+    }
+
+    override fun setDrawerUnlocked(){
+        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
+    }*/
+
     /*
     val vm by viewModels<TimeSlotsListViewModel>()
     private val sharedModel by viewModels<TimeSlotSharedViewModel>()
@@ -28,6 +45,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
+    private lateinit var drawerLayout: DrawerLayout
 
     val vm by viewModels<ProfileViewModel>()
 
@@ -36,6 +54,8 @@ class MainActivity : AppCompatActivity() {
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+
 
         setSupportActionBar(binding.appBarMain.toolbar)
 
@@ -50,10 +70,28 @@ class MainActivity : AppCompatActivity() {
         appBarConfiguration = AppBarConfiguration(
             setOf(
                 R.id.nav_timeSlotsList, /*, R.id.nav_timeSlotDetails*/
-                R.id.nav_showProfile
+                R.id.nav_showProfile,
+                R.id.nav_login
             ),
             drawerLayout
         )
+
+        //NON RIMUOVERE ANCHE SE INUTILIZZATA
+        var toggle = ActionBarDrawerToggle(this, drawerLayout, binding.appBarMain.toolbar, R.string.drawer_open, R.string.drawer_close);
+
+        navController.addOnDestinationChangedListener{_, destination, _ ->
+            if (destination.id == R.id.nav_login) {
+                drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
+                //toggle.isDrawerIndicatorEnabled = false;
+                //binding.appBarMain.toolbar.navigationIcon = null
+                binding.appBarMain.toolbar.visibility = View.GONE
+            } else {
+                binding.appBarMain.toolbar.visibility = View.VISIBLE
+                drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
+                //toggle.isDrawerIndicatorEnabled = true;
+            }
+        }
+
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 

@@ -4,11 +4,9 @@ import android.app.Application
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.TextView
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
@@ -24,17 +22,7 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-import it.polito.timebankingapp.ui.timeslots.TimeSlotsViewModel
 
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [LoginFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class LoginFragment : Fragment(R.layout.fragment_login) {
     // [START declare_auth]
     private lateinit var auth: FirebaseAuth
@@ -79,8 +67,13 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
         }
 
 
+        //(activity as MainActivity?)?.setDrawerLocked();
 
+    }
 
+    override fun onDestroyView(){
+        super.onDestroyView()
+        //(activity as MainActivity?)?.setDrawerLocked();
     }
 
     // [START on_start_check_user]
