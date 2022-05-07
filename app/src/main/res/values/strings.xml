@@ -24,7 +24,7 @@
     <string name="fragment_timeslot_duration">Duration (hours)</string>
     <string name="fragment_timeslot_location">Location</string>
     <string name="menu_edit_button">Edit</string>
-    <string name="menu_drawer_timeslots_list">Published offers</string>
+    <string name="menu_drawer_timeslots_list">Your published offers</string>
     <string name="time_slots_item_title">Title</string>
     <string name="time_slots_edit_icon">timeSlotEditIcon</string>
     <string name="time_slots_item_duration">3h</string>
@@ -48,4 +48,6 @@
     <string name="login_error">Login error</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="fragment_timeslot_related_skill">Related skill</string>
+    <string name="menu_drawer_all_published_offers">All published offers</string>
+    <string name="skills_list_title">Select a skill</string>
 </resources>
