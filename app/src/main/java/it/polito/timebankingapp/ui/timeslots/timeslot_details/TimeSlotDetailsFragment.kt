@@ -21,9 +21,11 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
 
     val globalModel : TimeSlotsViewModel by activityViewModels()
     private lateinit var timeSlotToEdit: TimeSlot
+    private lateinit var type: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        type = arguments?.getString("point_of_origin").toString() //skill_specific or personal
         setHasOptionsMenu(true)
     }
 
@@ -82,21 +84,36 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.menu_editpencil, menu)
+        if(type == "skill_specific")
+            inflater.inflate(R.menu.menu_showprofile, menu)
+        else //personal
+            inflater.inflate(R.menu.menu_editpencil, menu)
+
         super.onCreateOptionsMenu(menu, inflater)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.option1 -> {
-                Toast.makeText(
-                    context, "Edit TimeSlot",
-                    Toast.LENGTH_SHORT
-                ).show()
-                editTimeslot() //evoked when the pencil button is pressed
+                if(type == "skill_specific") {
+                    Toast.makeText(
+                        context, "Show user profile",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    findNavController().navigate(
+                        R.id.action_nav_timeSlotDetails_to_nav_showProfile,
+                        bundleOf("point_of_origin" to type)
+                    )
+                }
+                else { //personal
+                    Toast.makeText(
+                        context, "Edit time slot",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    editTimeslot() //evoked when the pencil button is pressed
+                }
                 true
             }
-
             else -> super.onOptionsItemSelected(item)
         }
     }

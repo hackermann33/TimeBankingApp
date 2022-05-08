@@ -166,4 +166,7 @@ class MainActivity : AppCompatActivity()/*, DrawerController */{
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
 
+    fun setActionBarTitle(title: String?) {
+         supportActionBar?.title = title
+    }
 }

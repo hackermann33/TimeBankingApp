@@ -56,8 +56,6 @@ class SkillSpecificTimeSlotListFragment : Fragment(R.layout.fragment_skill_speci
         val voidMessageText = view.findViewById<TextView>(R.id.emptyListMessage)
         val voidMessageSubText = view.findViewById<TextView>(R.id.empty_list_second_message)
 
-
-        val addTimeSlotButton = view.findViewById<FloatingActionButton>(R.id.addTimeSlotButton)
         var adTmp = TimeSlotAdapter(vm.timeSlots.value?.toMutableList() ?: mutableListOf(), ::selectTimeSlot, "skill_specific")
         rv.adapter = adTmp
 
@@ -80,12 +78,7 @@ class SkillSpecificTimeSlotListFragment : Fragment(R.layout.fragment_skill_speci
 
             }
         }
-        addTimeSlotButton.setOnClickListener { _ ->
-/*            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null)
 
- */             findNavController().navigate(R.id.action_timeSlotListFragment_to_nav_timeSlotEdit)
-        }
 
         /*
         val adapter= TimeSlotAdapter(l)

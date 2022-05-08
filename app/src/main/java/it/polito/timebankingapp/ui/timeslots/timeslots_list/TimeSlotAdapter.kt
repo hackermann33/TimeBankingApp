@@ -93,7 +93,10 @@ class TimeSlotAdapter(
                 R.id.action_timeSlotListFragment_to_nav_timeSlotDetails
 
             selectTimeSlot(position)
-            Navigation.findNavController(it).navigate(destination)
+            Navigation.findNavController(it).navigate(
+                destination,
+                bundleOf("point_of_origin" to type)
+            )
         });
 
 

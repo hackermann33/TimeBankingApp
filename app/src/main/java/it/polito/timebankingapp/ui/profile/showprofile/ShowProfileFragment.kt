@@ -18,6 +18,7 @@ import com.google.android.material.chip.ChipGroup
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseUser
 import de.hdodenhof.circleimageview.CircleImageView
+import it.polito.timebankingapp.MainActivity
 import it.polito.timebankingapp.R
 import it.polito.timebankingapp.model.user.User
 import it.polito.timebankingapp.ui.profile.ProfileViewModel
@@ -30,13 +31,18 @@ class ShowProfileFragment : Fragment(R.layout.fragment_showprofile) {
     private lateinit var usr: User
     private lateinit var loggedUser: FirebaseUser
     private lateinit var v : View
+    private lateinit var type : String
 
     val vm : ProfileViewModel by activityViewModels()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
+        type = arguments?.getString("point_of_origin").toString() //skill_specific or personal
+        if(type == "personal")
+            setHasOptionsMenu(true)
+        else
+            (activity as MainActivity?)?.setActionBarTitle("Offerer profile")
 
     }
 
@@ -162,7 +168,8 @@ class ShowProfileFragment : Fragment(R.layout.fragment_showprofile) {
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.menu_editpencil, menu)
+        if(type == "personal")
+            inflater.inflate(R.menu.menu_editpencil, menu)
         super.onCreateOptionsMenu(menu, inflater)
     }
 

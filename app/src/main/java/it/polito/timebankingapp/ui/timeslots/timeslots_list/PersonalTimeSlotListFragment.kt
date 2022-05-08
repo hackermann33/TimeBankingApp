@@ -19,7 +19,7 @@ import it.polito.timebankingapp.ui.timeslots.TimeSlotsViewModel
 /**
  * A fragment representing a list of Items.
  */
-class PersonalTimeSlotListFragment : Fragment(R.layout.fragment_skill_specific_timeslots_list) {
+class PersonalTimeSlotListFragment : Fragment(R.layout.fragment_personal_timeslots_list) {
 
     private var columnCount = 1 //credo sia da rimuovere
 
