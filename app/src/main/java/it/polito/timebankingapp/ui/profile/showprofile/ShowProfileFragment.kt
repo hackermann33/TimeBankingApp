@@ -39,10 +39,11 @@ class ShowProfileFragment : Fragment(R.layout.fragment_showprofile) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         type = arguments?.getString("point_of_origin").toString() //skill_specific or personal
-        if(type == "personal")
-            setHasOptionsMenu(true)
-        else
+        if(type == "skill_specific")
             (activity as MainActivity?)?.setActionBarTitle("Offerer profile")
+        else
+            setHasOptionsMenu(true)
+
 
     }
 
@@ -168,7 +169,7 @@ class ShowProfileFragment : Fragment(R.layout.fragment_showprofile) {
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        if(type == "personal")
+        if(type != "skill_specific")
             inflater.inflate(R.menu.menu_editpencil, menu)
         super.onCreateOptionsMenu(menu, inflater)
     }
