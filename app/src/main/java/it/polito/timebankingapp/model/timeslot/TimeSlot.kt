@@ -11,6 +11,7 @@ import java.util.*
 
 data class TimeSlot(
     var id: String = "",
+    var userId: String = "",
     var title: String = "",
     var description: String = "",
     var date: String = "",

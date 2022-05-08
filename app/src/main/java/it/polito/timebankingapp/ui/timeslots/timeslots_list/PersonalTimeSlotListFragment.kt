@@ -58,12 +58,12 @@ class PersonalTimeSlotListFragment : Fragment(R.layout.fragment_personal_timeslo
 
 
         val addTimeSlotButton = view.findViewById<FloatingActionButton>(R.id.addTimeSlotButton)
-        var adTmp = TimeSlotAdapter(vm.timeSlots.value?.toMutableList() ?: mutableListOf(), ::selectTimeSlot, "personal")
+        var adTmp = TimeSlotAdapter(vm.personalTimeSlots.value?.toMutableList() ?: mutableListOf(), ::selectTimeSlot, "personal")
         rv.adapter = adTmp
 
         var skill = arguments?.getString("skill") //da rimuovere
 
-        vm.timeSlots.observe(viewLifecycleOwner){
+        vm.personalTimeSlots.observe(viewLifecycleOwner){
             if(it.isNotEmpty()){
                 voidMessageText.isVisible = false
                 voidMessageImage.isVisible = false

@@ -14,8 +14,6 @@ import kotlin.reflect.javaType
 import kotlin.reflect.typeOf
 
 
-
-
 class User(
     var id: String = "",
     var pic: String = "",
