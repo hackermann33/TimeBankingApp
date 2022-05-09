@@ -62,27 +62,11 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
         assert(user == Firebase.auth.currentUser)
         _fireBaseUser.value = user
 
-
-        /*Check if profile already exists*/
-        var doc = db.collection("users").document(fireBaseUser.value!!.uid)
-
-        doc.get().addOnSuccessListener { d ->
-            if(d.exists()){
-                Log.d("LogIn", "exists");
-
-            }
-            else {
-                Log.d("LogIn", "non esiste")
-            }
-        }
-
-
         registerListener()
     }
 
     fun logOut() {
-        _fireBaseUser.value = Firebase.auth.currentUser
-
+        _fireBaseUser.value = null
     }
 
     override fun onCleared() {

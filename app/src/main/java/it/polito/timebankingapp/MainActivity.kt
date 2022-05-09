@@ -95,8 +95,8 @@ class MainActivity : AppCompatActivity()/*, DrawerController */{
 
         val signOutButton = navView.getHeaderView(0).findViewById<Button>(R.id.signOutButton)
         signOutButton.setOnClickListener{
-            Firebase.auth.signOut()
             vm.logOut()
+            Firebase.auth.signOut()
         }
 
         vm.fireBaseUser.observe(this) {

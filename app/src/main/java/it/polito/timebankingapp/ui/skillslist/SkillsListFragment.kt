@@ -11,6 +11,8 @@ import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import it.polito.timebankingapp.R
 import it.polito.timebankingapp.ui.auth.LoginFragment
 import it.polito.timebankingapp.ui.profile.ProfileViewModel
@@ -39,7 +41,8 @@ class SkillsListFragment : Fragment(R.layout.fragment_skills_list) {
 
 
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+
+    /*override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         val navController = findNavController()
@@ -56,7 +59,8 @@ class SkillsListFragment : Fragment(R.layout.fragment_skills_list) {
                     navController.navigate(startDestination, null, navOptions)
                 }
             }
-    }
+    }*/
+
 
 
 
@@ -66,11 +70,17 @@ class SkillsListFragment : Fragment(R.layout.fragment_skills_list) {
 
         val chipGroup: ChipGroup = v.findViewById(R.id.skillsGroup)
 
-        authVm.fireBaseUser.observe(viewLifecycleOwner){
-            if(it == null) {
-                findNavController().navigate(R.id.nav_login)
-            }
+         authVm.fireBaseUser.observe(viewLifecycleOwner){
+            if(it == null)
+                findNavController().navigate(R.id.action_nav_skillsList_to_nav_login)
+
         }
+        /*authVm.fireBaseUser.observe(viewLifecycleOwner){
+            if(it == null) {
+                findNavController().navigate(R.id.action_nav_skillsList_to_nav_login)
+            }
+        }*/
+
 
         SKILLS.forEach { skill ->
             val chip = layoutInflater.inflate(
