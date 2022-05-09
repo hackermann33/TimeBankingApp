@@ -32,26 +32,10 @@ class SkillSpecificTimeSlotListFragment : Fragment(R.layout.fragment_skill_speci
     val vm : TimeSlotsViewModel by activityViewModels()
     private lateinit var rv:RecyclerView
 
-    /*
-    private fun createItems(n: Int): MutableList<TimeSlot> {
-        val l = mutableListOf<TimeSlot>()
-        for (i in 1..n) {
-            TimeSlot()
-            val ts = TimeSlot().also{
-                it.title = "TitleTrial $i";
-                it.description= "Descr trial $i";
-                it.date = "2022/12/18";
-                it.time = "14:15";
-                it.duration = "56";
-                it.location = "Turin";
-            }
-            l.add(ts)
-            vm.addTimeSlot(ts)
-        }
-        return l
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
     }
-
-     */
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 

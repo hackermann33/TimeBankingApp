@@ -43,8 +43,6 @@ class ShowProfileFragment : Fragment(R.layout.fragment_showprofile) {
             (activity as MainActivity?)?.setActionBarTitle("Offerer profile")
         else
             setHasOptionsMenu(true)
-
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

@@ -67,6 +67,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
         tv = view.findViewById(R.id.textView)
         tv.text = "not logged"
 
+
         savedStateHandle = findNavController().previousBackStackEntry!!.savedStateHandle
         savedStateHandle.set(LOGIN_SUCCESSFUL, false)
 
@@ -135,9 +136,12 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                         val user = auth.currentUser
                         //savedStateHandle.set(LOGIN_SUCCESSFUL, true)
                         updateUI(user)
+
                         if (user != null) {
                             vm.logIn(user)
                         }
+                        savedStateHandle = findNavController().previousBackStackEntry!!.savedStateHandle
+                        savedStateHandle.set(LOGIN_SUCCESSFUL, true)
 
                         findNavController().popBackStack()
                     } else {

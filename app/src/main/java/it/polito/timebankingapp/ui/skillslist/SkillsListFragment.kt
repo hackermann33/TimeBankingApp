@@ -38,6 +38,28 @@ class SkillsListFragment : Fragment(R.layout.fragment_skills_list) {
     val vm: TimeSlotsViewModel by activityViewModels()
 
 
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        val navController = findNavController()
+
+        val currentBackStackEntry = navController.currentBackStackEntry!!
+        val savedStateHandle = currentBackStackEntry.savedStateHandle
+        savedStateHandle.getLiveData<Boolean>(LoginFragment.LOGIN_SUCCESSFUL)
+            .observe(currentBackStackEntry) { success ->
+                if (!success) {
+                    val startDestination = navController.graph.startDestinationId
+                    val navOptions = NavOptions.Builder()
+                        .setPopUpTo(startDestination, true)
+                        .build()
+                    navController.navigate(startDestination, null, navOptions)
+                }
+            }
+    }
+
+
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         v = view

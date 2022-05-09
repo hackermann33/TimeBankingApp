@@ -11,6 +11,7 @@ import com.google.firebase.firestore.*
 import com.google.firebase.ktx.Firebase
 import it.polito.timebankingapp.model.user.User
 
+
 class ProfileViewModel(application: Application) : AndroidViewModel(application) {
 
 
@@ -36,8 +37,8 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
         l = db.collection("users").document(fireBaseUser.value!!.uid)
             .addSnapshotListener { v, e ->
                 if (e == null) {
-                    /* Documento appena creato */
                     if (v != null) {
+                        /* Documento appena creato */
                         if(!v.exists()) {
                             usr = User().also { it.id = fireBaseUser.value!!.uid; it.fullName =
                                 fireBaseUser.value!!.displayName!!; it.email = fireBaseUser.value!!.email!!
@@ -60,6 +61,22 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
     fun logIn(user: FirebaseUser) {
         assert(user == Firebase.auth.currentUser)
         _fireBaseUser.value = user
+
+
+        /*Check if profile already exists*/
+        var doc = db.collection("users").document(fireBaseUser.value!!.uid)
+
+        doc.get().addOnSuccessListener { d ->
+            if(d.exists()){
+                Log.d("LogIn", "exists");
+
+            }
+            else {
+                Log.d("LogIn", "non esiste")
+            }
+        }
+
+
         registerListener()
     }
 
