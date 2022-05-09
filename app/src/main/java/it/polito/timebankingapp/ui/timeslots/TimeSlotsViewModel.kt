@@ -5,30 +5,41 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.QueryDocumentSnapshot
+import com.google.firebase.ktx.Firebase
 import it.polito.timebankingapp.model.timeslot.TimeSlot
 
 
 class TimeSlotsViewModel(application: Application): AndroidViewModel(application) {
 
-    private val _timeSlots = MutableLiveData<List<TimeSlot>>()
-    val timeSlots: LiveData<List<TimeSlot>> = _timeSlots
+    private val _personalTimeSlots = MutableLiveData<List<TimeSlot>>()
+    val personalTimeSlots: LiveData<List<TimeSlot>> = _personalTimeSlots
+
+    private val _globalTimeSlots = MutableLiveData<List<TimeSlot>>()
+    val globalTimeSlots: LiveData<List<TimeSlot>> = _globalTimeSlots
 
     private var l:ListenerRegistration
+    private var l2:ListenerRegistration
+
 
     private val db: FirebaseFirestore
 
     init {
-
         db = FirebaseFirestore.getInstance()
-        l = db.collection("timeSlots").addSnapshotListener{v,e ->
+        l = db.collection("timeSlots").whereEqualTo("userId", Firebase.auth.uid).addSnapshotListener{v,e ->
             if(e == null){
-                _timeSlots.value = v!!.mapNotNull { d -> d.toTimeSlot() }
-            } else _timeSlots.value = emptyList()
+                _personalTimeSlots.value = v!!.mapNotNull { d -> d.toTimeSlot() }
+            } else _personalTimeSlots.value = emptyList()
         }
 
+        l2 = db.collection("timeSlots").addSnapshotListener{v,e ->
+            if(e == null){
+                _globalTimeSlots.value = v!!.mapNotNull { d -> d.toTimeSlot() }
+            } else _globalTimeSlots.value = emptyList()
+        }
     }
 
     /*val repo = TimeSlotRepository(application)
@@ -43,11 +54,16 @@ class TimeSlotsViewModel(application: Application): AndroidViewModel(application
 
     fun addTimeSlot(ts: TimeSlot) {
 
-        val tsId: String = db.collection("timeSlots").document().id
 
-        ts.id = tsId //imposta id generato da firebase
+        val data = HashMap<String, Any>()
 
-        db.collection("timeSlots").document(tsId).set(ts)
+        val newTimeSlotRef = db.collection("timeSlots").document()
+
+
+        ts.id = newTimeSlotRef.id //imposta id generato da firebase
+        ts.userId = Firebase.auth.currentUser?.uid ?: ""
+
+        newTimeSlotRef.set(ts)
         .addOnSuccessListener{
             Log.d("timeSlots_add","Successfully added")
         }.addOnFailureListener{Log.d("timeSlots_add", "Error on adding")}
@@ -66,13 +82,12 @@ class TimeSlotsViewModel(application: Application): AndroidViewModel(application
     override fun onCleared() {
         super.onCleared()
         l.remove()
+        l2.remove()
     }
 
-    fun setSelectedTimeSlot(pos: Int){
-        val ts = timeSlots.value?.get(pos) ?: TimeSlot()
+    fun setSelectedTimeSlot(ts: TimeSlot){
         selectedTimeSlot.value = ts
     }
-
 
 
 
@@ -92,6 +107,7 @@ class TimeSlotsViewModel(application: Application): AndroidViewModel(application
 
 private fun QueryDocumentSnapshot.toTimeSlot() : TimeSlot? {
     return try {
+        val userId = get("userId") as String
         val title = get("title") as String
         val desc = get("description") as String
         val date = get("date") as String
@@ -101,7 +117,8 @@ private fun QueryDocumentSnapshot.toTimeSlot() : TimeSlot? {
         val restrictions = get("restrictions") as String
         val relatedSkill = get("relatedSkill") as String
 
-        TimeSlot(id, title, desc, date, time, duration, location, restrictions, relatedSkill)
+        //assert(userId == Firebase.auth.currentUser?.uid ?: false)
+        TimeSlot(id, userId,title, desc, date, time, duration, location, restrictions, relatedSkill)
     } catch(e: Exception) {
         e.printStackTrace()
         null

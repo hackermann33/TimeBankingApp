@@ -39,10 +39,11 @@ class ShowProfileFragment : Fragment(R.layout.fragment_showprofile) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         type = arguments?.getString("point_of_origin").toString() //skill_specific or personal
-        if(type == "personal")
-            setHasOptionsMenu(true)
-        else
+        if(type == "skill_specific")
             (activity as MainActivity?)?.setActionBarTitle("Offerer profile")
+        else
+            setHasOptionsMenu(true)
+
 
     }
 
@@ -56,6 +57,8 @@ class ShowProfileFragment : Fragment(R.layout.fragment_showprofile) {
         vm.fireBaseUser.observe(viewLifecycleOwner){
             if(it != null) {
                 loggedUser = it
+                usr = vm.user.value!!
+                showProfile(view)
             }
             else
                 navController.navigate(R.id.nav_login)
@@ -75,14 +78,6 @@ class ShowProfileFragment : Fragment(R.layout.fragment_showprofile) {
 
         //usr = savedInstanceState?.getSerializable("user") as User
 
-        vm.user.observe(viewLifecycleOwner){
-            if(it != null)
-                usr = it
-            else{
-                usr = User()
-            }
-            showProfile(view)
-        }
 
         /*setFragmentResultListener("profile") { requestKey, bundle ->
             usr = bundle.getSerializable("user") as User
@@ -168,7 +163,7 @@ class ShowProfileFragment : Fragment(R.layout.fragment_showprofile) {
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        if(type == "personal")
+        if(type != "skill_specific")
             inflater.inflate(R.menu.menu_editpencil, menu)
         super.onCreateOptionsMenu(menu, inflater)
     }

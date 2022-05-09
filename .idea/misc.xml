@@ -32,6 +32,7 @@
         <entry key="app/src/main/res/layout/fragment_editprofile.xml" value="0.3578125" />
         <entry key="app/src/main/res/layout/fragment_login.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_personal_timeslots_list.xml" value="0.3546875" />
+        <entry key="app/src/main/res/layout/fragment_skills_list.xml" value="0.3578125" />
         <entry key="app/src/main/res/layout/fragment_timeslots_list.xml" value="0.3546875" />
         <entry key="app/src/main/res/layout/nav_header_main.xml" value="0.3578125" />
       </map>

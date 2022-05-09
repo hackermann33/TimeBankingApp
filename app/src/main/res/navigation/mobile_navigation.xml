@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@id/nav_showProfile">
+    app:startDestination="@id/nav_skillsList">
     <fragment
         android:id="@+id/nav_timeSlotDetails"
         android:name="it.polito.timebankingapp.ui.timeslots.timeslot_details.TimeSlotDetailsFragment"
@@ -45,12 +45,8 @@
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
             app:popExitAnim="@anim/nav_default_pop_exit_anim" />
         <action
-            android:id="@+id/action_nav_timeSlotsList_to_showProfileActivity"
-            app:destination="@id/nav_showProfile"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim"
-            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+            android:id="@+id/action_nav_personalTimeSlotsList_to_nav_login"
+            app:destination="@id/nav_login" />
     </fragment>
     <fragment
         android:id="@+id/nav_showProfile"
@@ -64,6 +60,9 @@
             app:exitAnim="@anim/nav_default_exit_anim"
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
             app:popExitAnim="@anim/nav_default_pop_exit_anim"/>
+        <action
+            android:id="@+id/action_nav_showProfile_to_nav_login"
+            app:destination="@id/nav_login" />
     </fragment>
     <fragment
         android:id="@+id/nav_editProfile"
@@ -77,7 +76,7 @@
         tools:layout="@layout/fragment_login">
         <action
             android:id="@+id/action_loginFragment_to_nav_timeSlotsList"
-            app:destination="@id/nav_showProfile"
+            app:destination="@id/nav_skillsList"
             app:popUpTo="@id/nav_login"
             app:popUpToInclusive="true" />
     </fragment>
@@ -89,6 +88,9 @@
         <action
             android:id="@+id/action_nav_skillsList_to_skillSpecificTimeSlotListFragment"
             app:destination="@id/nav_skillSpecificTimeSlotList" />
+        <action
+            android:id="@+id/action_nav_skillsList_to_nav_login"
+            app:destination="@id/nav_login" />
     </fragment>
     <fragment
         android:id="@+id/nav_skillSpecificTimeSlotList"

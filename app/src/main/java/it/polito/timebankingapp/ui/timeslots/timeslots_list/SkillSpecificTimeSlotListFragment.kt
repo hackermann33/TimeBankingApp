@@ -11,9 +11,9 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResultListener
 import androidx.navigation.fragment.findNavController
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import it.polito.timebankingapp.R
+import it.polito.timebankingapp.model.timeslot.TimeSlot
 import it.polito.timebankingapp.ui.timeslots.TimeSlotsViewModel
 
 /**
@@ -56,12 +56,12 @@ class SkillSpecificTimeSlotListFragment : Fragment(R.layout.fragment_skill_speci
         val voidMessageText = view.findViewById<TextView>(R.id.emptyListMessage)
         val voidMessageSubText = view.findViewById<TextView>(R.id.empty_list_second_message)
 
-        var adTmp = TimeSlotAdapter(vm.timeSlots.value?.toMutableList() ?: mutableListOf(), ::selectTimeSlot, "skill_specific")
+        var adTmp = TimeSlotAdapter(vm.personalTimeSlots.value?.toMutableList() ?: mutableListOf(), ::selectTimeSlot, "skill_specific")
         rv.adapter = adTmp
 
         var skill = arguments?.getString("skill")
 
-        vm.timeSlots.observe(viewLifecycleOwner){
+        vm.globalTimeSlots.observe(viewLifecycleOwner){
             if(it.isNotEmpty()){
                 voidMessageText.isVisible = false
                 voidMessageImage.isVisible = false
@@ -103,9 +103,8 @@ class SkillSpecificTimeSlotListFragment : Fragment(R.layout.fragment_skill_speci
 
     }
 
-    private fun selectTimeSlot(pos: Int) {
-        vm.setSelectedTimeSlot(pos)
-
+    private fun selectTimeSlot(ts: TimeSlot) {
+        vm.setSelectedTimeSlot(ts)
     }
 
 
