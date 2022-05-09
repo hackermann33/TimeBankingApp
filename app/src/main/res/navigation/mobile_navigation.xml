@@ -44,9 +44,6 @@
             app:exitAnim="@anim/nav_default_exit_anim"
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
             app:popExitAnim="@anim/nav_default_pop_exit_anim" />
-        <action
-            android:id="@+id/action_nav_personalTimeSlotsList_to_nav_login"
-            app:destination="@id/nav_login" />
     </fragment>
     <fragment
         android:id="@+id/nav_showProfile"
@@ -60,9 +57,6 @@
             app:exitAnim="@anim/nav_default_exit_anim"
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
             app:popExitAnim="@anim/nav_default_pop_exit_anim"/>
-        <action
-            android:id="@+id/action_nav_showProfile_to_nav_login"
-            app:destination="@id/nav_login" />
     </fragment>
     <fragment
         android:id="@+id/nav_editProfile"
@@ -73,13 +67,7 @@
         android:id="@+id/nav_login"
         android:name="it.polito.timebankingapp.ui.auth.LoginFragment"
         android:label="Login"
-        tools:layout="@layout/fragment_login">
-        <action
-            android:id="@+id/action_loginFragment_to_nav_timeSlotsList"
-            app:destination="@id/nav_skillsList"
-            app:popUpTo="@id/nav_login"
-            app:popUpToInclusive="true" />
-    </fragment>
+        tools:layout="@layout/fragment_login"/>
     <fragment
         android:id="@+id/nav_skillsList"
         android:name="it.polito.timebankingapp.ui.skillslist.SkillsListFragment"
@@ -88,9 +76,6 @@
         <action
             android:id="@+id/action_nav_skillsList_to_skillSpecificTimeSlotListFragment"
             app:destination="@id/nav_skillSpecificTimeSlotList" />
-        <action
-            android:id="@+id/action_nav_skillsList_to_nav_login"
-            app:destination="@id/nav_login" />
     </fragment>
     <fragment
         android:id="@+id/nav_skillSpecificTimeSlotList"
@@ -100,9 +85,6 @@
         <action
             android:id="@+id/action_skillSpecificTimeSlotListFragment_to_nav_timeSlotDetails"
             app:destination="@id/nav_timeSlotDetails" />
-        <action
-            android:id="@+id/action_nav_skillSpecificTimeSlotList_self"
-            app:destination="@id/nav_skillSpecificTimeSlotList" />
     </fragment>
 
 </navigation>

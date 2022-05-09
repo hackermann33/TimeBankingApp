@@ -139,7 +139,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                             vm.logIn(user)
                         }
 
-                        findNavController().navigate(R.id.action_loginFragment_to_nav_timeSlotsList)
+                        findNavController().popBackStack()
                     } else {
                         // If sign in fails, display a message to the user.
                         Log.w(TAG, "signInWithCredential:failure", task.exception)

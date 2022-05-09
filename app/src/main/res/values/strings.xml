@@ -54,4 +54,6 @@
     <string name="drawer_close">Drawer close</string>
     <string name="sign_out">sign out</string>
     <string name="menu_show_user_profile">Show user profile</string>
+    <string name="filter_option">filter_option</string>
+    <string name="sort_option">sort_option</string>
 </resources>

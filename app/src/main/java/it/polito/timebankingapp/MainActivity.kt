@@ -67,10 +67,9 @@ class MainActivity : AppCompatActivity()/*, DrawerController */{
         // menu should be considered as top level destinations.
         appBarConfiguration = AppBarConfiguration(
             setOf(
+                R.id.nav_skillsList, //nota bug: la freccia direzionale non torna indietro ma apre il drawer
                 R.id.nav_personalTimeSlotsList, /*, R.id.nav_timeSlotDetails*/
-                R.id.nav_showProfile,
-                R.id.nav_login,
-                R.id.nav_skillsList //nota bug: la freccia direzionale non torna indietro ma apre il drawer
+                R.id.nav_showProfile
             ),
             drawerLayout
         )

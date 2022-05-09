@@ -1,12 +1,18 @@
 package it.polito.timebankingapp.ui.timeslots.timeslots_list
 
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResultListener
@@ -49,14 +55,14 @@ class SkillSpecificTimeSlotListFragment : Fragment(R.layout.fragment_skill_speci
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
-        rv = view.findViewById<RecyclerView>(R.id.time_slot_list)
+        rv = view.findViewById(R.id.time_slot_list)
         rv.layoutManager = LinearLayoutManager(context)
 
         val voidMessageImage = view.findViewById<ImageView>(R.id.time_slot_icon)
         val voidMessageText = view.findViewById<TextView>(R.id.emptyListMessage)
         val voidMessageSubText = view.findViewById<TextView>(R.id.empty_list_second_message)
 
-        var adTmp = TimeSlotAdapter(vm.personalTimeSlots.value?.toMutableList() ?: mutableListOf(), ::selectTimeSlot, "skill_specific")
+        var adTmp = TimeSlotAdapter(vm.globalTimeSlots.value?.toMutableList() ?: mutableListOf(), ::selectTimeSlot, "skill_specific")
         rv.adapter = adTmp
 
         var skill = arguments?.getString("skill")
@@ -107,5 +113,23 @@ class SkillSpecificTimeSlotListFragment : Fragment(R.layout.fragment_skill_speci
         vm.setSelectedTimeSlot(ts)
     }
 
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
 
+        inflater.inflate(R.menu.menu_filter_and_sort, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.sort_option -> {
+                /* sort by something */
+                true
+            }
+            R.id.filter_option -> {
+                /* filter by something*/
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
 }
