@@ -5,6 +5,7 @@ import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.firebase.firestore.Exclude
 import java.io.Serializable
 import java.text.SimpleDateFormat
 import java.util.*
@@ -28,6 +29,7 @@ data class TimeSlot(
         return title != "" && description != "" && date != "" && time != "" && duration != "" && location != "" && restrictions != "" && relatedSkill != ""
     }
 
+
     fun clone(ts : TimeSlot){
         this.title = ts.title
         this.description = ts.description
@@ -50,6 +52,7 @@ data class TimeSlot(
             Patterns.EMAIL_ADDRESS.matcher(email).matches()
         }
     }*/
+    @Exclude
     fun getCalendar(): Calendar {
         val cal = Calendar.getInstance(TimeZone.getDefault())
 

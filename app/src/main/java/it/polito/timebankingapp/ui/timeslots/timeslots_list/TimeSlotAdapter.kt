@@ -13,11 +13,12 @@ import androidx.navigation.Navigation
 
 import it.polito.timebankingapp.model.timeslot.TimeSlot
 import it.polito.timebankingapp.R
+import kotlin.reflect.KFunction1
 
 
 class TimeSlotAdapter(
     var data: MutableList<TimeSlot>,
-    val selectTimeSlot: (Int) -> Unit,
+    val selectTimeSlot: KFunction1<TimeSlot, Unit>,
     val type: String
 ) : RecyclerView.Adapter<TimeSlotAdapter.ItemViewHolder>() {
 
@@ -92,7 +93,7 @@ class TimeSlotAdapter(
             else
                 R.id.action_timeSlotListFragment_to_nav_timeSlotDetails
 
-            selectTimeSlot(position)
+            selectTimeSlot(item)
             Navigation.findNavController(it).navigate(
                 destination,
                 bundleOf("point_of_origin" to type)

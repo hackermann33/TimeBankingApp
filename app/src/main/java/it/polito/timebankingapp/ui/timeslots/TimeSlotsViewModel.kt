@@ -54,12 +54,16 @@ class TimeSlotsViewModel(application: Application): AndroidViewModel(application
 
     fun addTimeSlot(ts: TimeSlot) {
 
-        val tsId: String = db.collection("timeSlots").document().id
 
-        ts.id = tsId //imposta id generato da firebase
+        val data = HashMap<String, Any>()
+
+        val newTimeSlotRef = db.collection("timeSlots").document()
+
+
+        ts.id = newTimeSlotRef.id //imposta id generato da firebase
         ts.userId = Firebase.auth.currentUser?.uid ?: ""
 
-        db.collection("timeSlots").document(tsId).set(ts)
+        newTimeSlotRef.set(ts)
         .addOnSuccessListener{
             Log.d("timeSlots_add","Successfully added")
         }.addOnFailureListener{Log.d("timeSlots_add", "Error on adding")}
@@ -81,11 +85,9 @@ class TimeSlotsViewModel(application: Application): AndroidViewModel(application
         l2.remove()
     }
 
-    fun setSelectedTimeSlot(pos: Int){
-        val ts = personalTimeSlots.value?.get(pos) ?: TimeSlot()
+    fun setSelectedTimeSlot(ts: TimeSlot){
         selectedTimeSlot.value = ts
     }
-
 
 
 
@@ -115,7 +117,7 @@ private fun QueryDocumentSnapshot.toTimeSlot() : TimeSlot? {
         val restrictions = get("restrictions") as String
         val relatedSkill = get("relatedSkill") as String
 
-        assert(userId == Firebase.auth.currentUser?.uid ?: false)
+        //assert(userId == Firebase.auth.currentUser?.uid ?: false)
         TimeSlot(id, userId,title, desc, date, time, duration, location, restrictions, relatedSkill)
     } catch(e: Exception) {
         e.printStackTrace()

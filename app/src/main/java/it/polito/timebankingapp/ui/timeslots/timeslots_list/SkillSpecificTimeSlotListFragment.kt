@@ -10,8 +10,10 @@ import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResultListener
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import it.polito.timebankingapp.R
+import it.polito.timebankingapp.model.timeslot.TimeSlot
 import it.polito.timebankingapp.ui.timeslots.TimeSlotsViewModel
 
 /**
@@ -101,9 +103,8 @@ class SkillSpecificTimeSlotListFragment : Fragment(R.layout.fragment_skill_speci
 
     }
 
-    private fun selectTimeSlot(pos: Int) {
-        vm.setSelectedTimeSlot(pos)
-
+    private fun selectTimeSlot(ts: TimeSlot) {
+        vm.setSelectedTimeSlot(ts)
     }
 
 

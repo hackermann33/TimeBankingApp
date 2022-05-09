@@ -14,6 +14,8 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import it.polito.timebankingapp.R
+import it.polito.timebankingapp.model.timeslot.TimeSlot
+import it.polito.timebankingapp.ui.profile.ProfileViewModel
 import it.polito.timebankingapp.ui.timeslots.TimeSlotsViewModel
 
 /**
@@ -24,7 +26,10 @@ class PersonalTimeSlotListFragment : Fragment(R.layout.fragment_personal_timeslo
     private var columnCount = 1 //credo sia da rimuovere
 
     val vm : TimeSlotsViewModel by activityViewModels()
+    val authVm: ProfileViewModel by activityViewModels()
     private lateinit var rv:RecyclerView
+
+
 
     /*
     private fun createItems(n: Int): MutableList<TimeSlot> {
@@ -48,6 +53,12 @@ class PersonalTimeSlotListFragment : Fragment(R.layout.fragment_personal_timeslo
      */
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        authVm.fireBaseUser.observe(viewLifecycleOwner){
+            if(it == null) {
+                findNavController().navigate(R.id.nav_login)
+            }
+        }
+
 
         rv = view.findViewById<RecyclerView>(R.id.time_slot_list)
         rv.layoutManager = LinearLayoutManager(context)
@@ -109,9 +120,8 @@ class PersonalTimeSlotListFragment : Fragment(R.layout.fragment_personal_timeslo
 
     }
 
-    private fun selectTimeSlot(pos: Int) {
-        vm.setSelectedTimeSlot(pos)
-
+    private fun selectTimeSlot(ts: TimeSlot) {
+        vm.setSelectedTimeSlot(ts)
     }
 
 

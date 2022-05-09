@@ -57,6 +57,8 @@ class ShowProfileFragment : Fragment(R.layout.fragment_showprofile) {
         vm.fireBaseUser.observe(viewLifecycleOwner){
             if(it != null) {
                 loggedUser = it
+                usr = vm.user.value!!
+                showProfile(view)
             }
             else
                 navController.navigate(R.id.nav_login)
@@ -76,14 +78,6 @@ class ShowProfileFragment : Fragment(R.layout.fragment_showprofile) {
 
         //usr = savedInstanceState?.getSerializable("user") as User
 
-        vm.user.observe(viewLifecycleOwner){
-            if(it != null)
-                usr = it
-            else{
-                usr = User()
-            }
-            showProfile(view)
-        }
 
         /*setFragmentResultListener("profile") { requestKey, bundle ->
             usr = bundle.getSerializable("user") as User
