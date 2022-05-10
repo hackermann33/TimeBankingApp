@@ -38,6 +38,14 @@
           }
         },
         {
+          "client_id": "1031805806645-hlnde6htshje9hf91et9h225nc60a3gm.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "it.polito.timebankingapp",
+            "certificate_hash": "5664d8700ab875333f05d078747e774bc0d11af6"
+          }
+        },
+        {
           "client_id": "1031805806645-6530divvc0r01nm9dhik0kholhtabh8h.apps.googleusercontent.com",
           "client_type": 3
         }

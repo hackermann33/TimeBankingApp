@@ -67,18 +67,17 @@ class MainActivity : AppCompatActivity()/*, DrawerController */{
         // menu should be considered as top level destinations.
         appBarConfiguration = AppBarConfiguration(
             setOf(
+                R.id.nav_skillsList, //nota bug: la freccia direzionale non torna indietro ma apre il drawer
                 R.id.nav_personalTimeSlotsList, /*, R.id.nav_timeSlotDetails*/
-                R.id.nav_showProfile,
-                R.id.nav_login,
-                R.id.nav_skillsList //nota bug: la freccia direzionale non torna indietro ma apre il drawer
+                R.id.nav_showProfile
             ),
             drawerLayout
         )
 
         //NON RIMUOVERE ANCHE SE INUTILIZZATA
-        var toggle = ActionBarDrawerToggle(this, drawerLayout, binding.appBarMain.toolbar, R.string.drawer_open, R.string.drawer_close)
+        /*var toggle = ActionBarDrawerToggle(this, drawerLayout, binding.appBarMain.toolbar, R.string.drawer_open, R.string.drawer_close)*/
 
-        navController.addOnDestinationChangedListener{_, destination, _ ->
+        /*navController.addOnDestinationChangedListener{_, destination, _ ->
             if (destination.id == R.id.nav_login) {
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
                 //toggle.isDrawerIndicatorEnabled = false;
@@ -89,15 +88,15 @@ class MainActivity : AppCompatActivity()/*, DrawerController */{
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
                 //toggle.isDrawerIndicatorEnabled = true;
             }
-        }
+        }*/
 
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
         val signOutButton = navView.getHeaderView(0).findViewById<Button>(R.id.signOutButton)
         signOutButton.setOnClickListener{
-            Firebase.auth.signOut()
             vm.logOut()
+            Firebase.auth.signOut()
         }
 
         vm.fireBaseUser.observe(this) {

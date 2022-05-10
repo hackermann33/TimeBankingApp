@@ -1,6 +1,7 @@
 package it.polito.timebankingapp.ui.profile
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -9,6 +10,7 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.*
 import com.google.firebase.ktx.Firebase
 import it.polito.timebankingapp.model.user.User
+
 
 class ProfileViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -35,8 +37,8 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
         l = db.collection("users").document(fireBaseUser.value!!.uid)
             .addSnapshotListener { v, e ->
                 if (e == null) {
-                    /* Documento appena creato */
                     if (v != null) {
+                        /* Documento appena creato */
                         if(!v.exists()) {
                             usr = User().also { it.id = fireBaseUser.value!!.uid; it.fullName =
                                 fireBaseUser.value!!.displayName!!; it.email = fireBaseUser.value!!.email!!
@@ -59,12 +61,12 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
     fun logIn(user: FirebaseUser) {
         assert(user == Firebase.auth.currentUser)
         _fireBaseUser.value = user
+
         registerListener()
     }
 
     fun logOut() {
-        _fireBaseUser.value = Firebase.auth.currentUser
-
+        _fireBaseUser.value = null
     }
 
     override fun onCleared() {

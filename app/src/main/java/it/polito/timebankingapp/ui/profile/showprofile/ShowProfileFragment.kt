@@ -43,8 +43,6 @@ class ShowProfileFragment : Fragment(R.layout.fragment_showprofile) {
             (activity as MainActivity?)?.setActionBarTitle("Offerer profile")
         else
             setHasOptionsMenu(true)
-
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -54,7 +52,7 @@ class ShowProfileFragment : Fragment(R.layout.fragment_showprofile) {
         val navController = findNavController()
 
 
-        vm.fireBaseUser.observe(viewLifecycleOwner){
+        /*vm.fireBaseUser.observe(viewLifecycleOwner){
             if(it != null) {
                 loggedUser = it
                 usr = vm.user.value!!
@@ -62,7 +60,7 @@ class ShowProfileFragment : Fragment(R.layout.fragment_showprofile) {
             }
             else
                 navController.navigate(R.id.nav_login)
-        }
+        }*/
 
         //loggedUser = usrVm.userProfile.value!!
         //showProfile(view)

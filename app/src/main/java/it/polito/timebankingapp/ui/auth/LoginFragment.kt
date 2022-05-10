@@ -1,21 +1,13 @@
 package it.polito.timebankingapp.ui.auth
 
-import android.app.Application
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.*
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
-import androidx.navigation.NavOptions
-import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
-import com.firebase.ui.auth.data.model.User
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -28,7 +20,6 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import it.polito.timebankingapp.R
 import it.polito.timebankingapp.ui.profile.ProfileViewModel
-import it.polito.timebankingapp.ui.timeslots.timeslots_list.PersonalTimeSlotListFragment
 
 
 class LoginFragment : Fragment(R.layout.fragment_login) {
@@ -43,11 +34,28 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
     val vm : ProfileViewModel by activityViewModels()
     private lateinit var savedStateHandle: SavedStateHandle
 
+    private var firstTime =  true
+
+
+
+
+    fun clearBackStack() {
+        val fragmentManager: FragmentManager? = getFragmentManager()
+        if(fragmentManager != null) {
+            while (fragmentManager.backStackEntryCount != 0) {
+                fragmentManager.popBackStack(null, 0)
+            }
+        }
+    }
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
-        super.onCreate(savedInstanceState)
+        super.onViewCreated(view, savedInstanceState)
 
+        if(Firebase.auth.currentUser != null) {
+            findNavController().navigate(R.id.action_loginFragment_to_nav_skillsList)
+        }
         // [START config_signin]
         // Configure Google Sign In
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -67,9 +75,10 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
         tv = view.findViewById(R.id.textView)
         tv.text = "not logged"
 
-        savedStateHandle = findNavController().previousBackStackEntry!!.savedStateHandle
-        savedStateHandle.set(LOGIN_SUCCESSFUL, false)
 
+        /*savedStateHandle = findNavController().previousBackStackEntry!!.savedStateHandle
+        savedStateHandle.set(LOGIN_SUCCESSFUL, false)
+*/
         vm.fireBaseUser.observe(viewLifecycleOwner) {
             updateUI(it)
          }
@@ -135,11 +144,14 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                         val user = auth.currentUser
                         //savedStateHandle.set(LOGIN_SUCCESSFUL, true)
                         updateUI(user)
+
                         if (user != null) {
                             vm.logIn(user)
                         }
+                        findNavController().navigate(R.id.action_loginFragment_to_nav_skillsList)
 
-                        findNavController().navigate(R.id.action_loginFragment_to_nav_timeSlotsList)
+                        /*savedStateHandle = findNavController().previousBackStackEntry!!.savedStateHandle
+                        savedStateHandle.set(LOGIN_SUCCESSFUL, true)*/
                     } else {
                         // If sign in fails, display a message to the user.
                         Log.w(TAG, "signInWithCredential:failure", task.exception)
