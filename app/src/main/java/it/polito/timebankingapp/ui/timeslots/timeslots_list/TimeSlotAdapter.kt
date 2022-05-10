@@ -135,7 +135,7 @@ class TimeSlotAdapter(
 
     fun setOrder(parameter: String, orderingDirection: Boolean) {
         filterParameter = parameter
-        val newData = data.toMutableList()
+        val newData = displayData.toMutableList()
         if(orderingDirection)
             when(filterParameter){
                 "Title" -> newData.sortByDescending { it.title.lowercase().replace("\n", " ").trim() }
