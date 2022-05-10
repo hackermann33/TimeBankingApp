@@ -121,9 +121,10 @@ class ShowProfileFragment : Fragment(R.layout.fragment_showprofile) {
             })
         }
         try {
-            val f = File(usr.pic) //loggedUser.photoUrl
-            val bitmap = BitmapFactory.decodeStream(FileInputStream(f))
-            profilePic.setImageBitmap(bitmap)
+            vm.retrieveProfilePic(usr, profilePic)
+            //val f = File(usr.pic) //loggedUser.photoUrl
+            //val bitmap = BitmapFactory.decodeStream(FileInputStream(f))
+            //profilePic.setImageBitmap(bitmap)
         } catch (e: FileNotFoundException) {
             e.printStackTrace()
         }

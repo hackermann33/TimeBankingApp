@@ -223,19 +223,19 @@ class EditProfileFragment : Fragment(R.layout.fragment_editprofile) {
         if (requestCode == REQUEST_PIC && resultCode == RESULT_OK) {
             var imageBitmap = data?.extras?.get("data") as Bitmap?
             if (imageBitmap != null) {
-                usr.pic = saveToInternalStorage(imageBitmap)
+                saveToInternalStorage(imageBitmap)
             } else {
                 try {
                     val imageUri: Uri = data?.data as Uri
                     val ins = requireActivity().contentResolver.openInputStream(imageUri)
                     imageBitmap = BitmapFactory.decodeStream(ins)
-                    usr.pic = saveToInternalStorage(imageBitmap)
+                    saveToInternalStorage(imageBitmap)
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
             }
 
-            val ei = ExifInterface(usr.pic)
+            val ei = ExifInterface("/data/user/0/it.polito.timebankingapp/app_imageDir/profile.jpg")
             ei.getAttributeInt(
                 ExifInterface.TAG_ORIENTATION,
                 ExifInterface.ORIENTATION_UNDEFINED
@@ -310,9 +310,9 @@ class EditProfileFragment : Fragment(R.layout.fragment_editprofile) {
 
         if (usr.isValid()) {
             retrieveUserData()
-            usr.pic = saveToInternalStorage(profilePic.drawable.toBitmap())
+            var path = saveToInternalStorage(profilePic.drawable.toBitmap())
 
-            vm.editUser(usr)
+            vm.editUser(usr, path)
             //setFragmentResult("profile", b)
             //returnIntent.putExtra("it.polito.timebankingapp.EditProfileActivity.user", usr)
 
