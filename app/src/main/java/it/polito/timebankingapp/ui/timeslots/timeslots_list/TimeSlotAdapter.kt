@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import android.view.View
 import android.widget.ImageView
+import android.widget.SearchView
 
 import androidx.core.os.bundleOf
 import androidx.navigation.Navigation
@@ -24,6 +25,8 @@ class TimeSlotAdapter(
 
     //private var filter: Boolean = false
     private var displayData = data.toMutableList()
+    private var filterKeywords = ""
+    private var filterParameter = ""
 
 
     class ItemViewHolder(val mainView: View, val type:String) : RecyclerView.ViewHolder(mainView) {
@@ -107,9 +110,57 @@ class TimeSlotAdapter(
 
     //how many items?
     override fun getItemCount(): Int = displayData.size
+
+
+    fun setFilter(keywords: String, parameter: String) {
+        filterKeywords = keywords.lowercase().replace("\n", " ").trim()
+        filterParameter = parameter
+
+        val newData = if (filterKeywords != "") {
+            when(filterParameter){
+                "Title" -> data.filter { it.title.lowercase().replace("\n", " ").trim().contains(filterKeywords) }.toMutableList()
+                "Location" -> data.filter { it.location.lowercase().replace("\n", " ").trim().contains(filterKeywords) }.toMutableList()
+                "Date" -> data.filter { it.date.lowercase().replace("\n", " ").trim().contains(filterKeywords) }.toMutableList()
+                "Duration" -> data.filter { it.duration.lowercase().replace("\n", " ").trim().contains(filterKeywords) }.toMutableList()
+                else -> {
+                    data.toMutableList()
+                }
+            }
+        } else
+            data.toMutableList()
+        val diffs = DiffUtil.calculateDiff(MyDiffCallback(displayData, newData))
+        displayData = newData
+        diffs.dispatchUpdatesTo(this)
+    }
+
+    fun setOrder(parameter: String, orderingDirection: Boolean) {
+        filterParameter = parameter
+        val newData = data.toMutableList()
+        if(orderingDirection)
+            when(filterParameter){
+                "Title" -> newData.sortByDescending { it.title.lowercase().replace("\n", " ").trim() }
+                "Location" -> newData.sortByDescending { it.location.lowercase().replace("\n", " ").trim() }
+                "Date" -> newData.sortByDescending { it.date.lowercase().replace("\n", " ").trim() }
+                "Duration" -> newData.sortByDescending { it.duration.lowercase().replace("\n", " ").trim() }
+                else -> {
+                    data.toMutableList()
+                }
+            }
+        else
+            when(filterParameter){
+                "Title" -> newData.sortBy { it.title.lowercase().replace("\n", " ").trim() }
+                "Location" -> newData.sortBy { it.location.lowercase().replace("\n", " ").trim() }
+                "Date" -> newData.sortBy { it.date.lowercase().replace("\n", " ").trim() }
+                "Duration" -> newData.sortBy { it.duration.lowercase().replace("\n", " ").trim() }
+                else -> {
+                    data.toMutableList()
+                }
+            }
+        val diffs = DiffUtil.calculateDiff(MyDiffCallback(displayData, newData))
+        displayData = newData
+        diffs.dispatchUpdatesTo(this)
+    }
 }
-
-
 
 
 class MyDiffCallback(private val old: List<TimeSlot>, private val new: List<TimeSlot>): DiffUtil.Callback() {

@@ -54,4 +54,13 @@
     <string name="drawer_close">Drawer close</string>
     <string name="sign_out">sign out</string>
     <string name="menu_show_user_profile">Show user profile</string>
+    <string name="skill_specific_filter_by_text">Filter by:</string>
+    <string name="filter_parameter">Sort parameter</string>
+    <string name="filter_bar_hint">Write here to filter</string>
+    <string-array name="filter_parameters_array">
+        <item>Title</item>
+        <item>Location</item>
+        <item>Date</item>
+        <item>Duration</item>
+    </string-array>
 </resources>
