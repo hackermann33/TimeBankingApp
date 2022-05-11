@@ -63,6 +63,5 @@
         <item>Date</item>
         <item>Duration</item>
     </string-array>
-    <string name="filter_option">filter_option</string>
-    <string name="sort_option">sort_option</string>
+    <string name="filter_and_sort_option">Filter and Sort</string>
 </resources>

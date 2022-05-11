@@ -6,6 +6,6 @@
         android:id="@+id/option1"
         android:icon="@drawable/pencil_edit_icon_18"
         android:orderInCategory="1"
-        android:title="@string/filter_option"
+        android:title="@string/menu_edit_button"
         app:showAsAction="ifRoom" />
 </menu>
