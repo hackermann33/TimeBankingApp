@@ -1,7 +1,5 @@
 package it.polito.timebankingapp.ui.timeslots.timeslots_list
 
-import android.content.res.ColorStateList
-import android.graphics.Color
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
@@ -29,6 +27,7 @@ class SkillSpecificTimeSlotListFragment : Fragment(R.layout.fragment_skill_speci
     private var filterParameter = "Title"
     private var filterKeywords = ""
     private var orderingDirection = false //false == ascending, true = descending
+    private var openFilterSortMenu = false
 
     val vm : TimeSlotsViewModel by activityViewModels()
     private lateinit var rv:RecyclerView
@@ -169,12 +168,17 @@ class SkillSpecificTimeSlotListFragment : Fragment(R.layout.fragment_skill_speci
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-            R.id.sort_option -> {
-                /* sort by something */
-                true
-            }
-            R.id.filter_option -> {
+            R.id.filter_and_sort_option -> {
                 /* filter by something*/
+                val linearLayout = view?.findViewById(R.id.filter_and_sort_layout) as LinearLayout
+                if(!openFilterSortMenu) {
+                    linearLayout.visibility = View.VISIBLE
+                    openFilterSortMenu = true
+                }
+                else {
+                    linearLayout.visibility = View.GONE
+                    openFilterSortMenu = false
+                }
                 true
             }
             else -> super.onOptionsItemSelected(item)
