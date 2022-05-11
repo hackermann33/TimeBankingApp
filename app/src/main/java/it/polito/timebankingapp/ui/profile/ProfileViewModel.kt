@@ -115,16 +115,14 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
         val file = Uri.fromFile(File(path))
         val uploadTask = profilePicRef.putFile(file)
 
-        // Register observers to listen for when the download is done or if it fails
         uploadTask.addOnFailureListener {
-            // Handle unsuccessful uploads
             it.stackTrace
         }/*.addOnSuccessListener { taskSnapshot ->
             // taskSnapshot.metadata contains file metadata such as size, content-type, etc.
-            // ...
             taskSnapshot.toString()
         }*/
 
+        usr.tempImagePath = path
         db.collection("users").document(usr.id).set(usr)
     }
 
@@ -133,44 +131,16 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
 
         val gsReference = storage.getReferenceFromUrl("gs://timebankingdb.appspot.com/".plus(usr.pic))
 
-        val localFile = File.createTempFile("profile", "jpg",File("/data/user/0/it.polito.timebankingapp/app_imageDir"))
+        val localFile = File.createTempFile("profile", ".jpg", File("/data/user/0/it.polito.timebankingapp/app_imageDir"))
         gsReference.getFile(localFile).addOnSuccessListener {
-            // Local temp file has been created
-            usr.tempImagePath = localFile.name
-            val bitmap = BitmapFactory.decodeStream(FileInputStream(localFile))
+            usr.tempImagePath = "/data/user/0/it.polito.timebankingapp/app_imageDir/".plus(localFile.name) //imposta path del file temporaneo
             progressBar.visibility = View.GONE
+            val bitmap = BitmapFactory.decodeStream(FileInputStream(localFile))
             profilePic.setImageBitmap(bitmap)
             //localFile.deleteOnExit() //nel caso volessimo cancellarla ad uscita dell'app (necessario rif globale)
         }.addOnFailureListener {
             it.stackTrace
-        }/*.addOnProgressListener {
-            //displaying percentage in progress bar
-
-            val progress: Double =100.0 * it.bytesTransferred / it.totalByteCount
-            progressBar.progress = progress.toInt()
-        }*/
-
-        /*val TWO_MEGABYTES: Long = 2 * 1024 * 1024
-        gsReference.getBytes(TWO_MEGABYTES).addOnSuccessListener {
-            val bitmap = BitmapFactory.decodeByteArray(it, 0, it.size)
-            profilePic.setImageBitmap(bitmap)
-        }.addOnFailureListener {
-            it.stackTrace
-        }*/
+        }/*.addOnProgressListener {progressBar.progress = (100.0 * it.bytesTransferred / it.totalByteCount).toInt()}*/
     }
-/*
-    private fun downloadProfilePic(usr: User){
-        val storage: FirebaseStorage = FirebaseStorage.getInstance();
-
-        val gsReference = storage.getReferenceFromUrl("gs://timebankingdb.appspot.com/".plus(usr.pic))
-
-        val localFile = File.createTempFile("profile", "jpg",File("/data/user/0/it.polito.timebankingapp/app_imageDir"))
-        gsReference.getFile(localFile).addOnSuccessListener {
-            usr.tempImagePath = localFile.name
-        }.addOnFailureListener {
-            it.stackTrace
-        }
-    }*/
-
 }
 

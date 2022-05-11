@@ -97,7 +97,7 @@ class EditProfileFragment : Fragment(R.layout.fragment_editprofile) {
         }
 
         try {
-            val f = File(usr.pic)
+            val f = File(usr.tempImagePath)
             val bitmap = BitmapFactory.decodeStream(FileInputStream(f))
             profilePic.setImageBitmap(bitmap)
         } catch (e: FileNotFoundException) {
@@ -219,23 +219,23 @@ class EditProfileFragment : Fragment(R.layout.fragment_editprofile) {
     @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-
+        var editedImagePath: String = "";
         if (requestCode == REQUEST_PIC && resultCode == RESULT_OK) {
             var imageBitmap = data?.extras?.get("data") as Bitmap?
             if (imageBitmap != null) {
-                saveToInternalStorage(imageBitmap)
+                editedImagePath = saveToInternalStorage(imageBitmap)
             } else {
                 try {
                     val imageUri: Uri = data?.data as Uri
                     val ins = requireActivity().contentResolver.openInputStream(imageUri)
                     imageBitmap = BitmapFactory.decodeStream(ins)
-                    saveToInternalStorage(imageBitmap)
+                    editedImagePath = saveToInternalStorage(imageBitmap)
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
             }
 
-            val ei = ExifInterface("/data/user/0/it.polito.timebankingapp/app_imageDir/profile.jpg")
+            val ei = ExifInterface(editedImagePath)
             ei.getAttributeInt(
                 ExifInterface.TAG_ORIENTATION,
                 ExifInterface.ORIENTATION_UNDEFINED
@@ -252,15 +252,16 @@ class EditProfileFragment : Fragment(R.layout.fragment_editprofile) {
         }
     }
 
-    private fun saveToInternalStorage(bitmapImage: Bitmap): String {
+    private fun saveToInternalStorage(bitmapImage: Bitmap, save: Boolean = false): String {
         val cw = ContextWrapper(requireContext())
-        // path to /data/data/yourapp/app_data/imageDir
+
         val directory = cw.getDir("imageDir", Context.MODE_PRIVATE)
-        // Create imageDir
-        val mypath = File(directory, "profile.jpg")
+        val fileName = if(save) "profile.jpg" else "temp_profile.jpg"
+        val path = File(directory, fileName)
+
         var fos: FileOutputStream? = null
         try {
-            fos = FileOutputStream(mypath)
+            fos = FileOutputStream(path)
             // Use the compress method on the BitMap object to write image to the OutputStream
             bitmapImage.compress(Bitmap.CompressFormat.PNG, 100, fos)
         } catch (e: Exception) {
@@ -272,7 +273,7 @@ class EditProfileFragment : Fragment(R.layout.fragment_editprofile) {
                 e.printStackTrace()
             }
         }
-        return directory.absolutePath + "/profile.jpg"
+        return path.absolutePath
     }
 
     private fun rotateImage(source: Bitmap, angle: Int): Bitmap? {
@@ -303,14 +304,14 @@ class EditProfileFragment : Fragment(R.layout.fragment_editprofile) {
 
     }
 
-    fun handleProfileConfirmation() {
+    private fun handleProfileConfirmation() {
 
         /* Intent in order to save state and send it to showprofile*/
         retrieveUserData()
 
         if (usr.isValid()) {
             retrieveUserData()
-            var path = saveToInternalStorage(profilePic.drawable.toBitmap())
+            var path = saveToInternalStorage(profilePic.drawable.toBitmap(), true)
 
             vm.editUser(usr, path)
             //setFragmentResult("profile", b)
