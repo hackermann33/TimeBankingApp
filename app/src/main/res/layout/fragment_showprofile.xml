@@ -24,16 +24,32 @@
             android:orientation="vertical"
             android:weightSum="3">
 
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/profile_pic"
+            <FrameLayout
+                android:id="@+id/frame_layout_pic"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_gravity="center"
-                android:layout_weight="1"
-                android:padding="10dp"
-                android:src="@drawable/default_avatar"
-                app:civ_border_color="@color/text_standard"
-                app:civ_border_width="2dp" />
+                android:layout_height="200dp"
+                android:background="@android:color/transparent"
+                android:padding="10dp">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/profile_pic"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center|center_horizontal"
+                    android:src="@drawable/default_avatar"
+                    app:civ_border_color="@color/text_standard"
+                    app:civ_border_width="2dp" />
+
+                <ProgressBar
+                    android:id="@+id/profile_pic_progress_bar"
+                    style="?android:attr/progressBarStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:indeterminateTint="@color/blue"
+                    android:visibility="visible" />
+
+            </FrameLayout>
 
             <TextView
                 android:id="@+id/fullName"

@@ -23,7 +23,8 @@ class User(
     var location: String = "",
     var description: String = "",
     var balance: Int = 0,
-    var skills: MutableList<String> = mutableListOf()
+    var skills: MutableList<String> = mutableListOf(),
+    var tempImagePath: String = ""
 ) : Serializable {
 
     /*Here, I'm not checking that String is not empty, because if it's empty it will be used default image*/
