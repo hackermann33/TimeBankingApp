@@ -4,10 +4,7 @@ import android.content.res.Configuration
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.view.*
-import android.widget.LinearLayout
-import android.widget.ScrollView
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -105,7 +102,9 @@ class ShowProfileFragment : Fragment(R.layout.fragment_showprofile) {
 
     private fun showProfile(view: View) {
         val profilePic = view.findViewById<CircleImageView>(R.id.profile_pic)
+        val frameLayout = view.findViewById<FrameLayout>(R.id.frame_layout_pic)
         val sv = view.findViewById<ScrollView>(R.id.scrollView2)
+        val progressBar = view.findViewById<ProgressBar>(R.id.profile_pic_progress_bar)
 
         if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
             sv.viewTreeObserver.addOnGlobalLayoutListener(object :
@@ -113,15 +112,18 @@ class ShowProfileFragment : Fragment(R.layout.fragment_showprofile) {
                 override fun onGlobalLayout() {
                     val h = sv.height
                     val w = sv.width
-                    profilePic.post {
+                    /*profilePic.post {
                         profilePic.layoutParams = LinearLayout.LayoutParams(w, h / 3)
                     }
+                    sv.viewTreeObserver.removeOnGlobalLayoutListener(this)*/
+                    frameLayout.post { frameLayout.layoutParams = LinearLayout.LayoutParams(w, h / 3) }
                     sv.viewTreeObserver.removeOnGlobalLayoutListener(this)
                 }
             })
         }
         try {
-            vm.retrieveProfilePic(usr, profilePic)
+
+            vm.retrieveAndSetProfilePic(usr, profilePic, progressBar)
             //val f = File(usr.pic) //loggedUser.photoUrl
             //val bitmap = BitmapFactory.decodeStream(FileInputStream(f))
             //profilePic.setImageBitmap(bitmap)
