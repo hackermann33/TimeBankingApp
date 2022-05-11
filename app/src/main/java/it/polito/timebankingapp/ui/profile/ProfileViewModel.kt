@@ -22,6 +22,10 @@ import java.util.*
 
 class ProfileViewModel(application: Application) : AndroidViewModel(application) {
 
+    private val statusMessage = MutableLiveData<Event<String>>()
+
+    val message : LiveData<Event<String>>
+        get() = statusMessage
 
     private val _user = MutableLiveData<User>()
     val user: LiveData<User> = _user
@@ -60,6 +64,7 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
                         else {
                             usr = v.toUser()!!
                             _user.value = usr!!
+                            statusMessage.value = Event("User Updated Successfully")
                         }
                     }
                 } else _user.value = User()
@@ -142,3 +147,25 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
     }
 }
 
+open class Event<out T>(private val content: T) {
+
+    var hasBeenHandled = false
+        private set // Allow external read but not write
+
+    /**
+     * Returns the content and prevents its use again.
+     */
+    fun getContentIfNotHandled(): T? {
+        return if (hasBeenHandled) {
+            null
+        } else {
+            hasBeenHandled = true
+            content
+        }
+    }
+
+    /**
+     * Returns the content, even if it's already been handled.
+     */
+    fun peekContent(): T = content
+}

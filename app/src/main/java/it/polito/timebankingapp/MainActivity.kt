@@ -1,13 +1,16 @@
 package it.polito.timebankingapp
 
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
@@ -16,8 +19,11 @@ import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import de.hdodenhof.circleimageview.CircleImageView
 import it.polito.timebankingapp.databinding.ActivityMainBinding
 import it.polito.timebankingapp.ui.profile.ProfileViewModel
+import java.io.File
+import java.io.FileInputStream
 
 
 interface DrawerController {
@@ -103,7 +109,26 @@ class MainActivity : AppCompatActivity()/*, DrawerController */{
             val fullName = navView.getHeaderView(0).findViewById<TextView>(R.id.fullName)
             if(it!= null)
                 fullName.text = it.displayName
+
         }
+
+        vm.message.observe(this, Observer {
+            var usr = vm.user.value!!
+            val fullName = navView.getHeaderView(0).findViewById<TextView>(R.id.fullName)
+            val profilePic = navView.getHeaderView(0).findViewById<CircleImageView>(R.id.profile_pic)
+            fullName.text = usr.fullName
+            /*if(usr.tempImagePath == "")
+                vm.retrieveAndSetProfilePic(usr, profilePic, progressBar)
+            else {
+                progressBar.visibility = View.GONE
+                val f = File(usr.tempImagePath) //loggedUser.photoUrl (già salvata in locale)
+                val bitmap = BitmapFactory.decodeStream(FileInputStream(f))
+                profilePic.setImageBitmap(bitmap)
+            }*/
+            /*it.getContentIfNotHandled()?.let {
+                Toast.makeText(this, it, Toast.LENGTH_LONG).show()
+            }*/
+        })
 
         if(vm.fireBaseUser.value != null) {
             val fullName = navView.getHeaderView(0).findViewById<TextView>(R.id.fullName)
