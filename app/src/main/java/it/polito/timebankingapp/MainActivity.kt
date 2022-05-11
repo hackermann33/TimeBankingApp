@@ -4,6 +4,7 @@ import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
+import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
@@ -116,15 +117,16 @@ class MainActivity : AppCompatActivity()/*, DrawerController */{
             var usr = vm.user.value!!
             val fullName = navView.getHeaderView(0).findViewById<TextView>(R.id.fullName)
             val profilePic = navView.getHeaderView(0).findViewById<CircleImageView>(R.id.profile_pic)
+            val progressBar = navView.getHeaderView(0).findViewById<ProgressBar>(R.id.profile_pic_progress_bar)
             fullName.text = usr.fullName
-            /*if(usr.tempImagePath == "")
+            if(usr.tempImagePath == "")
                 vm.retrieveAndSetProfilePic(usr, profilePic, progressBar)
             else {
                 progressBar.visibility = View.GONE
                 val f = File(usr.tempImagePath) //loggedUser.photoUrl (già salvata in locale)
                 val bitmap = BitmapFactory.decodeStream(FileInputStream(f))
                 profilePic.setImageBitmap(bitmap)
-            }*/
+            }
             /*it.getContentIfNotHandled()?.let {
                 Toast.makeText(this, it, Toast.LENGTH_LONG).show()
             }*/
