@@ -122,11 +122,14 @@ class ShowProfileFragment : Fragment(R.layout.fragment_showprofile) {
             })
         }
         try {
-
-            vm.retrieveAndSetProfilePic(usr, profilePic, progressBar)
-            //val f = File(usr.pic) //loggedUser.photoUrl
-            //val bitmap = BitmapFactory.decodeStream(FileInputStream(f))
-            //profilePic.setImageBitmap(bitmap)
+            if(usr.tempImagePath == "")
+                vm.retrieveAndSetProfilePic(usr, profilePic, progressBar)
+            else {
+                progressBar.visibility = View.GONE
+                val f = File(usr.tempImagePath) //loggedUser.photoUrl (già salvata in locale)
+                val bitmap = BitmapFactory.decodeStream(FileInputStream(f))
+                profilePic.setImageBitmap(bitmap)
+            }
         } catch (e: FileNotFoundException) {
             e.printStackTrace()
         }
@@ -172,11 +175,20 @@ class ShowProfileFragment : Fragment(R.layout.fragment_showprofile) {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.option1 -> {
-                Toast.makeText(
-                    context, "Edit TimeSlot",
-                    Toast.LENGTH_SHORT
-                ).show()
-                editProfile() //evoked when the pencil button is pressed
+                val progressBar = v.findViewById<ProgressBar>(R.id.profile_pic_progress_bar)
+                if(progressBar.visibility == View.GONE) {
+                    Toast.makeText(
+                        context, "Edit profile",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    editProfile() //evoked when the pencil button is pressed
+                }
+                else {
+                    Toast.makeText(
+                        context, "Wait until all has has been retrieved.",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
                 true
             }
             else -> super.onOptionsItemSelected(item)
