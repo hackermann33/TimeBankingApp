@@ -1,10 +1,13 @@
 package it.polito.timebankingapp.ui.profile
 
 import android.app.Application
+import android.content.Context
+import android.content.ContextWrapper
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.view.View
 import android.widget.ProgressBar
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -131,14 +134,17 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
         db.collection("users").document(usr.id).set(usr)
     }
 
-    fun retrieveAndSetProfilePic(usr: User, profilePic:CircleImageView, progressBar: ProgressBar){ //retrieveAndSetProfilePic
+    fun retrieveAndSetProfilePic(usr: User, profilePic:CircleImageView, progressBar: ProgressBar, context: ContextWrapper){ //retrieveAndSetProfilePic
         val storage: FirebaseStorage = FirebaseStorage.getInstance();
 
         val gsReference = storage.getReferenceFromUrl("gs://timebankingdb.appspot.com/".plus(usr.pic))
 
-        val localFile = File.createTempFile("profile", ".jpg", File("/data/user/0/it.polito.timebankingapp/app_imageDir"))
+
+        val directory = context.getDir("imageDir", Context.MODE_PRIVATE)
+
+        val localFile = File.createTempFile("profile", ".jpg", directory)
         gsReference.getFile(localFile).addOnSuccessListener {
-            usr.tempImagePath = "/data/user/0/it.polito.timebankingapp/app_imageDir/".plus(localFile.name) //imposta path del file temporaneo
+            usr.tempImagePath = localFile.absolutePath //imposta path del file temporaneo
             progressBar.visibility = View.GONE
             val bitmap = BitmapFactory.decodeStream(FileInputStream(localFile))
             profilePic.setImageBitmap(bitmap)

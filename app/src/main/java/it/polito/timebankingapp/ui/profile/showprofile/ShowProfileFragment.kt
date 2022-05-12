@@ -1,5 +1,6 @@
 package it.polito.timebankingapp.ui.profile.showprofile
 
+import android.content.ContextWrapper
 import android.content.res.Configuration
 import android.graphics.BitmapFactory
 import android.os.Bundle
@@ -122,9 +123,10 @@ class ShowProfileFragment : Fragment(R.layout.fragment_showprofile) {
             })
         }
         try {
-            if(usr.tempImagePath == "")
-                vm.retrieveAndSetProfilePic(usr, profilePic, progressBar)
-            else {
+            if(usr.tempImagePath == "") {
+                val cw = ContextWrapper(requireContext())
+                vm.retrieveAndSetProfilePic(usr, profilePic, progressBar,cw)
+            }else {
                 progressBar.visibility = View.GONE
                 val f = File(usr.tempImagePath) //loggedUser.photoUrl (già salvata in locale)
                 val bitmap = BitmapFactory.decodeStream(FileInputStream(f))
