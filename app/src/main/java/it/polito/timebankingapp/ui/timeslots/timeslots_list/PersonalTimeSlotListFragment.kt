@@ -7,8 +7,12 @@ import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
+import androidx.core.graphics.drawable.toBitmap
+import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.setFragmentResultListener
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -94,7 +98,15 @@ class PersonalTimeSlotListFragment : Fragment(R.layout.fragment_personal_timeslo
         addTimeSlotButton.setOnClickListener { _ ->
 /*            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                 .setAction("Action", null)
- */             findNavController().navigate(R.id.action_timeSlotListFragment_to_nav_timeSlotEdit)
+ */     if (authVm.user.value!!.isValid()) {
+            findNavController().navigate(R.id.action_timeSlotListFragment_to_nav_timeSlotEdit)
+        } else {
+            AlertDialog.Builder(requireContext())
+                .setTitle("Profile NOT completed!")
+                .setMessage("You should first complete your profile before creating a new time slot offer.")
+                .setPositiveButton("Ok") { _, _ -> }
+                .show()
+            }
         }
 
         /*
