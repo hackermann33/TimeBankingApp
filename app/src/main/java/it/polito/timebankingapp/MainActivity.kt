@@ -1,5 +1,6 @@
 package it.polito.timebankingapp
 
+import android.content.ContextWrapper
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.view.View
@@ -10,6 +11,7 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
@@ -119,9 +121,10 @@ class MainActivity : AppCompatActivity()/*, DrawerController */{
             val profilePic = navView.getHeaderView(0).findViewById<CircleImageView>(R.id.profile_pic)
             val progressBar = navView.getHeaderView(0).findViewById<ProgressBar>(R.id.profile_pic_progress_bar)
             fullName.text = usr.fullName
-            if(usr.tempImagePath == "")
-                vm.retrieveAndSetProfilePic(usr, profilePic, progressBar)
-            else {
+            if(usr.tempImagePath == "") {
+                val cw = ContextWrapper(this)
+                vm.retrieveAndSetProfilePic(usr, profilePic, progressBar, cw)
+            }else {
                 progressBar.visibility = View.GONE
                 val f = File(usr.tempImagePath) //loggedUser.photoUrl (già salvata in locale)
                 val bitmap = BitmapFactory.decodeStream(FileInputStream(f))
