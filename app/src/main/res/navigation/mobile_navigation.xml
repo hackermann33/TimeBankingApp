@@ -47,7 +47,7 @@
         <action
             android:id="@+id/action_nav_personalTimeSlotsList_to_nav_login"
             app:destination="@id/nav_login"
-            app:popUpTo="@id/nav_login"
+            app:popUpTo="@id/nav_skillsList"
             app:popUpToInclusive="true" />
     </fragment>
     <fragment
@@ -65,7 +65,7 @@
         <action
             android:id="@+id/action_nav_showProfile_to_nav_login"
             app:destination="@id/nav_login"
-            app:popUpTo="@id/nav_login"
+            app:popUpTo="@id/nav_skillsList"
             app:popUpToInclusive="true" />
     </fragment>
     <fragment

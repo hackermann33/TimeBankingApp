@@ -3,8 +3,10 @@ package it.polito.timebankingapp.ui.profile
 import android.app.Application
 import android.content.Context
 import android.content.ContextWrapper
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
+import android.util.Log
 import android.view.View
 import android.widget.ProgressBar
 import androidx.core.content.ContentProviderCompat.requireContext
@@ -16,8 +18,10 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.*
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.ktx.storageMetadata
 import de.hdodenhof.circleimageview.CircleImageView
 import it.polito.timebankingapp.model.user.User
+import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileInputStream
 import java.util.*
@@ -33,8 +37,13 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
     private val _user = MutableLiveData<User>()
     val user: LiveData<User> = _user
 
+    private val _userImage = MutableLiveData<Bitmap>()
+    val userImage: LiveData<Bitmap> = _userImage
+
+    /* maybe this, can be removed*/
     private val _fireBaseUser = MutableLiveData<FirebaseUser?>(Firebase.auth.currentUser)
     val fireBaseUser: LiveData<FirebaseUser?> = _fireBaseUser
+
 
 
     private lateinit var l: ListenerRegistration
@@ -67,12 +76,29 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
                         else {
                             usr = v.toUser()!!
                             _user.value = usr!!
+                            downloadProfileImage()
                             statusMessage.value = Event("User Updated Successfully")
                         }
                     }
                 } else _user.value = User()
             }
 
+    }
+
+    fun downloadProfileImage() {
+        val storageRef = FirebaseStorage.getInstance().reference
+
+        var picRef = storageRef.child(user.value!!.pic)
+        Log.d("getProfileImage", "usrId: ${user.value}")
+
+        val ONE_MEGABYTE: Long = 1024 * 1024
+        picRef.getBytes(ONE_MEGABYTE).addOnSuccessListener {
+            _userImage.postValue(BitmapFactory.decodeByteArray(it,0, it.size))
+            // Data for "images/island.jpg" is returned, use this as needed
+        }.addOnFailureListener {
+            // Handle any errors
+            Log.d("getProfileImage", "usr: ${user.value.toString()} \npicRef: $picRef")
+        }
     }
 
     fun logIn(user: FirebaseUser) {
@@ -110,8 +136,8 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
         }
     }
 
-    fun editUser(usr: User, path: String) {
-        // Create a storage reference from our app
+    fun editUser(usr: User) {
+        /*// Create a storage reference from our app
         val storage: FirebaseStorage = FirebaseStorage.getInstance();
         val storageRef = storage.reference
 
@@ -123,20 +149,19 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
 
         uploadTask.addOnFailureListener {
             it.stackTrace
-        }/*.addOnSuccessListener { taskSnapshot ->
+        }*//*.addOnSuccessListener { taskSnapshot ->
             // taskSnapshot.metadata contains file metadata such as size, content-type, etc.
             taskSnapshot.toString()
-        }*/
+        }*//*
 
-        usr.tempImagePath = path
+        usr.tempImagePath = path*/
         db.collection("users").document(usr.id).set(usr)
     }
 
-    fun retrieveAndSetProfilePic(usr: User, profilePic:CircleImageView, progressBar: ProgressBar, context: ContextWrapper){ //retrieveAndSetProfilePic
+    /*fun retrieveAndSetProfilePic(usr: User, profilePic:CircleImageView, progressBar: ProgressBar, context: ContextWrapper){ //retrieveAndSetProfilePic
         val storage: FirebaseStorage = FirebaseStorage.getInstance();
 
         val gsReference = storage.getReferenceFromUrl("gs://timebankingdb.appspot.com/".plus(usr.pic))
-
 
         val directory = context.getDir("imageDir", Context.MODE_PRIVATE)
 
@@ -149,7 +174,30 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
             //localFile.deleteOnExit() //nel caso volessimo cancellarla ad uscita dell'app (necessario rif globale)
         }.addOnFailureListener {
             it.stackTrace
-        }/*.addOnProgressListener {progressBar.progress = (100.0 * it.bytesTransferred / it.totalByteCount).toInt()}*/
+        }*//*.addOnProgressListener {progressBar.progress = (100.0 * it.bytesTransferred / it.totalByteCount).toInt()}*//*
+    }*/
+
+    fun editUserImage(imageBitmap: Bitmap?) {
+        _userImage.postValue(imageBitmap!!)
+
+        // Create file metadata including the content type
+        var metadata = storageMetadata {
+            contentType = "image/jpg"
+        }
+
+        /*By bitmap*/
+        val baos = ByteArrayOutputStream()
+        imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+        val data = baos.toByteArray()
+
+
+        // Upload the file and metadata
+        FirebaseStorage.getInstance().reference.child("${user.value?.pic}").putBytes(data, metadata).addOnSuccessListener {
+            Log.d("editUserImage", "success: $it")
+        }.addOnFailureListener {
+            Log.d("editUserImage", "failure: $it")
+        }
+
     }
 }
 

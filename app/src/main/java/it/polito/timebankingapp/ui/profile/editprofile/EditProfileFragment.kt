@@ -22,12 +22,10 @@ import android.view.ViewTreeObserver
 import android.widget.*
 import androidx.activity.addCallback
 import androidx.appcompat.app.AlertDialog
-import androidx.core.graphics.drawable.toBitmap
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResult
-import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
@@ -59,7 +57,7 @@ const val REQUEST_PIC = 1
 
 class EditProfileFragment : Fragment(R.layout.fragment_editprofile) {
 
-    private lateinit var profilePic: CircleImageView
+    private lateinit var profilePicCircleView: CircleImageView
     private var usr: User = User()
     private lateinit var skillsGroup: ChipGroup
 
@@ -80,7 +78,13 @@ class EditProfileFragment : Fragment(R.layout.fragment_editprofile) {
 
 
 
-        profilePic = view.findViewById(R.id.profile_pic)
+        profilePicCircleView = view.findViewById(R.id.profile_pic)
+
+
+        vm.userImage.observe(viewLifecycleOwner){
+            profilePicCircleView.setImageBitmap(it)
+        }
+
         val sv = view.findViewById<ScrollView>(R.id.editScrollView2)
         val editPic = view.findViewById<FrameLayout>(R.id.editPic)
 
@@ -96,13 +100,14 @@ class EditProfileFragment : Fragment(R.layout.fragment_editprofile) {
             })
         }
 
+        /*
         try {
             val f = File(usr.tempImagePath)
             val bitmap = BitmapFactory.decodeStream(FileInputStream(f))
             profilePic.setImageBitmap(bitmap)
         } catch (e: FileNotFoundException) {
             e.printStackTrace()
-        }
+        }*/
 
         val picEdit = view.findViewById<ImageButton>(R.id.uploadProfilePicButton)
         picEdit.setOnClickListener {
@@ -223,23 +228,25 @@ class EditProfileFragment : Fragment(R.layout.fragment_editprofile) {
         if (requestCode == REQUEST_PIC && resultCode == RESULT_OK) {
             var imageBitmap = data?.extras?.get("data") as Bitmap?
             if (imageBitmap != null) {
-                editedImagePath = saveToInternalStorage(imageBitmap)
+                vm.editUserImage(imageBitmap)
+                //editedImagePath = saveToInternalStorage(imageBitmap)
             } else {
                 try {
                     val imageUri: Uri = data?.data as Uri
                     val ins = requireActivity().contentResolver.openInputStream(imageUri)
                     imageBitmap = BitmapFactory.decodeStream(ins)
-                    editedImagePath = saveToInternalStorage(imageBitmap)
+                    vm.editUserImage(imageBitmap)
+                    //editedImagePath = saveToInternalStorage(imageBitmap)
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
             }
 
-            val ei = ExifInterface(editedImagePath)
+            /*val ei = ExifInterface(editedImagePath)
             ei.getAttributeInt(
                 ExifInterface.TAG_ORIENTATION,
                 ExifInterface.ORIENTATION_UNDEFINED
-            )
+            )*/
 
             val rotatedBitmap: Bitmap? = when (attr.orientation) {
                 ExifInterface.ORIENTATION_ROTATE_90 -> rotateImage(imageBitmap!!, 90)
@@ -248,7 +255,8 @@ class EditProfileFragment : Fragment(R.layout.fragment_editprofile) {
                 ExifInterface.ORIENTATION_NORMAL -> imageBitmap
                 else -> imageBitmap
             }
-            profilePic.setImageBitmap(rotatedBitmap)
+            profilePicCircleView.setImageBitmap(rotatedBitmap)
+            vm.editUserImage(rotatedBitmap)
         }
     }
 
@@ -311,9 +319,9 @@ class EditProfileFragment : Fragment(R.layout.fragment_editprofile) {
 
         if (usr.isValid()) {
             retrieveUserData()
-            var path = saveToInternalStorage(profilePic.drawable.toBitmap(), true)
+            //var path = saveToInternalStorage(profilePic.drawable.toBitmap(), true)
 
-            vm.editUser(usr, path)
+            vm.editUser(usr)
             //setFragmentResult("profile", b)
             //returnIntent.putExtra("it.polito.timebankingapp.EditProfileActivity.user", usr)
 

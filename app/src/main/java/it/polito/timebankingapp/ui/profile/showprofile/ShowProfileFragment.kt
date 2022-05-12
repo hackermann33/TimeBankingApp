@@ -48,7 +48,11 @@ class ShowProfileFragment : Fragment(R.layout.fragment_showprofile) {
         v = view
 
         val navController = findNavController()
+        val profilePicCircleView = view.findViewById<CircleImageView>(R.id.profile_pic)
+        val progressBar = view.findViewById<ProgressBar>(R.id.profile_pic_progress_bar)
 
+        if(vm.userImage.value == null)
+            progressBar.visibility = View.GONE
 
         vm.fireBaseUser.observe(viewLifecycleOwner){
             if(it != null) {
@@ -58,6 +62,11 @@ class ShowProfileFragment : Fragment(R.layout.fragment_showprofile) {
             }
             else
                 navController.navigate(R.id.nav_login)
+        }
+
+        vm.userImage.observe(viewLifecycleOwner){
+            profilePicCircleView.setImageBitmap(it)
+            progressBar.visibility = View.GONE
         }
 
         //loggedUser = usrVm.userProfile.value!!
@@ -122,7 +131,7 @@ class ShowProfileFragment : Fragment(R.layout.fragment_showprofile) {
                 }
             })
         }
-        try {
+        /*try {
             if(usr.tempImagePath == "") {
                 val cw = ContextWrapper(requireContext())
                 vm.retrieveAndSetProfilePic(usr, profilePic, progressBar,cw)
@@ -134,7 +143,7 @@ class ShowProfileFragment : Fragment(R.layout.fragment_showprofile) {
             }
         } catch (e: FileNotFoundException) {
             e.printStackTrace()
-        }
+        }*/
 
         val nameView = view.findViewById<TextView>(R.id.fullName)
         nameView.text = usr.fullName
@@ -178,19 +187,19 @@ class ShowProfileFragment : Fragment(R.layout.fragment_showprofile) {
         return when (item.itemId) {
             R.id.option1 -> {
                 val progressBar = v.findViewById<ProgressBar>(R.id.profile_pic_progress_bar)
-                if(progressBar.visibility == View.GONE) {
+                editProfile() //evoked when the pencil button is pressed
+                /*if(progressBar.visibility == View.GONE) {
                     Toast.makeText(
                         context, "Edit profile",
                         Toast.LENGTH_SHORT
                     ).show()
-                    editProfile() //evoked when the pencil button is pressed
                 }
                 else {
                     Toast.makeText(
                         context, "Wait until all has has been retrieved.",
                         Toast.LENGTH_SHORT
                     ).show()
-                }
+                }*/
                 true
             }
             else -> super.onOptionsItemSelected(item)
