@@ -12,6 +12,8 @@ import com.google.firebase.ktx.Firebase
 import it.polito.timebankingapp.model.user.User
 
 
+/* Test new branch*/
+
 class ProfileViewModel(application: Application) : AndroidViewModel(application) {
 
 
