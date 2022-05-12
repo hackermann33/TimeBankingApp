@@ -34,7 +34,7 @@ interface DrawerController {
     fun setDrawerUnlocked()
 }
 
-/* try to commit */
+/* try to commit aaaaaa*/
 
 class MainActivity : AppCompatActivity()/*, DrawerController */{
     /*
