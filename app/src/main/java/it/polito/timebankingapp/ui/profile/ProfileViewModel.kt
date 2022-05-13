@@ -1,29 +1,22 @@
 package it.polito.timebankingapp.ui.profile
 
 import android.app.Application
-import android.content.Context
-import android.content.ContextWrapper
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.net.Uri
 import android.util.Log
-import android.view.View
-import android.widget.ProgressBar
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.firestore.*
+import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.ktx.storageMetadata
-import de.hdodenhof.circleimageview.CircleImageView
 import it.polito.timebankingapp.model.user.User
 import java.io.ByteArrayOutputStream
-import java.io.File
-import java.io.FileInputStream
 import java.util.*
 
 
@@ -91,8 +84,8 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
         var picRef = storageRef.child(user.value!!.pic)
         Log.d("getProfileImage", "usrId: ${user.value}")
 
-        val ONE_MEGABYTE: Long = 1024 * 1024
-        picRef.getBytes(ONE_MEGABYTE).addOnSuccessListener {
+        val TWO_MEGABYTES: Long = 1024 * 1024
+        picRef.getBytes(TWO_MEGABYTES).addOnSuccessListener {
             _userImage.postValue(BitmapFactory.decodeByteArray(it,0, it.size))
             // Data for "images/island.jpg" is returned, use this as needed
         }.addOnFailureListener {
@@ -187,7 +180,12 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
 
         /*By bitmap*/
         val baos = ByteArrayOutputStream()
-        imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+        if(imageBitmap.byteCount > 1024 * 1024) {
+            var resizedImageBitmap = getResizedBitmap(imageBitmap, 1024 )
+            resizedImageBitmap?.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+        } else
+            imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+
         val data = baos.toByteArray()
 
 
@@ -200,6 +198,22 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
 
     }
 }
+
+fun getResizedBitmap(image: Bitmap, maxSize: Int): Bitmap? {
+    var width = image.width
+    var height = image.height
+    val bitmapRatio = width.toFloat() / height.toFloat()
+    if (bitmapRatio > 1) {
+        width = maxSize
+        height = (width / bitmapRatio).toInt()
+    } else {
+        height = maxSize
+        width = (height * bitmapRatio).toInt()
+    }
+    return Bitmap.createScaledBitmap(image, width, height, true)
+}
+
+
 
 open class Event<out T>(private val content: T) {
 
