@@ -84,8 +84,8 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
         var picRef = storageRef.child(user.value!!.pic)
         Log.d("getProfileImage", "usrId: ${user.value}")
 
-        val TWO_MEGABYTES: Long = 1024 * 1024
-        picRef.getBytes(TWO_MEGABYTES).addOnSuccessListener {
+        val size: Long = 2 * 1024 * 1024
+        picRef.getBytes(size).addOnSuccessListener {
             _userImage.postValue(BitmapFactory.decodeByteArray(it,0, it.size))
             // Data for "images/island.jpg" is returned, use this as needed
         }.addOnFailureListener {
