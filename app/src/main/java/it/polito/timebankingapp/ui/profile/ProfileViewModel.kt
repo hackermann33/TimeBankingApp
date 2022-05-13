@@ -30,8 +30,8 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
     private val _user = MutableLiveData<User>()
     val user: LiveData<User> = _user
 
-    private val _userImage = MutableLiveData<Bitmap>()
-    val userImage: LiveData<Bitmap> = _userImage
+    private val _userImage = MutableLiveData<Bitmap?>()
+    val userImage: LiveData<Bitmap?> = _userImage
 
     /* maybe this, can be removed*/
     private val _fireBaseUser = MutableLiveData<FirebaseUser?>(Firebase.auth.currentUser)
@@ -81,17 +81,23 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
     fun downloadProfileImage() {
         val storageRef = FirebaseStorage.getInstance().reference
 
-        var picRef = storageRef.child(user.value!!.pic)
-        Log.d("getProfileImage", "usrId: ${user.value}")
+        /*if the user has already a profile picture */
+        if(user.value!!.pic.isNotEmpty()) {
+            val picRef = storageRef.child(user.value!!.pic)
+            Log.d("getProfileImage", "usrId: ${user.value}")
 
-        val size: Long = 2 * 1024 * 1024
-        picRef.getBytes(size).addOnSuccessListener {
-            _userImage.postValue(BitmapFactory.decodeByteArray(it,0, it.size))
-            // Data for "images/island.jpg" is returned, use this as needed
-        }.addOnFailureListener {
-            // Handle any errors
-            Log.d("getProfileImage", "usr: ${user.value.toString()} \npicRef: $picRef")
+            val size: Long = 2 * 1024 * 1024
+            picRef.getBytes(size).addOnSuccessListener {
+                _userImage.postValue(BitmapFactory.decodeByteArray(it, 0, it.size))
+                // Data for "images/island.jpg" is returned, use this as needed
+            }.addOnFailureListener {
+                // Handle any errors
+                _userImage.postValue(null)
+
+                Log.d("getProfileImage", "usr: ${user.value.toString()} \npicRef: $picRef")
+            }
         }
+
     }
 
     fun logIn(user: FirebaseUser) {
@@ -103,6 +109,8 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
 
     fun logOut() {
         _fireBaseUser.value = null
+        _userImage.postValue(null)
+        _user.postValue(User())
     }
 
     override fun onCleared() {

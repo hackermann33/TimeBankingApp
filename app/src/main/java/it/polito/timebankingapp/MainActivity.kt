@@ -119,21 +119,24 @@ class MainActivity : AppCompatActivity()/*, DrawerController */{
             googleSignInClient.signOut();
         }
 
-        vm.fireBaseUser.observe(this) {
+        vm.user.observe(this) {
             val fullName = navView.getHeaderView(0).findViewById<TextView>(R.id.fullName)
             if(it!= null) {
-                fullName.text = it.displayName
-
-
+                fullName.text = it.fullName
             }
         }
 
         val progressBar = navView.getHeaderView(0).findViewById<ProgressBar>(R.id.profile_pic_progress_bar)
+        val profilePic =
+            navView.getHeaderView(0).findViewById<CircleImageView>(R.id.profile_pic)
         vm.userImage.observe(this){
-            val profilePic = navView.getHeaderView(0).findViewById<CircleImageView>(R.id.profile_pic)
-
-            profilePic.setImageBitmap(it)
-            progressBar.visibility = View.GONE
+            if(it != null) {
+                profilePic.setImageBitmap(it)
+                progressBar.visibility = View.GONE
+            }
+            else {
+                profilePic.setImageResource(R.drawable.default_avatar)
+            }
         }
 
         if(vm.userImage.value == null)
