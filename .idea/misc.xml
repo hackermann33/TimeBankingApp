@@ -38,7 +38,7 @@
         <entry key="app/src/main/res/layout/app_bar_main.xml" value="0.3546875" />
         <entry key="app/src/main/res/layout/content_main.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_editprofile.xml" value="0.3578125" />
-        <entry key="app/src/main/res/layout/fragment_login.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/fragment_login.xml" value="0.33" />
         <entry key="app/src/main/res/layout/fragment_personal_timeslots_list.xml" value="0.3546875" />
         <entry key="app/src/main/res/layout/fragment_showprofile.xml" value="0.2056159420289855" />
         <entry key="app/src/main/res/layout/fragment_skills_list.xml" value="0.25" />
