@@ -16,15 +16,16 @@ import it.polito.timebankingapp.R
 import it.polito.timebankingapp.model.timeslot.TimeSlot
 import it.polito.timebankingapp.ui.timeslots.TimeSlotsViewModel
 
-
 class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
 
-    val globalModel : TimeSlotsViewModel by activityViewModels()
+    private val globalModel : TimeSlotsViewModel by activityViewModels()
     private lateinit var timeSlotToEdit: TimeSlot
     private lateinit var type: String
+    private lateinit var userId: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        userId = arguments?.getString("userId").toString()
         type = arguments?.getString("point_of_origin").toString() //skill_specific or personal
         setHasOptionsMenu(true)
     }
@@ -102,7 +103,7 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
                     ).show()
                     findNavController().navigate(
                         R.id.action_nav_timeSlotDetails_to_nav_showProfile,
-                        bundleOf("point_of_origin" to type)
+                        bundleOf("point_of_origin" to type, "userId" to userId)
                     )
                 }
                 else { //personal

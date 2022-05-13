@@ -99,7 +99,7 @@ class TimeSlotAdapter(
             selectTimeSlot(item)
             Navigation.findNavController(it).navigate(
                 destination,
-                bundleOf("point_of_origin" to type)
+                bundleOf("point_of_origin" to type, "userId" to item.userId)
             )
         });
 
