@@ -37,8 +37,11 @@ class ShowProfileFragment : Fragment(R.layout.fragment_showprofile) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         type = arguments?.getString("point_of_origin").toString() //skill_specific or personal
-        if(type == "skill_specific")
+        if(type == "skill_specific") {
+            var userId = arguments?.getString("userId").toString()
+            vm.retrieveTimeSlotProfileData(userId)
             (activity as MainActivity?)?.setActionBarTitle("Offerer profile")
+        }
         else
             setHasOptionsMenu(true)
     }
@@ -51,8 +54,24 @@ class ShowProfileFragment : Fragment(R.layout.fragment_showprofile) {
         val profilePicCircleView = view.findViewById<CircleImageView>(R.id.profile_pic)
         val progressBar = view.findViewById<ProgressBar>(R.id.profile_pic_progress_bar)
 
-        if(vm.userImage.value == null)
-            progressBar.visibility = View.GONE
+
+        if(type == "skill_specific") {
+            if(vm.timeslotUserImage.value == null)
+                progressBar.visibility = View.GONE
+
+            vm.timeslotUser.observe(viewLifecycleOwner){
+                usr = it //oppure it
+                showProfile(view)
+            }
+
+            vm.timeslotUserImage.observe(viewLifecycleOwner){
+                profilePicCircleView.setImageBitmap(it)
+                progressBar.visibility = View.GONE
+            }
+
+        } else { //personal
+            if (vm.userImage.value == null)
+                progressBar.visibility = View.GONE
 
         vm.fireBaseUser.observe(viewLifecycleOwner){
             if(it != null) {
@@ -73,6 +92,7 @@ class ShowProfileFragment : Fragment(R.layout.fragment_showprofile) {
                 profilePicCircleView.setImageResource(R.drawable.default_avatar)
             }
         }
+
         //loggedUser = usrVm.userProfile.value!!
         //showProfile(view)
 

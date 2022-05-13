@@ -33,6 +33,13 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
     private val _userImage = MutableLiveData<Bitmap?>()
     val userImage: LiveData<Bitmap?> = _userImage
 
+    private val _timeslotUser = MutableLiveData<User>()
+    val timeslotUser: LiveData<User> = _timeslotUser
+
+    private val _timeslotUserImage = MutableLiveData<Bitmap>()
+    val timeslotUserImage: LiveData<Bitmap> = _timeslotUserImage
+
+
     /* maybe this, can be removed*/
     private val _fireBaseUser = MutableLiveData<FirebaseUser?>(Firebase.auth.currentUser)
     val fireBaseUser: LiveData<FirebaseUser?> = _fireBaseUser
@@ -78,7 +85,7 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
 
     }
 
-    fun downloadProfileImage() {
+    private fun downloadProfileImage() {
         val storageRef = FirebaseStorage.getInstance().reference
 
         /*if the user has already a profile picture */
@@ -204,6 +211,36 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
             Log.d("editUserImage", "failure: $it")
         }
 
+    }
+
+    fun retrieveTimeSlotProfileData(userId: String) {
+        var timeslotUsr: User
+        l = db.collection("users").document(userId)
+            .addSnapshotListener { v, e ->
+                if (e == null) {
+                    if (v != null) {
+                        timeslotUsr = v.toUser()!!
+                        _timeslotUser.value = timeslotUsr!!
+
+                        //downloadProfileImage()
+                        val storageRef = FirebaseStorage.getInstance().reference
+
+                        var picRef = storageRef.child(timeslotUser.value!!.pic)
+                        Log.d("getProfileImage", "usrId: ${timeslotUser.value}")
+
+                        val size: Long = 2 * 1024 * 1024
+                        picRef.getBytes(size).addOnSuccessListener {
+                            _timeslotUserImage.postValue(BitmapFactory.decodeByteArray(it,0, it.size))
+                            // Data for "images/island.jpg" is returned, use this as needed
+                        }.addOnFailureListener {
+                            // Handle any errors
+                            Log.d("getProfileImage", "usr: ${timeslotUser.value.toString()} \npicRef: $picRef")
+                        }
+
+                        statusMessage.value = Event("User Updated Successfully")
+                    }
+                } else _timeslotUser.value = User()
+            }
     }
 }
 

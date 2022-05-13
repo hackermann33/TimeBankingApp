@@ -1,19 +1,14 @@
 package it.polito.timebankingapp
 
-import android.content.ContextWrapper
-import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.TextView
-import android.widget.Toast
 import androidx.activity.viewModels
-import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.drawerlayout.widget.DrawerLayout
-import androidx.lifecycle.Observer
+import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
@@ -27,8 +22,6 @@ import com.google.firebase.ktx.Firebase
 import de.hdodenhof.circleimageview.CircleImageView
 import it.polito.timebankingapp.databinding.ActivityMainBinding
 import it.polito.timebankingapp.ui.profile.ProfileViewModel
-import java.io.File
-import java.io.FileInputStream
 
 
 interface DrawerController {
@@ -63,7 +56,6 @@ class MainActivity : AppCompatActivity()/*, DrawerController */{
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
 
 
         setSupportActionBar(binding.appBarMain.toolbar)
@@ -227,4 +219,32 @@ class MainActivity : AppCompatActivity()/*, DrawerController */{
     fun setActionBarTitle(title: String?) {
          supportActionBar?.title = title
     }
+
+    override fun onBackPressed() {
+        // If the fragment exists and has some back-stack entry
+
+        // NB Maybe the backstack is used only with navigation drawer (other fragments uses navigation)
+        val navController = findNavController(R.id.nav_host_fragment_content_main)
+
+        if(currentFragmentBelongsToDrawer(navController)){
+            if(navController.currentBackStackEntry?.destination?.id == R.id.nav_skillsList) { /* if the current page is home page */
+                //when back button pressed from home page close the application
+                finish()
+            }
+            else
+                navController.popBackStack(R.id.nav_skillsList, false) //back to home page
+        }
+        else {
+            // Let super handle the back press
+            super.onBackPressed()
+        }
+    }
+
+    private fun currentFragmentBelongsToDrawer(navController: NavController): Boolean {
+        val currentFragmentId = navController.currentBackStackEntry?.destination?.id
+        if(currentFragmentId == R.id.nav_personalTimeSlotsList || currentFragmentId == R.id.nav_showProfile || currentFragmentId == R.id.nav_skillsList)
+            return true
+        return false
+    }
+
 }
