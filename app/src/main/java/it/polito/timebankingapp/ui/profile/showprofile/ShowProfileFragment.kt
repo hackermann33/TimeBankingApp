@@ -77,18 +77,23 @@ class ShowProfileFragment : Fragment(R.layout.fragment_showprofile) {
             if (vm.userImage.value == null)
                 progressBar.visibility = View.GONE
 
-            vm.fireBaseUser.observe(viewLifecycleOwner) {
-                if (it != null) {
-                    loggedUser = it
-                    usr = vm.user.value!!
-                    showProfile(view)
-                } else
-                    navController.navigate(R.id.nav_login)
+        vm.fireBaseUser.observe(viewLifecycleOwner){
+            if(it != null) {
+                loggedUser = it
+                usr = vm.user.value!!
+                showProfile(view)
             }
+            else
+                navController.navigate(R.id.action_nav_showProfile_to_nav_login)
+        }
 
-            vm.userImage.observe(viewLifecycleOwner) {
+        vm.userImage.observe(viewLifecycleOwner){
+            if(it != null) {
                 profilePicCircleView.setImageBitmap(it)
                 progressBar.visibility = View.GONE
+            }
+            else {
+                profilePicCircleView.setImageResource(R.drawable.default_avatar)
             }
         }
 
