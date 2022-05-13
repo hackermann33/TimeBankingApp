@@ -34,7 +34,6 @@ interface DrawerController {
     fun setDrawerUnlocked()
 }
 
-/* try to commit aaaaaa*/
 
 class MainActivity : AppCompatActivity()/*, DrawerController */{
     /*
@@ -100,6 +99,7 @@ class MainActivity : AppCompatActivity()/*, DrawerController */{
             }
         }*/
 
+
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
@@ -116,7 +116,19 @@ class MainActivity : AppCompatActivity()/*, DrawerController */{
 
         }
 
-        vm.message.observe(this, Observer {
+        val progressBar = navView.getHeaderView(0).findViewById<ProgressBar>(R.id.profile_pic_progress_bar)
+        vm.userImage.observe(this){
+            val profilePic = navView.getHeaderView(0).findViewById<CircleImageView>(R.id.profile_pic)
+
+            profilePic.setImageBitmap(it)
+            progressBar.visibility = View.GONE
+        }
+
+        if(vm.userImage.value == null)
+            progressBar.visibility = View.GONE
+
+
+        /*vm.message.observe(this, Observer {
             var usr = vm.user.value!!
             val fullName = navView.getHeaderView(0).findViewById<TextView>(R.id.fullName)
             val profilePic = navView.getHeaderView(0).findViewById<CircleImageView>(R.id.profile_pic)
@@ -131,10 +143,10 @@ class MainActivity : AppCompatActivity()/*, DrawerController */{
                 val bitmap = BitmapFactory.decodeStream(FileInputStream(f))
                 profilePic.setImageBitmap(bitmap)
             }
-            /*it.getContentIfNotHandled()?.let {
+            *//*it.getContentIfNotHandled()?.let {
                 Toast.makeText(this, it, Toast.LENGTH_LONG).show()
-            }*/
-        })
+            }*//*
+        })*/
 
         if(vm.fireBaseUser.value != null) {
             val fullName = navView.getHeaderView(0).findViewById<TextView>(R.id.fullName)
