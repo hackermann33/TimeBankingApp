@@ -181,7 +181,7 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
         _userImage.postValue(imageBitmap!!)
 
         // Create file metadata including the content type
-        var metadata = storageMetadata {
+        val metadata = storageMetadata {
             contentType = "image/jpg"
         }
 

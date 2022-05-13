@@ -73,8 +73,15 @@ class SkillsListFragment : Fragment(R.layout.fragment_skills_list) {
          authVm.fireBaseUser.observe(viewLifecycleOwner){
             if(it == null)
                 findNavController().navigate(R.id.action_nav_skillsList_to_nav_login)
-
+             else {
+                vm.updatePerSkillTimeSlots()
+                vm.updatePersonalTimeSlots()
+            }
         }
+
+
+
+
         /*authVm.fireBaseUser.observe(viewLifecycleOwner){
             if(it == null) {
                 findNavController().navigate(R.id.action_nav_skillsList_to_nav_login)

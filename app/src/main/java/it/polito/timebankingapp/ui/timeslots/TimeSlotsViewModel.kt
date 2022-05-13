@@ -2,18 +2,24 @@ package it.polito.timebankingapp.ui.timeslots
 
 import android.app.Application
 import android.util.Log
+import androidx.activity.viewModels
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.QueryDocumentSnapshot
 import com.google.firebase.ktx.Firebase
 import it.polito.timebankingapp.model.timeslot.TimeSlot
+import it.polito.timebankingapp.ui.profile.ProfileViewModel
 
 
 class TimeSlotsViewModel(application: Application): AndroidViewModel(application) {
+
+
 
     private val _personalTimeSlots = MutableLiveData<List<TimeSlot>>()
     val personalTimeSlots: LiveData<List<TimeSlot>> = _personalTimeSlots
@@ -21,26 +27,20 @@ class TimeSlotsViewModel(application: Application): AndroidViewModel(application
     private val _globalTimeSlots = MutableLiveData<List<TimeSlot>>()
     val globalTimeSlots: LiveData<List<TimeSlot>> = _globalTimeSlots
 
-    private var l:ListenerRegistration
-    private var l2:ListenerRegistration
+    private lateinit var l:ListenerRegistration
+    private lateinit var l2:ListenerRegistration
 
 
-    private val db: FirebaseFirestore
+    private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
 
     init {
-        db = FirebaseFirestore.getInstance()
-        l = db.collection("timeSlots").whereEqualTo("userId", Firebase.auth.uid).addSnapshotListener{v,e ->
-            if(e == null){
-                _personalTimeSlots.value = v!!.mapNotNull { d -> d.toTimeSlot() }
-            } else _personalTimeSlots.value = emptyList()
-        }
+        updatePersonalTimeSlots()
+        updatePerSkillTimeSlots()
 
-        l2 = db.collection("timeSlots").addSnapshotListener{v,e ->
-            if(e == null){
-                _globalTimeSlots.value = v!!.mapNotNull { d -> d.toTimeSlot() }
-            } else _globalTimeSlots.value = emptyList()
-        }
     }
+
+
+
 
     /*val repo = TimeSlotRepository(application)
 
@@ -51,6 +51,26 @@ class TimeSlotsViewModel(application: Application): AndroidViewModel(application
     val timeSlots: LiveData<List<TimeSlot>> = repo.timeSlots()
     */
     val selectedTimeSlot =  MutableLiveData<TimeSlot>()
+
+    fun updatePerSkillTimeSlots() {
+        l2 = db.collection("timeSlots").addSnapshotListener{v,e ->
+            if(e == null){
+                _globalTimeSlots.value = v!!.mapNotNull { d -> d.toTimeSlot() }
+            } else _globalTimeSlots.value = emptyList()
+        }
+
+    }
+
+
+    fun updatePersonalTimeSlots() {
+        l = db.collection("timeSlots").whereEqualTo("userId", Firebase.auth.uid).addSnapshotListener{v,e ->
+            if(e == null){
+                _personalTimeSlots.value = v!!.mapNotNull { d -> d.toTimeSlot() }
+            } else _personalTimeSlots.value = emptyList()
+        }
+    }
+
+
 
     fun addTimeSlot(ts: TimeSlot) {
 
