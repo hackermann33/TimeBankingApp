@@ -61,13 +61,10 @@ class PersonalTimeSlotListFragment : Fragment(R.layout.fragment_personal_timeslo
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         authVm.fireBaseUser.observe(viewLifecycleOwner){
             if(it == null) {
-                findNavController().navigate(R.id.nav_login)
+                findNavController().navigate(R.id.action_nav_personalTimeSlotsList_to_nav_login)
             }
+
         }
-
-
-
-
 
 
         rv = view.findViewById<RecyclerView>(R.id.time_slot_list)

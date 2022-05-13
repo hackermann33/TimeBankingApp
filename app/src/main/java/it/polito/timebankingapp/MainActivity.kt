@@ -129,6 +129,7 @@ class MainActivity : AppCompatActivity()/*, DrawerController */{
         val progressBar = navView.getHeaderView(0).findViewById<ProgressBar>(R.id.profile_pic_progress_bar)
         val profilePic =
             navView.getHeaderView(0).findViewById<CircleImageView>(R.id.profile_pic)
+
         vm.userImage.observe(this){
             if(it != null) {
                 profilePic.setImageBitmap(it)
