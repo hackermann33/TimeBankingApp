@@ -111,9 +111,11 @@ class MainActivity : AppCompatActivity()/*, DrawerController */{
 
         vm.fireBaseUser.observe(this) {
             val fullName = navView.getHeaderView(0).findViewById<TextView>(R.id.fullName)
-            if(it!= null)
+            if(it!= null) {
                 fullName.text = it.displayName
 
+
+            }
         }
 
         val progressBar = navView.getHeaderView(0).findViewById<ProgressBar>(R.id.profile_pic_progress_bar)
