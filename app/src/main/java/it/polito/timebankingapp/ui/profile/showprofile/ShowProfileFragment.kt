@@ -56,20 +56,25 @@ class ShowProfileFragment : Fragment(R.layout.fragment_showprofile) {
         val progressBar = view.findViewById<ProgressBar>(R.id.profile_pic_progress_bar)
 
 
-        if(type == "skill_specific") {
-            if(vm.timeslotUserImage.value == null)
+        if (type == "skill_specific") {
+            if (vm.timeslotUserImage.value == null)
                 progressBar.visibility = View.GONE
 
-            vm.timeslotUser.observe(viewLifecycleOwner){
+            vm.timeslotUser.observe(viewLifecycleOwner) {
                 usr = it //oppure it
                 showProfile(view)
             }
 
-            vm.timeslotUserImage.observe(viewLifecycleOwner){
-                if(it != null)
+            vm.timeslotUserImage.observe(viewLifecycleOwner) {
+                if (it != null)
                     profilePicCircleView.setImageBitmap(it)
                 else
-                    profilePicCircleView.setImageBitmap( BitmapFactory.decodeResource(resources, R.drawable.default_avatar))
+                    profilePicCircleView.setImageBitmap(
+                        BitmapFactory.decodeResource(
+                            resources,
+                            R.drawable.default_avatar
+                        )
+                    )
                 progressBar.visibility = View.GONE
             }
 
@@ -77,30 +82,28 @@ class ShowProfileFragment : Fragment(R.layout.fragment_showprofile) {
             if (vm.userImage.value == null)
                 progressBar.visibility = View.GONE
 
-        vm.fireBaseUser.observe(viewLifecycleOwner){
-            if(it != null) {
-                loggedUser = it
-                usr = vm.user.value!!
-                showProfile(view)
+            vm.fireBaseUser.observe(viewLifecycleOwner) {
+                if (it != null) {
+                    loggedUser = it
+                    usr = vm.user.value!!
+                    showProfile(view)
+                } else
+                    navController.navigate(R.id.action_nav_showProfile_to_nav_login)
             }
-            else
-                navController.navigate(R.id.action_nav_showProfile_to_nav_login)
-        }
 
-        vm.userImage.observe(viewLifecycleOwner){
-            if(it != null) {
-                profilePicCircleView.setImageBitmap(it)
-                progressBar.visibility = View.GONE
+            vm.userImage.observe(viewLifecycleOwner) {
+                if (it != null) {
+                    profilePicCircleView.setImageBitmap(it)
+                    progressBar.visibility = View.GONE
+                } else {
+                    profilePicCircleView.setImageResource(R.drawable.default_avatar)
+                }
             }
-            else {
-                profilePicCircleView.setImageResource(R.drawable.default_avatar)
-            }
-        }
 
-        //loggedUser = usrVm.userProfile.value!!
-        //showProfile(view)
+            //loggedUser = usrVm.userProfile.value!!
+            //showProfile(view)
 
-        /*sharedPref = requireActivity().getPreferences(android.content.Context.MODE_PRIVATE)
+            /*sharedPref = requireActivity().getPreferences(android.content.Context.MODE_PRIVATE)
 
         val profile = sharedPref.getString("profile", "")
         usr = if (sharedPref.contains("profile")) GsonBuilder().create()
@@ -109,10 +112,10 @@ class ShowProfileFragment : Fragment(R.layout.fragment_showprofile) {
 
          */
 
-        //usr = savedInstanceState?.getSerializable("user") as User
+            //usr = savedInstanceState?.getSerializable("user") as User
 
 
-        /*setFragmentResultListener("profile") { requestKey, bundle ->
+            /*setFragmentResultListener("profile") { requestKey, bundle ->
             usr = bundle.getSerializable("user") as User
             showProfile(view)
             val jsonString = GsonBuilder().create().toJson(usr)
@@ -124,12 +127,14 @@ class ShowProfileFragment : Fragment(R.layout.fragment_showprofile) {
 
         showProfile(view) */
 
-        setFragmentResultListener("editProfile") { _, bundle ->
-            val result = bundle.getBoolean("editProfileConfirm")
+            setFragmentResultListener("editProfile") { _, bundle ->
+                val result = bundle.getBoolean("editProfileConfirm")
 
-            if(result){
-                val snackBar = Snackbar.make(view, "Profile successfully edited.", Snackbar.LENGTH_LONG)
-                snackBar.setAction("DISMISS") { snackBar.dismiss() }.show()
+                if (result) {
+                    val snackBar =
+                        Snackbar.make(view, "Profile successfully edited.", Snackbar.LENGTH_LONG)
+                    snackBar.setAction("DISMISS") { snackBar.dismiss() }.show()
+                }
             }
         }
     }
