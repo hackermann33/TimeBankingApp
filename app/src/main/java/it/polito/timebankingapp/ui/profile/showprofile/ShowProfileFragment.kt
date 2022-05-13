@@ -28,21 +28,20 @@ class ShowProfileFragment : Fragment(R.layout.fragment_showprofile) {
 
     private lateinit var usr: User
     private lateinit var loggedUser: FirebaseUser
-    private lateinit var v : View
-    private lateinit var type : String
+    private lateinit var v: View
+    private lateinit var type: String
 
-    val vm : ProfileViewModel by activityViewModels()
+    val vm: ProfileViewModel by activityViewModels()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         type = arguments?.getString("point_of_origin").toString() //skill_specific or personal
-        if(type == "skill_specific") {
+        if (type == "skill_specific") {
             var userId = arguments?.getString("userId").toString()
             vm.retrieveTimeSlotProfileData(userId)
             (activity as MainActivity?)?.setActionBarTitle("Offerer profile")
-        }
-        else
+        } else
             setHasOptionsMenu(true)
     }
 
@@ -55,16 +54,16 @@ class ShowProfileFragment : Fragment(R.layout.fragment_showprofile) {
         val progressBar = view.findViewById<ProgressBar>(R.id.profile_pic_progress_bar)
 
 
-        if(type == "skill_specific") {
-            if(vm.timeslotUserImage.value == null)
+        if (type == "skill_specific") {
+            if (vm.timeslotUserImage.value == null)
                 progressBar.visibility = View.GONE
 
-            vm.timeslotUser.observe(viewLifecycleOwner){
+            vm.timeslotUser.observe(viewLifecycleOwner) {
                 usr = it //oppure it
                 showProfile(view)
             }
 
-            vm.timeslotUserImage.observe(viewLifecycleOwner){
+            vm.timeslotUserImage.observe(viewLifecycleOwner) {
                 profilePicCircleView.setImageBitmap(it)
                 progressBar.visibility = View.GONE
             }
@@ -73,58 +72,59 @@ class ShowProfileFragment : Fragment(R.layout.fragment_showprofile) {
             if (vm.userImage.value == null)
                 progressBar.visibility = View.GONE
 
-        vm.fireBaseUser.observe(viewLifecycleOwner){
-            if(it != null) {
-                loggedUser = it
-                usr = vm.user.value!!
-                showProfile(view)
+            vm.fireBaseUser.observe(viewLifecycleOwner) {
+                if (it != null) {
+                    loggedUser = it
+                    usr = vm.user.value!!
+                    showProfile(view)
+                } else
+                    navController.navigate(R.id.action_nav_showProfile_to_nav_login)
             }
-            else
-                navController.navigate(R.id.action_nav_showProfile_to_nav_login)
+
+            vm.userImage.observe(viewLifecycleOwner) {
+                if (it != null) {
+                    profilePicCircleView.setImageBitmap(it)
+                    progressBar.visibility = View.GONE
+                } else {
+                    profilePicCircleView.setImageResource(R.drawable.default_avatar)
+                }
+            }
         }
 
-        vm.userImage.observe(viewLifecycleOwner){
-            if(it != null) {
-                profilePicCircleView.setImageBitmap(it)
-                progressBar.visibility = View.GONE
-            }
-            else {
-                profilePicCircleView.setImageResource(R.drawable.default_avatar)
-            }
-        }
 
         //loggedUser = usrVm.userProfile.value!!
         //showProfile(view)
 
         /*sharedPref = requireActivity().getPreferences(android.content.Context.MODE_PRIVATE)
 
-        val profile = sharedPref.getString("profile", "")
-        usr = if (sharedPref.contains("profile")) GsonBuilder().create()
-            .fromJson(profile, User::class.java)
-        else User()
+    val profile = sharedPref.getString("profile", "")
+    usr = if (sharedPref.contains("profile")) GsonBuilder().create()
+        .fromJson(profile, User::class.java)
+    else User()
 
-         */
+     */
 
         //usr = savedInstanceState?.getSerializable("user") as User
 
 
         /*setFragmentResultListener("profile") { requestKey, bundle ->
-            usr = bundle.getSerializable("user") as User
-            showProfile(view)
-            val jsonString = GsonBuilder().create().toJson(usr)
-            with(sharedPref.edit()) {
-                putString("profile", jsonString)
-                apply()
-            }
+        usr = bundle.getSerializable("user") as User
+        showProfile(view)
+        val jsonString = GsonBuilder().create().toJson(usr)
+        with(sharedPref.edit()) {
+            putString("profile", jsonString)
+            apply()
         }
+    }
 
-        showProfile(view) */
+    showProfile(view) */
 
         setFragmentResultListener("editProfile") { _, bundle ->
             val result = bundle.getBoolean("editProfileConfirm")
 
-            if(result){
-                val snackBar = Snackbar.make(view, "Profile successfully edited.", Snackbar.LENGTH_LONG)
+            if (result) {
+                val snackBar =
+                    Snackbar.make(view, "Profile successfully edited.", Snackbar.LENGTH_LONG)
                 snackBar.setAction("DISMISS") { snackBar.dismiss() }.show()
             }
         }
@@ -147,27 +147,29 @@ class ShowProfileFragment : Fragment(R.layout.fragment_showprofile) {
                     val h = sv.height
                     val w = sv.width
                     /*profilePic.post {
-                        profilePic.layoutParams = LinearLayout.LayoutParams(w, h / 3)
+                    profilePic.layoutParams = LinearLayout.LayoutParams(w, h / 3)
+                }
+                sv.viewTreeObserver.removeOnGlobalLayoutListener(this)*/
+                    frameLayout.post {
+                        frameLayout.layoutParams = LinearLayout.LayoutParams(w, h / 3)
                     }
-                    sv.viewTreeObserver.removeOnGlobalLayoutListener(this)*/
-                    frameLayout.post { frameLayout.layoutParams = LinearLayout.LayoutParams(w, h / 3) }
                     sv.viewTreeObserver.removeOnGlobalLayoutListener(this)
                 }
             })
         }
         /*try {
-            if(usr.tempImagePath == "") {
-                val cw = ContextWrapper(requireContext())
-                vm.retrieveAndSetProfilePic(usr, profilePic, progressBar,cw)
-            }else {
-                progressBar.visibility = View.GONE
-                val f = File(usr.tempImagePath) //loggedUser.photoUrl (già salvata in locale)
-                val bitmap = BitmapFactory.decodeStream(FileInputStream(f))
-                profilePic.setImageBitmap(bitmap)
-            }
-        } catch (e: FileNotFoundException) {
-            e.printStackTrace()
-        }*/
+        if(usr.tempImagePath == "") {
+            val cw = ContextWrapper(requireContext())
+            vm.retrieveAndSetProfilePic(usr, profilePic, progressBar,cw)
+        }else {
+            progressBar.visibility = View.GONE
+            val f = File(usr.tempImagePath) //loggedUser.photoUrl (già salvata in locale)
+            val bitmap = BitmapFactory.decodeStream(FileInputStream(f))
+            profilePic.setImageBitmap(bitmap)
+        }
+    } catch (e: FileNotFoundException) {
+        e.printStackTrace()
+    }*/
 
         val nameView = view.findViewById<TextView>(R.id.fullName)
         nameView.text = usr.fullName
@@ -202,7 +204,7 @@ class ShowProfileFragment : Fragment(R.layout.fragment_showprofile) {
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        if(type != "skill_specific")
+        if (type != "skill_specific")
             inflater.inflate(R.menu.menu_editpencil, menu)
         super.onCreateOptionsMenu(menu, inflater)
     }
@@ -213,17 +215,17 @@ class ShowProfileFragment : Fragment(R.layout.fragment_showprofile) {
                 val progressBar = v.findViewById<ProgressBar>(R.id.profile_pic_progress_bar)
                 editProfile() //evoked when the pencil button is pressed
                 /*if(progressBar.visibility == View.GONE) {
-                    Toast.makeText(
-                        context, "Edit profile",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-                else {
-                    Toast.makeText(
-                        context, "Wait until all has has been retrieved.",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }*/
+                Toast.makeText(
+                    context, "Edit profile",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+            else {
+                Toast.makeText(
+                    context, "Wait until all has has been retrieved.",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }*/
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -235,5 +237,4 @@ class ShowProfileFragment : Fragment(R.layout.fragment_showprofile) {
         val b = bundleOf("profile" to usr)
         findNavController().navigate(R.id.action_showProfileFragment_to_editProfileActivity, b)
     }
-
 }
