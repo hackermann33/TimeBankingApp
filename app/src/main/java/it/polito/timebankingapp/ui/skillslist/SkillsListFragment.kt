@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
@@ -17,6 +18,7 @@ import it.polito.timebankingapp.R
 import it.polito.timebankingapp.ui.auth.LoginFragment
 import it.polito.timebankingapp.ui.profile.ProfileViewModel
 import it.polito.timebankingapp.ui.timeslots.TimeSlotsViewModel
+import it.polito.timebankingapp.ui.timeslots.timeslots_list.TimeSlotAdapter
 
 /* Global lists of skills,
    Every-time a user add a new skill in his profile, if not present in this list, it will be added!  */
@@ -36,8 +38,8 @@ private var SKILLS = arrayOf(
 class SkillsListFragment : Fragment(R.layout.fragment_skills_list) {
 
     private lateinit var v : View
-    val authVm: ProfileViewModel by activityViewModels()
-    val vm: TimeSlotsViewModel by activityViewModels()
+    private val authVm: ProfileViewModel by activityViewModels()
+    private val vm: TimeSlotsViewModel by activityViewModels()
 
 
 
@@ -79,6 +81,27 @@ class SkillsListFragment : Fragment(R.layout.fragment_skills_list) {
             }
         }
 
+        vm.skillList.observe(viewLifecycleOwner){
+            if(it.isNotEmpty()){
+                it.forEach { skill ->
+                    val chip = layoutInflater.inflate(
+                        R.layout.chip_layout_show,
+                        chipGroup.parent.parent as ViewGroup,
+                        false
+                    ) as Chip
+                    chip.text = skill
+                    chip.setOnClickListener { ch ->
+                        val text = (ch as Chip).text.toString()
+                        val b = bundleOf("skill" to text)
+                        findNavController().navigate(R.id.action_nav_skillsList_to_skillSpecificTimeSlotListFragment,b)
+                    }
+                    chipGroup.addView(chip)
+                }
+            }
+            else{
+                //show empty message!!!!!!!!
+            }
+        }
 
 
 
@@ -88,7 +111,7 @@ class SkillsListFragment : Fragment(R.layout.fragment_skills_list) {
             }
         }*/
 
-
+/*
         SKILLS.forEach { skill ->
             val chip = layoutInflater.inflate(
                 R.layout.chip_layout_show,
@@ -103,6 +126,6 @@ class SkillsListFragment : Fragment(R.layout.fragment_skills_list) {
             }
             chipGroup.addView(chip)
         }
-
+*/
     }
 }

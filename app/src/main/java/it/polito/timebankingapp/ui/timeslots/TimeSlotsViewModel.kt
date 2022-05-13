@@ -2,30 +2,28 @@ package it.polito.timebankingapp.ui.timeslots
 
 import android.app.Application
 import android.util.Log
-import androidx.activity.viewModels
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.QueryDocumentSnapshot
 import com.google.firebase.ktx.Firebase
 import it.polito.timebankingapp.model.timeslot.TimeSlot
-import it.polito.timebankingapp.ui.profile.ProfileViewModel
 
 
 class TimeSlotsViewModel(application: Application): AndroidViewModel(application) {
-
-
 
     private val _personalTimeSlots = MutableLiveData<List<TimeSlot>>()
     val personalTimeSlots: LiveData<List<TimeSlot>> = _personalTimeSlots
 
     private val _globalTimeSlots = MutableLiveData<List<TimeSlot>>()
     val globalTimeSlots: LiveData<List<TimeSlot>> = _globalTimeSlots
+
+    private val _skillList = MutableLiveData<List<String>>()
+    val skillList: LiveData<List<String>> = _skillList
 
     private lateinit var l:ListenerRegistration
     private lateinit var l2:ListenerRegistration
@@ -36,7 +34,7 @@ class TimeSlotsViewModel(application: Application): AndroidViewModel(application
     init {
         updatePersonalTimeSlots()
         updatePerSkillTimeSlots()
-
+        retrieveSkillList()
     }
 
 
@@ -70,22 +68,44 @@ class TimeSlotsViewModel(application: Application): AndroidViewModel(application
         }
     }
 
+    fun retrieveSkillList(){
+        val list = mutableListOf<String>()
+        db.collection("skills").get()
+            .addOnSuccessListener { result ->
+                for (document in result) {
+                    //Log.d(TAG, "${document.id} => ${document.data}")
+                    list.add(document.id)
+                }
+                _skillList.value = list
+            }
+            .addOnFailureListener { exception ->
+                Log.d("skill_list", "Error getting documents: ", exception)
+            }
+    }
+
 
 
     fun addTimeSlot(ts: TimeSlot) {
-
-
         val data = HashMap<String, Any>()
 
         val newTimeSlotRef = db.collection("timeSlots").document()
 
-
         ts.id = newTimeSlotRef.id //imposta id generato da firebase
         ts.userId = Firebase.auth.currentUser?.uid ?: ""
 
-        newTimeSlotRef.set(ts)
-        .addOnSuccessListener{
+        newTimeSlotRef.set(ts).addOnSuccessListener{
             Log.d("timeSlots_add","Successfully added")
+            val skillRef: DocumentReference = db.collection("skills").document(ts.relatedSkill)
+            skillRef.get().addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val document = task.result
+                    if (!document.exists()) {
+                        skillRef.set(data)
+                    }
+                } else {
+                    Log.d("timeSlots_add", "Failed with: ", task.exception)
+                }
+            }
         }.addOnFailureListener{Log.d("timeSlots_add", "Error on adding")}
 
         /*db.collection("timeSlots").document().set(ts).addOnSuccessListener {
