@@ -19,6 +19,8 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -107,6 +109,14 @@ class MainActivity : AppCompatActivity()/*, DrawerController */{
         signOutButton.setOnClickListener{
             vm.logOut()
             Firebase.auth.signOut()
+            val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.my_web_client_id))
+                .requestEmail()
+                .build()
+
+            val googleSignInClient = this.let { GoogleSignIn.getClient(it, gso) }
+
+            googleSignInClient.signOut();
         }
 
         vm.fireBaseUser.observe(this) {
