@@ -1,6 +1,5 @@
 package it.polito.timebankingapp.ui.profile.showprofile
 
-import android.content.ContextWrapper
 import android.content.res.Configuration
 import android.graphics.BitmapFactory
 import android.os.Bundle
@@ -20,9 +19,7 @@ import it.polito.timebankingapp.MainActivity
 import it.polito.timebankingapp.R
 import it.polito.timebankingapp.model.user.User
 import it.polito.timebankingapp.ui.profile.ProfileViewModel
-import java.io.File
-import java.io.FileInputStream
-import java.io.FileNotFoundException
+
 
 class ShowProfileFragment : Fragment(R.layout.fragment_showprofile) {
 
@@ -46,6 +43,10 @@ class ShowProfileFragment : Fragment(R.layout.fragment_showprofile) {
             setHasOptionsMenu(true)
     }
 
+    override fun onDetach() {
+        vm.clearTimeSlotUserImage()
+        super.onDetach()
+    }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         v = view
@@ -65,7 +66,10 @@ class ShowProfileFragment : Fragment(R.layout.fragment_showprofile) {
             }
 
             vm.timeslotUserImage.observe(viewLifecycleOwner){
-                profilePicCircleView.setImageBitmap(it)
+                if(it != null)
+                    profilePicCircleView.setImageBitmap(it)
+                else
+                    profilePicCircleView.setImageBitmap( BitmapFactory.decodeResource(resources, R.drawable.default_avatar))
                 progressBar.visibility = View.GONE
             }
 

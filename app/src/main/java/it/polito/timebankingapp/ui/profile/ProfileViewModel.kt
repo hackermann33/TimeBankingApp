@@ -1,5 +1,6 @@
 package it.polito.timebankingapp.ui.profile
 
+import android.R
 import android.app.Application
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -14,6 +15,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageException
 import com.google.firebase.storage.ktx.storageMetadata
 import it.polito.timebankingapp.model.user.User
 import java.io.ByteArrayOutputStream
@@ -36,8 +38,8 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
     private val _timeslotUser = MutableLiveData<User>()
     val timeslotUser: LiveData<User> = _timeslotUser
 
-    private val _timeslotUserImage = MutableLiveData<Bitmap>()
-    val timeslotUserImage: LiveData<Bitmap> = _timeslotUserImage
+    private val _timeslotUserImage = MutableLiveData<Bitmap?>()
+    val timeslotUserImage: LiveData<Bitmap?> = _timeslotUserImage
 
 
     /* maybe this, can be removed*/
@@ -71,6 +73,7 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
                             db.collection("users").document(fireBaseUser.value!!.uid)
                                 .set(usr)
                             _user.value = usr!!
+
                         }
                         /* Documento già esistente */
                         else {
@@ -213,6 +216,10 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
 
     }
 
+    fun clearTimeSlotUserImage() {
+        _timeslotUserImage.postValue(null)
+    }
+
     fun retrieveTimeSlotProfileData(userId: String) {
         var timeslotUsr: User
         l = db.collection("users").document(userId)
@@ -227,16 +234,20 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
 
                         var picRef = storageRef.child(timeslotUser.value!!.pic)
                         Log.d("getProfileImage", "usrId: ${timeslotUser.value}")
-
+                        picRef.downloadUrl
                         val size: Long = 2 * 1024 * 1024
-                        picRef.getBytes(size).addOnSuccessListener {
-                            _timeslotUserImage.postValue(BitmapFactory.decodeByteArray(it,0, it.size))
-                            // Data for "images/island.jpg" is returned, use this as needed
-                        }.addOnFailureListener {
-                            // Handle any errors
-                            Log.d("getProfileImage", "usr: ${timeslotUser.value.toString()} \npicRef: $picRef")
+                        try {
+                            picRef.getBytes(size).addOnSuccessListener {
+                                _timeslotUserImage.postValue(BitmapFactory.decodeByteArray(it,0, it.size))
+                                // Data for "images/island.jpg" is returned, use this as needed
+                            }.addOnFailureListener {
+                                // Handle any errors
+                                Log.d("getProfileImage", "usr: ${timeslotUser.value.toString()} \npicRef: $picRef")
+                            }
+                        } catch (e: StorageException){
+                            Log.d("getProfileImage", "missing image on picRef: $picRef")
+                            _timeslotUserImage.postValue(null)
                         }
-
                         statusMessage.value = Event("User Updated Successfully")
                     }
                 } else _timeslotUser.value = User()
