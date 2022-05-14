@@ -27,6 +27,7 @@ class ShowTimeSlotProfileFragment : Fragment(R.layout.fragment_showprofile) {
     private lateinit var loggedUser: FirebaseUser
     private lateinit var v : View
     private lateinit var type : String
+    private var loading: Boolean = false
 
     val vm : ProfileViewModel by activityViewModels()
 
@@ -45,6 +46,7 @@ class ShowTimeSlotProfileFragment : Fragment(R.layout.fragment_showprofile) {
 
     override fun onDetach() {
         vm.clearTimeSlotUserImage()
+        vm.setLoadingFlag(true)
         super.onDetach()
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -58,29 +60,38 @@ class ShowTimeSlotProfileFragment : Fragment(R.layout.fragment_showprofile) {
 
         if (type == "skill_specific") {
             if (vm.timeslotUserImage.value == null)
-                progressBar.visibility = View.GONE
+                progressBar.visibility = View.VISIBLE
 
             vm.timeslotUser.observe(viewLifecycleOwner) {
                 usr = it //oppure it
                 showProfile(view)
             }
 
+            vm.timeslotUserImageLoading.observe(viewLifecycleOwner) {
+                loading = it
+            }
+
             vm.timeslotUserImage.observe(viewLifecycleOwner) {
-                if (it != null)
-                    profilePicCircleView.setImageBitmap(it)
-                else
-                    profilePicCircleView.setImageBitmap(
-                        BitmapFactory.decodeResource(
-                            resources,
-                            R.drawable.default_avatar
+                if(loading) {
+                    vm.setLoadingFlag(false)
+                } else{
+                    if (it != null)
+                        profilePicCircleView.setImageBitmap(it)
+                    else
+                        profilePicCircleView.setImageBitmap(
+                            BitmapFactory.decodeResource(
+                                resources,
+                                R.drawable.default_avatar
+                            )
                         )
-                    )
-                progressBar.visibility = View.GONE
+                    progressBar.visibility = View.GONE
+                }
+
             }
 
         } else { //personal
             if (vm.userImage.value == null)
-                progressBar.visibility = View.GONE
+                progressBar.visibility = View.VISIBLE
 
             vm.fireBaseUser.observe(viewLifecycleOwner) {
                 if (it != null) {

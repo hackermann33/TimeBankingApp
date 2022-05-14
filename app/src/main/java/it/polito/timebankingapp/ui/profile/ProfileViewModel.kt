@@ -41,6 +41,8 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
     private val _timeslotUserImage = MutableLiveData<Bitmap?>()
     val timeslotUserImage: LiveData<Bitmap?> = _timeslotUserImage
 
+    private val _timeslotUserImageLoading = MutableLiveData<Boolean>()
+    val timeslotUserImageLoading: LiveData<Boolean> = _timeslotUserImageLoading
 
     /* maybe this, can be removed*/
     private val _fireBaseUser = MutableLiveData<FirebaseUser?>(Firebase.auth.currentUser)
@@ -56,6 +58,7 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
         if (fireBaseUser.value != null) {
             registerListener()
         }
+        _timeslotUserImageLoading.value = false
     }
 
     private fun registerListener() {
@@ -218,6 +221,10 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
 
     fun clearTimeSlotUserImage() {
         _timeslotUserImage.postValue(null)
+    }
+
+    fun setLoadingFlag(value: Boolean) {
+        _timeslotUserImageLoading.value = value
     }
 
     fun retrieveTimeSlotProfileData(userId: String) {
