@@ -3,6 +3,9 @@ package it.polito.timebankingapp.ui.skillslist
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.ProgressBar
+import android.widget.TextView
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -72,6 +75,11 @@ class SkillsListFragment : Fragment(R.layout.fragment_skills_list) {
 
         val chipGroup: ChipGroup = v.findViewById(R.id.skillsGroup)
 
+        val voidMessageImage = view.findViewById<ImageView>(R.id.time_slot_icon)
+        val voidMessageText = view.findViewById<TextView>(R.id.emptyListMessage)
+        val voidMessageSubText = view.findViewById<TextView>(R.id.empty_list_second_message)
+        val progressBar = view.findViewById<ProgressBar>(R.id.skill_list_progressBar)
+
         authVm.fireBaseUser.observe(viewLifecycleOwner){
             if(it == null)
                 findNavController().navigate(R.id.action_nav_skillsList_to_nav_login)
@@ -82,6 +90,7 @@ class SkillsListFragment : Fragment(R.layout.fragment_skills_list) {
         }
 
         vm.skillList.observe(viewLifecycleOwner){
+            progressBar.visibility = View.GONE
             if(it.isNotEmpty()){
                 it.forEach { skill ->
                     val chip = layoutInflater.inflate(
@@ -99,7 +108,9 @@ class SkillsListFragment : Fragment(R.layout.fragment_skills_list) {
                 }
             }
             else{
-                //show empty message!!!!!!!!
+                voidMessageText.isVisible = true
+                voidMessageImage.isVisible = true
+                voidMessageSubText.isVisible = true
             }
         }
 
