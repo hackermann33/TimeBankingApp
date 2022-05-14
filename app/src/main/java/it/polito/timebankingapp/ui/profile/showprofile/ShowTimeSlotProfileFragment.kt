@@ -28,7 +28,6 @@ class ShowTimeSlotProfileFragment : Fragment(R.layout.fragment_showprofile) {
     private lateinit var loggedUser: FirebaseUser
     private lateinit var v : View
     private lateinit var type : String
-    private var loading: Boolean = false
 
     val vm : ProfileViewModel by activityViewModels()
 
@@ -45,17 +44,7 @@ class ShowTimeSlotProfileFragment : Fragment(R.layout.fragment_showprofile) {
             setHasOptionsMenu(true)
     }
 
-    override fun onAttach(context: Context) {
-        vm.clearTimeSlotUserImage()
-        vm.setLoadingFlag(true)
-        super.onAttach(context)
-    }
 
-    override fun onDetach() {
-        //vm.clearTimeSlotUserImage()
-        //vm.setLoadingFlag(true)
-        super.onDetach()
-    }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         v = view
@@ -74,27 +63,22 @@ class ShowTimeSlotProfileFragment : Fragment(R.layout.fragment_showprofile) {
                 showProfile(view)
             }
 
-            vm.timeslotUserImageLoading.observe(viewLifecycleOwner) {
-                loading = it
-            }
 
             vm.timeslotUserImage.observe(viewLifecycleOwner) {
-                if(loading) {
-                    vm.setLoadingFlag(false)
-                } else{
-                    if (it != null)
-                        profilePicCircleView.setImageBitmap(it)
-                    else
-                        profilePicCircleView.setImageBitmap(
-                            BitmapFactory.decodeResource(
-                                resources,
-                                R.drawable.default_avatar
-                            )
-                        )
+                if (it != null){
+                    profilePicCircleView.setImageBitmap(it)
                     progressBar.visibility = View.GONE
                 }
+                else {
+                    profilePicCircleView.setImageBitmap(
+                        BitmapFactory.decodeResource(
+                            resources,
+                            R.drawable.default_avatar
+                        )
+                    )
 
-            }
+                    }
+                }
 
         } else { //personal
             if (vm.userImage.value == null)
@@ -105,9 +89,7 @@ class ShowTimeSlotProfileFragment : Fragment(R.layout.fragment_showprofile) {
                     loggedUser = it
                     usr = vm.user.value!!
                     showProfile(view)
-                } else
-                    navController.navigate(R.id.action_nav_showProfile_to_nav_login)
-            }
+                } }
 
             vm.userImage.observe(viewLifecycleOwner) {
                 if (it != null) {

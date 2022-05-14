@@ -46,18 +46,19 @@ class SkillSpecificTimeSlotListFragment : Fragment(R.layout.fragment_skill_speci
         val voidMessageText = view.findViewById<TextView>(R.id.emptyListMessage)
         val voidMessageSubText = view.findViewById<TextView>(R.id.empty_list_second_message)
 
-        var adTmp = TimeSlotAdapter(vm.globalTimeSlots.value?.toMutableList() ?: mutableListOf(), ::selectTimeSlot, "skill_specific")
+
+        var adTmp = TimeSlotAdapter(vm.perSkillTimeSlots.value?.toMutableList() ?: mutableListOf(), ::selectTimeSlot, "skill_specific")
         rv.adapter = adTmp
 
-        var skill = arguments?.getString("skill")
+        //var skill = arguments?.getString("skill")
 
-        vm.globalTimeSlots.observe(viewLifecycleOwner){
+        vm.perSkillTimeSlots.observe(viewLifecycleOwner){
             if(it.isNotEmpty()){
                 voidMessageText.isVisible = false
                 voidMessageImage.isVisible = false
                 voidMessageSubText.isVisible = false
 
-                adTmp = TimeSlotAdapter(it.filter{it.relatedSkill ==  skill || skill == null  }.toMutableList(), ::selectTimeSlot, "skill_specific")
+                adTmp = TimeSlotAdapter(it.toMutableList(), ::selectTimeSlot, "skill_specific")
                 adTmp.data = it.toMutableList()
                 rv.adapter = adTmp
                 adTmp.setFilter(filterKeywords, filterParameter)

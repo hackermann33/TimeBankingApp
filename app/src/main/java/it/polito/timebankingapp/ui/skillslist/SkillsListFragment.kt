@@ -45,8 +45,6 @@ class SkillsListFragment : Fragment(R.layout.fragment_skills_list) {
     private val vm: TimeSlotsViewModel by activityViewModels()
 
 
-
-
     /*override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -81,9 +79,7 @@ class SkillsListFragment : Fragment(R.layout.fragment_skills_list) {
         val progressBar = view.findViewById<ProgressBar>(R.id.skill_list_progressBar)
 
         authVm.fireBaseUser.observe(viewLifecycleOwner){
-            if(it == null)
-                findNavController().navigate(R.id.action_nav_skillsList_to_nav_login)
-             else {
+            if(it != null) {
                 vm.updatePerSkillTimeSlots()
                 vm.updatePersonalTimeSlots()
             }
@@ -101,8 +97,9 @@ class SkillsListFragment : Fragment(R.layout.fragment_skills_list) {
                     chip.text = skill
                     chip.setOnClickListener { ch ->
                         val text = (ch as Chip).text.toString()
-                        val b = bundleOf("skill" to text)
-                        findNavController().navigate(R.id.action_nav_skillsList_to_skillSpecificTimeSlotListFragment,b)
+                        vm.setFilteringSkill( text)
+                        //val b = bundleOf("skill" to text)
+                        findNavController().navigate(R.id.action_nav_skillsList_to_skillSpecificTimeSlotListFragment)
                     }
                     chipGroup.addView(chip)
                 }

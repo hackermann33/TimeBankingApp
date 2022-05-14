@@ -24,21 +24,9 @@ import it.polito.timebankingapp.databinding.ActivityMainBinding
 import it.polito.timebankingapp.ui.profile.ProfileViewModel
 
 
-interface DrawerController {
-    fun setDrawerLocked()
-    fun setDrawerUnlocked()
-}
 
 
-class MainActivity : AppCompatActivity()/*, DrawerController */{
-    /*
-    override fun setDrawerLocked(){
-        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
-    }
-
-    override fun setDrawerUnlocked(){
-        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
-    }*/
+class MainActivity : AppCompatActivity() {
 
     /*
     val vm by viewModels<TimeSlotsListViewModel>()
@@ -48,6 +36,7 @@ class MainActivity : AppCompatActivity()/*, DrawerController */{
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
     private lateinit var drawerLayout: DrawerLayout
+    private lateinit var navController: NavController
 
     val vm by viewModels<ProfileViewModel>()
 
@@ -57,30 +46,25 @@ class MainActivity : AppCompatActivity()/*, DrawerController */{
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-
         setSupportActionBar(binding.appBarMain.toolbar)
-
 
         val drawerLayout: DrawerLayout = binding.drawerLayout
         val navView: NavigationView = binding.navView
-        val navController = findNavController(R.id.nav_host_fragment_content_main)
 
+        navController = findNavController(R.id.nav_host_fragment_content_main)
 
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
+        /* Considering the SkillsListFragment (as described in the navigation graph)
+        as top-level simplify navigation */
         appBarConfiguration = AppBarConfiguration(
-            setOf(
-                R.id.nav_skillsList, //nota bug: la freccia direzionale non torna indietro ma apre il drawer
-                R.id.nav_personalTimeSlotsList, /*, R.id.nav_timeSlotDetails*/
-                R.id.nav_showProfile
-            ),
+            navController.graph,
             drawerLayout
         )
 
         //NON RIMUOVERE ANCHE SE INUTILIZZATA
         /*var toggle = ActionBarDrawerToggle(this, drawerLayout, binding.appBarMain.toolbar, R.string.drawer_open, R.string.drawer_close)*/
 
-        navController.addOnDestinationChangedListener{_, destination, _ ->
+        /* Disabling drawer when in login fragment */
+        navController.addOnDestinationChangedListener { _, destination, _ ->
             if (destination.id == R.id.nav_login) {
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
                 //toggle.isDrawerIndicatorEnabled = false;
@@ -93,124 +77,61 @@ class MainActivity : AppCompatActivity()/*, DrawerController */{
             }
         }
 
-
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
+
         val signOutButton = navView.getHeaderView(0).findViewById<Button>(R.id.signOutButton)
-        signOutButton.setOnClickListener{
-            vm.logOut()
-            Firebase.auth.signOut()
-            val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.my_web_client_id))
-                .requestEmail()
-                .build()
-
-            val googleSignInClient = this.let { GoogleSignIn.getClient(it, gso) }
-
-            googleSignInClient.signOut();
+        signOutButton.setOnClickListener {
+            setSignOutClick()
         }
+
+        /* If user signs out, navigation to login fragment will happen */
+        vm.fireBaseUser.observe(this) {
+            if (it == null) {
+                navController.navigate(R.id.nav_login)
+            }
+        }
+
 
         vm.user.observe(this) {
             val fullName = navView.getHeaderView(0).findViewById<TextView>(R.id.fullName)
-            if(it!= null) {
+            if (it != null) {
                 fullName.text = it.fullName
             }
         }
 
-        val progressBar = navView.getHeaderView(0).findViewById<ProgressBar>(R.id.profile_pic_progress_bar)
+        val progressBar =
+            navView.getHeaderView(0).findViewById<ProgressBar>(R.id.profile_pic_progress_bar)
         val profilePic =
             navView.getHeaderView(0).findViewById<CircleImageView>(R.id.profile_pic)
 
-        vm.userImage.observe(this){
-            if(it != null) {
+        vm.userImage.observe(this) {
+            if (it != null) {
                 profilePic.setImageBitmap(it)
                 progressBar.visibility = View.GONE
-            }
-            else {
+            } else {
                 profilePic.setImageResource(R.drawable.default_avatar)
             }
         }
 
-        if(vm.userImage.value == null)
+        if (vm.userImage.value == null)
             progressBar.visibility = View.GONE
-
-
-        /*vm.message.observe(this, Observer {
-            var usr = vm.user.value!!
-            val fullName = navView.getHeaderView(0).findViewById<TextView>(R.id.fullName)
-            val profilePic = navView.getHeaderView(0).findViewById<CircleImageView>(R.id.profile_pic)
-            val progressBar = navView.getHeaderView(0).findViewById<ProgressBar>(R.id.profile_pic_progress_bar)
-            fullName.text = usr.fullName
-            if(usr.tempImagePath == "") {
-                val cw = ContextWrapper(this)
-                vm.retrieveAndSetProfilePic(usr, profilePic, progressBar, cw)
-            }else {
-                progressBar.visibility = View.GONE
-                val f = File(usr.tempImagePath) //loggedUser.photoUrl (già salvata in locale)
-                val bitmap = BitmapFactory.decodeStream(FileInputStream(f))
-                profilePic.setImageBitmap(bitmap)
-            }
-            *//*it.getContentIfNotHandled()?.let {
-                Toast.makeText(this, it, Toast.LENGTH_LONG).show()
-            }*//*
-        })*/
-
-        if(vm.fireBaseUser.value != null) {
-            val fullName = navView.getHeaderView(0).findViewById<TextView>(R.id.fullName)
-        }
-
-        /*vm.usr.observe(this) {
-
-            val profilePic = navView.getHeaderView(0).findViewById<CircleImageView>(R.id.profile_pic)
-            val fullName = navView.getHeaderView(0).findViewById<TextView>(R.id.fullName)
-
-            if (it != null) {
-                fullName.text = it.fullName
-                try {
-                    val f = File(it.pic)
-                    val bitmap = BitmapFactory.decodeStream(FileInputStream(f))
-                    profilePic.setImageBitmap(bitmap)
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
-            }
-
-        }*/
-
-
-
-/*
-        sharedModel.select(TimeSlot().also {
-            it.title = "TitleTrial"; it.description = "Descr trial"; it.date = "2022/12/18"; it.time = "14:15"; it.duration = "56"; it.location = "Turin"
-        })
-
- */
-
-        //createItems(10)
 
     }
 
+    private fun setSignOutClick() {
+        vm.logOut()
+        Firebase.auth.signOut()
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(getString(R.string.my_web_client_id))
+            .requestEmail()
+            .build()
+        val googleSignInClient = this.let { GoogleSignIn.getClient(it, gso) }
+        googleSignInClient.signOut();
+        navController.navigate(R.id.action_global_to_nav_login)
+    }
 
-    /*
-        private fun createItems(n: Int): MutableList<TimeSlot> {
-            val l = mutableListOf<TimeSlot>()
-            for (i in 1..n) {
-                TimeSlot()
-                val ts = TimeSlot().also{
-                    it.title = "TitleTrial $i";
-                    it.description= "Descr trial $i";
-                    it.date = "2022/12/18";
-                    it.time = "14:15";
-                    it.duration = "56";
-                    it.location = "Turin";
-                }
-                l.add(ts)
-                vm.addTimeSlot(ts)
-            }
-            return l
-        }
-     */
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment_content_main)
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
@@ -220,31 +141,6 @@ class MainActivity : AppCompatActivity()/*, DrawerController */{
          supportActionBar?.title = title
     }
 
-    override fun onBackPressed() {
-        // If the fragment exists and has some back-stack entry
 
-        // NB Maybe the backstack is used only with navigation drawer (other fragments uses navigation)
-        val navController = findNavController(R.id.nav_host_fragment_content_main)
-
-        if(currentFragmentBelongsToDrawer(navController)){
-            if(navController.currentBackStackEntry?.destination?.id == R.id.nav_skillsList) { /* if the current page is home page */
-                //when back button pressed from home page close the application
-                finish()
-            }
-            else
-                navController.popBackStack(R.id.nav_skillsList, false) //back to home page
-        }
-        else {
-            // Let super handle the back press
-            super.onBackPressed()
-        }
-    }
-
-    private fun currentFragmentBelongsToDrawer(navController: NavController): Boolean {
-        val currentFragmentId = navController.currentBackStackEntry?.destination?.id
-        if(currentFragmentId == R.id.nav_personalTimeSlotsList || currentFragmentId == R.id.nav_showProfile || currentFragmentId == R.id.nav_skillsList)
-            return true
-        return false
-    }
 
 }

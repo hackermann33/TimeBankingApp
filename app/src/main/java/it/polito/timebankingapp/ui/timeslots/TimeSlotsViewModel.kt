@@ -22,19 +22,30 @@ class TimeSlotsViewModel(application: Application): AndroidViewModel(application
     private val _globalTimeSlots = MutableLiveData<List<TimeSlot>>()
     val globalTimeSlots: LiveData<List<TimeSlot>> = _globalTimeSlots
 
+    private val _perSkillTimeSlots = MutableLiveData<List<TimeSlot>>()
+    val perSkillTimeSlots: LiveData<List<TimeSlot>> = _perSkillTimeSlots
+
+
     private val _skillList = MutableLiveData<List<String>>()
     val skillList: LiveData<List<String>> = _skillList
 
     private lateinit var l:ListenerRegistration
+
+
+    private val _selectedSkill = MutableLiveData<String>()
+    var selectedSkill: LiveData<String> = _selectedSkill
+
     private lateinit var l2:ListenerRegistration
 
 
     private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
 
     init {
-        updatePersonalTimeSlots()
-        updatePerSkillTimeSlots()
-        retrieveSkillList()
+        Firebase.auth.addAuthStateListener {
+            updatePersonalTimeSlots()
+            updatePerSkillTimeSlots()
+            retrieveSkillList()
+        }
     }
 
 
@@ -129,6 +140,9 @@ class TimeSlotsViewModel(application: Application): AndroidViewModel(application
         selectedTimeSlot.value = ts
     }
 
+    fun setFilteringSkill(skill: String?) {
+        _perSkillTimeSlots.value = globalTimeSlots.value?.filter{ skill == null || it.relatedSkill == skill }
+    }
 
 
     /*private val _privateTimeSlot = TimeSlot("test1","test2","test3","test4","test5","test6")

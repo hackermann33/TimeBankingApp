@@ -4,10 +4,12 @@ import android.R
 import android.app.Application
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.liveData
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.DocumentSnapshot
@@ -16,9 +18,11 @@ import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageException
+import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.ktx.storageMetadata
 import it.polito.timebankingapp.model.user.User
 import java.io.ByteArrayOutputStream
+import java.io.File
 import java.util.*
 
 
@@ -41,8 +45,6 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
     private val _timeslotUserImage = MutableLiveData<Bitmap?>()
     val timeslotUserImage: LiveData<Bitmap?> = _timeslotUserImage
 
-    private val _timeslotUserImageLoading = MutableLiveData<Boolean>()
-    val timeslotUserImageLoading: LiveData<Boolean> = _timeslotUserImageLoading
 
     /* maybe this, can be removed*/
     private val _fireBaseUser = MutableLiveData<FirebaseUser?>(Firebase.auth.currentUser)
@@ -58,7 +60,7 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
         if (fireBaseUser.value != null) {
             registerListener()
         }
-        _timeslotUserImageLoading.value = true
+        //_timeslotUserImageLoading.value = true
     }
 
     private fun registerListener() {
@@ -75,20 +77,18 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
                             }
                             db.collection("users").document(fireBaseUser.value!!.uid)
                                 .set(usr)
-                            _user.value = usr!!
-
+                            _user.value = usr
                         }
                         /* Documento già esistente */
                         else {
                             usr = v.toUser()!!
-                            _user.value = usr!!
+                            _user.value = usr
                             downloadProfileImage()
                             statusMessage.value = Event("User Updated Successfully")
                         }
                     }
                 } else _user.value = User()
             }
-
     }
 
     private fun downloadProfileImage() {
@@ -223,9 +223,7 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
         _timeslotUserImage.value = null
     }
 
-    fun setLoadingFlag(value: Boolean) {
-        _timeslotUserImageLoading.value = value
-    }
+
 
     fun retrieveTimeSlotProfileData(userId: String) {
         var timeslotUsr: User
@@ -234,7 +232,7 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
                 if (e == null) {
                     if (v != null) {
                         timeslotUsr = v.toUser()!!
-                        _timeslotUser.value = timeslotUsr!!
+                        _timeslotUser.value = timeslotUsr
 
                         //downloadProfileImage()
                         val storageRef = FirebaseStorage.getInstance().reference
@@ -246,7 +244,6 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
                         try {
                             picRef.getBytes(size).addOnSuccessListener {
                                 _timeslotUserImage.postValue(BitmapFactory.decodeByteArray(it,0, it.size))
-                                // Data for "images/island.jpg" is returned, use this as needed
                             }.addOnFailureListener {
                                 // Handle any errors
                                 Log.d("getProfileImage", "usr: ${timeslotUser.value.toString()} \npicRef: $picRef")
