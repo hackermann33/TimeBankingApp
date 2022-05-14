@@ -7,21 +7,40 @@
     android:layout_marginLeft="16dp"
     android:layout_marginRight="16dp"
     tools:context=".ui.profile.showprofile.ShowPersonalProfileFragment">
-
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/profile_pic"
+    <FrameLayout
+        android:id="@+id/frame_layout_pic"
         android:layout_width="0dp"
         android:layout_height="match_parent"
+        android:background="@android:color/transparent"
         android:layout_marginEnd="16dp"
         android:padding="10dp"
-        android:src="@drawable/default_avatar"
-        app:civ_border_color="@color/text_standard"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/scrollView2"
         app:layout_constraintHorizontal_weight="1"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/profile_pic"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center|center_horizontal"
+            android:src="@drawable/default_avatar"
+            app:civ_border_color="@color/text_standard"
+            app:civ_border_width="2dp" />
+
+        <ProgressBar
+            android:id="@+id/profile_pic_progress_bar"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:indeterminateTint="@color/blue"
+            android:visibility="visible" />
+
+    </FrameLayout>
+
 
     <ScrollView
         android:id="@+id/scrollView2"
@@ -31,7 +50,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintHorizontal_weight="2"
-        app:layout_constraintStart_toEndOf="@+id/profile_pic"
+        app:layout_constraintStart_toEndOf="@+id/frame_layout_pic"
         app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
