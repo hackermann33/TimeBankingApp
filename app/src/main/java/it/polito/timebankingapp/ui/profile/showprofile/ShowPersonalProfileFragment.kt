@@ -21,7 +21,7 @@ import it.polito.timebankingapp.model.user.User
 import it.polito.timebankingapp.ui.profile.ProfileViewModel
 
 
-class ShowProfileFragment : Fragment(R.layout.fragment_showprofile) {
+class ShowPersonalProfileFragment : Fragment(R.layout.fragment_showprofile) {
 
     private lateinit var usr: User
     private lateinit var loggedUser: FirebaseUser
