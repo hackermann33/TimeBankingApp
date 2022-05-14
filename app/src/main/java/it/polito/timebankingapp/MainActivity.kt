@@ -80,7 +80,7 @@ class MainActivity : AppCompatActivity()/*, DrawerController */{
         //NON RIMUOVERE ANCHE SE INUTILIZZATA
         /*var toggle = ActionBarDrawerToggle(this, drawerLayout, binding.appBarMain.toolbar, R.string.drawer_open, R.string.drawer_close)*/
 
-        /*navController.addOnDestinationChangedListener{_, destination, _ ->
+        navController.addOnDestinationChangedListener{_, destination, _ ->
             if (destination.id == R.id.nav_login) {
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
                 //toggle.isDrawerIndicatorEnabled = false;
@@ -91,7 +91,7 @@ class MainActivity : AppCompatActivity()/*, DrawerController */{
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
                 //toggle.isDrawerIndicatorEnabled = true;
             }
-        }*/
+        }
 
 
         setupActionBarWithNavController(navController, appBarConfiguration)
