@@ -58,7 +58,7 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
         if (fireBaseUser.value != null) {
             registerListener()
         }
-        _timeslotUserImageLoading.value = false
+        _timeslotUserImageLoading.value = true
     }
 
     private fun registerListener() {
@@ -220,7 +220,7 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
     }
 
     fun clearTimeSlotUserImage() {
-        _timeslotUserImage.postValue(null)
+        _timeslotUserImage.value = null
     }
 
     fun setLoadingFlag(value: Boolean) {

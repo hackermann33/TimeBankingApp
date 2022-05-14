@@ -1,5 +1,6 @@
 package it.polito.timebankingapp.ui.profile.showprofile
 
+import android.content.Context
 import android.content.res.Configuration
 import android.graphics.BitmapFactory
 import android.os.Bundle
@@ -44,9 +45,15 @@ class ShowTimeSlotProfileFragment : Fragment(R.layout.fragment_showprofile) {
             setHasOptionsMenu(true)
     }
 
-    override fun onDetach() {
+    override fun onAttach(context: Context) {
         vm.clearTimeSlotUserImage()
         vm.setLoadingFlag(true)
+        super.onAttach(context)
+    }
+
+    override fun onDetach() {
+        //vm.clearTimeSlotUserImage()
+        //vm.setLoadingFlag(true)
         super.onDetach()
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
