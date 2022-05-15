@@ -68,13 +68,13 @@ class ShowPersonalProfileFragment : Fragment(R.layout.fragment_showprofile) {
             vm.timeslotUserImage.observe(viewLifecycleOwner) {
                 if (it != null)
                     profilePicCircleView.setImageBitmap(it)
-                else
+                /*else
                     profilePicCircleView.setImageBitmap(
                         BitmapFactory.decodeResource(
                             resources,
                             R.drawable.default_avatar
                         )
-                    )
+                    )*/
                 progressBar.visibility = View.GONE
             }
 

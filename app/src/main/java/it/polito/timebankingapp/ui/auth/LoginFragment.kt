@@ -126,7 +126,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                 firebaseAuthWithGoogle(account.idToken!!)
             } catch (e: ApiException) {
                 // Google Sign In failed, update UI appropriately
-                Log.w(TAG, "Google sign in failed", e)
+                Log.w(TAG, "Google sign in failed")
             }
         }
     }

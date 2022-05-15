@@ -139,6 +139,11 @@ class ShowTimeSlotProfileFragment : Fragment(R.layout.fragment_showprofile) {
         }
     }
 
+    override fun onDetach() {
+        super.onDetach()
+        vm.clearTimeSlotUserImage()
+    }
+
     private fun showWelcomeMessage() {
         TODO("Not yet implemented")
     }

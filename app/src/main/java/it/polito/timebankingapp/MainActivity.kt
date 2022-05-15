@@ -89,7 +89,7 @@ class MainActivity : AppCompatActivity() {
         /* If user signs out, navigation to login fragment will happen */
         vm.fireBaseUser.observe(this) {
             if (it == null) {
-                navController.navigate(R.id.nav_login)
+                navController.navigate(R.id.action_global_to_nav_login)
             }
         }
 
@@ -129,7 +129,7 @@ class MainActivity : AppCompatActivity() {
             .build()
         val googleSignInClient = this.let { GoogleSignIn.getClient(it, gso) }
         googleSignInClient.signOut();
-        navController.navigate(R.id.action_global_to_nav_login)
+        //navController.navigate(R.id.action_global_to_nav_login)
     }
 
     override fun onSupportNavigateUp(): Boolean {

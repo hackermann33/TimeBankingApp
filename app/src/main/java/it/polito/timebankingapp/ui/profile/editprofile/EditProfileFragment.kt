@@ -82,7 +82,8 @@ class EditProfileFragment : Fragment(R.layout.fragment_editprofile) {
 
 
         vm.userImage.observe(viewLifecycleOwner){
-            profilePicCircleView.setImageBitmap(it)
+            if(it!=null)
+                profilePicCircleView.setImageBitmap(it)
         }
 
         val sv = view.findViewById<ScrollView>(R.id.editScrollView2)
@@ -228,14 +229,14 @@ class EditProfileFragment : Fragment(R.layout.fragment_editprofile) {
         if (requestCode == REQUEST_PIC && resultCode == RESULT_OK) {
             var imageBitmap = data?.extras?.get("data") as Bitmap?
             if (imageBitmap != null) {
-                vm.editUserImage(imageBitmap)
+                //vm.editUserImage(imageBitmap)
                 //editedImagePath = saveToInternalStorage(imageBitmap)
             } else {
                 try {
                     val imageUri: Uri = data?.data as Uri
                     val ins = requireActivity().contentResolver.openInputStream(imageUri)
                     imageBitmap = BitmapFactory.decodeStream(ins)
-                    vm.editUserImage(imageBitmap)
+                    //vm.editUserImage(imageBitmap)
                     //editedImagePath = saveToInternalStorage(imageBitmap)
                 } catch (e: Exception) {
                     e.printStackTrace()
