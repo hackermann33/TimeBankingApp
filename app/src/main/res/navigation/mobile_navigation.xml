@@ -97,9 +97,5 @@
             android:id="@+id/action_skillSpecificTimeSlotListFragment_to_nav_timeSlotDetails"
             app:destination="@id/nav_timeSlotDetails" />
     </fragment>
-    <fragment
-        android:id="@+id/nav_showTimeSlotProfile"
-        android:name="it.polito.timebankingapp.ui.profile.showprofile.ShowTimeSlotProfileFragment"
-        android:label="Offerer's profile" />
 
 </navigation>

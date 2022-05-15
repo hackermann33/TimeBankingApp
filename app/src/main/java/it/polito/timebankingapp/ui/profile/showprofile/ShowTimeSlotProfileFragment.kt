@@ -34,18 +34,18 @@ class ShowTimeSlotProfileFragment : Fragment(R.layout.fragment_showprofile) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        type = arguments?.getString("point_of_origin").toString() //skill_specific or personal
+        /*type = arguments?.getString("point_of_origin").toString() //skill_specific or personal
         if (type == "skill_specific") {
             var userId = arguments?.getString("userId").toString()
             //vm.retrieveTimeSlotProfileData(userId)
             (activity as MainActivity?)?.setActionBarTitle("Offerer profile")
         } else
-            setHasOptionsMenu(true)
+            setHasOptionsMenu(true)*/
     }
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+        /*super.onViewCreated(view, savedInstanceState)
         v = view
 
         val navController = findNavController()
@@ -99,19 +99,19 @@ class ShowTimeSlotProfileFragment : Fragment(R.layout.fragment_showprofile) {
             //loggedUser = usrVm.userProfile.value!!
             //showProfile(view)
 
-            /*sharedPref = requireActivity().getPreferences(android.content.Context.MODE_PRIVATE)
+            *//*sharedPref = requireActivity().getPreferences(android.content.Context.MODE_PRIVATE)
 
         val profile = sharedPref.getString("profile", "")
         usr = if (sharedPref.contains("profile")) GsonBuilder().create()
             .fromJson(profile, User::class.java)
         else User()
 
-         */
+         *//*
 
             //usr = savedInstanceState?.getSerializable("user") as User
 
 
-            /*setFragmentResultListener("profile") { requestKey, bundle ->
+            *//*setFragmentResultListener("profile") { requestKey, bundle ->
             usr = bundle.getSerializable("user") as User
             showProfile(view)
             val jsonString = GsonBuilder().create().toJson(usr)
@@ -121,7 +121,7 @@ class ShowTimeSlotProfileFragment : Fragment(R.layout.fragment_showprofile) {
             }
         }
 
-        showProfile(view) */
+        showProfile(view) *//*
 
             setFragmentResultListener("editProfile") { _, bundle ->
                 val result = bundle.getBoolean("editProfileConfirm")
@@ -132,7 +132,7 @@ class ShowTimeSlotProfileFragment : Fragment(R.layout.fragment_showprofile) {
                     snackBar.setAction("DISMISS") { snackBar.dismiss() }.show()
                 }
             }
-        }
+        }*/
     }
 
     override fun onDetach() {
