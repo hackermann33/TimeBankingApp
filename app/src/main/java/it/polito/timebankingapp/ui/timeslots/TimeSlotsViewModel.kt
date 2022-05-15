@@ -25,26 +25,28 @@ class TimeSlotsViewModel(application: Application): AndroidViewModel(application
     private val _perSkillTimeSlots = MutableLiveData<List<TimeSlot>>()
     val perSkillTimeSlots: LiveData<List<TimeSlot>> = _perSkillTimeSlots
 
-
     private val _skillList = MutableLiveData<List<String>>()
     val skillList: LiveData<List<String>> = _skillList
 
     private lateinit var l:ListenerRegistration
 
 
-    private val _selectedSkill = MutableLiveData<String>()
-    var selectedSkill: LiveData<String> = _selectedSkill
+    private val _selectedSkill = MutableLiveData<String?>()
+    var selectedSkill: LiveData<String?> = _selectedSkill
 
     private lateinit var l2:ListenerRegistration
+    private lateinit var l3:ListenerRegistration
 
 
     private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
 
     init {
         Firebase.auth.addAuthStateListener {
-            updatePersonalTimeSlots()
-            updatePerSkillTimeSlots()
-            retrieveSkillList()
+            if (it.currentUser != null) {
+                updatePersonalTimeSlots()
+                updatePerSkillTimeSlots()
+                retrieveSkillList()
+            }
         }
     }
 
@@ -80,9 +82,14 @@ class TimeSlotsViewModel(application: Application): AndroidViewModel(application
     }
 
     fun retrieveSkillList(){
-        val list = mutableListOf<String>()
-        db.collection("skills").get()
-            .addOnSuccessListener { result ->
+        //val list = mutableListOf<String>()
+        l3 = db.collection("skills").addSnapshotListener {
+            v,e ->
+            if(e == null){
+                _skillList.value = v!!.mapNotNull { d -> d.id}
+            }else _skillList.value = emptyList()
+        }
+            /*.addOnSuccessListener { result ->
                 for (document in result) {
                     //Log.d(TAG, "${document.id} => ${document.data}")
                     list.add(document.id)
@@ -91,7 +98,7 @@ class TimeSlotsViewModel(application: Application): AndroidViewModel(application
             }
             .addOnFailureListener { exception ->
                 Log.d("skill_list", "Error getting documents: ", exception)
-            }
+            }*/
     }
 
 
@@ -134,6 +141,7 @@ class TimeSlotsViewModel(application: Application): AndroidViewModel(application
         super.onCleared()
         l.remove()
         l2.remove()
+        l3.remove()
     }
 
     fun setSelectedTimeSlot(ts: TimeSlot){
@@ -141,6 +149,7 @@ class TimeSlotsViewModel(application: Application): AndroidViewModel(application
     }
 
     fun setFilteringSkill(skill: String?) {
+        _selectedSkill.postValue(skill)
         _perSkillTimeSlots.value = globalTimeSlots.value?.filter{ skill == null || it.relatedSkill == skill }
     }
 

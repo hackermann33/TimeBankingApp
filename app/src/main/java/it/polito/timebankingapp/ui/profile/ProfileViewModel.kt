@@ -28,11 +28,6 @@ import java.util.*
 
 class ProfileViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val statusMessage = MutableLiveData<Event<String>>()
-
-    val message : LiveData<Event<String>>
-        get() = statusMessage
-
     private val _user = MutableLiveData<User>()
     val user: LiveData<User> = _user
 
@@ -49,8 +44,6 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
     /* maybe this, can be removed*/
     private val _fireBaseUser = MutableLiveData<FirebaseUser?>(Firebase.auth.currentUser)
     val fireBaseUser: LiveData<FirebaseUser?> = _fireBaseUser
-
-
 
     private lateinit var l: ListenerRegistration
 
@@ -84,7 +77,6 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
                             usr = v.toUser()!!
                             _user.value = usr
                             downloadProfileImage()
-                            statusMessage.value = Event("User Updated Successfully")
                         }
                     }
                 } else _user.value = User()
@@ -108,9 +100,9 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
                 _userImage.postValue(null)
 
                 Log.d("getProfileImage", "usr: ${user.value.toString()} \npicRef: $picRef")
+                Log.d("getProfileImage", it.toString());
             }
         }
-
     }
 
     fun logIn(user: FirebaseUser) {
@@ -252,7 +244,6 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
                             Log.d("getProfileImage", "missing image on picRef: $picRef")
                             _timeslotUserImage.postValue(null)
                         }
-                        statusMessage.value = Event("User Updated Successfully")
                     }
                 } else _timeslotUser.value = User()
             }
@@ -274,26 +265,3 @@ fun getResizedBitmap(image: Bitmap, maxSize: Int): Bitmap? {
 }
 
 
-
-open class Event<out T>(private val content: T) {
-
-    var hasBeenHandled = false
-        private set // Allow external read but not write
-
-    /**
-     * Returns the content and prevents its use again.
-     */
-    fun getContentIfNotHandled(): T? {
-        return if (hasBeenHandled) {
-            null
-        } else {
-            hasBeenHandled = true
-            content
-        }
-    }
-
-    /**
-     * Returns the content, even if it's already been handled.
-     */
-    fun peekContent(): T = content
-}
