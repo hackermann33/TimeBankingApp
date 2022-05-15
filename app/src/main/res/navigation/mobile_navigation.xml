@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
     app:startDestination="@id/nav_skillsList">
+
     <action
         android:id="@+id/action_global_to_nav_login"
         app:destination="@id/nav_login"
@@ -99,3 +100,4 @@
     </fragment>
 
 </navigation>
+

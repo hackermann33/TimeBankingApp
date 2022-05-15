@@ -23,7 +23,9 @@ import it.polito.timebankingapp.ui.profile.ProfileViewModel
 
 class ShowPersonalProfileFragment : Fragment(R.layout.fragment_showprofile) {
 
-    private lateinit var usr: User
+    private lateinit var user: User
+    private lateinit var timeSlotUser: User
+
     private lateinit var loggedUser: FirebaseUser
     private lateinit var v : View
     private lateinit var type : String
@@ -44,7 +46,7 @@ class ShowPersonalProfileFragment : Fragment(R.layout.fragment_showprofile) {
     }
 
     override fun onDetach() {
-        vm.clearTimeSlotUserImage()
+        //vm.clearTimeSlotUserImage()
         super.onDetach()
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -58,8 +60,14 @@ class ShowPersonalProfileFragment : Fragment(R.layout.fragment_showprofile) {
 
         if (type == "skill_specific") {
             vm.timeslotUser.observe(viewLifecycleOwner) {
-                usr = it //oppure it
-                showProfile(view)
+                timeSlotUser = it //oppure it
+                showProfile(view, timeSlotUser)
+            }
+
+            if(vm.timeslotUserImage.value != null){ /* Check this because if image is alreaady set
+                                                  , observer won't be triggered */
+                profilePicCircleView.setImageBitmap(vm.timeslotUserImage.value)
+                progressBar.visibility = View.GONE
             }
 
 
@@ -79,8 +87,8 @@ class ShowPersonalProfileFragment : Fragment(R.layout.fragment_showprofile) {
 
         } else { //personal
             vm.user.observe(viewLifecycleOwner) {
-                usr = it //oppure it
-                showProfile(view)
+                user = it //oppure it
+                showProfile(view, user)
             }
 
 
@@ -141,7 +149,7 @@ class ShowPersonalProfileFragment : Fragment(R.layout.fragment_showprofile) {
         TODO("Not yet implemented")
     }
 
-    private fun showProfile(view: View) {
+    private fun showProfile(view: View, usr: User) {
         val profilePic = view.findViewById<CircleImageView>(R.id.profile_pic)
         val frameLayout = view.findViewById<FrameLayout>(R.id.frame_layout_pic)
         val sv = view.findViewById<ScrollView>(R.id.scrollView2)
@@ -243,7 +251,7 @@ class ShowPersonalProfileFragment : Fragment(R.layout.fragment_showprofile) {
 
     private fun editProfile() {
         //launch edit profile fragment
-        val b = bundleOf("profile" to usr)
+        val b = bundleOf("profile" to user)
         findNavController().navigate(R.id.action_showProfileFragment_to_editProfileActivity, b)
     }
 

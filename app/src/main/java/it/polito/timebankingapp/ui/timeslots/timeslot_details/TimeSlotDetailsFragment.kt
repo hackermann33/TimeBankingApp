@@ -103,6 +103,7 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
                         context, "Show user profile",
                         Toast.LENGTH_SHORT
                     ).show()
+                    profileViewModel.clearTimeSlotUserImage()
                     profileViewModel.retrieveTimeSlotProfileData(userId)
                     findNavController().navigate(
                         R.id.action_nav_timeSlotDetails_to_nav_showProfile,

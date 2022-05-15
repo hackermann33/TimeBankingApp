@@ -56,6 +56,7 @@ class MainActivity : AppCompatActivity() {
         /* Considering the SkillsListFragment (as described in the navigation graph)
         as top-level simplify navigation */
         appBarConfiguration = AppBarConfiguration(
+            /*setOf(R.id.nav_skillsList, R.id.nav_showProfile, R.id.nav_personalTimeSlotsList)*/
             navController.graph,
             drawerLayout
         )
