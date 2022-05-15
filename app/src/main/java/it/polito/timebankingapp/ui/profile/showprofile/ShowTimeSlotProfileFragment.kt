@@ -26,21 +26,20 @@ class ShowTimeSlotProfileFragment : Fragment(R.layout.fragment_showprofile) {
 
     private lateinit var usr: User
     private lateinit var loggedUser: FirebaseUser
-    private lateinit var v : View
-    private lateinit var type : String
+    private lateinit var v: View
+    private lateinit var type: String
 
-    val vm : ProfileViewModel by activityViewModels()
+    val vm: ProfileViewModel by activityViewModels()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         type = arguments?.getString("point_of_origin").toString() //skill_specific or personal
-        if(type == "skill_specific") {
+        if (type == "skill_specific") {
             var userId = arguments?.getString("userId").toString()
-            vm.retrieveTimeSlotProfileData(userId)
+            //vm.retrieveTimeSlotProfileData(userId)
             (activity as MainActivity?)?.setActionBarTitle("Offerer profile")
-        }
-        else
+        } else
             setHasOptionsMenu(true)
     }
 
@@ -55,8 +54,6 @@ class ShowTimeSlotProfileFragment : Fragment(R.layout.fragment_showprofile) {
 
 
         if (type == "skill_specific") {
-            if (vm.timeslotUserImage.value == null)
-                progressBar.visibility = View.VISIBLE
 
             vm.timeslotUser.observe(viewLifecycleOwner) {
                 usr = it //oppure it
@@ -65,20 +62,18 @@ class ShowTimeSlotProfileFragment : Fragment(R.layout.fragment_showprofile) {
 
 
             vm.timeslotUserImage.observe(viewLifecycleOwner) {
-                if (it != null){
+                if (it != null) {
                     profilePicCircleView.setImageBitmap(it)
                     progressBar.visibility = View.GONE
-                }
-                else {
+                } else {
                     profilePicCircleView.setImageBitmap(
                         BitmapFactory.decodeResource(
                             resources,
                             R.drawable.default_avatar
                         )
                     )
-
-                    }
                 }
+            }
 
         } else { //personal
             if (vm.userImage.value == null)
@@ -89,7 +84,8 @@ class ShowTimeSlotProfileFragment : Fragment(R.layout.fragment_showprofile) {
                     loggedUser = it
                     usr = vm.user.value!!
                     showProfile(view)
-                } }
+                }
+            }
 
             vm.userImage.observe(viewLifecycleOwner) {
                 if (it != null) {
@@ -164,10 +160,16 @@ class ShowTimeSlotProfileFragment : Fragment(R.layout.fragment_showprofile) {
                         profilePic.layoutParams = LinearLayout.LayoutParams(w, h / 3)
                     }
                     sv.viewTreeObserver.removeOnGlobalLayoutListener(this)*/
-                    frameLayout.post { frameLayout.layoutParams = LinearLayout.LayoutParams(w, h / 3) }
+                    frameLayout.post {
+                        frameLayout.layoutParams = LinearLayout.LayoutParams(w, h / 3)
+                    }
                     sv.viewTreeObserver.removeOnGlobalLayoutListener(this)
                 }
             })
+        }
+
+        if(!usr.hasImage()){
+            progressBar.visibility = View.GONE
         }
         /*try {
             if(usr.tempImagePath == "") {
@@ -216,7 +218,7 @@ class ShowTimeSlotProfileFragment : Fragment(R.layout.fragment_showprofile) {
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        if(type != "skill_specific")
+        if (type != "skill_specific")
             inflater.inflate(R.menu.menu_editpencil, menu)
         super.onCreateOptionsMenu(menu, inflater)
     }

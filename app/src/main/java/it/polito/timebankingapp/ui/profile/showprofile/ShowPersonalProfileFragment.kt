@@ -36,7 +36,7 @@ class ShowPersonalProfileFragment : Fragment(R.layout.fragment_showprofile) {
         type = arguments?.getString("point_of_origin").toString() //skill_specific or personal
         if(type == "skill_specific") {
             var userId = arguments?.getString("userId").toString()
-            vm.retrieveTimeSlotProfileData(userId)
+            //vm.retrieveTimeSlotProfileData(userId)
             (activity as MainActivity?)?.setActionBarTitle("Offerer profile")
         }
         else

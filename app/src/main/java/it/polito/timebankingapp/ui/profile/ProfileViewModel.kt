@@ -70,13 +70,13 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
             .addSnapshotListener { v, e ->
                 if (e == null) {
                     if (v != null) {
-                        /* Documento appena creato */
+                        /* Utente appena creato */
                         if (!v.exists()) {
                             usr = User().also {
                                 it.id = fireBaseUser.value!!.uid; it.fullName =
                                 fireBaseUser.value!!.displayName!!; it.email =
                                 fireBaseUser.value!!.email!!;
-                                it.pic = "images/".plus(UUID.randomUUID().toString());
+                                //it.pic = "images/".plus(UUID.randomUUID().toString());
                             }
                             db.collection("users").document(fireBaseUser.value!!.uid)
                                 .set(usr)
@@ -101,7 +101,7 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
 
             storageRef.child(user.value!!.pic).downloadUrl.addOnSuccessListener {
                 Log.d("getProfileImage", "usrId: ${user.value}")
-                val picRef = storageRef.child(it.toString())
+                val picRef = storageRef.child(it.lastPathSegment.toString())
                 val size: Long = 2 * 1024 * 1024
                 picRef.getBytes(size).addOnSuccessListener {
                     _userImage.postValue(BitmapFactory.decodeByteArray(it, 0, it.size))
@@ -216,6 +216,8 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
 
         val data = baos.toByteArray()
 
+        if(user.value!!.pic.isEmpty())
+            user.value!!.pic = "images/".plus(UUID.randomUUID().toString());
 
         // Upload the file and metadata
         FirebaseStorage.getInstance().reference.child("${user.value?.pic}").putBytes(data, metadata)
@@ -244,28 +246,33 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
                         //downloadProfileImage()
                         val storageRef = FirebaseStorage.getInstance().reference
 
-                        var picRef = storageRef.child(timeslotUser.value!!.pic)
-                        Log.d("getProfileImage", "usrId: ${timeslotUser.value}")
-                        picRef.downloadUrl
-                        val size: Long = 2 * 1024 * 1024
-                        try {
-                            picRef.getBytes(size).addOnSuccessListener {
-                                _timeslotUserImage.postValue(
-                                    BitmapFactory.decodeByteArray(
-                                        it,
-                                        0,
-                                        it.size
+                        if (timeslotUser.value!!.pic.isNotEmpty()) {
+                            var picRef = storageRef.child(timeslotUser.value!!.pic)
+                            Log.d("getProfileImage", "usrId: ${timeslotUser.value}")
+                            picRef.downloadUrl
+                            val size: Long = 2 * 1024 * 1024
+                            try {
+                                picRef.getBytes(size).addOnSuccessListener {
+                                    _timeslotUserImage.postValue(
+                                        BitmapFactory.decodeByteArray(
+                                            it,
+                                            0,
+                                            it.size
+                                        )
                                     )
-                                )
-                            }.addOnFailureListener {
-                                // Handle any errors
-                                Log.d(
-                                    "getProfileImage",
-                                    "usr: ${timeslotUser.value.toString()} \npicRef: $picRef"
-                                )
+                                }.addOnFailureListener {
+                                    // Handle any errors
+                                    Log.d(
+                                        "getProfileImage",
+                                        "usr: ${timeslotUser.value.toString()} \npicRef: $picRef"
+                                    )
+                                }
+                            } catch (e: StorageException) {
+                                Log.d("getProfileImage", "missing image on picRef: $picRef")
+                                _timeslotUserImage.postValue(null)
                             }
-                        } catch (e: StorageException) {
-                            Log.d("getProfileImage", "missing image on picRef: $picRef")
+                        }
+                        else {
                             _timeslotUserImage.postValue(null)
                         }
                     }

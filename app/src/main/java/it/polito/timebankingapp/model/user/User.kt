@@ -38,6 +38,8 @@ class User(
             Patterns.EMAIL_ADDRESS.matcher(email).matches()
         }
     }
+
+    fun hasImage() = pic.isNotEmpty()
 }
 
 

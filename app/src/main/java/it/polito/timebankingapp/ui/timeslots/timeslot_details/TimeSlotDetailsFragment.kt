@@ -14,11 +14,13 @@ import com.google.android.material.chip.ChipGroup
 import com.google.android.material.snackbar.Snackbar
 import it.polito.timebankingapp.R
 import it.polito.timebankingapp.model.timeslot.TimeSlot
+import it.polito.timebankingapp.ui.profile.ProfileViewModel
 import it.polito.timebankingapp.ui.timeslots.TimeSlotsViewModel
 
 class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
 
     private val globalModel : TimeSlotsViewModel by activityViewModels()
+    private val profileViewModel: ProfileViewModel by activityViewModels()
     private lateinit var timeSlotToEdit: TimeSlot
     private lateinit var type: String
     private lateinit var userId: String
@@ -101,6 +103,7 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
                         context, "Show user profile",
                         Toast.LENGTH_SHORT
                     ).show()
+                    profileViewModel.retrieveTimeSlotProfileData(userId)
                     findNavController().navigate(
                         R.id.action_nav_timeSlotDetails_to_nav_showProfile,
                         bundleOf("point_of_origin" to type, "userId" to userId)
