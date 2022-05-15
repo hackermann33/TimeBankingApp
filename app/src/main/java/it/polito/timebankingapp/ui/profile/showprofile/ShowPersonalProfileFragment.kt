@@ -57,25 +57,24 @@ class ShowPersonalProfileFragment : Fragment(R.layout.fragment_showprofile) {
 
 
         if (type == "skill_specific") {
-            if (vm.timeslotUserImage.value == null)
-                progressBar.visibility = View.GONE
-
             vm.timeslotUser.observe(viewLifecycleOwner) {
                 usr = it //oppure it
                 showProfile(view)
             }
 
+
             vm.timeslotUserImage.observe(viewLifecycleOwner) {
-                if (it != null)
+                if (it != null) {
                     profilePicCircleView.setImageBitmap(it)
-                /*else
+                    progressBar.visibility = View.GONE
+                } else {
                     profilePicCircleView.setImageBitmap(
                         BitmapFactory.decodeResource(
                             resources,
                             R.drawable.default_avatar
                         )
-                    )*/
-                progressBar.visibility = View.GONE
+                    )
+                }
             }
 
         } else { //personal
@@ -162,6 +161,10 @@ class ShowPersonalProfileFragment : Fragment(R.layout.fragment_showprofile) {
                     sv.viewTreeObserver.removeOnGlobalLayoutListener(this)
                 }
             })
+        }
+
+        if(!usr.hasImage()){
+            progressBar.visibility = View.GONE
         }
         /*try {
             if(usr.tempImagePath == "") {

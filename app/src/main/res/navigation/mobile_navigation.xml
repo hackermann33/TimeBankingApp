@@ -23,7 +23,7 @@
             app:popExitAnim="@anim/nav_default_pop_exit_anim" />
         <action
             android:id="@+id/action_nav_timeSlotDetails_to_nav_showProfile"
-            app:destination="@id/nav_showTimeSlotProfile" />
+            app:destination="@id/nav_showProfile" />
     </fragment>
 
     <fragment
