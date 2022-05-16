@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
+import it.polito.timebankingapp.MainActivity
 import it.polito.timebankingapp.R
 import it.polito.timebankingapp.model.timeslot.TimeSlot
 import it.polito.timebankingapp.ui.timeslots.TimeSlotsViewModel
@@ -38,8 +39,14 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_timeslots_list) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         type = arguments?.getString("point_of_origin").toString() //skill or personal
-        if(type == "skill")
+        val mainTitle: String
+        if(type == "skill") {
             setHasOptionsMenu(true)
+            mainTitle = "Offers for ${vm.selectedSkill.value.toString()}"
+        }else
+            mainTitle = "Your advertisements"
+        (activity as MainActivity?)?.setActionBarTitle(mainTitle)
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
