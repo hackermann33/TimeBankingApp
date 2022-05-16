@@ -15,7 +15,7 @@
             android:title="@string/menu_drawer_show_profile"
             />
         <item
-            android:id="@+id/nav_personalTimeSlotsList"
+            android:id="@+id/nav_timeSlotList"
             android:icon="@drawable/ic_baseline_list_24"
             android:title="@string/menu_drawer_timeslots_list"
             />

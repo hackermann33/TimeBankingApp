@@ -1,7 +1,6 @@
 package it.polito.timebankingapp
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.ProgressBar
@@ -10,7 +9,6 @@ import androidx.activity.viewModels
 import androidx.annotation.IdRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.drawerlayout.widget.DrawerLayout
-import androidx.fragment.app.FragmentManager
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -128,7 +126,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun isInsideDrawer(@IdRes id: Int): Boolean {
-        return id == R.id.nav_skillsList || id == R.id.nav_showProfile || id == R.id.nav_personalTimeSlotsList
+        return id == R.id.nav_skillsList || id == R.id.nav_showProfile || id == R.id.nav_timeSlotList
     }
 
 

@@ -54,8 +54,8 @@ class SkillsListFragment : Fragment(R.layout.fragment_skills_list) {
                     chip.setOnClickListener { ch ->
                         val text = (ch as Chip).text.toString()
                         vm.setFilteringSkill( text)
-                        //val b = bundleOf("skill" to text)
-                        findNavController().navigate(R.id.action_nav_skillsList_to_skillSpecificTimeSlotListFragment)
+                        val b = bundleOf("point_of_origin" to "skill")
+                        findNavController().navigate(R.id.action_nav_skillsList_to_skillSpecificTimeSlotListFragment, b)
                     }
                     chipGroup.addView(chip)
                 }

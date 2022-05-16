@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import android.widget.TextView
 import android.view.View
 import android.widget.ImageView
-import android.widget.SearchView
 
 import androidx.core.os.bundleOf
 import androidx.navigation.Navigation
@@ -42,9 +41,13 @@ class TimeSlotAdapter(
             location.text = ts.location
             start.text = ts.date.plus(" ").plus(ts.time)
             duration.text = ts.duration.plus(" hour(s)")
-            if(type != "skill_specific") {
-                editButton = mainView.findViewById(R.id.time_slots_edit_button)
+            editButton = mainView.findViewById(R.id.time_slots_edit_button)
+
+            if(type == "personal") {
                 editButton.setOnClickListener(editAction)
+            }
+            else {
+                editButton.visibility = View.GONE
             }
 
             this.mainView.setOnClickListener(detailAction)
@@ -59,10 +62,7 @@ class TimeSlotAdapter(
 
     //inflate the item_layout-based structure inside each ViewHolder
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
-        val destination = if (type === "skill_specific")
-            R.layout.skill_specific_timeslots_item_layout
-        else
-            R.layout.personal_timeslots_item_layout
+        val destination =  R.layout.timeslot_item_layout
 
         val vg = LayoutInflater
             .from(parent.context)
@@ -84,17 +84,16 @@ class TimeSlotAdapter(
                 //click on edit button
                 if(type != "skill_specific") {
                     Navigation.findNavController(it).navigate(
-                        R.id.action_timeSlotListFragment_to_nav_timeSlotEdit,
+                        R.id.action_nav_skillSpecificTimeSlotList_to_nav_timeSlotEdit,
                         //bundleOf( Pair("id",item.id)) //da fixare la prossima volta appena si aggiunge la shared activity viewmodel
                         bundleOf("timeslot" to item, "position" to position) //temp
                     )
                 }
             }
         }, detailAction = {
-            val destination = if (type === "skill_specific")
+            val destination =
                 R.id.action_skillSpecificTimeSlotListFragment_to_nav_timeSlotDetails
-            else
-                R.id.action_timeSlotListFragment_to_nav_timeSlotDetails
+
 
             selectTimeSlot(item)
             Navigation.findNavController(it).navigate(

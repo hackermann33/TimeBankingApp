@@ -32,7 +32,6 @@ class TimeSlotsViewModel(application: Application): AndroidViewModel(application
     val selectedTimeSlot: LiveData<TimeSlot> = _selectedTimeSlot
 
 
-
     private lateinit var l:ListenerRegistration
 
 

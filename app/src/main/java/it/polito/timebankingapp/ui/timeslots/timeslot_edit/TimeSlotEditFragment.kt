@@ -15,6 +15,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -28,6 +29,7 @@ import com.google.android.material.timepicker.TimeFormat
 import it.polito.timebankingapp.MainActivity
 import it.polito.timebankingapp.R
 import it.polito.timebankingapp.model.timeslot.TimeSlot
+import it.polito.timebankingapp.ui.profile.ProfileViewModel
 import it.polito.timebankingapp.ui.timeslots.TimeSlotsViewModel
 import java.text.SimpleDateFormat
 import java.util.*
@@ -35,27 +37,15 @@ import java.util.*
 /** TODO: When edit is confirmed, global view model should be updated (DB)
  **/
 
-val DEBUG = false
+val DEBUG = true
 
-/* Global lists of skills,
-   Every-time a user add a new skill in his profile, if not present in this list, it will be added!  */
-private var SKILLS = arrayOf(
-    "Gardening",
-    "Tutoring",
-    "Baby sitting",
-    "Driver",
-    "C developer",
-    "Grocery shopping",
-    "Cleaning and organization",
-    "Cooking",
-    "Data analytics",
-    "Microsoft Excel",
-)
 
 
 class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
 
     private val vm by viewModels<TimeSlotsViewModel>()
+    private val usrVm by activityViewModels<ProfileViewModel>()
+
     private var tsToEdit: TimeSlot = TimeSlot()
 
     private lateinit var v: View
@@ -69,6 +59,12 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
     private lateinit var restrictionsEditText: TextInputEditText
 
     private lateinit var skillsGroup: ChipGroup
+
+    private lateinit var newSkillView: AutoCompleteTextView
+
+    private lateinit var permittedSkills: List<String>
+
+
 
     private var addMode: Boolean = false
     private lateinit var calendar: Calendar
@@ -118,7 +114,16 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
         val addSkillButton = view.findViewById<Button>(R.id.addSkillButton)
         skillsGroup = view.findViewById(R.id.edit_timeslot_SkillsGroup)
 
-        val newSkillView = updateSkillsHints()
+        permittedSkills  = (usrVm.user.value?.skills ?: listOf())
+
+        usrVm.user.observe(viewLifecycleOwner) {
+            if(it != null) {
+                permittedSkills = it.skills
+            }
+        }
+
+        newSkillView = v.findViewById<View>(R.id.edit_timeslot_RelatedSkill) as AutoCompleteTextView
+        updateSkillsHints()
 
         addSkillButton.setOnClickListener {
             var skillStr = newSkillView.text.toString()
@@ -130,16 +135,19 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
                 .replaceFirstChar { it.uppercase() }
 
             if (skillStr.isNotEmpty()) {
-                /*Adding to the global list of skill hints*/
-                if (!SKILLS.contains(skillStr))
-                    SKILLS = SKILLS.plus(skillStr)
-                if (tsToEdit.relatedSkill != skillStr) {
+                if (tsToEdit.relatedSkill != skillStr && usrVm.user.value?.skills?.contains(skillStr)!! ) {
                     tsToEdit.relatedSkill = skillStr
                     addSkillChip(skillStr)
+                }
+                else {
+                    val relatedSkillLay = v.findViewById<TextInputLayout>(R.id.edit_timeslot_RelatedSkillLay)
+                    relatedSkillLay.error = "Warning! To add a skill, be sure that you have added it in your profile first!"
+
                 }
                 newSkillView.text.clear()
                 updateSkillsHints()
             }
+
         }
 
         addSkillButton.textSize = (4 * resources.displayMetrics.density)
@@ -164,15 +172,13 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
         skillsGroup.addView(chip)
     }
 
-    private fun updateSkillsHints(): AutoCompleteTextView {
+    private fun updateSkillsHints() {
         val adapter: ArrayAdapter<String> = ArrayAdapter<String>(
             this.requireContext(),
             android.R.layout.simple_dropdown_item_1line,
-            SKILLS.filter { sk -> !tsToEdit.relatedSkill.contains(sk) }
+            permittedSkills.filter { sk -> !tsToEdit.relatedSkill.contains(sk) }
         )
-        val newSkillView = v.findViewById<View>(R.id.edit_timeslot_RelatedSkill) as AutoCompleteTextView
         newSkillView.setAdapter(adapter)
-        return newSkillView
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
