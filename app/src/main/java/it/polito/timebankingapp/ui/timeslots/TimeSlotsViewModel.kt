@@ -28,6 +28,11 @@ class TimeSlotsViewModel(application: Application): AndroidViewModel(application
     private val _skillList = MutableLiveData<List<String>>()
     val skillList: LiveData<List<String>> = _skillList
 
+    private val _selectedTimeSlot =  MutableLiveData<TimeSlot>()
+    val selectedTimeSlot: LiveData<TimeSlot> = _selectedTimeSlot
+
+
+
     private lateinit var l:ListenerRegistration
 
 
@@ -61,7 +66,6 @@ class TimeSlotsViewModel(application: Application): AndroidViewModel(application
     val timeSlotsNumber: LiveData<Int> = repo.count()
     val timeSlots: LiveData<List<TimeSlot>> = repo.timeSlots()
     */
-    val selectedTimeSlot =  MutableLiveData<TimeSlot>()
 
     fun updatePerSkillTimeSlots() {
         l2 = db.collection("timeSlots").addSnapshotListener{v,e ->
@@ -145,7 +149,7 @@ class TimeSlotsViewModel(application: Application): AndroidViewModel(application
     }
 
     fun setSelectedTimeSlot(ts: TimeSlot){
-        selectedTimeSlot.value = ts
+        _selectedTimeSlot.value = ts
     }
 
     fun setFilteringSkill(skill: String?) {

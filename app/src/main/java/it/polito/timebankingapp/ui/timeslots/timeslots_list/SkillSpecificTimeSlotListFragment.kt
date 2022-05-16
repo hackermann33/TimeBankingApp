@@ -68,6 +68,7 @@ class SkillSpecificTimeSlotListFragment : Fragment(R.layout.fragment_skill_speci
                 voidMessageText.isVisible = true
                 voidMessageImage.isVisible = true
                 voidMessageSubText.isVisible = true
+
             }
         }
 
@@ -153,6 +154,7 @@ class SkillSpecificTimeSlotListFragment : Fragment(R.layout.fragment_skill_speci
 
 
     }
+
 
 
     private fun selectTimeSlot(ts: TimeSlot) {

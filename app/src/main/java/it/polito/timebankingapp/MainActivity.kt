@@ -1,13 +1,16 @@
 package it.polito.timebankingapp
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.activity.viewModels
+import androidx.annotation.IdRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.fragment.app.FragmentManager
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -22,8 +25,6 @@ import com.google.firebase.ktx.Firebase
 import de.hdodenhof.circleimageview.CircleImageView
 import it.polito.timebankingapp.databinding.ActivityMainBinding
 import it.polito.timebankingapp.ui.profile.ProfileViewModel
-
-
 
 
 class MainActivity : AppCompatActivity() {
@@ -56,7 +57,7 @@ class MainActivity : AppCompatActivity() {
         /* Considering the SkillsListFragment (as described in the navigation graph)
         as top-level simplify navigation */
         appBarConfiguration = AppBarConfiguration(
-            /*setOf(R.id.nav_skillsList, R.id.nav_showProfile, R.id.nav_personalTimeSlotsList)*/
+            /*setOf(R.id.nav_skillsList, R.id.nav_showProfile, R.id.nav_personalTimeSlotsList),*/
             navController.graph,
             drawerLayout
         )
@@ -65,18 +66,23 @@ class MainActivity : AppCompatActivity() {
         /*var toggle = ActionBarDrawerToggle(this, drawerLayout, binding.appBarMain.toolbar, R.string.drawer_open, R.string.drawer_close)*/
 
         /* Disabling drawer when in login fragment */
-        navController.addOnDestinationChangedListener { _, destination, _ ->
-            if (destination.id == R.id.nav_login) {
+        navController.addOnDestinationChangedListener { nc, destination, _ ->
+            if (destination.id == R.id.nav_login || !isInsideDrawer(destination.id)) {
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
                 //toggle.isDrawerIndicatorEnabled = false;
                 //binding.appBarMain.toolbar.navigationIcon = null
-                binding.appBarMain.toolbar.visibility = View.GONE
-            } else {
+                if (destination.id == R.id.nav_login)
+                    binding.appBarMain.toolbar.visibility = View.GONE
+            } else if (nc.backQueue.size > 3)
+                drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
+            else {
                 binding.appBarMain.toolbar.visibility = View.VISIBLE
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
                 //toggle.isDrawerIndicatorEnabled = true;
+                /* Se vado a nav_showProfile ma ho giànav_timeSlotDetails nello stack... sono TimeSlotProfile*/
             }
         }
+
 
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
@@ -121,6 +127,11 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    private fun isInsideDrawer(@IdRes id: Int): Boolean {
+        return id == R.id.nav_skillsList || id == R.id.nav_showProfile || id == R.id.nav_personalTimeSlotsList
+    }
+
+
     private fun setSignOutClick() {
         vm.logOut()
         Firebase.auth.signOut()
@@ -139,9 +150,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun setActionBarTitle(title: String?) {
-         supportActionBar?.title = title
+        supportActionBar?.title = title
     }
 
 
-
 }
+
