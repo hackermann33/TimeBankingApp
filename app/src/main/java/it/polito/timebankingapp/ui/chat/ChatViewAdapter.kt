@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
@@ -14,25 +15,23 @@ import it.polito.timebankingapp.ui.timeslots.timeslots_list.MyDiffCallback
 
 
 class ChatViewAdapter(
-    /*var context: Context,*/
     private var messageList: MutableList<ChatMessage>
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val VIEW_TYPE_MESSAGE_SENT = 1
     private val VIEW_TYPE_MESSAGE_RECEIVED = 2
 
-    /*private val mContext: Context = context*/
     private val mMessageList: List<ChatMessage> = messageList
 
     private class SentMessageHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var messageText: TextView = itemView.findViewById<View>(R.id.text_gchat_message_me) as TextView
         var timeText: TextView = itemView.findViewById<View>(R.id.text_gchat_timestamp_me) as TextView
+        var dateText: TextView = itemView.findViewById<View>(R.id.text_gchat_date) as TextView
 
         fun bind(message: ChatMessage) {
             messageText.text = message.messageText
 
-            // Format the stored timestamp into a readable String using method.
-            //timeText.setText(Utils.formatDateTime(message.getCreatedAt()))
+            dateText.text = if(message.timestamp.split("-")[0] == "skip") "" else message.timestamp.split("-")[0]
             timeText.text = message.timestamp.split("-")[1]
         }
     }
@@ -42,11 +41,12 @@ class ChatViewAdapter(
         var timeText: TextView = itemView.findViewById<View>(R.id.text_gchat_timestamp_other) as TextView
         var nameText: TextView = itemView.findViewById<View>(R.id.text_gchat_user_other) as TextView
         var profileImage: ImageView = itemView.findViewById<View>(R.id.image_gchat_profile_other) as ImageView
+        var dateText: TextView = itemView.findViewById<View>(R.id.text_gchat_date) as TextView
 
         fun bind(message: ChatMessage) {
             messageText.text = message.messageText
 
-            // Format the stored timestamp into a readable String using method.
+            dateText.text = if(message.timestamp.split("-")[0] == "skip") "" else message.timestamp.split("-")[0]
             timeText.text = message.timestamp.split("-")[1]/*Utils.formatDateTime(message.getCreatedAt())*/
             nameText.text = "userId.name" /*message.getSender().getNickname()*/
 
@@ -73,7 +73,7 @@ class ChatViewAdapter(
 
     //populate data for each inflated ViewHolder
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        val message: ChatMessage = mMessageList[position]
+        val message: ChatMessage = mMessageList[position]//text_gchat_date_me
 
         when (holder.itemViewType) {
             VIEW_TYPE_MESSAGE_SENT -> (holder as SentMessageHolder).bind(message)
@@ -96,6 +96,12 @@ class ChatViewAdapter(
     }
 
     fun addMessage(message: ChatMessage) {
+        if(messageList.size > 0) {
+            val val1 = mMessageList[messageList.size - 1].timestamp.split("-")[0]
+            val val2 = message.timestamp.split("-")[0]
+            if (val1 == val2 || val1 == "skip")
+                message.timestamp = "skip-".plus(message.timestamp.split("-")[1])
+        }
         messageList.add(message)
         notifyDataSetChanged()
     }

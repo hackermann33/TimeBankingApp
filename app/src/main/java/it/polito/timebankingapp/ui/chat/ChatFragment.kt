@@ -27,24 +27,35 @@ class ChatFragment : Fragment(R.layout.fragment_chat_list) {
 
         //val res =  BitmapFactory.decodeResource(requireContext().resources,R.drawable.default_avatar)
         tempList.add(ChatMessage("1","user1","Ciao","17/05/2022-11:05"))
-        tempList.add(ChatMessage("2","user2","Ciao","17/05/2022-11:07"))
+        tempList.add(ChatMessage("2","user2","Ciao, questa è una prova per vedere quanto può essere lungo un messaggio","17/05/2022-11:07"))
         tempList.add(ChatMessage("3","user1","Arrivederci","17/05/2022-11:09"))
 
-        val adTmp = ChatViewAdapter(/*requireContext(),*/tempList)
-        rv.adapter = adTmp
+        //rimuovi date dello stesso giorno
+        val tempList2 = mutableListOf<ChatMessage>()
+        for(i in 0 until tempList.size) {
+            if (i > 0) {
+                val val1 = tempList[i - 1].timestamp.split("-")[0]
+                val val2 = tempList[i].timestamp.split("-")[0]
+                if (val1 == val2 || val1 == "skip")
+                    tempList[i].timestamp = "skip-".plus(tempList[i].timestamp.split("-")[1])
+            }
+            tempList2.add(tempList[i])
+        }
 
+        val adTmp = ChatViewAdapter(tempList)
+        rv.adapter = adTmp
 
         val layoutManager = rv.layoutManager as LinearLayoutManager?
         val sendButton = view.findViewById<Button>(R.id.button_gchat_send)
         val textMessage = view.findViewById<EditText>(R.id.edit_gchat_message)
 
         sendButton.setOnClickListener {
-            //temporary method
             val dateCalendar = GregorianCalendar().time
-            val dateFormatter = SimpleDateFormat("yyyy.MM.dd-HH.mm")
+            val dateFormatter = SimpleDateFormat("dd/MM/yyyy-HH:mm")
             val timestamp = dateFormatter.format(dateCalendar)
 
             if (textMessage.length() > 0) {
+                //temporary method
                 adTmp.addMessage(ChatMessage("..", "user2", textMessage.text.toString(), timestamp))
                 textMessage.text.clear();
                 layoutManager!!.scrollToPosition(adTmp.itemCount - 1);
