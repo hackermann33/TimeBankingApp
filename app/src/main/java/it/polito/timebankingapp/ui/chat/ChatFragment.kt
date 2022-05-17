@@ -33,16 +33,22 @@ class ChatFragment : Fragment(R.layout.fragment_chat_list) {
         val adTmp = ChatViewAdapter(/*requireContext(),*/tempList)
         rv.adapter = adTmp
 
-        var sendButton = view.findViewById<Button>(R.id.button_gchat_send)
-        var textMessage = view.findViewById<EditText>(R.id.edit_gchat_message)
+
+        val layoutManager = rv.layoutManager as LinearLayoutManager?
+        val sendButton = view.findViewById<Button>(R.id.button_gchat_send)
+        val textMessage = view.findViewById<EditText>(R.id.edit_gchat_message)
+
         sendButton.setOnClickListener {
             //temporary method
             val dateCalendar = GregorianCalendar().time
             val dateFormatter = SimpleDateFormat("yyyy.MM.dd-HH.mm")
             val timestamp = dateFormatter.format(dateCalendar)
 
-            adTmp.addMessage(ChatMessage("..", "user2", textMessage.text.toString(), timestamp))
-            textMessage.setText("")
+            if (textMessage.length() > 0) {
+                adTmp.addMessage(ChatMessage("..", "user2", textMessage.text.toString(), timestamp))
+                textMessage.text.clear();
+                layoutManager!!.scrollToPosition(adTmp.itemCount - 1);
+            }
         }
     }
 }
