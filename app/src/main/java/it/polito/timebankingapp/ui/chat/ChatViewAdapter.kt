@@ -1,127 +1,116 @@
 package it.polito.timebankingapp.ui.chat
 
-import androidx.recyclerview.widget.RecyclerView
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.core.os.bundleOf
-import androidx.navigation.Navigation
+import androidx.recyclerview.widget.RecyclerView
 import it.polito.timebankingapp.R
-import it.polito.timebankingapp.model.timeslot.TimeSlot
+import it.polito.timebankingapp.model.message.ChatMessage
 
-import it.polito.timebankingapp.ui.chat.placeholder.PlaceholderContent.PlaceholderItem
-//import it.polito.timebankingapp.ui.chat.databinding.FragmentChatBinding
-import it.polito.timebankingapp.ui.timeslots.timeslots_list.TimeSlotAdapter
-import kotlin.reflect.KFunction1
-
-/**
- * [RecyclerView.Adapter] that can display a [PlaceholderItem].
- * TODO: Replace the implementation with code for your data type.
- */
 
 class ChatViewAdapter(
-    var data: MutableList<TimeSlot>,
-    val selectTimeSlot: KFunction1<TimeSlot, Unit>,
-    val type: String
-) : RecyclerView.Adapter<TimeSlotAdapter.ItemViewHolder>() {
+    var context: Context,
+    private var messageList: MutableList<ChatMessage>
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    class ItemViewHolder(val mainView: View, val type:String) : RecyclerView.ViewHolder(mainView) {
+    private val VIEW_TYPE_MESSAGE_SENT = 1
+    private val VIEW_TYPE_MESSAGE_RECEIVED = 2
 
+    private val mContext: Context = context
+    private val mMessageList: List<ChatMessage> = messageList
 
+    private class SentMessageHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        var messageText: TextView = itemView.findViewById<View>(R.id.text_gchat_message_me) as TextView
+        var timeText: TextView = itemView.findViewById<View>(R.id.text_gchat_timestamp_me) as TextView
 
-        fun bind(ts: TimeSlot, editAction: (v: View) -> Unit, detailAction: (v: View) -> Unit) {
+        fun bind(message: ChatMessage) {
+            messageText.text = message.messageText
 
-        }
-
-        fun unbind() {
-
+            // Format the stored timestamp into a readable String using method.
+            //timeText.setText(Utils.formatDateTime(message.getCreatedAt()))
+            timeText.text = message.time
         }
     }
+
+    private class ReceivedMessageHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        var messageText: TextView = itemView.findViewById<View>(R.id.text_gchat_message_other) as TextView
+        var timeText: TextView = itemView.findViewById<View>(R.id.text_gchat_timestamp_other) as TextView
+        var nameText: TextView = itemView.findViewById<View>(R.id.text_gchat_user_other) as TextView
+        var profileImage: ImageView = itemView.findViewById<View>(R.id.image_gchat_profile_other) as ImageView
+
+        fun bind(message: ChatMessage) {
+            messageText.text = message.messageText
+
+            // Format the stored timestamp into a readable String using method.
+            timeText.text = message.time/*Utils.formatDateTime(message.getCreatedAt())*/
+            nameText.text = message.name /*message.getSender().getNickname()*/
+
+            profileImage.setImageBitmap(message.profilePic) //troppo grande
+
+            // Insert the profile image from the URL into the ImageView.
+            /*Utils.displayRoundImageFromUrl( //da sistemare con il corretto metodo
+                mContext,
+                message.getSender().getProfileUrl(),
+                profileImage
+            )*/
+        }
+    }
+
     //inflate the item_layout-based structure inside each ViewHolder
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TimeSlotAdapter.ItemViewHolder {
-        val destination =  R.layout.timeslot_item_layout
-
-        val vg = LayoutInflater
-            .from(parent.context)
-            .inflate(destination, parent, false) //attachToRoot: take all you measures
-        //but do not attach it immediately to the ViewHolder tree of components (could be a ghost item)
-
-        return TimeSlotAdapter.ItemViewHolder(vg, type)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        val vg: View
+        return if (viewType == VIEW_TYPE_MESSAGE_SENT) {
+            vg = LayoutInflater
+                .from(parent.context)
+                .inflate(R.layout.fragment_chat_sender_item, parent, false)
+            SentMessageHolder(vg)
+        } else { // (viewType == VIEW_TYPE_MESSAGE_RECEIVED) {
+            vg = LayoutInflater
+                .from(parent.context)
+                .inflate(R.layout.fragment_chat_receiver_item, parent, false)
+            ReceivedMessageHolder(vg)
+        }
     }
 
     //populate data for each inflated ViewHolder
-    override fun onBindViewHolder(holder: TimeSlotAdapter.ItemViewHolder, position: Int) {
-        //holder.name.text = data[position].name
-        //holder.role.text = data[position].role
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        val message: ChatMessage = mMessageList[position]
 
-        /*val item = displayData[position]
-        holder.bind(item, editAction =  {//1:17:00
-            val pos = data.indexOf(item)
-            if (pos != -1) {
-                //click on edit button
-                if(type != "skill_specific") {
-                    Navigation.findNavController(it).navigate(
-                        R.id.action_nav_skillSpecificTimeSlotList_to_nav_timeSlotEdit,
-                        //bundleOf( Pair("id",item.id)) //da fixare la prossima volta appena si aggiunge la shared activity viewmodel
-                        bundleOf("timeslot" to item, "position" to position) //temp
-                    )
-                }
-            }
-        }, detailAction = {
-            val destination =
-                R.id.action_skillSpecificTimeSlotListFragment_to_nav_timeSlotDetails
-
-
-            selectTimeSlot(item)
-            Navigation.findNavController(it).navigate(
-                destination,
-                bundleOf("point_of_origin" to type, "userId" to item.userId)
-            )
-        });*/
-
-
-
-        //Navigation.createNavigateOnClickListener(R.id.action_timeSlotListFragment_to_nav_timeSlotDetails, bundleOf("timeslot" to item)) )
-    }
-
-    override fun getItemCount(): Int = 2 /*displayData.size*/
-
-}
-
-/*
-class ChatViewAdapter(
-    private val values: List<PlaceholderItem>
-) : RecyclerView.Adapter<ChatViewAdapter.ViewHolder>() {
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-
-        return ViewHolder(
-            FragmentChatBinding.inflate(
-                LayoutInflater.from(parent.context),
-                parent,
-                false
-            )
-        )
-
-    }
-
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = values[position]
-        holder.idView.text = item.id
-        holder.contentView.text = item.content
-    }
-
-    override fun getItemCount(): Int = values.size
-
-    inner class ViewHolder(binding: FragmentChatBinding) : RecyclerView.ViewHolder(binding.root) {
-        val idView: TextView = binding.itemNumber
-        val contentView: TextView = binding.content
-
-        override fun toString(): String {
-            return super.toString() + " '" + contentView.text + "'"
+        when (holder.itemViewType) {
+            VIEW_TYPE_MESSAGE_SENT -> (holder as SentMessageHolder).bind(message)
+            VIEW_TYPE_MESSAGE_RECEIVED -> (holder as ReceivedMessageHolder).bind(message)
         }
     }
 
+    override fun getItemCount(): Int = messageList.size
+
+    // Determines the appropriate ViewType according to the sender of the message.
+    override fun getItemViewType(position: Int): Int {
+        val message: ChatMessage = mMessageList[position]
+        return if (message.userId != "user1" /*message.getSender().getUserId().equals(SendBird.getCurrentUser().getUserId())*/) {
+            // If the current user is the sender of the message
+            VIEW_TYPE_MESSAGE_SENT
+        } else {
+            // If some other user sent the message
+            VIEW_TYPE_MESSAGE_RECEIVED
+        }
+    }
+}
+
+/*
+class MyDiffCallback(private val old: List<TimeSlot>, private val new: List<TimeSlot>): DiffUtil.Callback() {
+    override fun getOldListSize(): Int = old.size
+
+    override fun getNewListSize(): Int = new.size
+
+    override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+        return old[oldItemPosition] === new[newItemPosition]
+    }
+
+    override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+        return old[oldItemPosition] == new[newItemPosition]
+    }
 }*/

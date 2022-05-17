@@ -64,4 +64,5 @@
         <item>Duration</item>
     </string-array>
     <string name="filter_and_sort_option">Filter and Sort</string>
+    <string name="chat">Chat</string>
 </resources>
