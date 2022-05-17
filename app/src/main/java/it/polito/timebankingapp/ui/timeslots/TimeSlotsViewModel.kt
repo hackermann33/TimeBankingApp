@@ -48,7 +48,7 @@ class TimeSlotsViewModel(application: Application): AndroidViewModel(application
         Firebase.auth.addAuthStateListener {
             if (it.currentUser != null) {
                 updatePersonalTimeSlots()
-                updatePerSkillTimeSlots()
+                updateAllTimeSlots()
                 retrieveSkillList()
             }
         }
@@ -66,13 +66,12 @@ class TimeSlotsViewModel(application: Application): AndroidViewModel(application
     val timeSlots: LiveData<List<TimeSlot>> = repo.timeSlots()
     */
 
-    fun updatePerSkillTimeSlots() {
+    fun updateAllTimeSlots() {
         l2 = db.collection("timeSlots").addSnapshotListener{v,e ->
             if(e == null){
                 _globalTimeSlots.value = v!!.mapNotNull { d -> d.toTimeSlot() }
             } else _globalTimeSlots.value = emptyList()
         }
-
     }
 
 
