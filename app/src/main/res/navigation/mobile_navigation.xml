@@ -63,7 +63,7 @@
     <fragment
         android:id="@+id/nav_skillsList"
         android:name="it.polito.timebankingapp.ui.skillslist.SkillsListFragment"
-        android:label="Skills list"
+        android:label="All offers"
         tools:layout="@layout/fragment_skills_list">
         <action
             android:id="@+id/action_nav_skillsList_to_skillSpecificTimeSlotListFragment"
@@ -72,8 +72,9 @@
     <fragment
         android:id="@+id/nav_timeSlotList"
         android:name="it.polito.timebankingapp.ui.timeslots.timeslots_list.TimeSlotListFragment"
-        android:label="Available offers"
         tools:layout="@layout/fragment_timeslots_list">
+
+        <!--android:label="Available offers" set programmatically-->
         <action
             android:id="@+id/action_skillSpecificTimeSlotListFragment_to_nav_timeSlotDetails"
             app:destination="@id/nav_timeSlotDetails" />

@@ -35,9 +35,20 @@
         <entry key="..\:/Users/fifi9/GitHub Repos/TimeBankingApp/app/src/main/res/menu/menu_editpencil.xml" value="0.15305686190679776" />
         <entry key="..\:/Users/fifi9/GitHub Repos/TimeBankingApp/app/src/main/res/menu/menu_filter_and_sort.xml" value="0.15433946130825138" />
         <entry key="..\:/Users/fifi9/GitHub Repos/TimeBankingApp/app/src/main/res/menu/menu_showprofile.xml" value="0.3009833262077811" />
+        <entry key="app/src/main/res/drawable/home_icon.xml" value="0.3115" />
+        <entry key="app/src/main/res/drawable/ic_baseline_account_box_24.xml" value="0.3115" />
+        <entry key="app/src/main/res/drawable/ic_baseline_edit_24.xml" value="0.3115" />
+        <entry key="app/src/main/res/drawable/ic_baseline_filter_alt_24.xml" value="0.3115" />
+        <entry key="app/src/main/res/drawable/ic_baseline_list_24.xml" value="0.3115" />
         <entry key="app/src/main/res/drawable/ic_baseline_sort_24.xml" value="0.34" />
+        <entry key="app/src/main/res/drawable/ic_menu_camera.xml" value="0.3115" />
+        <entry key="app/src/main/res/drawable/ic_menu_gallery.xml" value="0.3115" />
+        <entry key="app/src/main/res/drawable/ic_menu_slideshow.xml" value="0.3115" />
+        <entry key="app/src/main/res/drawable/pencil.xml" value="0.3115" />
+        <entry key="app/src/main/res/drawable/side_nav_bar.xml" value="0.3115" />
+        <entry key="app/src/main/res/drawable/test.xml" value="0.3115" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.22" />
-        <entry key="app/src/main/res/layout/activity_main.xml" value="0.19655797101449277" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.5" />
         <entry key="app/src/main/res/layout/app_bar_main.xml" value="0.3546875" />
         <entry key="app/src/main/res/layout/content_main.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_editprofile.xml" value="0.3578125" />
