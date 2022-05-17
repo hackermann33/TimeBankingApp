@@ -148,16 +148,22 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_timeslots_list) {
             //image buttons (sorting)
             val ascendingButton = view.findViewById(R.id.ascend_button) as ImageButton
             val descendingButton = view.findViewById(R.id.descend_button) as ImageButton
+            val mRecyclerView = view.findViewById(R.id.time_slot_list) as RecyclerView
+            val layoutManager = mRecyclerView
+                .layoutManager as LinearLayoutManager?
+
             ascendingButton.setOnClickListener {
                 orderingDirection = false
                 adTmp.setFilter(filterKeywords, filterParameter)
                 adTmp.setOrder(filterParameter, orderingDirection)
+                layoutManager!!.scrollToPositionWithOffset(0, 0)
             }
 
             descendingButton.setOnClickListener {
                 orderingDirection = true
                 adTmp.setFilter(filterKeywords, filterParameter)
                 adTmp.setOrder(filterParameter, orderingDirection)
+                layoutManager!!.scrollToPositionWithOffset(0, 0)
             }
 
         }
