@@ -101,8 +101,10 @@ class MainActivity : AppCompatActivity() {
 
         vm.user.observe(this) {
             val fullName = navView.getHeaderView(0).findViewById<TextView>(R.id.fullName)
+            var emailET = navView.getHeaderView(0).findViewById<TextView>(R.id.emailTextView)
             if (it != null) {
                 fullName.text = it.fullName
+                emailET.text = it.email
             }
         }
 
