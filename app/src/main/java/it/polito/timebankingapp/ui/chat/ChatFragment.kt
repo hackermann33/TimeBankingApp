@@ -21,12 +21,12 @@ class ChatFragment : Fragment(R.layout.fragment_chat_list) {
 
         val tempList = mutableListOf<ChatMessage>()
 
-        val res =  BitmapFactory.decodeResource(requireContext().resources,R.drawable.default_avatar)
-        tempList.add(ChatMessage("1","user1","Nome Cognome","Ciao","17/05/2022","11:05",res))
-        tempList.add(ChatMessage("2","user2","Name Surname","Ciao","17/05/2022","11:07",res))
-        tempList.add(ChatMessage("3","user1","Nome Cognome","Arrivederci","17/05/2022","11:09",res))
+        //val res =  BitmapFactory.decodeResource(requireContext().resources,R.drawable.default_avatar)
+        tempList.add(ChatMessage("1","user1","Ciao","17/05/2022","11:05"))
+        tempList.add(ChatMessage("2","user2","Ciao","17/05/2022","11:07"))
+        tempList.add(ChatMessage("3","user1","Arrivederci","17/05/2022","11:09"))
 
-        val adTmp = ChatViewAdapter(requireContext(),tempList)
+        val adTmp = ChatViewAdapter(/*requireContext(),*/tempList)
         rv.adapter = adTmp
     }
 }

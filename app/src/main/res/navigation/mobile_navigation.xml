@@ -85,7 +85,7 @@
     <fragment
         android:id="@+id/nav_chatFragment"
         android:name="it.polito.timebankingapp.ui.chat.ChatFragment"
-        android:label="ChatFragment" />
+        android:label="Chat" />
 
 </navigation>
 

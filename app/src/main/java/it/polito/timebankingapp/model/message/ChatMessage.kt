@@ -5,15 +5,13 @@ import java.io.Serializable
 
 
 data class ChatMessage(
-    var id: String = "",
+    var messageId: String = "",
     var userId: String = "",
-    var name: String = "",
     var messageText: String = "",
     var date: String = "",
     var time: String = "",
-    var profilePic: Bitmap
 ) : Serializable {
 
-    override fun toString(): String = "id:$id, userId: $userId, name: $name, date: $date, time: $time, messageText: $messageText"
+    override fun toString(): String = "messageId:$messageId, userId: $userId, date: $date, time: $time, messageText: $messageText"
 
 }

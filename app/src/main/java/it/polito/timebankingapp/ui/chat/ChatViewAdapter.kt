@@ -12,14 +12,14 @@ import it.polito.timebankingapp.model.message.ChatMessage
 
 
 class ChatViewAdapter(
-    var context: Context,
+    /*var context: Context,*/
     private var messageList: MutableList<ChatMessage>
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val VIEW_TYPE_MESSAGE_SENT = 1
     private val VIEW_TYPE_MESSAGE_RECEIVED = 2
 
-    private val mContext: Context = context
+    /*private val mContext: Context = context*/
     private val mMessageList: List<ChatMessage> = messageList
 
     private class SentMessageHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -46,16 +46,10 @@ class ChatViewAdapter(
 
             // Format the stored timestamp into a readable String using method.
             timeText.text = message.time/*Utils.formatDateTime(message.getCreatedAt())*/
-            nameText.text = message.name /*message.getSender().getNickname()*/
+            nameText.text = "userId.name" /*message.getSender().getNickname()*/
 
-            profileImage.setImageBitmap(message.profilePic) //troppo grande
+            //profileImage.setImageBitmap(message.profilePic) //da riabilitare più avanti
 
-            // Insert the profile image from the URL into the ImageView.
-            /*Utils.displayRoundImageFromUrl( //da sistemare con il corretto metodo
-                mContext,
-                message.getSender().getProfileUrl(),
-                profileImage
-            )*/
         }
     }
 
