@@ -33,7 +33,7 @@ class ChatViewAdapter(
 
             // Format the stored timestamp into a readable String using method.
             //timeText.setText(Utils.formatDateTime(message.getCreatedAt()))
-            timeText.text = message.time
+            timeText.text = message.timestamp.split("-")[1]
         }
     }
 
@@ -47,7 +47,7 @@ class ChatViewAdapter(
             messageText.text = message.messageText
 
             // Format the stored timestamp into a readable String using method.
-            timeText.text = message.time/*Utils.formatDateTime(message.getCreatedAt())*/
+            timeText.text = message.timestamp.split("-")[1]/*Utils.formatDateTime(message.getCreatedAt())*/
             nameText.text = "userId.name" /*message.getSender().getNickname()*/
 
             //profileImage.setImageBitmap(message.profilePic) //da riabilitare più avanti

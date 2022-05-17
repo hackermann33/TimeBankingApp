@@ -8,10 +8,9 @@ data class ChatMessage(
     var messageId: String = "",
     var userId: String = "",
     var messageText: String = "",
-    var date: String = "",
-    var time: String = "",
+    var timestamp: String = ""
 ) : Serializable {
 
-    override fun toString(): String = "messageId:$messageId, userId: $userId, date: $date, time: $time, messageText: $messageText"
+    override fun toString(): String = "messageId:$messageId, userId: $userId, timestamp: $timestamp, messageText: $messageText"
 
 }

@@ -6,13 +6,11 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.QueryDocumentSnapshot
 import com.google.firebase.ktx.Firebase
 import it.polito.timebankingapp.model.message.ChatMessage
-import it.polito.timebankingapp.model.timeslot.TimeSlot
 
 class ChatViewModel(application: Application): AndroidViewModel(application) {
     private val _chatMessages = MutableLiveData<List<ChatMessage>>()
@@ -22,8 +20,8 @@ class ChatViewModel(application: Application): AndroidViewModel(application) {
 
     private lateinit var l: ListenerRegistration
 
-    fun retrieveChatMessages(timeslotId: String, requestorId: String ){
-        l = db.collection("chats").document(timeslotId).collection(requestorId)
+    fun retrieveChatMessages(timeslotId: String, requesterId: String ){
+        l = db.collection("chats").document(timeslotId).collection(requesterId).orderBy("timestamp")
             .addSnapshotListener {
                 v,e ->
                 if(e == null){
@@ -33,33 +31,18 @@ class ChatViewModel(application: Application): AndroidViewModel(application) {
         }
     }
 
-    fun addMessage(ts: TimeSlot) {
-       /* val data = HashMap<String, Any>()
+    fun addNewMessage(timeslotId: String, requesterId: String, cm : ChatMessage) {
+        //se la chat non esiste ancora, creane una nuova automaticamente
+        val newChatRef = db.collection("chats").document(timeslotId).collection(requesterId).document()
 
-        val newTimeSlotRef = db.collection("timeSlots").document()
+        cm.messageId =newChatRef.id  //imposta id generato da firebase
+        cm.userId = Firebase.auth.currentUser?.uid ?: ""
 
-        ts.id = newTimeSlotRef.id //imposta id generato da firebase
-        ts.userId = Firebase.auth.currentUser?.uid ?: ""
-
-        newTimeSlotRef.set(ts).addOnSuccessListener{
-            Log.d("timeSlots_add","Successfully added")
-            val skillRef: DocumentReference = db.collection("skills").document(ts.relatedSkill)
-            skillRef.get().addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    val document = task.result
-                    if (!document.exists()) {
-                        skillRef.set(data)
-                    }
-                } else {
-                    Log.d("timeSlots_add", "Failed with: ", task.exception)
-                }
-            }
-        }.addOnFailureListener{ Log.d("timeSlots_add", "Error on adding")}
-*/
-    }
-
-    fun addNewChat() {
-        //to-do
+        newChatRef.set(cm).addOnSuccessListener{
+            Log.d("chat_create","Successfully added")
+        }.addOnFailureListener{
+            Log.d("timeSlots_add", "Error on adding")
+        }
     }
 
     private fun QueryDocumentSnapshot.toChatMessage() : ChatMessage? {
@@ -67,10 +50,9 @@ class ChatViewModel(application: Application): AndroidViewModel(application) {
             val messageId = get("messageId") as String
             val userId = get("userId") as String
             val messageText = get("messageText") as String
-            val date = get("date") as String
-            val time = get("time") as String
+            val timestamp = get("timestamp") as String
 
-            ChatMessage(messageId = messageId, userId=userId, messageText = messageText, date = date, time =time)
+            ChatMessage(messageId = messageId, userId=userId, messageText = messageText, timestamp =timestamp)
         } catch(e: Exception) {
             e.printStackTrace()
             null

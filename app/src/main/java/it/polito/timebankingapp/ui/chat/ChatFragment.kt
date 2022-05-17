@@ -26,9 +26,9 @@ class ChatFragment : Fragment(R.layout.fragment_chat_list) {
         val tempList = mutableListOf<ChatMessage>()
 
         //val res =  BitmapFactory.decodeResource(requireContext().resources,R.drawable.default_avatar)
-        tempList.add(ChatMessage("1","user1","Ciao","17/05/2022","11:05"))
-        tempList.add(ChatMessage("2","user2","Ciao","17/05/2022","11:07"))
-        tempList.add(ChatMessage("3","user1","Arrivederci","17/05/2022","11:09"))
+        tempList.add(ChatMessage("1","user1","Ciao","17/05/2022-11:05"))
+        tempList.add(ChatMessage("2","user2","Ciao","17/05/2022-11:07"))
+        tempList.add(ChatMessage("3","user1","Arrivederci","17/05/2022-11:09"))
 
         val adTmp = ChatViewAdapter(/*requireContext(),*/tempList)
         rv.adapter = adTmp
@@ -38,12 +38,10 @@ class ChatFragment : Fragment(R.layout.fragment_chat_list) {
         sendButton.setOnClickListener {
             //temporary method
             val dateCalendar = GregorianCalendar().time
-            val dateFormatter = SimpleDateFormat("yyyy.MM.dd").toLocalizedPattern()
-            val timeFormatter = SimpleDateFormat("HH.mm")
-            val date = dateFormatter.format(dateCalendar)
-            val time = timeFormatter.format(dateCalendar)
+            val dateFormatter = SimpleDateFormat("yyyy.MM.dd-HH.mm")
+            val timestamp = dateFormatter.format(dateCalendar)
 
-            adTmp.addMessage(ChatMessage("..", "user2", textMessage.text.toString(), date, time))
+            adTmp.addMessage(ChatMessage("..", "user2", textMessage.text.toString(), timestamp))
             textMessage.setText("")
         }
     }
