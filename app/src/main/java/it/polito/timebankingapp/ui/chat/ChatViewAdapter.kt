@@ -6,9 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import it.polito.timebankingapp.R
 import it.polito.timebankingapp.model.message.ChatMessage
+import it.polito.timebankingapp.ui.timeslots.timeslots_list.MyDiffCallback
 
 
 class ChatViewAdapter(
@@ -91,6 +93,11 @@ class ChatViewAdapter(
             // If some other user sent the message
             VIEW_TYPE_MESSAGE_RECEIVED
         }
+    }
+
+    fun addMessage(message: ChatMessage) {
+        messageList.add(message)
+        notifyDataSetChanged()
     }
 }
 

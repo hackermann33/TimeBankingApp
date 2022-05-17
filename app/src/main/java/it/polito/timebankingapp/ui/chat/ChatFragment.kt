@@ -3,11 +3,15 @@ package it.polito.timebankingapp.ui.chat
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.view.View
+import android.widget.Button
+import android.widget.EditText
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import it.polito.timebankingapp.R
 import it.polito.timebankingapp.model.message.ChatMessage
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 class ChatFragment : Fragment(R.layout.fragment_chat_list) {
@@ -28,5 +32,19 @@ class ChatFragment : Fragment(R.layout.fragment_chat_list) {
 
         val adTmp = ChatViewAdapter(/*requireContext(),*/tempList)
         rv.adapter = adTmp
+
+        var sendButton = view.findViewById<Button>(R.id.button_gchat_send)
+        var textMessage = view.findViewById<EditText>(R.id.edit_gchat_message)
+        sendButton.setOnClickListener {
+            //temporary method
+            val dateCalendar = GregorianCalendar().time
+            val dateFormatter = SimpleDateFormat("yyyy.MM.dd").toLocalizedPattern()
+            val timeFormatter = SimpleDateFormat("HH.mm")
+            val date = dateFormatter.format(dateCalendar)
+            val time = timeFormatter.format(dateCalendar)
+
+            adTmp.addMessage(ChatMessage("..", "user2", textMessage.text.toString(), date, time))
+            textMessage.setText("")
+        }
     }
 }
