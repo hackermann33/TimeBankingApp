@@ -21,7 +21,26 @@ class ChatViewAdapter(
     private val VIEW_TYPE_MESSAGE_SENT = 1
     private val VIEW_TYPE_MESSAGE_RECEIVED = 2
 
-    private val mMessageList: List<ChatMessage> = messageList
+    private var mMessageList: MutableList<ChatMessage> = messageList
+    private var displayedList : MutableList<ChatMessage> = mutableListOf()
+
+    init {
+        //rimuovi date dello stesso giorno assegnando il tag "skip"
+
+        var tempMessage: ChatMessage
+
+        for(i in mMessageList.indices) {
+            tempMessage = mMessageList[i].copy() //Debug necessario
+            if (i > 0) {
+                val val1 = mMessageList[i - 1].timestamp.split("-")[0]
+                val val2 = mMessageList[i].timestamp.split("-")[0]
+                if (val1 == val2 /*|| val1 == "skip"*/) {
+                    tempMessage.timestamp = "skip-".plus(mMessageList[i].timestamp.split("-")[1])
+                }
+            }
+            displayedList.add(tempMessage)
+        }
+    }
 
     private class SentMessageHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var messageText: TextView = itemView.findViewById<View>(R.id.text_gchat_message_me) as TextView
@@ -73,7 +92,7 @@ class ChatViewAdapter(
 
     //populate data for each inflated ViewHolder
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        val message: ChatMessage = mMessageList[position]//text_gchat_date_me
+        val message: ChatMessage = displayedList[position] //text_gchat_date_me
 
         when (holder.itemViewType) {
             VIEW_TYPE_MESSAGE_SENT -> (holder as SentMessageHolder).bind(message)
@@ -87,37 +106,23 @@ class ChatViewAdapter(
     override fun getItemViewType(position: Int): Int {
         val message: ChatMessage = mMessageList[position]
         return if (message.userId != "user1" /*message.getSender().getUserId().equals(SendBird.getCurrentUser().getUserId())*/) {
-            // If the current user is the sender of the message
-            VIEW_TYPE_MESSAGE_SENT
+            VIEW_TYPE_MESSAGE_SENT // If the current user is the sender of the message
         } else {
-            // If some other user sent the message
-            VIEW_TYPE_MESSAGE_RECEIVED
+            VIEW_TYPE_MESSAGE_RECEIVED // If some other user sent the message
         }
     }
 
-    fun addMessage(message: ChatMessage) {
-        if(messageList.size > 0) {
-            val val1 = mMessageList[messageList.size - 1].timestamp.split("-")[0]
+    fun addMessage(message: ChatMessage) { //si assegna skip a display data e si aggiunge alla lista classica con il timestamp normale
+        val i = mMessageList.size
+        val tempMessage = message.copy()
+        if(i > 0) {
+            val val1 = mMessageList[i - 1].timestamp.split("-")[0] //Da debuggare
             val val2 = message.timestamp.split("-")[0]
-            if (val1 == val2 || val1 == "skip")
-                message.timestamp = "skip-".plus(message.timestamp.split("-")[1])
+            if (val1 == val2)
+                tempMessage.timestamp = "skip-".plus(message.timestamp.split("-")[1])
         }
-        messageList.add(message)
-        notifyDataSetChanged()
+        mMessageList.add(message)
+        displayedList.add(tempMessage)
+        notifyItemChanged(i)
     }
 }
-
-/*
-class MyDiffCallback(private val old: List<TimeSlot>, private val new: List<TimeSlot>): DiffUtil.Callback() {
-    override fun getOldListSize(): Int = old.size
-
-    override fun getNewListSize(): Int = new.size
-
-    override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        return old[oldItemPosition] === new[newItemPosition]
-    }
-
-    override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        return old[oldItemPosition] == new[newItemPosition]
-    }
-}*/

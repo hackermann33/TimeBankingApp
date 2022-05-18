@@ -65,4 +65,9 @@
     </string-array>
     <string name="filter_and_sort_option">Filter and Sort</string>
     <string name="chat">Chat</string>
+    <string name="chat_user_icon">User Icon</string>
+    <string name="chat_fullname">Name Surname</string>
+    <string name="chat_message">Message</string>
+    <string name="chat_time">00:00</string>
+    <string name="chat_date">01/01/1970</string>
 </resources>

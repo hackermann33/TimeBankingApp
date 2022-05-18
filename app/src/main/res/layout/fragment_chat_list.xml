@@ -52,6 +52,7 @@ android:layout_height="match_parent">
             android:layout_toStartOf="@+id/button_gchat_send"
             android:background="@android:color/transparent"
             android:hint="Enter Message"
+            android:imeOptions="actionSend"
             android:inputType="text"
             android:maxLines="6"
             android:minHeight="48dp"
