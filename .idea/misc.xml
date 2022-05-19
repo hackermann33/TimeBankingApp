@@ -53,6 +53,7 @@
         <entry key="app/src/main/res/layout/fragment_time_slot_details.xml" value="0.35597826086956524" />
         <entry key="app/src/main/res/layout/fragment_timeslots_list.xml" value="0.3546875" />
         <entry key="app/src/main/res/layout/nav_header_main.xml" value="0.3578125" />
+        <entry key="app/src/main/res/layout/timeslot_item_layout.xml" value="0.18" />
         <entry key="app/src/main/res/menu/activity_main_drawer.xml" value="0.20680272108843537" />
         <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.34" />
         <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.34" />
