@@ -20,9 +20,9 @@
             android:title="@string/menu_drawer_timeslots_list"
             />
         <item
-            android:id="@+id/nav_chatFragment"
+            android:id="@+id/nav_chatsList"
             android:icon="@drawable/ic_baseline_list_24"
-            android:title="@string/chat"
+            android:title="@string/chats"
             />
     </group>
 </menu>

@@ -1,17 +1,13 @@
-package it.polito.timebankingapp.ui.chat
+package it.polito.timebankingapp.ui.chats.chat
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import it.polito.timebankingapp.R
-import it.polito.timebankingapp.model.message.ChatMessage
-import it.polito.timebankingapp.ui.timeslots.timeslots_list.MyDiffCallback
+import it.polito.timebankingapp.model.chat.ChatMessage
 
 
 class ChatViewAdapter(

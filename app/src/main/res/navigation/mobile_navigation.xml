@@ -83,9 +83,22 @@
             app:destination="@id/nav_timeSlotEdit" />
     </fragment>
     <fragment
-        android:id="@+id/nav_chatFragment"
-        android:name="it.polito.timebankingapp.ui.chat.ChatFragment"
+        android:id="@+id/nav_chat"
+        android:name="it.polito.timebankingapp.ui.chats.chat.ChatFragment"
         android:label="Chat" />
+    <fragment
+        android:id="@+id/nav_chatsList"
+        android:name="it.polito.timebankingapp.ui.chats.chatslist.ChatsListFragment"
+        android:label="Available chats"
+        tools:layout="@layout/fragment_chats_list_list" >
+        <action
+            android:id="@+id/action_nav_chatsList_to_nav_chat"
+            app:destination="@id/nav_chat"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+    </fragment>
 
 </navigation>
 
