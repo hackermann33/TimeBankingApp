@@ -98,18 +98,22 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-
+        val progressBar =
+            navView.getHeaderView(0).findViewById<ProgressBar>(R.id.profile_pic_progress_bar)
         vm.user.observe(this) {
             val fullName = navView.getHeaderView(0).findViewById<TextView>(R.id.fullName)
             var emailET = navView.getHeaderView(0).findViewById<TextView>(R.id.emailTextView)
             if (it != null) {
                 fullName.text = it.fullName
                 emailET.text = it.email
+
+                if(!it.hasImage())
+                    progressBar.visibility = View.GONE
+
             }
         }
 
-        val progressBar =
-            navView.getHeaderView(0).findViewById<ProgressBar>(R.id.profile_pic_progress_bar)
+
         val profilePic =
             navView.getHeaderView(0).findViewById<CircleImageView>(R.id.profile_pic)
 
@@ -122,8 +126,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        if (vm.userImage.value == null)
-            progressBar.visibility = View.GONE
+
 
     }
 

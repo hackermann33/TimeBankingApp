@@ -19,8 +19,9 @@ class TimeSlotsViewModel(application: Application): AndroidViewModel(application
     private val _personalTimeSlots = MutableLiveData<List<TimeSlot>>()
     val personalTimeSlots: LiveData<List<TimeSlot>> = _personalTimeSlots
 
-    private val _globalTimeSlots = MutableLiveData<List<TimeSlot>>()
-    val globalTimeSlots: LiveData<List<TimeSlot>> = _globalTimeSlots
+    /*  publicTimeSlots is excluding that one of the current user! */
+    private val _publicTimeSlots = MutableLiveData<List<TimeSlot>>()
+    val publicTimeSlots: LiveData<List<TimeSlot>> = _publicTimeSlots
 
     private val _perSkillTimeSlots = MutableLiveData<List<TimeSlot>>()
     val perSkillTimeSlots: LiveData<List<TimeSlot>> = _perSkillTimeSlots
@@ -48,7 +49,7 @@ class TimeSlotsViewModel(application: Application): AndroidViewModel(application
         Firebase.auth.addAuthStateListener {
             if (it.currentUser != null) {
                 updatePersonalTimeSlots()
-                updatePerSkillTimeSlots()
+                updatePublicTimeSlots()
                 retrieveSkillList()
             }
         }
@@ -66,13 +67,12 @@ class TimeSlotsViewModel(application: Application): AndroidViewModel(application
     val timeSlots: LiveData<List<TimeSlot>> = repo.timeSlots()
     */
 
-    fun updatePerSkillTimeSlots() {
-        l2 = db.collection("timeSlots").addSnapshotListener{v,e ->
+    fun updatePublicTimeSlots() {
+        l2 = db.collection("timeSlots").whereNotEqualTo("userId", Firebase.auth.uid).addSnapshotListener{v,e ->
             if(e == null){
-                _globalTimeSlots.value = v!!.mapNotNull { d -> d.toTimeSlot() }
-            } else _globalTimeSlots.value = emptyList()
+                _publicTimeSlots.value = v!!.mapNotNull { d -> d.toTimeSlot() }
+            } else _publicTimeSlots.value = emptyList()
         }
-
     }
 
 
@@ -153,7 +153,7 @@ class TimeSlotsViewModel(application: Application): AndroidViewModel(application
 
     fun setFilteringSkill(skill: String?) {
         _selectedSkill.postValue(skill)
-        _perSkillTimeSlots.value = globalTimeSlots.value?.filter{ skill == null || it.relatedSkill == skill }
+        _perSkillTimeSlots.value = publicTimeSlots.value?.filter{ skill == null || it.relatedSkill == skill }
     }
 
 

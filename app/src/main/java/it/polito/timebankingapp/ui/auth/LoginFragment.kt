@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.*
 import androidx.lifecycle.SavedStateHandle
@@ -11,7 +12,6 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import com.google.android.gms.common.SignInButton
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -73,7 +73,6 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
         // [END initialize_auth]
 
         tv = view.findViewById(R.id.textView)
-        tv.text = "not logged"
 
 
         /*savedStateHandle = findNavController().previousBackStackEntry!!.savedStateHandle
@@ -85,13 +84,21 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
 
         // Set the dimensions of the sign-in button.
         // Set the dimensions of the sign-in button.
+/*
         val signInButton: SignInButton = view.findViewById(R.id.sign_in_button)
         signInButton.setSize(SignInButton.SIZE_STANDARD)
 
         signInButton.setOnClickListener {
             signIn()
         }
+*/
 
+
+        val signInButton: Button = view.findViewById(R.id.sign_in_button)
+
+        signInButton.setOnClickListener {
+            signIn()
+        }
 
 
         //(activity as MainActivity?)?.setDrawerLocked();
@@ -176,12 +183,6 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
     // [END signin]
 
     private fun updateUI(user: FirebaseUser?) {
-        if(user == null){
-            tv.text = "Not logged"
-        }
-        else {
-            tv.text = auth.currentUser?.displayName ?: ""
-        }
 
     }
 
