@@ -1,18 +1,17 @@
 package it.polito.timebankingapp.ui.timeslots.timeslots_list
 
-import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.DiffUtil
 import android.view.LayoutInflater
-import android.view.ViewGroup
-import android.widget.TextView
 import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageView
-
+import android.widget.TextView
 import androidx.core.os.bundleOf
 import androidx.navigation.Navigation
-
-import it.polito.timebankingapp.model.timeslot.TimeSlot
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.RecyclerView
 import it.polito.timebankingapp.R
+import it.polito.timebankingapp.model.timeslot.TimeSlot
+import ru.nikartm.support.ImageBadgeView
 import kotlin.reflect.KFunction1
 
 
@@ -34,6 +33,7 @@ class TimeSlotAdapter(
         private val start: TextView = mainView.findViewById(R.id.time_slots_item_start)
         private val duration: TextView = mainView.findViewById(R.id.time_slots_item_duration)
         private lateinit var editButton: ImageView
+        private lateinit var chatButton: ImageBadgeView
 
 
         fun bind(ts: TimeSlot, editAction: (v: View) -> Unit, detailAction: (v: View) -> Unit) {
@@ -42,22 +42,22 @@ class TimeSlotAdapter(
             start.text = ts.date.plus(" ").plus(ts.time)
             duration.text = ts.duration.plus(" hour(s)")
             editButton = mainView.findViewById(R.id.time_slots_edit_button)
+            chatButton = mainView.findViewById(R.id.imageView3)
 
             if(type == "personal") {
                 editButton.setOnClickListener(editAction)
             }
             else {
                 editButton.visibility = View.GONE
+                /*chatButton.visibleBadge(false)
+                chatButton.setBadgeBackground(null)*/
+                chatButton.badgeColor = R.color.background
+                chatButton.clearBadge()
             }
 
             this.mainView.setOnClickListener(detailAction)
         }
 
-        fun unbind() {
-            if(type != "skill_specific") {
-                editButton.setOnClickListener(null)
-            }
-        }
     }
 
     //inflate the item_layout-based structure inside each ViewHolder
@@ -100,11 +100,10 @@ class TimeSlotAdapter(
                 destination,
                 bundleOf("point_of_origin" to type, "userId" to item.userId)
             )
-        });
+        })
 
 
-
-            //Navigation.createNavigateOnClickListener(R.id.action_timeSlotListFragment_to_nav_timeSlotDetails, bundleOf("timeslot" to item)) )
+        //Navigation.createNavigateOnClickListener(R.id.action_timeSlotListFragment_to_nav_timeSlotDetails, bundleOf("timeslot" to item)) )
     }
 
     //how many items?

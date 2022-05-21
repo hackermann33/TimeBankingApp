@@ -26,7 +26,6 @@ class ShowPersonalProfileFragment : Fragment(R.layout.fragment_showprofile) {
     private lateinit var user: User
     private lateinit var timeSlotUser: User
 
-    private lateinit var loggedUser: FirebaseUser
     private lateinit var v : View
     private lateinit var type : String
 
@@ -37,23 +36,16 @@ class ShowPersonalProfileFragment : Fragment(R.layout.fragment_showprofile) {
         super.onCreate(savedInstanceState)
         type = arguments?.getString("point_of_origin").toString() //skill_specific or personal
         if(type == "skill_specific") {
-            var userId = arguments?.getString("userId").toString()
-            //vm.retrieveTimeSlotProfileData(userId)
             (activity as MainActivity?)?.setActionBarTitle("Offerer profile")
         }
         else
             setHasOptionsMenu(true)
     }
 
-    override fun onDetach() {
-        //vm.clearTimeSlotUserImage()
-        super.onDetach()
-    }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         v = view
 
-        val navController = findNavController()
         val profilePicCircleView = view.findViewById<CircleImageView>(R.id.profile_pic)
         val progressBar = view.findViewById<ProgressBar>(R.id.profile_pic_progress_bar)
 
@@ -64,11 +56,11 @@ class ShowPersonalProfileFragment : Fragment(R.layout.fragment_showprofile) {
                 showProfile(view, timeSlotUser)
             }
 
-            if(vm.timeslotUserImage.value != null){ /* Check this because if image is alreaady set
-                                                  , observer won't be triggered */
+            /*if(vm.timeslotUserImage.value != null){ *//* Check this because if image is alreaady set
+                                                  , observer won't be triggered *//*
                 profilePicCircleView.setImageBitmap(vm.timeslotUserImage.value)
                 progressBar.visibility = View.GONE
-            }
+            }*/
 
 
             vm.timeslotUserImage.observe(viewLifecycleOwner) {
@@ -145,12 +137,7 @@ class ShowPersonalProfileFragment : Fragment(R.layout.fragment_showprofile) {
         }
     }
 
-    private fun showWelcomeMessage() {
-        TODO("Not yet implemented")
-    }
-
     private fun showProfile(view: View, usr: User) {
-        val profilePic = view.findViewById<CircleImageView>(R.id.profile_pic)
         val frameLayout = view.findViewById<FrameLayout>(R.id.frame_layout_pic)
         val sv = view.findViewById<ScrollView>(R.id.scrollView2)
         val progressBar = view.findViewById<ProgressBar>(R.id.profile_pic_progress_bar)
@@ -231,7 +218,7 @@ class ShowPersonalProfileFragment : Fragment(R.layout.fragment_showprofile) {
             R.id.option1 -> {
                 val progressBar = v.findViewById<ProgressBar>(R.id.profile_pic_progress_bar)
                 editProfile() //evoked when the pencil button is pressed
-                /*if(progressBar.visibility == View.GONE) {
+                if(progressBar.visibility == View.GONE) {
                     Toast.makeText(
                         context, "Edit profile",
                         Toast.LENGTH_SHORT
@@ -242,7 +229,7 @@ class ShowPersonalProfileFragment : Fragment(R.layout.fragment_showprofile) {
                         context, "Wait until all has has been retrieved.",
                         Toast.LENGTH_SHORT
                     ).show()
-                }*/
+                }
                 true
             }
             else -> super.onOptionsItemSelected(item)

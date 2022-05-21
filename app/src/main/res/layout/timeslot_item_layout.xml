@@ -20,7 +20,9 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
 
-            android:padding="16dp">
+            android:paddingStart="16dp"
+            android:paddingTop="16dp"
+            android:paddingBottom="8dp">
 
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guideline3"
@@ -44,9 +46,9 @@
                 android:id="@+id/time_slots_item_title"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/roboto_medium"
                 android:text="@string/time_slots_item_title"
                 android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-                android:textStyle="bold"
                 app:layout_constraintEnd_toStartOf="@+id/guideline3"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -57,8 +59,7 @@
                 android:layout_height="48dp"
                 android:backgroundTint="?attr/colorPrimary"
                 android:contentDescription="@string/time_slots_edit_icon"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="1.0"
+                android:visibility="visible"
                 app:layout_constraintStart_toStartOf="@+id/guideline3"
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/ic_baseline_edit_24" />
@@ -70,25 +71,65 @@
                 android:layout_marginTop="16dp"
                 android:layout_weight="1"
                 android:text="@string/time_slots_item_location"
-                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/time_slots_item_title" />
 
-            <ImageView
-                android:id="@+id/chat_button"
+            <ru.nikartm.support.ImageBadgeView
+                android:id="@+id/imageView3"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:contentDescription="@string/chat_button_description"
-                android:minWidth="48dp"
-                android:minHeight="48dp"
+                app:ibv_badgePadding="2dp"
+                app:ibv_badgePosition="top_right"
+                app:ibv_badgeTextSize="12sp"
+                app:ibv_badgeTextStyle="bold"
+                app:ibv_badgeValue="100"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/guideline3"
+                app:layout_constraintTop_toBottomOf="@id/barrier"
+                app:layout_constraintVertical_bias="0.0"
+                app:srcCompat="@drawable/ic_outline_chat_24" />
+
+            <!--<FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="6dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="@+id/guideline3"
                 app:layout_constraintTop_toBottomOf="@id/barrier"
-                app:layout_constraintVertical_bias="0.0"
-                app:srcCompat="@drawable/ic_outline_chat_24"
-                app:tint="@color/primary" />
+                app:layout_constraintVertical_bias="0.0">
+
+                <ImageView
+                    android:id="@+id/chat_button"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_gravity="top|left"
+                    android:layout_marginTop="6dp"
+                    android:contentDescription="@string/chat_button_description"
+                    android:minWidth="48dp"
+                    android:minHeight="48dp"
+                    app:srcCompat="@drawable/ic_outline_chat_24" />
+
+                <TextView
+                    android:id="@+id/messageCounterTextView"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="right|top"
+                    android:background="@drawable/ic_baseline_circle_24"
+                    android:backgroundTint="#D50000"
+                    android:gravity="center"
+                    android:padding="5dp"
+                    android:text="4"
+                    android:textColor="@color/dark_white"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:visibility="visible" />
+
+
+            </FrameLayout>-->
+
 
             <TextView
                 android:id="@+id/time_slots_item_start_label"

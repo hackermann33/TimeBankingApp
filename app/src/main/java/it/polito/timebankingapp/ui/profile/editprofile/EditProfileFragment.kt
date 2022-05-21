@@ -225,7 +225,7 @@ class EditProfileFragment : Fragment(R.layout.fragment_editprofile) {
     @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        var editedImagePath: String = "";
+        var editedImagePath = ""
         if (requestCode == REQUEST_PIC && resultCode == RESULT_OK) {
             var imageBitmap = data?.extras?.get("data") as Bitmap?
             if (imageBitmap != null) {
@@ -259,30 +259,6 @@ class EditProfileFragment : Fragment(R.layout.fragment_editprofile) {
             profilePicCircleView.setImageBitmap(rotatedBitmap)
             vm.editUserImage(rotatedBitmap)
         }
-    }
-
-    private fun saveToInternalStorage(bitmapImage: Bitmap, save: Boolean = false): String {
-        val cw = ContextWrapper(requireContext())
-
-        val directory = cw.getDir("imageDir", Context.MODE_PRIVATE)
-        val fileName = if(save) "profile.jpg" else "temp_profile.jpg"
-        val path = File(directory, fileName)
-
-        var fos: FileOutputStream? = null
-        try {
-            fos = FileOutputStream(path)
-            // Use the compress method on the BitMap object to write image to the OutputStream
-            bitmapImage.compress(Bitmap.CompressFormat.PNG, 100, fos)
-        } catch (e: Exception) {
-            e.printStackTrace()
-        } finally {
-            try {
-                fos!!.close()
-            } catch (e: IOException) {
-                e.printStackTrace()
-            }
-        }
-        return path.absolutePath
     }
 
     private fun rotateImage(source: Bitmap, angle: Int): Bitmap? {

@@ -19,13 +19,16 @@
         android:layout_marginTop="100dp"
         android:src="@drawable/time_slot_icon"
         android:visibility="invisible"
+        android:contentDescription="@string/no_time_slots_available"
         app:layout_constraintBottom_toTopOf="@+id/emptyListMessage"
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_chainStyle="packed"
-        app:tint="@color/divider" />
+        app:tint="@color/divider"
+
+        />
 
     <TextView
         android:id="@+id/emptyListMessage"
@@ -34,7 +37,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginBottom="16dp"
         android:fontFamily="@font/roboto"
-        android:text="No Advertisements"
+        android:text="@string/no_advertisements"
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:textColor="@color/divider"
@@ -53,7 +56,7 @@
         android:layout_marginEnd="128dp"
         android:layout_marginBottom="150dp"
         android:fontFamily="@font/roboto"
-        android:text="Sorry, but at the moment there aren't any available offers. Try again later!"
+        android:text="@string/there_aren_t_any_offers"
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         android:textColor="@color/divider"
@@ -84,6 +87,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="16dp"
+                android:fontFamily="@font/roboto_medium"
                 android:gravity="center"
                 android:text="@string/skills_list_title"
                 android:textAppearance="@style/TextAppearance.AppCompat.Display1" />

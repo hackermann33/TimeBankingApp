@@ -7,25 +7,18 @@ import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.core.os.bundleOf
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
-import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
 import it.polito.timebankingapp.R
-import it.polito.timebankingapp.ui.auth.LoginFragment
 import it.polito.timebankingapp.ui.profile.ProfileViewModel
 import it.polito.timebankingapp.ui.timeslots.TimeSlotsViewModel
 
 class SkillsListFragment : Fragment(R.layout.fragment_skills_list) {
 
     private lateinit var v : View
-    private val authVm: ProfileViewModel by activityViewModels()
     private val vm: TimeSlotsViewModel by activityViewModels()
 
 

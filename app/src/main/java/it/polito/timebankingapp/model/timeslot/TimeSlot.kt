@@ -1,10 +1,6 @@
 package it.polito.timebankingapp.model.timeslot
 
 import android.util.Log
-import androidx.room.Entity
-import androidx.room.Index
-import androidx.room.PrimaryKey
-import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.firebase.firestore.Exclude
 import java.io.Serializable
 import java.text.SimpleDateFormat
@@ -30,16 +26,6 @@ data class TimeSlot(
     }
 
 
-    fun clone(ts : TimeSlot){
-        this.title = ts.title
-        this.description = ts.description
-        this.date = ts.date
-        this.time = ts.time
-        this.duration = ts.duration
-        this.location = ts.location
-        this.restrictions = ts.restrictions
-        this.relatedSkill = ts.relatedSkill
-    }
     /*Here, I'm not checking that String is not empty, because if it's empty it will be used default image*/
     /*fun isValid(): Boolean {
         return fullName.isNotEmpty() && nick.isNotEmpty() && isValidEmail() && location.isNotEmpty() && description.isNotEmpty()

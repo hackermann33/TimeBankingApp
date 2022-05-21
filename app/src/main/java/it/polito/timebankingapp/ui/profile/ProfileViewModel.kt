@@ -1,15 +1,12 @@
 package it.polito.timebankingapp.ui.profile
 
-import android.R
 import android.app.Application
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.liveData
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.DocumentSnapshot
@@ -18,11 +15,9 @@ import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageException
-import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.ktx.storageMetadata
 import it.polito.timebankingapp.model.user.User
 import java.io.ByteArrayOutputStream
-import java.io.File
 import java.util.*
 
 
@@ -75,7 +70,7 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
                             usr = User().also {
                                 it.id = fireBaseUser.value!!.uid; it.fullName =
                                 fireBaseUser.value!!.displayName!!; it.email =
-                                fireBaseUser.value!!.email!!;
+                                fireBaseUser.value!!.email!!
                                 //it.pic = "images/".plus(UUID.randomUUID().toString());
                             }
                             db.collection("users").document(fireBaseUser.value!!.uid)
@@ -110,7 +105,7 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
                     // This should not happen since we check before if the image exists.
                     _userImage.postValue(null)
                     Log.d("getProfileImage", "usr: ${user.value.toString()} \npicRef: $picRef")
-                    Log.d("getProfileImage", it.toString());
+                    Log.d("getProfileImage", it.toString())
                 }
             }.addOnFailureListener {
                 Log.d("downloadProfileImage", it.toString())
@@ -209,7 +204,7 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
         /*By bitmap*/
         val baos = ByteArrayOutputStream()
         if (imageBitmap.byteCount > 1024 * 1024) {
-            var resizedImageBitmap = getResizedBitmap(imageBitmap, 1024)
+            val resizedImageBitmap = getResizedBitmap(imageBitmap, 1024)
             resizedImageBitmap?.compress(Bitmap.CompressFormat.JPEG, 100, baos)
         } else
             imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
@@ -217,7 +212,7 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
         val data = baos.toByteArray()
 
         if(user.value!!.pic.isEmpty())
-            user.value!!.pic = "images/".plus(UUID.randomUUID().toString());
+            user.value!!.pic = "images/".plus(UUID.randomUUID().toString())
 
         // Upload the file and metadata
         FirebaseStorage.getInstance().reference.child("${user.value?.pic}").putBytes(data, metadata)
@@ -247,7 +242,7 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
                         val storageRef = FirebaseStorage.getInstance().reference
 
                         if (timeslotUser.value!!.pic.isNotEmpty()) {
-                            var picRef = storageRef.child(timeslotUser.value!!.pic)
+                            val picRef = storageRef.child(timeslotUser.value!!.pic)
                             Log.d("getProfileImage", "usrId: ${timeslotUser.value}")
                             picRef.downloadUrl
                             val size: Long = 2 * 1024 * 1024

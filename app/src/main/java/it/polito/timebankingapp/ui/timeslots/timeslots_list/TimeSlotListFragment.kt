@@ -27,7 +27,6 @@ import it.polito.timebankingapp.ui.timeslots.TimeSlotsViewModel
 class TimeSlotListFragment : Fragment(R.layout.fragment_timeslots_list) {
 
     private lateinit var type: String
-    private var columnCount = 1 //credo sia da rimuovere
     private var filterParameter = "Title"
     private var filterKeywords = ""
     private var orderingDirection = false //false == ascending, true = descending
@@ -122,7 +121,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_timeslots_list) {
                     id: Long
                 ) {
                     filterParameter =
-                        resources.getStringArray(R.array.filter_parameters_array)[position];
+                        resources.getStringArray(R.array.filter_parameters_array)[position]
                     adTmp.setFilter(filterKeywords, filterParameter)
                     adTmp.setOrder(filterParameter, orderingDirection)
                 }
@@ -148,8 +147,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_timeslots_list) {
             //image buttons (sorting)
             val ascendingButton = view.findViewById(R.id.ascend_button) as ImageButton
             val descendingButton = view.findViewById(R.id.descend_button) as ImageButton
-            val mRecyclerView = view.findViewById(R.id.time_slot_list) as RecyclerView
-            val layoutManager = mRecyclerView.layoutManager as LinearLayoutManager?
+            val layoutManager = rv.layoutManager as LinearLayoutManager?
 
             ascendingButton.setOnClickListener {
                 orderingDirection = false
@@ -188,10 +186,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_timeslots_list) {
 
                 }
             }
-            addTimeSlotButton.setOnClickListener { _ ->
-/*            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null)
- */
+            addTimeSlotButton.setOnClickListener {
                 findNavController().navigate(R.id.action_nav_skillSpecificTimeSlotList_to_nav_timeSlotEdit)
             }
 

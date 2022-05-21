@@ -37,18 +37,6 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
     private var firstTime =  true
 
 
-
-
-    fun clearBackStack() {
-        val fragmentManager: FragmentManager? = getFragmentManager()
-        if(fragmentManager != null) {
-            while (fragmentManager.backStackEntryCount != 0) {
-                fragmentManager.popBackStack(null, 0)
-            }
-        }
-    }
-
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         super.onViewCreated(view, savedInstanceState)
@@ -105,10 +93,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
 
     }
 
-    override fun onDestroyView(){
-        super.onDestroyView()
-        //(activity as MainActivity?)?.setDrawerLocked();
-    }
+
 
     // [START on_start_check_user]
     override fun onStart() {
