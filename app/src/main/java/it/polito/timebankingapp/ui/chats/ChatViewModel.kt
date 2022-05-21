@@ -1,4 +1,4 @@
-package it.polito.timebankingapp.ui.chat
+package it.polito.timebankingapp.ui.chats
 
 import android.app.Application
 import android.util.Log
@@ -10,7 +10,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.QueryDocumentSnapshot
 import com.google.firebase.ktx.Firebase
-import it.polito.timebankingapp.model.message.ChatMessage
+import it.polito.timebankingapp.model.chat.ChatMessage
 
 class ChatViewModel(application: Application): AndroidViewModel(application) {
     private val _chatMessages = MutableLiveData<List<ChatMessage>>()

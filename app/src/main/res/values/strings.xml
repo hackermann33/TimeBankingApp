@@ -64,11 +64,14 @@
         <item>Duration</item>
     </string-array>
     <string name="filter_and_sort_option">Filter and Sort</string>
-    <string name="chat">Chat</string>
+    <string name="chats">Chats</string>
     <string name="chat_user_icon">User Icon</string>
     <string name="chat_fullname">Name Surname</string>
     <string name="chat_message">Message</string>
     <string name="chat_time">00:00</string>
     <string name="chat_date">01/01/1970</string>
     <string name="chat_button_description">Open a chat with the </string>
+    <string name="chat_list_item_fullname">Nome Cognome</string>
+    <string name="chat_list_item_timestamp">01/01/1970</string>
+    <string name="chat_list_item_message">[Tu]: Messaggio in anteprima</string>
 </resources>

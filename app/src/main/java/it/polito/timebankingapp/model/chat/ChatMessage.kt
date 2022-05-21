@@ -1,6 +1,5 @@
-package it.polito.timebankingapp.model.message
+package it.polito.timebankingapp.model.chat
 
-import android.graphics.Bitmap
 import java.io.Serializable
 
 
