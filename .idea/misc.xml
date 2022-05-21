@@ -43,7 +43,7 @@
         <entry key="app/src/main/res/drawable/ic_baseline_location_on_24.xml" value="0.1925" />
         <entry key="app/src/main/res/drawable/ic_baseline_sort_24.xml" value="0.34" />
         <entry key="app/src/main/res/drawable/ic_outline_chat_24.xml" value="0.277" />
-        <entry key="app/src/main/res/layout-land/nav_header_main.xml" value="0.15608465608465608" />
+        <entry key="app/src/main/res/layout-land/nav_header_main.xml" value="0.5" />
         <entry key="app/src/main/res/layout-land/timeslot_item_layout_2.xml" value="0.14895833333333333" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.22" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.19655797101449277" />
@@ -57,7 +57,7 @@
         <entry key="app/src/main/res/layout/fragment_skills_list.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_time_slot_details.xml" value="0.35597826086956524" />
         <entry key="app/src/main/res/layout/fragment_timeslots_list.xml" value="0.3546875" />
-        <entry key="app/src/main/res/layout/nav_header_main.xml" value="0.3578125" />
+        <entry key="app/src/main/res/layout/nav_header_main.xml" value="0.25" />
         <entry key="app/src/main/res/layout/timeslot_item_layout.xml" value="0.1" />
         <entry key="app/src/main/res/layout/timeslot_item_layout_2.xml" value="0.33" />
         <entry key="app/src/main/res/menu/activity_main_drawer.xml" value="0.20680272108843537" />
