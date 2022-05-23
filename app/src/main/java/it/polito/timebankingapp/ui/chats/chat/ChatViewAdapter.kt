@@ -153,7 +153,7 @@ class ChatViewAdapter(
         mMessageList.add(message)
         displayedList.add(tempMessage)*/
 
-        notifyItemChanged(i)
         sendMessage(message)
+        notifyItemInserted(i)
     }
 }
