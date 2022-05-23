@@ -7,6 +7,7 @@ import android.view.inputmethod.EditorInfo
 import android.widget.Button
 import android.widget.EditText
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.ktx.auth
@@ -27,6 +28,8 @@ class ChatFragment : Fragment(R.layout.fragment_chat_list) {
     private lateinit var textMessage: EditText
     private lateinit var layoutManager: LinearLayoutManager
 
+    private val chatVm : ChatViewModel by activityViewModels()
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         rv = view.findViewById(R.id.recycler_gchat)
@@ -39,17 +42,17 @@ class ChatFragment : Fragment(R.layout.fragment_chat_list) {
         }
 
         //questa lista deve essere ipoteticamente ritornata dal corrispettivo ChatsListItem
-        val tempList = mutableListOf<ChatMessage>()
-
-        //val res =  BitmapFactory.decodeResource(requireContext().resources,R.drawable.default_avatar)
-        tempList.add(ChatMessage("1","user1","Ciao","17/05/2022-11:05"))
-        tempList.add(ChatMessage("2","user2","Ciao, questa è una prova per vedere quanto può essere lungo un messaggio","17/05/2022-11:07"))
-        tempList.add(ChatMessage("3","user1","Arrivederci","17/05/2022-11:09"))
-
-        (activity as MainActivity?)?.supportActionBar?.title = "Nome Cognome"
-
-        adTmp = ChatViewAdapter(tempList)
-        rv.adapter = adTmp
+//        val tempList = mutableListOf<ChatMessage>()
+//
+//        //val res =  BitmapFactory.decodeResource(requireContext().resources,R.drawable.default_avatar)
+//        tempList.add(ChatMessage("1","user1","Ciao","17/05/2022-11:05"))
+//        tempList.add(ChatMessage("2","user2","Ciao, questa è una prova per vedere quanto può essere lungo un messaggio","17/05/2022-11:07"))
+//        tempList.add(ChatMessage("3","user1","Arrivederci","17/05/2022-11:09"))
+//
+//        (activity as MainActivity?)?.supportActionBar?.title = "Nome Cognome"
+//
+//        adTmp = ChatViewAdapter(tempList)
+//        rv.adapter = adTmp
 
         layoutManager = rv.layoutManager as LinearLayoutManager
         textMessage = view.findViewById(R.id.edit_gchat_message)

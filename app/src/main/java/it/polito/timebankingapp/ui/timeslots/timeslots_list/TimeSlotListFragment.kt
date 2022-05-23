@@ -72,6 +72,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_timeslots_list) {
             var adTmp = TimeSlotAdapter(
                 vm.perSkillTimeSlots.value?.toMutableList() ?: mutableListOf(),
                 ::selectTimeSlot,
+                ::requestTimeSlot,
                 "skill_specific"
             )
             rv.adapter = adTmp
@@ -84,7 +85,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_timeslots_list) {
                     voidMessageImage.isVisible = false
                     voidMessageSubText.isVisible = false
 
-                    adTmp = TimeSlotAdapter(it.toMutableList(), ::selectTimeSlot, "skill_specific")
+                    adTmp = TimeSlotAdapter(it.toMutableList(), ::selectTimeSlot, ::requestTimeSlot, "skill_specific")
                     adTmp.data = it.toMutableList()
                     rv.adapter = adTmp
                     adTmp.setFilter(filterKeywords, filterParameter)
@@ -217,7 +218,10 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_timeslots_list) {
 
     }
 
-
+    private fun requestTimeSlot(ts: TimeSlot) {
+        val chatId = vm.requestTimeSlot(userVm.user.value!!, ts)
+        chatVm.selectChat(chatId)
+    }
 
     private fun selectTimeSlot(ts: TimeSlot) {
         vm.setSelectedTimeSlot(ts)

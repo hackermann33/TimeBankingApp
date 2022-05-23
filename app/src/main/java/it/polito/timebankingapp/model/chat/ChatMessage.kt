@@ -9,13 +9,13 @@ import java.util.*
 
 
 data class ChatMessage(
-    var messageId: String = "",
     var userId: String = "",
     var messageText: String = "",
-    var timestamp: String = ""
+    var timestamp: Calendar = Calendar.getInstance()
+//    var timestamp: String = ""
 ) : Serializable {
 
-    override fun toString(): String = "messageId:$messageId, userId: $userId, timestamp: $timestamp, messageText: $messageText"
+    override fun toString(): String = "userId: $userId, timestamp: $timestamp, messageText: $messageText"
 
 
 }

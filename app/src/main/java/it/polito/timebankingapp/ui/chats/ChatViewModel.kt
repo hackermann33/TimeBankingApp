@@ -12,6 +12,7 @@ import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.QueryDocumentSnapshot
 import com.google.firebase.ktx.Firebase
 import it.polito.timebankingapp.model.chat.ChatMessage
+import java.util.*
 
 class ChatViewModel(application: Application): AndroidViewModel(application) {
     private val _chatId = MutableLiveData<String>()
@@ -25,34 +26,43 @@ class ChatViewModel(application: Application): AndroidViewModel(application) {
 
     private lateinit var l: ListenerRegistration
 
-    fun retrieveChatMessages(timeslotId: String, requesterId: String ){
-        l = db.collection("chats").document(timeslotId).collection(requesterId).orderBy("timestamp")
-            .addSnapshotListener {
-                v,e ->
-                if(e == null){
-                    _chatMessages.value = v!!.mapNotNull { d -> d.toChatMessage() }
-                } else
-                    _chatMessages.value = emptyList()
-        }
+//    fun retrieveChatMessages(timeslotId: String, requesterId: String ){
+//        l = db.collection("chats").document(timeslotId).collection(requesterId).orderBy("timestamp")
+//            .addSnapshotListener {
+//                v,e ->
+//                if(e == null){
+//                    _chatMessages.value = v!!.mapNotNull { d -> d.toChatMessage() }
+//                } else
+//                    _chatMessages.value = emptyList()
+//        }
+//    }
+
+
+    fun sendMessage(message: ChatMessage) {
+        db.collection("chats").document(chatId.value!!).collection("messages").add(mapOf(
+            "messageText" to message.messageText,
+            "timestamp" to message.timestamp.time,
+            "userId" to message.userId,
+        )).addOnSuccessListener { Log.d("sendMessage", "success") }.addOnFailureListener { Log.d("sendMessage", "failure")}
     }
 
-    fun addNewMessage(timeslotId: String, requesterId: String, cm : ChatMessage) {
-        //se la chat non esiste ancora, creane una nuova automaticamente
-        val newChatRef = db.collection("chats").document(timeslotId).collection(requesterId).document()
-
-        cm.messageId =newChatRef.id  //imposta id generato da firebase
-        cm.userId = Firebase.auth.currentUser?.uid ?: ""
-
-        newChatRef.set(cm).addOnSuccessListener{
-            Log.d("chat_create","Successfully added")
-        }.addOnFailureListener{
-            Log.d("timeSlots_add", "Error on adding")
-        }
-    }
+//    fun addNewMessage(timeslotId: String, requesterId: String, cm : ChatMessage) {
+//        //se la chat non esiste ancora, creane una nuova automaticamente
+//        val newChatRef = db.collection("chats").document(timeslotId).collection(requesterId).document()
+//
+//        cm.messageId =newChatRef.id  //imposta id generato da firebase
+//        cm.userId = Firebase.auth.currentUser?.uid ?: ""
+//
+//        newChatRef.set(cm).addOnSuccessListener{
+//            Log.d("chat_create","Successfully added")
+//        }.addOnFailureListener{
+//            Log.d("timeSlots_add", "Error on adding")
+//        }
+//    }
 
     private fun QueryDocumentSnapshot.toChatMessage() : ChatMessage? {
         return try {
-            val messageId = get("messageId") as String
+            //val messageId = get("messageId") as String
             val userId = get("userId") as String
             val messageText = get("messageText") as String
             val timestamp = get("timestamp") as Timestamp

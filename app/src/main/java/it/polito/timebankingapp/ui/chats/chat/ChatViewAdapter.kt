@@ -1,5 +1,6 @@
 package it.polito.timebankingapp.ui.chats.chat
 
+import android.telecom.TelecomManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -73,7 +74,7 @@ class ChatViewAdapter(
         var profileImage: ImageView = itemView.findViewById<View>(R.id.image_gchat_profile_other) as ImageView
         var dateText: TextView = itemView.findViewById<View>(R.id.text_gchat_date) as TextView
 
-        fun bind(message: ChatMessage) {
+        fun bind(message: ChatMessage, showDate : Boolean) {
             messageText.text = message.messageText
 
             val cal = message.timestamp

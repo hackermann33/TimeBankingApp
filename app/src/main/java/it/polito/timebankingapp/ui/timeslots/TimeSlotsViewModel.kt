@@ -157,6 +157,27 @@ class TimeSlotsViewModel(application: Application): AndroidViewModel(application
         _perSkillTimeSlots.value = publicTimeSlots.value?.filter{ skill == null || it.relatedSkill == skill }
     }
 
+    fun requestTimeSlot(requester: User, ts: TimeSlot) : String {
+        val myUid = Firebase.auth.uid!!
+        val chatId = ts.id + "_" + myUid
+
+        /* Look for existing chat otherwise create it*/
+        db.collection("rooms").document(myUid).collection("userRooms").document(chatId)
+            .set (mapOf(
+                "fullName" to ts.userId,
+                "status" to STATUS_INTERESTED
+            )).addOnSuccessListener { Log.d("requestTimeSlot", "success") }.addOnFailureListener { Log.d("requestTimeSlot", "failure")}
+
+        db.collection("rooms").document(ts.userId).collection("userRooms").document(chatId)
+            .set (mapOf(
+                "fullName" to requester.fullName,
+                "status" to STATUS_INTERESTED
+            )).addOnSuccessListener {Log.d("requestTimeSlot", "success")}.addOnFailureListener{Log.d("requestTimeSLot", "failure")}
+
+
+        return chatId
+    }
+
 
     /*private val _privateTimeSlot = TimeSlot("test1","test2","test3","test4","test5","test6")
 
@@ -169,6 +190,10 @@ class TimeSlotsViewModel(application: Application): AndroidViewModel(application
     fun saveEdits(newTimeSlot: TimeSlot) {
         _mutableTimeSlot.value = newTimeSlot
     }*/
+
+    companion object {
+        const val STATUS_INTERESTED = 0
+    }
 
 }
 
