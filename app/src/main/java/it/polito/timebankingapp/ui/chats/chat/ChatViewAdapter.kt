@@ -8,10 +8,13 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import it.polito.timebankingapp.R
 import it.polito.timebankingapp.model.chat.ChatMessage
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 class ChatViewAdapter(
-    private var messageList: MutableList<ChatMessage>
+    private var messageList: MutableList<ChatMessage>,
+    private var sendMessage: (ChatMessage) -> Unit
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val VIEW_TYPE_MESSAGE_SENT = 1
@@ -25,17 +28,17 @@ class ChatViewAdapter(
 
         var tempMessage: ChatMessage
 
-        for(i in mMessageList.indices) {
-            tempMessage = mMessageList[i].copy() //Debug necessario
+        /*for(i in mMessageList.indices) {
+             = mMessageList[i].copy() //Debug necessario
             if (i > 0) {
                 val val1 = mMessageList[i - 1].timestamp.split("-")[0]
                 val val2 = mMessageList[i].timestamp.split("-")[0]
-                if (val1 == val2 /*|| val1 == "skip"*/) {
+                if (val1 == val2 *//*|| val1 == "skip"*//*) {
                     tempMessage.timestamp = "skip-".plus(mMessageList[i].timestamp.split("-")[1])
                 }
             }
             displayedList.add(tempMessage)
-        }
+        }*/
     }
 
     private class SentMessageHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -43,11 +46,23 @@ class ChatViewAdapter(
         var timeText: TextView = itemView.findViewById<View>(R.id.text_gchat_timestamp_me) as TextView
         var dateText: TextView = itemView.findViewById<View>(R.id.text_gchat_date) as TextView
 
-        fun bind(message: ChatMessage) {
+        fun bind(message: ChatMessage, putDateText: Boolean) {
             messageText.text = message.messageText
 
-            dateText.text = if(message.timestamp.split("-")[0] == "skip") "" else message.timestamp.split("-")[0]
-            timeText.text = message.timestamp.split("-")[1]
+//            dateText.text = message.timestamp /*if(message.timestamp. =split("-")[0]= "skip") "" else message.timestamp.split("-")[0]*/
+//            timeText.text = message.timestamp /*.split("-")[1]*/
+            val cal = message.timestamp
+            val pattern = "MMM d, yyyy"
+            val sdf  = SimpleDateFormat(pattern, Locale.getDefault())
+            val date = sdf.format(cal.time)
+            val hour = String.format("%02d:%02d", cal[Calendar.HOUR], cal[Calendar.MINUTE] )
+
+            if(putDateText)
+                dateText.text = date
+            else
+                dateText.text = ""
+            /*if(message.timestamp.split("-")[0] == "skip") *//*"" else message.timestamp.split("-")[0]*/
+            timeText.text = hour /*.split("-")[1]*//*Utils.formatDateTime(message.getCreatedAt())*/
         }
     }
 
@@ -61,8 +76,22 @@ class ChatViewAdapter(
         fun bind(message: ChatMessage) {
             messageText.text = message.messageText
 
-            dateText.text = if(message.timestamp.split("-")[0] == "skip") "" else message.timestamp.split("-")[0]
-            timeText.text = message.timestamp.split("-")[1]/*Utils.formatDateTime(message.getCreatedAt())*/
+            val cal = message.timestamp
+            val pattern = "MMMMM d, yyyy"
+            val sdf  = SimpleDateFormat(pattern)
+            val date = sdf.format(cal.time)
+            val hour = String.format("%02d:%02d", cal[Calendar.HOUR], cal[Calendar.MINUTE] )
+
+            if(showDate) {
+                dateText.text =
+                    date /*if(message.timestamp.split("-")[0] == "skip") *//*"" else message.timestamp.split("-")[0]*/
+                timeText.text =
+                    hour /*.split("-")[1]*//*Utils.formatDateTime(message.getCreatedAt())*/
+            }
+            else{
+                dateText.text = ""
+                timeText.text = ""
+            }
             nameText.text = "userId.name" /*message.getSender().getNickname()*/
 
             //profileImage.setImageBitmap(message.profilePic) //da riabilitare più avanti
@@ -88,11 +117,15 @@ class ChatViewAdapter(
 
     //populate data for each inflated ViewHolder
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        val message: ChatMessage = displayedList[position] //text_gchat_date_me
+        var putDateText = false
+        if(position == 0 || messageList[position-1].timestamp[Calendar.DATE] != messageList[position].timestamp[Calendar.DATE] )
+          putDateText = true
+
+        val message: ChatMessage = messageList[position] //text_gchat_date_me
 
         when (holder.itemViewType) {
-            VIEW_TYPE_MESSAGE_SENT -> (holder as SentMessageHolder).bind(message)
-            VIEW_TYPE_MESSAGE_RECEIVED -> (holder as ReceivedMessageHolder).bind(message)
+            VIEW_TYPE_MESSAGE_SENT -> (holder as SentMessageHolder).bind(message, putDateText)
+            VIEW_TYPE_MESSAGE_RECEIVED -> (holder as ReceivedMessageHolder).bind(message, putDateText)
         }
     }
 
@@ -111,14 +144,16 @@ class ChatViewAdapter(
     fun addMessage(message: ChatMessage) { //si assegna skip a display data e si aggiunge alla lista classica con il timestamp normale
         val i = mMessageList.size
         val tempMessage = message.copy()
-        if(i > 0) {
+        /*if(i > 0) {
             val val1 = mMessageList[i - 1].timestamp.split("-")[0] //Da debuggare
             val val2 = message.timestamp.split("-")[0]
             if (val1 == val2)
                 tempMessage.timestamp = "skip-".plus(message.timestamp.split("-")[1])
         }
         mMessageList.add(message)
-        displayedList.add(tempMessage)
+        displayedList.add(tempMessage)*/
+
         notifyItemChanged(i)
+        sendMessage(message)
     }
 }

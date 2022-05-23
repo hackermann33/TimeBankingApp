@@ -23,16 +23,6 @@ class ChatsListFragment : Fragment(R.layout.fragment_chats_list_list) {
         val tempMessagesList = mutableListOf<ChatMessage>()
 
         //val res =  BitmapFactory.decodeResource(requireContext().resources,R.drawable.default_avatar)
-        tempMessagesList.add(ChatMessage("1", "user1", "Ciao", "17/05/2022-11:05"))
-        tempMessagesList.add(
-            ChatMessage(
-                "2"         ,
-                "user2",
-                "Ciao, questa è una prova per vedere quanto può essere lungo un messaggio",
-                "17/05/2022-11:07"
-            )
-        )
-        tempMessagesList.add(ChatMessage("3", "user1", "Arrivederci", "17/05/2022-11:09"))
 
         //chatsList
         val chatsListItem = ChatsListItem("timeslotID", "requesterId", tempMessagesList)

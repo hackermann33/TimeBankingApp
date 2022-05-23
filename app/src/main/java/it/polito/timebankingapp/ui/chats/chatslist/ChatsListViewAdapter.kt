@@ -22,11 +22,11 @@ class ChatsListViewAdapter(
         var numNotifiesText: TextView = itemView.findViewById(R.id.chat_list_item_notifies_number)
 
         fun bind(cli: ChatsListItem, openChatAction: (v: View) -> Unit) {
-            fullNameText.text = "Nome Cognome" //necessario riferimento usr o timeslotusr
+            /*fullNameText.text = "Nome Cognome" //necessario riferimento usr o timeslotusr
             messageText.text = cli.chatMessages[cli.chatMessages.size-1].messageText
             timeText.text = cli.chatMessages[cli.chatMessages.size-1].timestamp.split("-")[1] //se è di oggi mostra l'orario, altrimenti la data
             numNotifiesText.text =  "(1)" //logica conteggio non letti da implementare in futuro
-            this.itemView.setOnClickListener(openChatAction)
+            this.itemView.setOnClickListener(openChatAction)*/
         }
     }
 

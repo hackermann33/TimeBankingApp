@@ -12,6 +12,7 @@ import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.QueryDocumentSnapshot
 import com.google.firebase.ktx.Firebase
 import it.polito.timebankingapp.model.timeslot.TimeSlot
+import it.polito.timebankingapp.model.user.User
 
 
 class TimeSlotsViewModel(application: Application): AndroidViewModel(application) {
@@ -170,6 +171,10 @@ class TimeSlotsViewModel(application: Application): AndroidViewModel(application
     }*/
 
 }
+
+
+
+
 
 private fun QueryDocumentSnapshot.toTimeSlot() : TimeSlot? {
     return try {

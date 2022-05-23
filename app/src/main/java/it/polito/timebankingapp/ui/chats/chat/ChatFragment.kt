@@ -9,9 +9,12 @@ import android.widget.EditText
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import it.polito.timebankingapp.MainActivity
 import it.polito.timebankingapp.R
 import it.polito.timebankingapp.model.chat.ChatMessage
+import it.polito.timebankingapp.ui.chats.ChatViewModel
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -29,6 +32,11 @@ class ChatFragment : Fragment(R.layout.fragment_chat_list) {
         rv = view.findViewById(R.id.recycler_gchat)
         rv.layoutManager = LinearLayoutManager(context)
 
+        val tempList = mutableListOf<ChatMessage>()
+        chatVm.chatMessages.observe(viewLifecycleOwner) {
+            adTmp = ChatViewAdapter(it.toMutableList(), ::sendMessage)
+            rv.adapter = adTmp
+        }
 
         //questa lista deve essere ipoteticamente ritornata dal corrispettivo ChatsListItem
         val tempList = mutableListOf<ChatMessage>()
@@ -48,9 +56,20 @@ class ChatFragment : Fragment(R.layout.fragment_chat_list) {
         val sendButton = view.findViewById<Button>(R.id.button_gchat_send)
 
         sendButton.setOnClickListener {
-            addMessage()
+            if(textMessage.text.isNotEmpty()) {
+                adTmp.addMessage(
+                    ChatMessage(
+                        Firebase.auth.currentUser!!.uid,
+                        textMessage.text.toString(),
+                        Calendar.getInstance()
+                    )
+                )
+                textMessage.text.clear()
+            }
         }
 
+    }
+        /*
         textMessage.setOnEditorActionListener { v, actionId, event ->
             var handled = false
             if (actionId == EditorInfo.IME_ACTION_SEND) {
@@ -58,20 +77,25 @@ class ChatFragment : Fragment(R.layout.fragment_chat_list) {
                 handled = true
             }
             handled
-        }
-    }
+        }*/
 
-    @SuppressLint("SimpleDateFormat")
-    private fun addMessage(){
-        val dateCalendar = GregorianCalendar().time
-        val dateFormatter = SimpleDateFormat("dd/MM/yyyy-HH:mm")
-        val timestamp = dateFormatter.format(dateCalendar)
+//    @SuppressLint("SimpleDateFormat")
+//    private fun addMessage(){
+//        val dateCalendar = GregorianCalendar().time
+//        val dateFormatter = SimpleDateFormat("dd/MM/yyyy-HH:mm")
+//        val timestamp = dateFormatter.format(dateCalendar)
+//
+//        if (textMessage.length() > 0) {
+//            //temporary method
+//            adTmp.addMessage(ChatMessage( "user2", textMessage.text.toString(), Calendar.getInstance()))
+//            textMessage.text.clear();
+//            layoutManager!!.scrollToPosition(adTmp.itemCount - 1);
+//        }
+//    }
 
-        if (textMessage.length() > 0) {
-            //temporary method
-            adTmp.addMessage(ChatMessage("..", "user2", textMessage.text.toString(), timestamp))
-            textMessage.text.clear();
-            layoutManager!!.scrollToPosition(adTmp.itemCount - 1);
-        }
+    fun sendMessage(chatMessage: ChatMessage) {
+        chatVm.sendMessage(chatMessage)
     }
 }
+
+

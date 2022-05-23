@@ -18,6 +18,8 @@ import com.google.android.material.snackbar.Snackbar
 import it.polito.timebankingapp.MainActivity
 import it.polito.timebankingapp.R
 import it.polito.timebankingapp.model.timeslot.TimeSlot
+import it.polito.timebankingapp.ui.chats.ChatViewModel
+import it.polito.timebankingapp.ui.profile.ProfileViewModel
 import it.polito.timebankingapp.ui.timeslots.TimeSlotsViewModel
 
 
@@ -33,6 +35,9 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_timeslots_list) {
     private var openFilterSortMenu = false
 
     val vm : TimeSlotsViewModel by activityViewModels()
+    val userVm: ProfileViewModel by activityViewModels()
+    val chatVm: ChatViewModel by activityViewModels()
+
     private lateinit var rv:RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -166,7 +171,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_timeslots_list) {
         }
         else { //personal
 
-            var adTmp = TimeSlotAdapter(vm.personalTimeSlots.value?.toMutableList() ?: mutableListOf(), ::selectTimeSlot, "personal")
+            var adTmp = TimeSlotAdapter(vm.personalTimeSlots.value?.toMutableList() ?: mutableListOf(), ::selectTimeSlot, null ,"personal")
             rv.adapter = adTmp
 
             vm.personalTimeSlots.observe(viewLifecycleOwner){
@@ -175,7 +180,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_timeslots_list) {
                     voidMessageImage.isVisible = false
                     voidMessageSubText.isVisible = false
 
-                    adTmp = TimeSlotAdapter(it.toMutableList(), ::selectTimeSlot, "personal")
+                    adTmp = TimeSlotAdapter(it.toMutableList(), ::selectTimeSlot, null, "personal")
                     adTmp.data = it.toMutableList()
                     rv.adapter = adTmp
                 }
