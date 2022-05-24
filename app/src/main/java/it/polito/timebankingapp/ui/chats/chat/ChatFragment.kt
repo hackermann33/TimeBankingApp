@@ -1,24 +1,21 @@
 package it.polito.timebankingapp.ui.chats.chat
 
-import android.annotation.SuppressLint
+import android.os.Build
 import android.os.Bundle
 import android.view.View
-import android.view.inputmethod.EditorInfo
+import android.view.View.OnLayoutChangeListener
 import android.widget.Button
 import android.widget.EditText
 import android.widget.RatingBar
-import androidx.core.view.size
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-import it.polito.timebankingapp.MainActivity
 import it.polito.timebankingapp.R
 import it.polito.timebankingapp.model.chat.ChatMessage
 import it.polito.timebankingapp.ui.chats.ChatViewModel
-import java.text.SimpleDateFormat
 import java.util.*
 
 
@@ -43,6 +40,18 @@ class ChatFragment : Fragment(R.layout.fragment_chat_list) {
             rv.adapter = adTmp
             rv.scrollToPosition(adTmp.itemCount-1)
         }
+
+
+            rv.addOnLayoutChangeListener(OnLayoutChangeListener { v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
+                if (bottom < oldBottom) {
+                    rv.postDelayed(Runnable {
+                        rv.smoothScrollToPosition(
+                            (rv.adapter?.itemCount ?: 1) - 1
+                        )
+                    }, 100)
+                }
+            })
+
 
         //questa lista deve essere ipoteticamente ritornata dal corrispettivo ChatsListItem
 //        val tempList = mutableListOf<ChatMessage>()
