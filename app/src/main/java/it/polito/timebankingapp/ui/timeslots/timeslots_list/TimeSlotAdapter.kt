@@ -11,15 +11,14 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import it.polito.timebankingapp.R
 import it.polito.timebankingapp.model.timeslot.TimeSlot
-import it.polito.timebankingapp.model.user.User
 import ru.nikartm.support.ImageBadgeView
-import kotlin.reflect.KFunction1
 
 
 class TimeSlotAdapter(
     var data: MutableList<TimeSlot>,
     val selectTimeSlot: (t: TimeSlot) ->Unit,
     val requestTimeSlot: ((t: TimeSlot) -> Unit?)?,
+    val showRequests: ((t: TimeSlot) -> Unit?)?,
     val type: String
 ) : RecyclerView.Adapter<TimeSlotAdapter.ItemViewHolder>() {
 
@@ -38,7 +37,7 @@ class TimeSlotAdapter(
         private lateinit var chatButton: ImageBadgeView
 
 
-        fun bind(ts: TimeSlot, editAction: (v: View) -> Unit, detailAction: (v: View) -> Unit, requestAction: (v: View) -> Unit) {
+        fun bind(ts: TimeSlot, editAction: (v: View) -> Unit, detailAction: (v: View) -> Unit, requestAction: (v: View) -> Unit, showRequestsAction: (v: View) -> Unit) {
             title.text = ts.title
             location.text = ts.location
             start.text = ts.date.plus(" ").plus(ts.time)
@@ -48,6 +47,7 @@ class TimeSlotAdapter(
 
             if(type == "personal") {
                 editButton.setOnClickListener(editAction)
+                chatButton.setOnClickListener(showRequestsAction)
             }
             else {
                 editButton.visibility = View.GONE
@@ -109,6 +109,9 @@ class TimeSlotAdapter(
             
             requestTimeSlot!!(item)
             Navigation.findNavController(it).navigate(R.id.action_nav_timeSlotList_to_nav_chat)
+        }, showRequestsAction = {
+            showRequests!!(item)
+            Navigation.findNavController(it).navigate(R.id.action_nav_timeSlotList_to_nav_chatsList)
         })
 
 

@@ -171,13 +171,13 @@ class TimeSlotsViewModel(application: Application): AndroidViewModel(application
         db.collection("rooms").document(ts.userId).collection("userRooms").document(chatId)
             .set (mapOf(
                 "fullName" to requester.fullName,
+                "profilepic" to requester.pic,
                 "status" to STATUS_INTERESTED
             )).addOnSuccessListener {Log.d("requestTimeSlot", "success")}.addOnFailureListener{Log.d("requestTimeSLot", "failure")}
 
 
         return chatId
     }
-
 
     /*private val _privateTimeSlot = TimeSlot("test1","test2","test3","test4","test5","test6")
 

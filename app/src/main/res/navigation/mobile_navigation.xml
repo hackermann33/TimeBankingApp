@@ -84,6 +84,9 @@
         <action
             android:id="@+id/action_nav_timeSlotList_to_nav_chat"
             app:destination="@id/nav_chat" />
+        <action
+            android:id="@+id/action_nav_timeSlotList_to_nav_chatsList"
+            app:destination="@id/nav_chatsList" />
     </fragment>
     <fragment
         android:id="@+id/nav_chat"

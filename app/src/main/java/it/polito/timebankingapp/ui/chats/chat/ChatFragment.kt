@@ -6,6 +6,7 @@ import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.Button
 import android.widget.EditText
+import android.widget.RatingBar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -53,6 +54,9 @@ class ChatFragment : Fragment(R.layout.fragment_chat_list) {
 //
 //        adTmp = ChatViewAdapter(tempList)
 //        rv.adapter = adTmp
+
+        val ratingBar = view.findViewById<RatingBar>(R.id.ratingBar)
+        ratingBar.rating = 4.5F
 
         layoutManager = rv.layoutManager as LinearLayoutManager
         textMessage = view.findViewById(R.id.edit_gchat_message)

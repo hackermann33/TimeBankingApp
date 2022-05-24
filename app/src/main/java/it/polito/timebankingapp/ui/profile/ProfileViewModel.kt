@@ -38,6 +38,8 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
     val timeslotUserImage: LiveData<Bitmap?> = _timeslotUserImage
 
 
+
+
     /* maybe this, can be removed*/
     private val _fireBaseUser = MutableLiveData<FirebaseUser?>(Firebase.auth.currentUser)
     val fireBaseUser: LiveData<FirebaseUser?> = _fireBaseUser

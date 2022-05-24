@@ -7,6 +7,8 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import it.polito.timebankingapp.R
 import it.polito.timebankingapp.model.chat.ChatMessage
 import java.text.SimpleDateFormat
@@ -135,7 +137,7 @@ class ChatViewAdapter(
     // Determines the appropriate ViewType according to the sender of the message.
     override fun getItemViewType(position: Int): Int {
         val message: ChatMessage = mMessageList[position]
-        return if (message.userId != "user1" /*message.getSender().getUserId().equals(SendBird.getCurrentUser().getUserId())*/) {
+        return if (message.userId == Firebase.auth.uid /*message.getSender().getUserId().equals(SendBird.getCurrentUser().getUserId())*/) {
             VIEW_TYPE_MESSAGE_SENT // If the current user is the sender of the message
         } else {
             VIEW_TYPE_MESSAGE_RECEIVED // If some other user sent the message

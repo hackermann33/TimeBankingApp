@@ -34,9 +34,9 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_timeslots_list) {
     private var orderingDirection = false //false == ascending, true = descending
     private var openFilterSortMenu = false
 
-    val vm : TimeSlotsViewModel by activityViewModels()
-    val userVm: ProfileViewModel by activityViewModels()
-    val chatVm: ChatViewModel by activityViewModels()
+    private val vm : TimeSlotsViewModel by activityViewModels()
+    private val userVm: ProfileViewModel by activityViewModels()
+    private val chatVm: ChatViewModel by activityViewModels()
 
     private lateinit var rv:RecyclerView
 
@@ -73,6 +73,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_timeslots_list) {
                 vm.perSkillTimeSlots.value?.toMutableList() ?: mutableListOf(),
                 ::selectTimeSlot,
                 ::requestTimeSlot,
+                ::showRequests,
                 "skill_specific"
             )
             rv.adapter = adTmp
@@ -85,7 +86,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_timeslots_list) {
                     voidMessageImage.isVisible = false
                     voidMessageSubText.isVisible = false
 
-                    adTmp = TimeSlotAdapter(it.toMutableList(), ::selectTimeSlot, ::requestTimeSlot, "skill_specific")
+                    adTmp = TimeSlotAdapter(it.toMutableList(), ::selectTimeSlot, ::requestTimeSlot, null,"skill_specific")
                     adTmp.data = it.toMutableList()
                     rv.adapter = adTmp
                     adTmp.setFilter(filterKeywords, filterParameter)
@@ -172,7 +173,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_timeslots_list) {
         }
         else { //personal
 
-            var adTmp = TimeSlotAdapter(vm.personalTimeSlots.value?.toMutableList() ?: mutableListOf(), ::selectTimeSlot, null ,"personal")
+            var adTmp = TimeSlotAdapter(vm.personalTimeSlots.value?.toMutableList() ?: mutableListOf(), ::selectTimeSlot, null, ::showRequests,"personal")
             rv.adapter = adTmp
 
             vm.personalTimeSlots.observe(viewLifecycleOwner){
@@ -181,7 +182,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_timeslots_list) {
                     voidMessageImage.isVisible = false
                     voidMessageSubText.isVisible = false
 
-                    adTmp = TimeSlotAdapter(it.toMutableList(), ::selectTimeSlot, null, "personal")
+                    adTmp = TimeSlotAdapter(it.toMutableList(), ::selectTimeSlot, null, ::showRequests,"personal")
                     adTmp.data = it.toMutableList()
                     rv.adapter = adTmp
                 }
@@ -221,6 +222,10 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_timeslots_list) {
     private fun requestTimeSlot(ts: TimeSlot) {
         val chatId = vm.requestTimeSlot(userVm.user.value!!, ts)
         chatVm.selectChat(chatId)
+    }
+
+    private fun showRequests(ts: TimeSlot){
+        chatVm.showRequests(ts.id)
     }
 
     private fun selectTimeSlot(ts: TimeSlot) {

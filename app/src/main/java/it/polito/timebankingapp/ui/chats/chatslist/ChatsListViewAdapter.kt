@@ -6,27 +6,33 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.navigation.Navigation
+import de.hdodenhof.circleimageview.CircleImageView
 import it.polito.timebankingapp.R
 import it.polito.timebankingapp.model.chat.ChatsListItem
 
 class ChatsListViewAdapter(
-    data: List<ChatsListItem>
+    private var data: List<ChatsListItem>,
+    private var selectChat: (chatId: String) -> Unit?
 ) : RecyclerView.Adapter<ChatsListViewAdapter.ItemViewHolder>() {
 
     private var displayData = data.toMutableList()
 
     class ItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        var fullNameText: TextView = itemView.findViewById(R.id.chat_list_item_fullname)
+        private var fullNameText: TextView = itemView.findViewById(R.id.chat_list_item_fullname)
         var messageText: TextView = itemView.findViewById(R.id.chat_list_item_message)
         var timeText: TextView = itemView.findViewById(R.id.chat_list_item_timestamp)
         var numNotifiesText: TextView = itemView.findViewById(R.id.chat_list_item_notifies_number)
+        private val imagePic: CircleImageView = itemView.findViewById(R.id.chat_list_item_profile_pic)
 
         fun bind(cli: ChatsListItem, openChatAction: (v: View) -> Unit) {
-            /*fullNameText.text = "Nome Cognome" //necessario riferimento usr o timeslotusr
-            messageText.text = cli.chatMessages[cli.chatMessages.size-1].messageText
-            timeText.text = cli.chatMessages[cli.chatMessages.size-1].timestamp.split("-")[1] //se è di oggi mostra l'orario, altrimenti la data
-            numNotifiesText.text =  "(1)" //logica conteggio non letti da implementare in futuro
-            this.itemView.setOnClickListener(openChatAction)*/
+//            fullNameText.text = "Nome Cognome" //necessario riferimento usr o timeslotusr
+//            messageText.text = cli.chatMessages[cli.chatMessages.size-1].messageText
+//            timeText.text = cli.chatMessages[cli.chatMessages.size-1].timestamp.split("-")[1] //se è di oggi mostra l'orario, altrimenti la data
+//            numNotifiesText.text =  "(1)" //logica conteggio non letti da implementare in futuro
+            fullNameText.text = cli.userName
+            // sarebbe da mettere il last message della chat dentro il documento in userRooms (per l'anteprima)
+            // e anche le altre info riguardo a tempo e conteggio non letti e foto profilo altro utente
+            this.itemView.setOnClickListener(openChatAction)
         }
     }
 
@@ -46,15 +52,18 @@ class ChatsListViewAdapter(
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
 
         val item = displayData[position]
-        holder.bind(item, openChatAction = {
+        holder.bind(item, openChatAction =
+        {
             val destination = R.id.action_nav_chatsList_to_nav_chat
-
+            selectChat(item.chatId)
             Navigation.findNavController(it).navigate(
                 destination//,
                 //bundleOf("point_of_origin" to type, "userId" to item.userId)
             )
-        });
+        }
+        );
     }
+
 
     //how many items?
     override fun getItemCount(): Int = displayData.size

@@ -77,7 +77,6 @@ class EditProfileFragment : Fragment(R.layout.fragment_editprofile) {
         usr = arguments?.getSerializable("profile") as User? ?: User()
 
 
-
         profilePicCircleView = view.findViewById(R.id.profile_pic)
 
 
