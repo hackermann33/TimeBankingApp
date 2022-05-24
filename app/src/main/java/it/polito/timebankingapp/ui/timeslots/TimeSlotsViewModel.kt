@@ -17,8 +17,8 @@ import it.polito.timebankingapp.model.user.User
 
 class TimeSlotsViewModel(application: Application): AndroidViewModel(application) {
 
-    private val _personalTimeSlots = MutableLiveData<List<TimeSlot>>()
-    val personalTimeSlots: LiveData<List<TimeSlot>> = _personalTimeSlots
+    private val _timeSlots = MutableLiveData<List<TimeSlot>>()
+    val timeSlots: LiveData<List<TimeSlot>> = _timeSlots
 
     /*  publicTimeSlots is excluding that one of the current user! */
     private val _publicTimeSlots = MutableLiveData<List<TimeSlot>>()
@@ -33,6 +33,9 @@ class TimeSlotsViewModel(application: Application): AndroidViewModel(application
     private val _selectedTimeSlot =  MutableLiveData<TimeSlot>()
     val selectedTimeSlot: LiveData<TimeSlot> = _selectedTimeSlot
 
+    lateinit var type: String
+    private set
+
 
     private lateinit var l:ListenerRegistration
 
@@ -44,13 +47,13 @@ class TimeSlotsViewModel(application: Application): AndroidViewModel(application
     private lateinit var l3:ListenerRegistration
 
 
-    private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
+    private var db: FirebaseFirestore = FirebaseFirestore.getInstance()
 
     init {
         Firebase.auth.addAuthStateListener {
             if (it.currentUser != null) {
-                updatePersonalTimeSlots()
-                updatePublicTimeSlots()
+                /*updatePersonalTimeSlots()
+                updateSkillSpecificTimeSlots(skill)*/
                 retrieveSkillList()
             }
         }
@@ -68,8 +71,8 @@ class TimeSlotsViewModel(application: Application): AndroidViewModel(application
     val timeSlots: LiveData<List<TimeSlot>> = repo.timeSlots()
     */
 
-    fun updatePublicTimeSlots() {
-        l2 = db.collection("timeSlots").whereNotEqualTo("userId", Firebase.auth.uid).addSnapshotListener{v,e ->
+    fun updateSkillSpecificTimeSlots() {
+        l = db.collection("timeSlots").whereNotEqualTo("userId", Firebase.auth.uid).whereEqualTo("relatedSkill", selectedSkill.value).addSnapshotListener{v,e ->
             if(e == null){
                 _publicTimeSlots.value = v!!.mapNotNull { d -> d.toTimeSlot() }
             } else _publicTimeSlots.value = emptyList()
@@ -80,14 +83,16 @@ class TimeSlotsViewModel(application: Application): AndroidViewModel(application
     fun updatePersonalTimeSlots() {
         l = db.collection("timeSlots").whereEqualTo("userId", Firebase.auth.uid).addSnapshotListener{v,e ->
             if(e == null){
-                _personalTimeSlots.value = v!!.mapNotNull { d -> d.toTimeSlot() }
-            } else _personalTimeSlots.value = emptyList()
+                _timeSlots.value = v!!.mapNotNull { d -> d.toTimeSlot() }
+            } else _timeSlots.value = emptyList()
         }
     }
 
+
+    /* Move to skillsListViewModel */
     fun retrieveSkillList(){
         //val list = mutableListOf<String>()
-        l3 = db.collection("skills").addSnapshotListener {
+        l = db.collection("skills").addSnapshotListener {
             v,e ->
             if(e == null){
                 _skillList.value = v!!.mapNotNull { d -> d.id}
@@ -144,19 +149,20 @@ class TimeSlotsViewModel(application: Application): AndroidViewModel(application
     override fun onCleared() {
         super.onCleared()
         l.remove()
-        l2.remove()
-        l3.remove()
+        super.onCleared()
     }
 
     fun setSelectedTimeSlot(ts: TimeSlot){
         _selectedTimeSlot.value = ts
     }
 
+    //This should not be used anymore, use updateSkillSpecificTimeSlots
     fun setFilteringSkill(skill: String?) {
         _selectedSkill.postValue(skill)
-        _perSkillTimeSlots.value = publicTimeSlots.value?.filter{ skill == null || it.relatedSkill == skill }
+       // _perSkillTimeSlots.value = publicTimeSlots.value?.filter{ skill == null || it.relatedSkill == skill }
     }
 
+    /* This is used to contact the offerer through chat */
     fun requestTimeSlot(requester: User, ts: TimeSlot) : String {
         val myUid = Firebase.auth.uid!!
         val chatId = ts.id + "_" + myUid
@@ -175,8 +181,28 @@ class TimeSlotsViewModel(application: Application): AndroidViewModel(application
                 "status" to STATUS_INTERESTED
             )).addOnSuccessListener {Log.d("requestTimeSlot", "success")}.addOnFailureListener{Log.d("requestTimeSLot", "failure")}
 
-
         return chatId
+    }
+
+    fun setType(type: String) {
+        this.type = type
+
+        when(type) {
+            "personal" -> updatePersonalTimeSlots()
+            "skill" ->{
+                updateSkillSpecificTimeSlots()
+            }
+            "interesting" -> updateInterestingTimeSlots()
+
+        }
+    }
+
+
+    private fun updateInterestingTimeSlots() {
+        val myUid = Firebase.auth.uid!!
+        db.collection("rooms").document(myUid).collection("userRooms").whereEqualTo("requesterId", Firebase.auth.uid)
+            .whereEqualTo("status", STATUS_INTERESTED)
+
     }
 
     /*private val _privateTimeSlot = TimeSlot("test1","test2","test3","test4","test5","test6")
@@ -196,8 +222,6 @@ class TimeSlotsViewModel(application: Application): AndroidViewModel(application
     }
 
 }
-
-
 
 
 

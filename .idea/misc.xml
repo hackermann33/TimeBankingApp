@@ -66,6 +66,7 @@
         <entry key="app/src/main/res/layout/timeslot_item_layout.xml" value="0.1" />
         <entry key="app/src/main/res/layout/timeslot_item_layout_2.xml" value="0.33" />
         <entry key="app/src/main/res/menu/activity_main_drawer.xml" value="0.20680272108843537" />
+        <entry key="app/src/main/res/menu/menu_filter_and_sort.xml" value="0.3578125" />
         <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.34" />
         <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.34" />
       </map>
