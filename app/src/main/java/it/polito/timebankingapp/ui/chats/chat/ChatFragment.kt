@@ -38,7 +38,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat_list) {
         chatVm.chatMessages.observe(viewLifecycleOwner) {
             adTmp = ChatViewAdapter(it.toMutableList(), ::sendMessage)
             rv.adapter = adTmp
-            rv.scrollToPosition(adTmp.itemCount-1)
+            rv.smoothScrollToPosition(adTmp.itemCount-1)
         }
 
 
