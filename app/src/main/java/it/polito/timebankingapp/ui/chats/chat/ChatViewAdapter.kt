@@ -48,9 +48,10 @@ class ChatViewAdapter(
     private class SentMessageHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var messageText: TextView = itemView.findViewById<View>(R.id.text_gchat_message_me) as TextView
         var timeText: TextView = itemView.findViewById<View>(R.id.text_gchat_timestamp_me) as TextView
+
         var dateText: TextView = itemView.findViewById<View>(R.id.text_gchat_date) as TextView
 
-        fun bind(message: ChatMessage, putDateText: Boolean) {
+        fun bind(message: ChatMessage, showDate: Boolean) {
             messageText.text = message.messageText
 
 //            dateText.text = message.timestamp /*if(message.timestamp. =split("-")[0]= "skip") "" else message.timestamp.split("-")[0]*/
@@ -61,12 +62,13 @@ class ChatViewAdapter(
             val date = sdf.format(cal.time)
             val hour = String.format("%02d:%02d", cal[Calendar.HOUR], cal[Calendar.MINUTE] )
 
-            if(putDateText)
+            if(showDate)
                 dateText.text = date
             else
-                dateText.text = ""
+                dateText.visibility = View.GONE
             /*if(message.timestamp.split("-")[0] == "skip") *//*"" else message.timestamp.split("-")[0]*/
             timeText.text = hour /*.split("-")[1]*//*Utils.formatDateTime(message.getCreatedAt())*/
+
         }
     }
 
@@ -86,17 +88,13 @@ class ChatViewAdapter(
             val date = sdf.format(cal.time)
             val hour = String.format("%02d:%02d", cal[Calendar.HOUR], cal[Calendar.MINUTE] )
 
-            if(showDate) {
-                dateText.text =
-                    date /*if(message.timestamp.split("-")[0] == "skip") *//*"" else message.timestamp.split("-")[0]*/
-                timeText.text =
-                    hour /*.split("-")[1]*//*Utils.formatDateTime(message.getCreatedAt())*/
-            }
-            else{
-                dateText.text = ""
-                timeText.text = ""
-            }
-            nameText.text = "userId.name" /*message.getSender().getNickname()*/
+            if(showDate)
+                dateText.text = date
+            else
+                dateText.visibility = View.GONE
+
+            timeText.text = hour
+            nameText.text = "userId.name"
 
             //profileImage.setImageBitmap(message.profilePic) //da riabilitare più avanti
 
