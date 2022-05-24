@@ -7,6 +7,7 @@ import android.view.inputmethod.EditorInfo
 import android.widget.Button
 import android.widget.EditText
 import android.widget.RatingBar
+import androidx.core.view.size
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -40,6 +41,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat_list) {
         chatVm.chatMessages.observe(viewLifecycleOwner) {
             adTmp = ChatViewAdapter(it.toMutableList(), ::sendMessage)
             rv.adapter = adTmp
+            rv.scrollToPosition(adTmp.itemCount-1)
         }
 
         //questa lista deve essere ipoteticamente ritornata dal corrispettivo ChatsListItem
@@ -59,19 +61,27 @@ class ChatFragment : Fragment(R.layout.fragment_chat_list) {
         ratingBar.rating = 4.5F
 
         layoutManager = rv.layoutManager as LinearLayoutManager
+        layoutManager.stackFromEnd = true
         textMessage = view.findViewById(R.id.edit_gchat_message)
         val sendButton = view.findViewById<Button>(R.id.button_gchat_send)
 
         sendButton.setOnClickListener {
             if(textMessage.text.isNotEmpty()) {
-                adTmp.addMessage(
+//                adTmp.addMessage(
+//                    ChatMessage(
+//                        Firebase.auth.currentUser!!.uid,
+//                        textMessage.text.toString(),
+//                        Calendar.getInstance()
+//                    )
+//                )
+                sendMessage(
                     ChatMessage(
-                        Firebase.auth.currentUser!!.uid,
-                        textMessage.text.toString(),
-                        Calendar.getInstance()
-                    )
-                )
+                    Firebase.auth.currentUser!!.uid,
+                    textMessage.text.toString(),
+                    Calendar.getInstance()
+                ))
                 textMessage.text.clear()
+
             }
         }
 

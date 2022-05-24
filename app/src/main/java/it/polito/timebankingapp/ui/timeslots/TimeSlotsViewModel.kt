@@ -171,7 +171,7 @@ class TimeSlotsViewModel(application: Application): AndroidViewModel(application
         db.collection("rooms").document(ts.userId).collection("userRooms").document(chatId)
             .set (mapOf(
                 "fullName" to requester.fullName,
-                "profilepic" to requester.pic,
+                "profilePic" to requester.pic,
                 "status" to STATUS_INTERESTED
             )).addOnSuccessListener {Log.d("requestTimeSlot", "success")}.addOnFailureListener{Log.d("requestTimeSLot", "failure")}
 

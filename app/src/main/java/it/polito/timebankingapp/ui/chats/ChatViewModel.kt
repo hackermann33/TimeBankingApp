@@ -58,7 +58,10 @@ class ChatViewModel(application: Application): AndroidViewModel(application) {
             "messageText" to message.messageText,
             "timestamp" to message.timestamp.time,
             "userId" to message.userId,
-        )).addOnSuccessListener { Log.d("sendMessage", "success") }.addOnFailureListener { Log.d("sendMessage", "failure")}
+        )).addOnSuccessListener {
+            Log.d("sendMessage", "success")
+
+        }.addOnFailureListener { Log.d("sendMessage", "failure")}
     }
 
 //    fun addNewMessage(timeslotId: String, requesterId: String, cm : ChatMessage) {

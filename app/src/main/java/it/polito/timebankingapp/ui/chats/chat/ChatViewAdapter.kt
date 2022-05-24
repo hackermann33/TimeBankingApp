@@ -1,6 +1,7 @@
 package it.polito.timebankingapp.ui.chats.chat
 
 import android.telecom.TelecomManager
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -145,7 +146,7 @@ class ChatViewAdapter(
     }
 
     fun addMessage(message: ChatMessage) { //si assegna skip a display data e si aggiunge alla lista classica con il timestamp normale
-        val i = mMessageList.size
+        val i = messageList.size
         val tempMessage = message.copy()
         /*if(i > 0) {
             val val1 = mMessageList[i - 1].timestamp.split("-")[0] //Da debuggare
@@ -155,8 +156,8 @@ class ChatViewAdapter(
         }
         mMessageList.add(message)
         displayedList.add(tempMessage)*/
-
+        Log.d("sizeOfMsgList", i.toString())
         sendMessage(message)
-        notifyItemInserted(i)
+//        notifyItemInserted(i)
     }
 }
