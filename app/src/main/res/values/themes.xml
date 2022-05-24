@@ -52,4 +52,9 @@
     <style name="Theme.TimeBankingApp.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="Theme.TimeBankingApp.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="RatingBar" parent="Theme.AppCompat">
+        <item name="colorControlNormal">#A5A5A5</item>
+        <item name="colorControlActivated">#FFD600</item>
+    </style>
 </resources>

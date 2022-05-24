@@ -42,6 +42,7 @@
                     android:layout_marginStart="16dp"
                     android:contentDescription="Rating Bar"
                     android:numStars="5"
+                    android:theme="@style/RatingBar"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/textView5"
                     app:layout_constraintHorizontal_bias="0.0"
@@ -96,21 +97,30 @@
         android:layout_height="match_parent"
         app:layoutManager="LinearLayoutManager"
         app:layout_constrainedHeight="true"
-        app:layout_constraintBottom_toTopOf="@+id/layout_gchat_chatbox"
+        app:layout_constraintBottom_toTopOf="@+id/divider7"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cardview"
-        tools:context=".ui.chats.chat.ChatFragment" />
+        tools:context=".ui.chats.chat.ChatFragment">
+
+    </androidx.recyclerview.widget.RecyclerView>
+
+    <View
+        android:id="@+id/divider7"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintBottom_toTopOf="@+id/layout_gchat_chatbox"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <RelativeLayout
         android:id="@+id/layout_gchat_chatbox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/recycler_gchat">
+        app:layout_constraintStart_toStartOf="parent">
 
 
         <EditText
