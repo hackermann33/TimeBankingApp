@@ -50,6 +50,7 @@ class SkillsListFragment : Fragment(R.layout.fragment_skills_list) {
                     chip.text = skill
                     chip.setOnClickListener { ch ->
                         val text = (ch as Chip).text.toString()
+                        //vm.setType("skill")
                         //vm.setType("skill", skill)
                         vm.setFilteringSkill(skill)
                         val b = bundleOf("point_of_origin" to "skill")

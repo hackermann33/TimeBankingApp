@@ -90,11 +90,6 @@ class MainActivity : AppCompatActivity() {
             if(destination.id == R.id.nav_interestingTimeSlotList){
                 timeSlotVm.setType("interesting")
             }
-            if(destination.id == R.id.nav_skillSpecificTimeSlotList){
-                 timeSlotVm.setType("skill")
-            }
-
-
         }
 
 

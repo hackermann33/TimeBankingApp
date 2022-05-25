@@ -71,8 +71,10 @@ class TimeSlotsViewModel(application: Application): AndroidViewModel(application
     val timeSlots: LiveData<List<TimeSlot>> = repo.timeSlots()
     */
 
-    fun updateSkillSpecificTimeSlots() {
-        l = db.collection("timeSlots").whereNotEqualTo("userId", Firebase.auth.uid).whereEqualTo("relatedSkill", selectedSkill.value).addSnapshotListener{v,e ->
+
+    fun updateSkillSpecificTimeSlots(skill: String) {
+        Log.d("selectedSkill", "updateSkillSpecificTimeSlos: selectedSkill: ${skill}")
+        l = db.collection("timeSlots").whereNotEqualTo("userId", Firebase.auth.uid).whereEqualTo("relatedSkill",skill).addSnapshotListener{v,e ->
             if(e == null){
                 _timeSlots.value = v!!.mapNotNull { d -> d.toTimeSlot() }
             } else _timeSlots.value = emptyList()
@@ -110,6 +112,9 @@ class TimeSlotsViewModel(application: Application): AndroidViewModel(application
             }*/
     }
 
+    fun clearTimeSlots() {
+        _timeSlots.postValue(listOf())
+    }
 
 
     fun addTimeSlot(ts: TimeSlot) {
@@ -156,8 +161,12 @@ class TimeSlotsViewModel(application: Application): AndroidViewModel(application
     }
 
     //This should not be used anymore, use updateSkillSpecificTimeSlots
-    fun setFilteringSkill(skill: String?) {
+    fun setFilteringSkill(skill: String) {
+        type = "skill"
+
+        Log.d("selectedSkill", "setFilteringSkill: $skill")
         _selectedSkill.postValue(skill)
+        updateSkillSpecificTimeSlots(skill)
        // _perSkillTimeSlots.value = publicTimeSlots.value?.filter{ skill == null || it.relatedSkill == skill }
     }
 
@@ -191,7 +200,7 @@ class TimeSlotsViewModel(application: Application): AndroidViewModel(application
         when(type) {
             "personal" -> updatePersonalTimeSlots()
             "skill" ->{
-                updateSkillSpecificTimeSlots()
+                /*updateSkillSpecificTimeSlots()*/
             }
             "interesting" -> updateInterestingTimeSlots()
 
@@ -200,10 +209,13 @@ class TimeSlotsViewModel(application: Application): AndroidViewModel(application
 
 
     private fun updateInterestingTimeSlots() {
-        val myUid = Firebase.auth.uid!!
-        db.collection("rooms").document(myUid).collection("userRooms").whereEqualTo("requesterId", Firebase.auth.uid)
-            .whereEqualTo("status", STATUS_INTERESTED)
 
+        val myUid = Firebase.auth.uid!!
+        l = db.collection("timeSlots").whereEqualTo("userId", Firebase.auth.uid).addSnapshotListener{v,e ->
+            if(e == null){
+                _timeSlots.value = v!!.mapNotNull { d -> d.toTimeSlot() }
+            } else _timeSlots.value = emptyList()
+        }
     }
 
     /*private val _privateTimeSlot = TimeSlot("test1","test2","test3","test4","test5","test6")

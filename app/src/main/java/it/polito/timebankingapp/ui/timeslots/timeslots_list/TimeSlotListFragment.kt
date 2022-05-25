@@ -91,6 +91,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_timeslots_list) {
         }
 
 
+/*
         val adTmp = TimeSlotAdapter(
             vm.timeSlots.value?.toMutableList() ?: mutableListOf(),
             ::selectTimeSlot,
@@ -99,6 +100,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_timeslots_list) {
             vm.type
         )
         rv.adapter = adTmp
+*/
 
 
         //var skill = arguments?.getString("skill")
@@ -203,11 +205,11 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_timeslots_list) {
         val voidMessageText = v.findViewById<TextView>(R.id.emptyListMessage)
         val voidMessageSubText = v.findViewById<TextView>(R.id.empty_list_second_message)
 
-        val v = if(b) View.GONE else View.VISIBLE
+        val visibility = if(b) View.VISIBLE else View.GONE
 
-        voidMessageText.visibility = v
-        voidMessageImage.visibility = v
-        voidMessageSubText.visibility = v
+        voidMessageText.visibility = visibility
+        voidMessageImage.visibility = visibility
+        voidMessageSubText.visibility = visibility
     }
 
     private fun requestTimeSlot(ts: TimeSlot) {
@@ -222,6 +224,12 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_timeslots_list) {
     private fun selectTimeSlot(ts: TimeSlot) {
         vm.setSelectedTimeSlot(ts)
     }
+
+    override fun onDetach() {
+        vm.clearTimeSlots()
+        super.onDetach()
+    }
+
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_filter_and_sort, menu)
