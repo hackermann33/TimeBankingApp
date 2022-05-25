@@ -74,8 +74,8 @@ class TimeSlotsViewModel(application: Application): AndroidViewModel(application
     fun updateSkillSpecificTimeSlots() {
         l = db.collection("timeSlots").whereNotEqualTo("userId", Firebase.auth.uid).whereEqualTo("relatedSkill", selectedSkill.value).addSnapshotListener{v,e ->
             if(e == null){
-                _publicTimeSlots.value = v!!.mapNotNull { d -> d.toTimeSlot() }
-            } else _publicTimeSlots.value = emptyList()
+                _timeSlots.value = v!!.mapNotNull { d -> d.toTimeSlot() }
+            } else _timeSlots.value = emptyList()
         }
     }
 
@@ -147,7 +147,6 @@ class TimeSlotsViewModel(application: Application): AndroidViewModel(application
     }
 
     override fun onCleared() {
-        super.onCleared()
         l.remove()
         super.onCleared()
     }
@@ -171,14 +170,16 @@ class TimeSlotsViewModel(application: Application): AndroidViewModel(application
         db.collection("rooms").document(myUid).collection("userRooms").document(chatId)
             .set (mapOf(
                 "fullName" to ts.userId,
-                "status" to STATUS_INTERESTED
+                "status" to STATUS_INTERESTED,
+                "requesterId" to Firebase.auth.uid
             )).addOnSuccessListener { Log.d("requestTimeSlot", "success") }.addOnFailureListener { Log.d("requestTimeSlot", "failure")}
 
         db.collection("rooms").document(ts.userId).collection("userRooms").document(chatId)
             .set (mapOf(
                 "fullName" to requester.fullName,
                 "profilePic" to requester.pic,
-                "status" to STATUS_INTERESTED
+                "status" to STATUS_INTERESTED,
+                "requesterId" to Firebase.auth.uid
             )).addOnSuccessListener {Log.d("requestTimeSlot", "success")}.addOnFailureListener{Log.d("requestTimeSLot", "failure")}
 
         return chatId

@@ -87,9 +87,9 @@ class TimeSlotAdapter(
             val pos = data.indexOf(item)
             if (pos != -1) {
                 //click on edit button
-                if(type != "skill_specific") {
+                if(type != "skill") {
                     Navigation.findNavController(it).navigate(
-                        R.id.action_nav_skillSpecificTimeSlotList_to_nav_timeSlotEdit,
+                        R.id.action_nav_personalTimeSlotList_to_nav_timeSlotEdit,
                         //bundleOf( Pair("id",item.id)) //da fixare la prossima volta appena si aggiunge la shared activity viewmodel
                         bundleOf("timeslot" to item, "position" to position) //temp
                     )

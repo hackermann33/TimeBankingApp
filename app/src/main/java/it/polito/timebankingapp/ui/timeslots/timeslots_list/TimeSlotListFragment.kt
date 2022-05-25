@@ -28,7 +28,7 @@ import it.polito.timebankingapp.ui.timeslots.TimeSlotsViewModel
  */
 class TimeSlotListFragment : Fragment(R.layout.fragment_timeslots_list) {
 
-    private lateinit var type: String
+
     private var filterParameter = "Title"
     private var filterKeywords = ""
     private var orderingDirection = false //false == ascending, true = descending
@@ -38,7 +38,9 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_timeslots_list) {
     private val userVm: ProfileViewModel by activityViewModels()
     private val chatVm: ChatViewModel by activityViewModels()
 
-    private lateinit var rv:RecyclerView
+    private lateinit var type: String
+
+    private lateinit var rv: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,7 +65,6 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_timeslots_list) {
         rv.layoutManager = LinearLayoutManager(context)
 
         val addTimeSlotButton = view.findViewById<FloatingActionButton>(R.id.addTimeSlotButton)
-
 
         if (vm.type == "skill" || vm.type == "interesting") {
             addTimeSlotButton.visibility = View.GONE
