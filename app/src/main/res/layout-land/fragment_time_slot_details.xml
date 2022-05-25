@@ -171,6 +171,13 @@
                 android:layout_marginBottom="8dp"
                 android:text="@string/fragment_timeslot_restrictions" />
 
+            <View
+                android:id="@+id/divider9"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="8dp"
+                android:background="?android:attr/listDivider" />
+
             <TextView
                 style="@style/ItemLabel"
                 android:layout_width="wrap_content"

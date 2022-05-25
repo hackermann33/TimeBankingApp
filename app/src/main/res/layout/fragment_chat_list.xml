@@ -40,7 +40,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
-                    android:contentDescription="Rating Bar"
+                    android:contentDescription="@string/rating_bar"
                     android:numStars="5"
                     android:theme="@style/RatingBar"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -55,7 +55,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:text="N reviews"
+                    android:text="@string/n_reviews"
                     android:textAppearance="@style/TextAppearance.AppCompat.Large"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -76,7 +76,7 @@
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="8dp"
                     android:layout_weight="1"
-                    android:text="Deny" />
+                    android:text="@string/deny" />
 
                 <Button
                     android:id="@+id/button3"
@@ -85,7 +85,7 @@
                     android:layout_marginStart="8dp"
                     android:layout_marginEnd="16dp"
                     android:layout_weight="1"
-                    android:text="Accept" />
+                    android:text="@string/accept" />
             </LinearLayout>
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
@@ -131,7 +131,7 @@
             android:layout_marginStart="16dp"
             android:layout_toStartOf="@+id/button_gchat_send"
             android:background="@android:color/transparent"
-            android:hint="Enter Message"
+            android:hint="@string/hint_enter_message"
             android:imeOptions="actionSend"
             android:inputType="text"
             android:maxLines="6"
@@ -144,7 +144,7 @@
             android:layout_height="48dp"
             android:layout_alignParentEnd="true"
             android:background="?attr/selectableItemBackground"
-            android:text="Send"
+            android:text="@string/send"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
             android:textColor="@color/primary" />
 

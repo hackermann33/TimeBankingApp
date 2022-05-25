@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginLeft="16dp"
     android:layout_marginRight="16dp"
     tools:context=".ui.profile.editprofile.EditProfileFragment">
 
@@ -14,7 +13,7 @@
         android:layout_height="match_parent"
         android:layout_marginEnd="16dp"
         android:background="@android:color/transparent"
-        android:padding="10dp"
+
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/editScrollView2"
         app:layout_constraintHorizontal_bias="0.5"
@@ -22,12 +21,25 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/timeslot_splash"
+            android:rotation="90"
+            android:scaleX="2"
+            android:scaleY="2"
+            app:srcCompat="@drawable/timeslot_splash"
+            tools:src="@tools:sample/backgrounds/scenic" />
+
         <de.hdodenhof.circleimageview.CircleImageView
+            android:padding="16dp"
             android:id="@+id/profile_pic"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:src="@drawable/default_avatar"
-            app:civ_border_color="@color/text_standard"
+            app:civ_border_color="@color/primary"
+            app:civ_border_width="2dp"
             tools:ignore="ImageContrastCheck" />
 
         <ImageButton

@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginLeft="16dp"
     android:layout_marginRight="16dp"
     tools:context=".ui.profile.showprofile.ShowPersonalProfileFragment">
     <FrameLayout
@@ -12,8 +11,6 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:background="@android:color/transparent"
-        android:layout_marginEnd="16dp"
-        android:padding="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/scrollView2"
@@ -21,14 +18,27 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/timeslot_splash"
+            android:rotation="90"
+            android:scaleX="2"
+            android:scaleY="2"
+            app:srcCompat="@drawable/timeslot_splash"
+            tools:src="@tools:sample/backgrounds/scenic" />
+
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/profile_pic"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center|center_horizontal"
             android:src="@drawable/default_avatar"
-            app:civ_border_color="@color/text_standard"
-            app:civ_border_width="2dp" />
+            android:visibility="visible"
+            app:civ_border_color="@color/primary"
+            app:civ_border_width="2dp"
+            android:padding="16dp"  />
 
         <ProgressBar
             android:id="@+id/profile_pic_progress_bar"
@@ -56,98 +66,198 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginRight="16dp"
+            android:paddingBottom="16dp"
             android:orientation="vertical">
-
             <TextView
                 android:id="@+id/fullName"
+                style="@style/Widget.AppCompat.TextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/roboto_medium"
                 android:text="@string/fragment_profile_full_name"
-                android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                />
+                android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+
+            <View
+                android:id="@+id/divider10"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="8dp"
+                android:background="?android:attr/listDivider" />
 
             <TextView
+                style="@style/ItemLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/fragment_profile_nickname"
-                style = "@style/ItemLabel"
-                />
+                android:text="@string/fragment_profile_nickname" />
 
             <TextView
                 android:id="@+id/nickname"
+                style="@style/Item"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/fragment_profile_nickname"
-                style = "@style/Item"/>
+                android:text="@string/fragment_profile_nickname" />
+
+            <View
+                android:id="@+id/divider11"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="8dp"
+                android:background="?android:attr/listDivider" />
 
             <TextView
+                style="@style/ItemLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/fragment_profile_email"
-                style = "@style/ItemLabel"/>
+                android:text="@string/fragment_profile_email" />
 
             <TextView
                 android:id="@+id/email"
+                style="@style/Item"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/fragment_profile_email"
-                style = "@style/Item" />
+                android:text="@string/fragment_profile_email" />
+
+            <View
+                android:id="@+id/divider12"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="8dp"
+                android:background="?android:attr/listDivider" />
 
             <TextView
+                style="@style/ItemLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/fragment_profile_location"
-                style = "@style/ItemLabel"
-                />
+                android:text="@string/fragment_profile_location" />
 
             <TextView
                 android:id="@+id/location"
+                style="@style/Item"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/fragment_profile_location"
-                style = "@style/Item"/>
+                android:text="@string/fragment_profile_location" />
+
+            <View
+                android:id="@+id/divider13"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="8dp"
+                android:background="?android:attr/listDivider" />
 
             <TextView
+                style="@style/ItemLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/fragment_profile_balance"
-                style = "@style/ItemLabel" />
+                android:text="@string/fragment_profile_balance" />
 
             <TextView
                 android:id="@+id/balance"
+                style="@style/Item"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/fragment_profile_balance"
-                style = "@style/Item" />
+                android:text="@string/fragment_profile_balance" />
+
+            <View
+                android:id="@+id/divider14"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="8dp"
+                android:background="?android:attr/listDivider" />
 
             <TextView
+                style="@style/ItemLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/fragment_profile_description"
-                style = "@style/ItemLabel"
-                />
+                android:text="@string/fragment_profile_description" />
 
             <TextView
                 android:id="@+id/description"
+                style="@style/Item"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/fragment_profile_description"
-                style = "@style/Item" />
+                android:text="@string/fragment_profile_description" />
+
+            <View
+                android:id="@+id/divider15"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="8dp"
+                android:background="?android:attr/listDivider" />
 
             <TextView
+                style="@style/ItemLabel"
                 android:layout_width="match_parent"
+
                 android:layout_height="wrap_content"
-                android:text="@string/fragment_profile_skills"
-                style = "@style/ItemLabel" />
+                android:text="@string/fragment_profile_skills" />
 
             <com.google.android.material.chip.ChipGroup
                 android:id="@+id/skillsGroup"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="10dp"
-                android:layout_marginBottom="30dp"
-                app:chipSpacingVertical="4dp" />
+                android:layout_marginBottom="20dp"
+                app:chipSpacingVertical="4dp">
+
+
+            </com.google.android.material.chip.ChipGroup>
+            <View
+                android:id="@+id/divider16"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="8dp"
+                android:background="?android:attr/listDivider" />
+
+            <TextView
+                style="@style/ItemLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/fragment_show_profile_review_rating_score" />
+
+            <RatingBar
+                android:id="@+id/profile_reviews_rating_score"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/Widget.AppCompat.RatingBar.Indicator"
+                android:contentDescription="@string/rating_bar"
+                android:numStars="5"
+                android:theme="@style/RatingBar"/>
+
+            <View
+                android:id="@+id/divider17"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="8dp"
+                android:background="?android:attr/listDivider" />
+
+            <TextView
+                style="@style/ItemLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/fragment_profile_reviews_label" />
+
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/short_reviews_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+            </androidx.recyclerview.widget.RecyclerView>
+
+            <Button
+                android:id="@+id/show_all_reviews"
+                android:layout_width="match_parent"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="32dp"
+                android:layout_marginBottom="16dp"
+                android:layout_height="wrap_content"
+                android:text="@string/show_all_reviews" />
         </LinearLayout>
+
+
     </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>
