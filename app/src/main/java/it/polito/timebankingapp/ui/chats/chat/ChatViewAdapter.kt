@@ -93,6 +93,8 @@ class ChatViewAdapter(
             else
                 dateText.visibility = View.GONE
 
+
+
             timeText.text = hour
             nameText.text = "userId.name"
 

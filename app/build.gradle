@@ -68,4 +68,5 @@ dependencies {
     implementation 'com.google.android.material:material:1.6.0'
     implementation 'com.google.firebase:firebase-firestore-ktx'
     implementation 'io.github.nikartm:image-support:2.0.0'
+    implementation 'com.github.bumptech.glide:glide:4.13.2'
 }
