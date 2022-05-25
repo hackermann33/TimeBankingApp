@@ -77,4 +77,5 @@
     <string name="no_time_slots_available">No time slots available</string>
     <string name="no_advertisements">No Advertisements</string>
     <string name="there_aren_t_any_offers">Sorry, but at the moment there aren\'t any available offers. Try again later!</string>
+    <string name="your_interesting_offers">Your interesting offers</string>
 </resources>

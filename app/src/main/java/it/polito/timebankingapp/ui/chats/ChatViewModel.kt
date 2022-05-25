@@ -101,6 +101,10 @@ class ChatViewModel(application: Application): AndroidViewModel(application) {
         l.remove()
     }
 
+    fun cleanChats(){
+        _chatMessages.value = listOf()
+    }
+
     fun selectChat(chatId: String) {
         l = db.collection("chats").document(chatId).collection("messages").orderBy("timestamp")
             .addSnapshotListener{

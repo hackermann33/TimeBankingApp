@@ -87,18 +87,21 @@ class TimeSlotAdapter(
             val pos = data.indexOf(item)
             if (pos != -1) {
                 //click on edit button
-                if(type != "skill_specific") {
+                if(type != "skill") {
                     Navigation.findNavController(it).navigate(
-                        R.id.action_nav_skillSpecificTimeSlotList_to_nav_timeSlotEdit,
+                        R.id.action_nav_personalTimeSlotList_to_nav_timeSlotEdit,
                         //bundleOf( Pair("id",item.id)) //da fixare la prossima volta appena si aggiunge la shared activity viewmodel
                         bundleOf("timeslot" to item, "position" to position) //temp
                     )
                 }
             }
         }, detailAction = {
-            val destination =
-                R.id.action_skillSpecificTimeSlotListFragment_to_nav_timeSlotDetails
-
+            val destination = when(type) {
+                "skill" -> R.id.action_skillSpecificTimeSlotListFragment_to_nav_timeSlotDetails
+                "personal" -> R.id.action_nav_personalTimeSlotList_to_nav_timeSlotDetails
+                "interesting" -> R.id.action_nav_interestingTimeSlotList_to_nav_timeSlotDetails
+                else -> {R.id.nav_timeSlotDetails}
+            }
 
             selectTimeSlot(item)
             Navigation.findNavController(it).navigate(
@@ -108,10 +111,10 @@ class TimeSlotAdapter(
         }, requestAction = {
             
             requestTimeSlot!!(item)
-            Navigation.findNavController(it).navigate(R.id.action_nav_timeSlotList_to_nav_chat)
+            Navigation.findNavController(it).navigate(R.id.action_nav_skillSpecificTimeSlotList_to_nav_chat)
         }, showRequestsAction = {
             showRequests!!(item)
-            Navigation.findNavController(it).navigate(R.id.action_nav_timeSlotList_to_nav_chatsList)
+            Navigation.findNavController(it).navigate(R.id.action_nav_personalTimeSlotList_to_nav_chatsList)
         })
 
 
