@@ -43,7 +43,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat_list) {
 
 
             rv.addOnLayoutChangeListener(OnLayoutChangeListener { v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
-                if (bottom < oldBottom) {
+                if (bottom < oldBottom && rv.adapter?.itemCount!! > 0 )  {
                     rv.postDelayed(Runnable {
                         rv.smoothScrollToPosition(
                             (rv.adapter?.itemCount ?: 1) - 1
