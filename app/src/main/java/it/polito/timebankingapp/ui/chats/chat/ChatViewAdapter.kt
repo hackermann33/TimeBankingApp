@@ -76,14 +76,14 @@ class ChatViewAdapter(
         var messageText: TextView = itemView.findViewById<View>(R.id.text_gchat_message_other) as TextView
         var timeText: TextView = itemView.findViewById<View>(R.id.text_gchat_timestamp_other) as TextView
         var nameText: TextView = itemView.findViewById<View>(R.id.text_gchat_user_other) as TextView
-        var profileImage: ImageView = itemView.findViewById<View>(R.id.image_gchat_profile_other) as ImageView
+//        var profileImage: ImageView = itemView.findViewById<View>(R.id.image_gchat_profile_other) as ImageView
         var dateText: TextView = itemView.findViewById<View>(R.id.text_gchat_date) as TextView
 
         fun bind(message: ChatMessage, showDate : Boolean) {
             messageText.text = message.messageText
 
             val cal = message.timestamp
-            val pattern = "MMMMM d, yyyy"
+            val pattern = "MMM d, yyyy"
             val sdf  = SimpleDateFormat(pattern)
             val date = sdf.format(cal.time)
             val hour = String.format("%02d:%02d", cal[Calendar.HOUR], cal[Calendar.MINUTE] )
@@ -94,7 +94,7 @@ class ChatViewAdapter(
                 dateText.visibility = View.GONE
 
             timeText.text = hour
-            nameText.text = "userId.name"
+            nameText.text = message.userName
 
             //profileImage.setImageBitmap(message.profilePic) //da riabilitare più avanti
 

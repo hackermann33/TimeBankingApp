@@ -2,20 +2,28 @@ package it.polito.timebankingapp.ui.chats.chat
 
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.View.OnLayoutChangeListener
 import android.widget.Button
 import android.widget.EditText
 import android.widget.RatingBar
+import android.widget.TextView
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
+import de.hdodenhof.circleimageview.CircleImageView
 import it.polito.timebankingapp.R
 import it.polito.timebankingapp.model.chat.ChatMessage
 import it.polito.timebankingapp.ui.chats.ChatViewModel
+import it.polito.timebankingapp.ui.profile.ProfileViewModel
 import java.util.*
 
 
@@ -28,6 +36,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat_list) {
     private lateinit var layoutManager: LinearLayoutManager
 
     private val chatVm : ChatViewModel by activityViewModels()
+    private val profileVM : ProfileViewModel by activityViewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
@@ -69,6 +78,25 @@ class ChatFragment : Fragment(R.layout.fragment_chat_list) {
         val ratingBar = view.findViewById<RatingBar>(R.id.ratingBar)
         ratingBar.rating = 4.5F
 
+        val profilePic = view.findViewById<CircleImageView>(R.id.chat_profile_pic)
+//        loadImageIntoView(profilePic, arguments?.getString("profilePic"))
+        profileVM.timeslotUserImage.observe(viewLifecycleOwner){
+            profilePic.setImageBitmap(it)
+        }
+        profilePic.setOnClickListener{
+            findNavController().navigate(R.id.action_nav_chat_to_nav_showProfile, bundleOf("point_of_origin" to "skill_specific"))
+        }
+        val profileName = view.findViewById<TextView>(R.id.chat_profile_name)
+        profileName.setOnClickListener{
+//            profileVM.retrieveTimeSlotProfileData(arguments?.getString("profileId") ?: "")
+            findNavController().navigate(R.id.action_nav_chat_to_nav_showProfile, bundleOf("point_of_origin" to "skill_specific"))
+        }
+        profileVM.timeslotUser.observe(viewLifecycleOwner){
+            profileName.text = it.fullName
+        }
+
+
+
         layoutManager = rv.layoutManager as LinearLayoutManager
         layoutManager.stackFromEnd = true
         textMessage = view.findViewById(R.id.edit_gchat_message)
@@ -87,7 +115,8 @@ class ChatFragment : Fragment(R.layout.fragment_chat_list) {
                     ChatMessage(
                     Firebase.auth.currentUser!!.uid,
                     textMessage.text.toString(),
-                    Calendar.getInstance()
+                    Calendar.getInstance(),
+                    profileVM.user.value!!.fullName
                 ))
                 textMessage.text.clear()
 
@@ -126,6 +155,25 @@ class ChatFragment : Fragment(R.layout.fragment_chat_list) {
     override fun onDetach() {
         super.onDetach()
         chatVm.cleanChats()
+    }
+
+    private fun loadImageIntoView(view: CircleImageView, url: String?) {
+        val storageReference = FirebaseStorage.getInstance().reference
+        val picRef = storageReference.child(url ?: "")
+        picRef.downloadUrl
+            .addOnSuccessListener { uri ->
+                val downloadUrl = uri.toString()
+                Glide.with(view.context)
+                    .load(downloadUrl)
+                    .into(view)
+            }
+            .addOnFailureListener { e ->
+                Log.w(
+                    "loadImage",
+                    "Getting download url was not successful.",
+                    e
+                )
+            }
     }
 }
 

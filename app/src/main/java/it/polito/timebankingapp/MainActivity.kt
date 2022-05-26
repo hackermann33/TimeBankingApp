@@ -92,8 +92,8 @@ class MainActivity : AppCompatActivity() {
             if(destination.id == R.id.nav_interestingTimeSlotList){
                 timeSlotVm.updateInterestingTimeSlots()
             }
-            if(destination.id == R.id.nav_chatsList)
-                chatVm.updateAllChats()
+//            if(destination.id == R.id.nav_chatsList)
+//                chatVm.updateAllChats()
         }
 
 

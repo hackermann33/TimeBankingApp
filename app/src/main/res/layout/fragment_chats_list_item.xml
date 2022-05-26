@@ -25,7 +25,7 @@
 
 
             <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/chat_list_item_profile_pic"
+                android:id="@+id/chat_profile_pic"
                 android:layout_width="78dp"
                 android:layout_height="78dp"
                 android:layout_margin="8dp"
@@ -47,7 +47,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_weight="4"
-                app:layout_constraintStart_toEndOf="@+id/chat_list_item_profile_pic"
+                app:layout_constraintStart_toEndOf="@+id/chat_profile_pic"
                 app:layout_constraintTop_toTopOf="parent">
 
                 <LinearLayout

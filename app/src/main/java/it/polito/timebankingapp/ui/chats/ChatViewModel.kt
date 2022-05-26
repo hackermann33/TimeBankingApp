@@ -56,7 +56,8 @@ class ChatViewModel(application: Application): AndroidViewModel(application) {
         requestRef.collection("messages").document().set( mapOf(
             "messageText" to message.messageText,
             "timestamp" to message.timestamp.time,
-            "userId" to message.userId
+            "userId" to message.userId,
+            "userName" to message.userName
         )).addOnSuccessListener {
             requestRef.update(mapOf ("lastMessageText" to message.messageText, "lastMessageTime" to message.timestamp.time))
             Log.d("sendMessage", "success")
@@ -84,12 +85,13 @@ class ChatViewModel(application: Application): AndroidViewModel(application) {
             val userId = get("userId") as String
             val messageText = get("messageText") as String
             val timestamp = get("timestamp") as Timestamp
+            val userName = get("userName") as String
 
 
             val cal = Calendar.getInstance()
             cal.time = timestamp.toDate()
 
-            ChatMessage(userId,messageText, cal)
+            ChatMessage(userId,messageText, cal, userName)
         } catch(e: Exception) {
             e.printStackTrace()
             null
@@ -117,41 +119,45 @@ class ChatViewModel(application: Application): AndroidViewModel(application) {
                     _chatMessages.value = emptyList()
             }
     }
-
-    fun updateAllChats() {
-           Log.d("User", Firebase.auth.uid.toString())
-            val currentId = Firebase.auth.uid.toString()
-            l = db.collection("requests").whereArrayContains("users","${Firebase.auth.uid}")
-                .addSnapshotListener{v,e ->
-                    if(e == null){
-                        Log.d("chatList", "chatList: ${_chatsList.value}")
-                        val req = v!!.mapNotNull {  d -> d.toObject<Request>()  }
-
-                        _chatsList.value = req.mapNotNull {  r ->
-                            val otherUser = if(r.offerer.id == currentId)
-                                r.requester
-                            else
-                                    r.offerer ;
-                            val timeStr = r.lastMessageTime.toDisplayString()
-                            ChatsListItem(r.requestId, r.timeSlot.id, otherUser.fullName, otherUser.pic, r.lastMessageText, timeStr )}
-                        Log.d("chatsListValue", "success")
-                    } else{
-                        _chatsList.value = emptyList()
-                        Log.d("chatsListValue", "failed")
-                    }
-                }
-        }
+//    not used
+//    fun updateAllChats() {
+//           Log.d("User", Firebase.auth.uid.toString())
+//            val currentId = Firebase.auth.uid.toString()
+//            l = db.collection("requests").whereArrayContains("users","${Firebase.auth.uid}")
+//                .addSnapshotListener{v,e ->
+//                    if(e == null){
+//                        Log.d("chatList", "chatList: ${_chatsList.value}")
+//                        val req = v!!.mapNotNull {  d -> d.toObject<Request>()  }
+//
+//                        _chatsList.value = req.mapNotNull {  r ->
+//                            val otherUser = if(r.offerer.id == currentId)
+//                                r.requester
+//                            else
+//                                    r.offerer ;
+//                            val timeStr = r.lastMessageTime.toDisplayString()
+//                            ChatsListItem(r.requestId, r.timeSlot.id, otherUser.fullName, otherUser.pic, r.lastMessageText, timeStr )}
+//                        Log.d("chatsListValue", "success")
+//                    } else{
+//                        _chatsList.value = emptyList()
+//                        Log.d("chatsListValue", "failed")
+//                    }
+//                }
+//        }
 
     fun showRequests(tsId: String) {
 //        Log.d("showRequests", "Arrived at ViewModel $tsId")
         Log.d("User", Firebase.auth.uid.toString())
-        l = db.collection("requests").whereEqualTo("offerer.id","${Firebase.auth.uid}").whereEqualTo("timeSlot.id", tsId)
+        l = db.collection("requests").whereEqualTo("offerer.id",Firebase.auth.uid.toString()).whereEqualTo("timeSlot.id", tsId)
             .addSnapshotListener{v,e ->
             if(e == null){
                 Log.d("chatList", "chatList: ${_chatsList.value}")
                 val req = v!!.mapNotNull {  d -> d.toObject<Request>()  }
-                _chatsList.value = req.mapNotNull {  r -> val timeStr = r.lastMessageTime.toDisplayString() ; ChatsListItem(r.requestId, r.timeSlot.id, r.requester.fullName, r.requester.pic, r.lastMessageText, timeStr)}
-                Log.d("chatsListValue", "success")
+                _chatsList.value = req.mapNotNull { r ->
+                    val timeStr = r.lastMessageTime.toDisplayString()
+                    val userId = r.users.first { uid -> uid != Firebase.auth.uid }
+                    ChatsListItem(r.requestId, userId, r.timeSlot.id, r.requester.fullName, r.requester.pic, r.lastMessageText, timeStr)
+                }
+                Log.d("chatsListValue", "chatList: ${_chatsList.value}")
             } else{
                 _chatsList.value = emptyList()
                 Log.d("chatsListValue", "failed")

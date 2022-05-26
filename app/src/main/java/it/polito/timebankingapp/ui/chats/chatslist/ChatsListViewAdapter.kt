@@ -6,18 +6,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.os.bundleOf
 import androidx.navigation.Navigation
 import com.bumptech.glide.Glide
-import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.ktx.storage
 import de.hdodenhof.circleimageview.CircleImageView
 import it.polito.timebankingapp.R
 import it.polito.timebankingapp.model.chat.ChatsListItem
 
 class ChatsListViewAdapter(
     private var data: List<ChatsListItem>,
-    private var selectChat: (chatId: String) -> Unit?
+    private var selectChat: (chatId: String) -> Unit?,
+    private var updateUser: (userId: String) -> Unit?
 ) : RecyclerView.Adapter<ChatsListViewAdapter.ItemViewHolder>() {
 
     private var displayData = data.toMutableList()
@@ -27,7 +27,7 @@ class ChatsListViewAdapter(
         var messageText: TextView = itemView.findViewById(R.id.chat_list_item_message)
         var timeText: TextView = itemView.findViewById(R.id.chat_list_item_timestamp)
         var numNotifiesText: TextView = itemView.findViewById(R.id.chat_list_item_notifies_number)
-        private val imagePic: CircleImageView = itemView.findViewById(R.id.chat_list_item_profile_pic)
+        private val imagePic: CircleImageView = itemView.findViewById(R.id.chat_profile_pic)
 
         fun bind(cli: ChatsListItem, openChatAction: (v: View) -> Unit) {
 //            fullNameText.text = "Nome Cognome" //necessario riferimento usr o timeslotusr
@@ -86,8 +86,12 @@ class ChatsListViewAdapter(
         {
             val destination = R.id.action_nav_chatsList_to_nav_chat
             selectChat(item.chatId)
+//            val b = bundleOf("profilePic" to item.userPic)
+//            b.putString("profileName", item.userName)
+//            b.putString("profileId", item.userId)
+            updateUser(item.userId)
             Navigation.findNavController(it).navigate(
-                destination//,
+                destination,
                 //bundleOf("point_of_origin" to type, "userId" to item.userId)
             )
         }

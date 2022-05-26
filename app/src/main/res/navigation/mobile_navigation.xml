@@ -121,7 +121,11 @@
     <fragment
         android:id="@+id/nav_chat"
         android:name="it.polito.timebankingapp.ui.chats.chat.ChatFragment"
-        android:label="Chat" />
+        android:label="Chat" >
+        <action
+            android:id="@+id/action_nav_chat_to_nav_showProfile"
+            app:destination="@id/nav_showProfile" />
+    </fragment>
     <fragment
         android:id="@+id/nav_chatsList"
         android:name="it.polito.timebankingapp.ui.chats.chatslist.ChatsListFragment"

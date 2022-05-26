@@ -8,12 +8,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import it.polito.timebankingapp.R
 import it.polito.timebankingapp.ui.chats.ChatViewModel
+import it.polito.timebankingapp.ui.profile.ProfileViewModel
 
 class ChatsListFragment : Fragment(R.layout.fragment_chats_list_list) {
 
     private lateinit var rv : RecyclerView
     private lateinit var adTmp: ChatsListViewAdapter
     private val chatVm : ChatViewModel by activityViewModels()
+    private val profileVm : ProfileViewModel by activityViewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
@@ -33,7 +35,7 @@ class ChatsListFragment : Fragment(R.layout.fragment_chats_list_list) {
 //        tempChatsList.add(chatsListItem)
 //        tempChatsList.add(chatsListItem)
         chatVm.chatsList.observe(viewLifecycleOwner){
-            adTmp = ChatsListViewAdapter(it, ::selectChat)
+            adTmp = ChatsListViewAdapter(it, ::selectChat, ::updateTimeSlotProfile)
             rv.adapter = adTmp
         }
 
@@ -43,5 +45,9 @@ class ChatsListFragment : Fragment(R.layout.fragment_chats_list_list) {
 
     fun selectChat(chatId : String){
         chatVm.selectChat(chatId)
+    }
+
+    fun updateTimeSlotProfile(userId : String){
+        profileVm.retrieveTimeSlotProfileData(userId)
     }
 }

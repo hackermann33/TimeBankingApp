@@ -11,7 +11,8 @@ import java.util.*
 data class ChatMessage(
     var userId: String = "",
     var messageText: String = "",
-    var timestamp: Calendar = Calendar.getInstance()
+    var timestamp: Calendar = Calendar.getInstance(),
+    var userName: String = ""
 //    var timestamp: String = ""
 ) : Serializable {
 

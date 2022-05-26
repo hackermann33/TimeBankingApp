@@ -19,6 +19,7 @@ class TimeSlotAdapter(
     val selectTimeSlot: (t: TimeSlot) ->Unit,
     val requestTimeSlot: ((t: TimeSlot) -> Unit?)?,
     val showRequests: ((t: TimeSlot) -> Unit?)?,
+    val updateUser: (userId : String) -> Unit,
     val type: String
 ) : RecyclerView.Adapter<TimeSlotAdapter.ItemViewHolder>() {
 
@@ -106,8 +107,12 @@ class TimeSlotAdapter(
                 bundleOf("point_of_origin" to type, "userId" to item.userId)
             )
         }, requestAction = {
+            updateUser(item.userId)
             requestTimeSlot!!(item)
-            Navigation.findNavController(it).navigate(R.id.action_nav_skillSpecificTimeSlotList_to_nav_chat)
+//            val b = bundleOf("profilePic" to item.)
+//            b.putString("profileName", item.userName)
+//            b.putString("profileId", item.userId)
+            Navigation.findNavController(it).navigate(R.id.action_nav_skillSpecificTimeSlotList_to_nav_chat, )
         }, showRequestsAction = {
             showRequests!!(item)
             Navigation.findNavController(it).navigate(R.id.action_nav_personalTimeSlotList_to_nav_chatsList)

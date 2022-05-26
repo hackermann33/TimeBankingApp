@@ -71,7 +71,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_timeslots_list) {
 
         if (type == "skill_specific" || type == "interesting") {
             addTimeSlotButton.visibility = View.GONE
-        } else {
+        } else { //personal
             addTimeSlotButton.setOnClickListener {
                 findNavController().navigate(R.id.action_nav_personalTimeSlotList_to_nav_timeSlotEdit)
             }
@@ -116,6 +116,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_timeslots_list) {
                     ::selectTimeSlot,
                     ::requestTimeSlot,
                     ::showRequests,
+                    ::updateUser,
                     type
                 )
 
@@ -281,6 +282,10 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_timeslots_list) {
             e.printStackTrace()
             null
         }
+    }
+
+    private fun updateUser(userId : String){
+        userVm.retrieveTimeSlotProfileData(userId)
     }
 
 }

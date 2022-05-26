@@ -7,6 +7,7 @@ import java.util.*
 
 data class ChatsListItem(
     var chatId: String,
+    var userId: String,
     var timeslotId: String ,
 //    var userId: String = "",
     var userName: String ,

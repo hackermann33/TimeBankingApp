@@ -251,7 +251,7 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
 
                         if (timeslotUser.value!!.pic.isNotEmpty()) {
                             val picRef = storageRef.child(timeslotUser.value!!.pic)
-                            Log.d("getProfileImage", "usrId: ${timeslotUser.value}")
+                            Log.d("getProfileImage", "usrId: ${timeslotUser.value?.pic}")
                             picRef.downloadUrl
                             val size: Long = 2 * 1024 * 1024
                             try {
