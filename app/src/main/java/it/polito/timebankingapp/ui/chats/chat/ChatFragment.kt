@@ -122,6 +122,11 @@ class ChatFragment : Fragment(R.layout.fragment_chat_list) {
     fun sendMessage(chatMessage: ChatMessage) {
         chatVm.sendMessage(chatMessage)
     }
+
+    override fun onDetach() {
+        super.onDetach()
+        chatVm.cleanChats()
+    }
 }
 
 

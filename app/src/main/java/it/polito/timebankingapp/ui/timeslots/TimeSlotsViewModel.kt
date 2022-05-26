@@ -10,22 +10,19 @@ import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.QueryDocumentSnapshot
+import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
+import it.polito.timebankingapp.model.Request
+import it.polito.timebankingapp.model.Request.Companion.STATUS_INTERESTED
 import it.polito.timebankingapp.model.timeslot.TimeSlot
 import it.polito.timebankingapp.model.user.User
+import java.sql.Time
 
 
 class TimeSlotsViewModel(application: Application): AndroidViewModel(application) {
 
-    private val _personalTimeSlots = MutableLiveData<List<TimeSlot>>()
-    val personalTimeSlots: LiveData<List<TimeSlot>> = _personalTimeSlots
-
-    /*  publicTimeSlots is excluding that one of the current user! */
-    private val _publicTimeSlots = MutableLiveData<List<TimeSlot>>()
-    val publicTimeSlots: LiveData<List<TimeSlot>> = _publicTimeSlots
-
-    private val _perSkillTimeSlots = MutableLiveData<List<TimeSlot>>()
-    val perSkillTimeSlots: LiveData<List<TimeSlot>> = _perSkillTimeSlots
+    private val _timeSlots = MutableLiveData<List<TimeSlot>>()
+    val timeSlots: LiveData<List<TimeSlot>> = _timeSlots
 
     private val _skillList = MutableLiveData<List<String>>()
     val skillList: LiveData<List<String>> = _skillList
@@ -33,9 +30,10 @@ class TimeSlotsViewModel(application: Application): AndroidViewModel(application
     private val _selectedTimeSlot =  MutableLiveData<TimeSlot>()
     val selectedTimeSlot: LiveData<TimeSlot> = _selectedTimeSlot
 
+    lateinit var type: String
+    private set
 
     private lateinit var l:ListenerRegistration
-
 
     private val _selectedSkill = MutableLiveData<String?>()
     var selectedSkill: LiveData<String?> = _selectedSkill
@@ -44,35 +42,24 @@ class TimeSlotsViewModel(application: Application): AndroidViewModel(application
     private lateinit var l3:ListenerRegistration
 
 
-    private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
+    private var db: FirebaseFirestore = FirebaseFirestore.getInstance()
 
     init {
         Firebase.auth.addAuthStateListener {
             if (it.currentUser != null) {
-                updatePersonalTimeSlots()
-                updatePublicTimeSlots()
+                /*updatePersonalTimeSlots()
+                updateSkillSpecificTimeSlots(skill)*/
                 retrieveSkillList()
             }
         }
     }
 
-
-
-
-    /*val repo = TimeSlotRepository(application)
-
-    //NOTA: la ViewModel dovrebbe essere strutturata in modo che essa ritorni dati ad entrambe TimeSlotDetails e TimeSlotEdit
-    //cioè forse sostituire tutto il sistema del passaggio del bundle, idk (da investigare meglio
-
-    val timeSlotsNumber: LiveData<Int> = repo.count()
-    val timeSlots: LiveData<List<TimeSlot>> = repo.timeSlots()
-    */
-
-    fun updatePublicTimeSlots() {
-        l2 = db.collection("timeSlots").whereNotEqualTo("userId", Firebase.auth.uid).addSnapshotListener{v,e ->
+    fun updateSkillSpecificTimeSlots(skill: String) {
+        Log.d("selectedSkill", "updateSkillSpecificTimeSlos: selectedSkill: ${skill}")
+        l = db.collection("timeSlots").whereNotEqualTo("userId", Firebase.auth.uid).whereEqualTo("relatedSkill",skill).addSnapshotListener{v,e ->
             if(e == null){
-                _publicTimeSlots.value = v!!.mapNotNull { d -> d.toTimeSlot() }
-            } else _publicTimeSlots.value = emptyList()
+                _timeSlots.value = v!!.mapNotNull { d -> d.toObject<TimeSlot>() }
+            } else _timeSlots.value = emptyList()
         }
     }
 
@@ -80,31 +67,53 @@ class TimeSlotsViewModel(application: Application): AndroidViewModel(application
     fun updatePersonalTimeSlots() {
         l = db.collection("timeSlots").whereEqualTo("userId", Firebase.auth.uid).addSnapshotListener{v,e ->
             if(e == null){
-                _personalTimeSlots.value = v!!.mapNotNull { d -> d.toTimeSlot() }
-            } else _personalTimeSlots.value = emptyList()
+                _timeSlots.value = v!!.mapNotNull { d -> d.toObject<TimeSlot>() }
+            } else _timeSlots.value = emptyList()
         }
     }
 
+
+
+
+
+
+
+    fun updateInterestingTimeSlots() {
+        val myUid = Firebase.auth.uid!!
+        db.collection("requests").whereEqualTo("requester.id", myUid)
+            .whereEqualTo("status", Request.STATUS_INTERESTED).addSnapshotListener{ v, e ->
+                if(e == null){
+                    val req = v!!.mapNotNull {  d -> d.toObject<Request>()  }
+                    _timeSlots.value = req.mapNotNull {  r -> r.timeSlot }
+                } else {
+                    _timeSlots.value = emptyList()
+                }
+            }
+        }
+
+    /* Move to skillsListViewModel */
     fun retrieveSkillList(){
-        //val list = mutableListOf<String>()
-        l3 = db.collection("skills").addSnapshotListener {
+        l = db.collection("skills").addSnapshotListener {
             v,e ->
             if(e == null){
                 _skillList.value = v!!.mapNotNull { d -> d.id}
             }else _skillList.value = emptyList()
         }
-            /*.addOnSuccessListener { result ->
-                for (document in result) {
-                    //Log.d(TAG, "${document.id} => ${document.data}")
-                    list.add(document.id)
-                }
-                _skillList.value = list
+        /*.addOnSuccessListener { result ->
+            for (document in result) {
+                //Log.d(TAG, "${document.id} => ${document.data}")
+                list.add(document.id)
             }
-            .addOnFailureListener { exception ->
-                Log.d("skill_list", "Error getting documents: ", exception)
-            }*/
+            _skillList.value = list
+        }
+        .addOnFailureListener { exception ->
+            Log.d("skill_list", "Error getting documents: ", exception)
+        }*/
     }
 
+    fun clearTimeSlots() {
+        _timeSlots.postValue(listOf())
+    }
 
 
     fun addTimeSlot(ts: TimeSlot) {
@@ -142,82 +151,30 @@ class TimeSlotsViewModel(application: Application): AndroidViewModel(application
     }
 
     override fun onCleared() {
-        super.onCleared()
         l.remove()
-        l2.remove()
-        l3.remove()
+        super.onCleared()
     }
 
     fun setSelectedTimeSlot(ts: TimeSlot){
         _selectedTimeSlot.value = ts
     }
 
-    fun setFilteringSkill(skill: String?) {
+    fun setFilteringSkill(skill: String) {
+
+        Log.d("selectedSkill", "setFilteringSkill: $skill")
         _selectedSkill.postValue(skill)
-        _perSkillTimeSlots.value = publicTimeSlots.value?.filter{ skill == null || it.relatedSkill == skill }
+        updateSkillSpecificTimeSlots(skill)
     }
 
-    fun requestTimeSlot(requester: User, ts: TimeSlot) : String {
-        val myUid = Firebase.auth.uid!!
-        val chatId = ts.id + "_" + myUid
+    /* This is used to contact the offerer through chat */
+    fun requestTimeSlot(ts: TimeSlot, requester: User, offerer: User) : String {
+        val chatId = ts.id + "_" + requester.id
+        val  req = Request(timeSlot = ts, requester = requester, offerer = offerer)
 
-        /* Look for existing chat otherwise create it*/
-        db.collection("rooms").document(myUid).collection("userRooms").document(chatId)
-            .set (mapOf(
-                "fullName" to ts.userId,
-                "status" to STATUS_INTERESTED
-            )).addOnSuccessListener { Log.d("requestTimeSlot", "success") }.addOnFailureListener { Log.d("requestTimeSlot", "failure")}
-
-        db.collection("rooms").document(ts.userId).collection("userRooms").document(chatId)
-            .set (mapOf(
-                "fullName" to requester.fullName,
-                "profilePic" to requester.pic,
-                "status" to STATUS_INTERESTED
-            )).addOnSuccessListener {Log.d("requestTimeSlot", "success")}.addOnFailureListener{Log.d("requestTimeSLot", "failure")}
-
+        db.collection("requests").document(chatId).set(req)
 
         return chatId
     }
 
-    /*private val _privateTimeSlot = TimeSlot("test1","test2","test3","test4","test5","test6")
-
-    private val _mutableTimeSlot = MutableLiveData<TimeSlot>().apply {
-        value = _privateTimeSlot
-    }
-
-    val timeSlot: LiveData<TimeSlot> =_mutableTimeSlot
-
-    fun saveEdits(newTimeSlot: TimeSlot) {
-        _mutableTimeSlot.value = newTimeSlot
-    }*/
-
-    companion object {
-        const val STATUS_INTERESTED = 0
-    }
-
-}
-
-
-
-
-
-private fun QueryDocumentSnapshot.toTimeSlot() : TimeSlot? {
-    return try {
-        val userId = get("userId") as String
-        val title = get("title") as String
-        val desc = get("description") as String
-        val date = get("date") as String
-        val time = get("time") as String
-        val duration = get("duration") as String
-        val location = get("location") as String
-        val restrictions = get("restrictions") as String
-        val relatedSkill = get("relatedSkill") as String
-
-        //assert(userId == Firebase.auth.currentUser?.uid ?: false)
-        TimeSlot(id, userId,title, desc, date, time, duration, location, restrictions, relatedSkill)
-    } catch(e: Exception) {
-        e.printStackTrace()
-        null
-    }
 
 }

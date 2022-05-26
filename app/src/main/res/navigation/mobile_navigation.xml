@@ -5,6 +5,39 @@
     android:id="@+id/mobile_navigation"
     app:startDestination="@id/nav_skillsList">
 
+    <fragment
+        android:id="@+id/nav_personalTimeSlotList"
+        android:name="it.polito.timebankingapp.ui.timeslots.timeslots_list.TimeSlotListFragment"
+        tools:layout="@layout/fragment_timeslots_list">
+        <action
+            android:id="@+id/action_nav_personalTimeSlotList_to_nav_chatsList"
+            app:destination="@id/nav_chatsList" />
+        <action
+            android:id="@+id/action_nav_personalTimeSlotList_to_nav_timeSlotDetails"
+            app:destination="@id/nav_timeSlotDetails" />
+        <action
+            android:id="@+id/action_nav_personalTimeSlotList_to_nav_timeSlotEdit"
+            app:destination="@id/nav_timeSlotEdit" />
+        <argument
+            android:name="point_of_origin"
+            app:argType="string"
+            android:defaultValue="personal" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_interestingTimeSlotList"
+        android:name="it.polito.timebankingapp.ui.timeslots.timeslots_list.TimeSlotListFragment"
+        tools:layout="@layout/fragment_timeslots_list">
+        <action
+            android:id="@+id/action_nav_interestingTimeSlotList_to_nav_chat"
+            app:destination="@id/nav_chat" />
+        <action
+            android:id="@+id/action_nav_interestingTimeSlotList_to_nav_timeSlotDetails"
+            app:destination="@id/nav_timeSlotDetails" />
+        <argument
+            android:name="point_of_origin"
+            app:argType="string"
+            android:defaultValue="interesting" />
+    </fragment>
     <action
         android:id="@+id/action_global_to_nav_login"
         app:destination="@id/nav_login"
@@ -67,10 +100,10 @@
         tools:layout="@layout/fragment_skills_list">
         <action
             android:id="@+id/action_nav_skillsList_to_skillSpecificTimeSlotListFragment"
-            app:destination="@id/nav_timeSlotList" />
+            app:destination="@id/nav_skillSpecificTimeSlotList" />
     </fragment>
     <fragment
-        android:id="@+id/nav_timeSlotList"
+        android:id="@+id/nav_skillSpecificTimeSlotList"
         android:name="it.polito.timebankingapp.ui.timeslots.timeslots_list.TimeSlotListFragment"
         tools:layout="@layout/fragment_timeslots_list">
 
@@ -79,14 +112,8 @@
             android:id="@+id/action_skillSpecificTimeSlotListFragment_to_nav_timeSlotDetails"
             app:destination="@id/nav_timeSlotDetails" />
         <action
-            android:id="@+id/action_nav_skillSpecificTimeSlotList_to_nav_timeSlotEdit"
-            app:destination="@id/nav_timeSlotEdit" />
-        <action
-            android:id="@+id/action_nav_timeSlotList_to_nav_chat"
+            android:id="@+id/action_nav_skillSpecificTimeSlotList_to_nav_chat"
             app:destination="@id/nav_chat" />
-        <action
-            android:id="@+id/action_nav_timeSlotList_to_nav_chatsList"
-            app:destination="@id/nav_chatsList" />
     </fragment>
     <fragment
         android:id="@+id/nav_chat"

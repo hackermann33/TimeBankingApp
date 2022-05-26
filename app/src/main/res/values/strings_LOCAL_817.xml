@@ -88,5 +88,4 @@
     <string name="fragment_profile_reviews_label">Reviews</string>
     <string name="reviews_item_timestamp">Timestamp</string>
     <string name="reviews_item_review_text">Review Text</string>
-    <string name="your_interesting_offers">Your interesting offers</string>
 </resources>

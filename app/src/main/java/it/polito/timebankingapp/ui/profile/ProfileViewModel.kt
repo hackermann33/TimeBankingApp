@@ -7,6 +7,7 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.DocumentSnapshot
@@ -135,7 +136,8 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
         l.remove()
     }
 
-    private fun DocumentSnapshot.toUser(): User? {
+
+    fun DocumentSnapshot.toUser(): User? {
 
         return try {
             val pic = get("pic") as String
@@ -230,6 +232,10 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
         _timeslotUserImage.value = null
     }
 
+
+    fun getUserFromId(userId: String): Task<DocumentSnapshot> {
+        return db.collection("users").document(userId).get()
+    }
 
     fun retrieveTimeSlotProfileData(userId: String) {
         var timeslotUsr: User

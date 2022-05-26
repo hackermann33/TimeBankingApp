@@ -56,13 +56,11 @@ class TimeSlotAdapter(
                 /* remove badge from chat icon when requester */
                 chatButton.badgeColor = R.color.background
                 chatButton.clearBadge()
-                
                 chatButton.setOnClickListener(requestAction)
             }
 
             this.mainView.setOnClickListener(detailAction)
         }
-
     }
 
     //inflate the item_layout-based structure inside each ViewHolder
@@ -87,18 +85,20 @@ class TimeSlotAdapter(
             val pos = data.indexOf(item)
             if (pos != -1) {
                 //click on edit button
-                if(type != "skill_specific") {
+                if(type == "personal") {
                     Navigation.findNavController(it).navigate(
-                        R.id.action_nav_skillSpecificTimeSlotList_to_nav_timeSlotEdit,
-                        //bundleOf( Pair("id",item.id)) //da fixare la prossima volta appena si aggiunge la shared activity viewmodel
+                        R.id.action_nav_personalTimeSlotList_to_nav_timeSlotEdit,
                         bundleOf("timeslot" to item, "position" to position) //temp
                     )
                 }
             }
         }, detailAction = {
-            val destination =
-                R.id.action_skillSpecificTimeSlotListFragment_to_nav_timeSlotDetails
-
+            val destination = when(type) {
+                "skill_specific" -> R.id.action_skillSpecificTimeSlotListFragment_to_nav_timeSlotDetails
+                "personal" -> R.id.action_nav_personalTimeSlotList_to_nav_timeSlotDetails
+                "interesting" -> R.id.action_nav_interestingTimeSlotList_to_nav_timeSlotDetails
+                else -> {R.id.nav_timeSlotDetails}
+            }
 
             selectTimeSlot(item)
             Navigation.findNavController(it).navigate(
@@ -106,12 +106,11 @@ class TimeSlotAdapter(
                 bundleOf("point_of_origin" to type, "userId" to item.userId)
             )
         }, requestAction = {
-            
             requestTimeSlot!!(item)
-            Navigation.findNavController(it).navigate(R.id.action_nav_timeSlotList_to_nav_chat)
+            Navigation.findNavController(it).navigate(R.id.action_nav_skillSpecificTimeSlotList_to_nav_chat)
         }, showRequestsAction = {
             showRequests!!(item)
-            Navigation.findNavController(it).navigate(R.id.action_nav_timeSlotList_to_nav_chatsList)
+            Navigation.findNavController(it).navigate(R.id.action_nav_personalTimeSlotList_to_nav_chatsList)
         })
 
 
@@ -120,7 +119,6 @@ class TimeSlotAdapter(
 
     //how many items?
     override fun getItemCount(): Int = displayData.size
-
 
     fun setFilter(keywords: String, parameter: String) {
         filterKeywords = keywords.lowercase().replace("\n", " ").trim()

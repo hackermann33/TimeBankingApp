@@ -22,7 +22,9 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import de.hdodenhof.circleimageview.CircleImageView
 import it.polito.timebankingapp.databinding.ActivityMainBinding
+import it.polito.timebankingapp.ui.chats.ChatViewModel
 import it.polito.timebankingapp.ui.profile.ProfileViewModel
+import it.polito.timebankingapp.ui.timeslots.TimeSlotsViewModel
 
 
 class MainActivity : AppCompatActivity() {
@@ -38,6 +40,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var navController: NavController
 
     val vm by viewModels<ProfileViewModel>()
+    val timeSlotVm by viewModels<TimeSlotsViewModel>()
+    val chatVm by viewModels<ChatViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,6 +53,8 @@ class MainActivity : AppCompatActivity() {
 
         val drawerLayout: DrawerLayout = binding.drawerLayout
         val navView: NavigationView = binding.navView
+
+
 
         navController = findNavController(R.id.nav_host_fragment_content_main)
 
@@ -79,6 +85,15 @@ class MainActivity : AppCompatActivity() {
                 //toggle.isDrawerIndicatorEnabled = true;
                 /* Se vado a nav_showProfile ma ho giànav_timeSlotDetails nello stack... sono TimeSlotProfile*/
             }
+
+            if(destination.id == R.id.nav_personalTimeSlotList){
+                timeSlotVm.updatePersonalTimeSlots()
+            }
+            if(destination.id == R.id.nav_interestingTimeSlotList){
+                timeSlotVm.updateInterestingTimeSlots()
+            }
+            if(destination.id == R.id.nav_chatsList)
+                chatVm.updateAllChats()
         }
 
 
@@ -127,11 +142,10 @@ class MainActivity : AppCompatActivity() {
         }
 
 
-
     }
 
     private fun isInsideDrawer(@IdRes id: Int): Boolean {
-        return id == R.id.nav_skillsList || id == R.id.nav_showProfile || id == R.id.nav_timeSlotList
+        return id == R.id.nav_skillsList || id == R.id.nav_showProfile || id == R.id.nav_skillSpecificTimeSlotList
     }
 
 

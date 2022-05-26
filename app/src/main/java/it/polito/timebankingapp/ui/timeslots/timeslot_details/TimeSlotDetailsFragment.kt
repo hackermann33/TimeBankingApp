@@ -17,6 +17,8 @@ import it.polito.timebankingapp.model.timeslot.TimeSlot
 import it.polito.timebankingapp.ui.profile.ProfileViewModel
 import it.polito.timebankingapp.ui.timeslots.TimeSlotsViewModel
 
+
+
 class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
 
     private val globalModel : TimeSlotsViewModel by activityViewModels()
@@ -98,7 +100,7 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.option1 -> {
-                if(type == "skill_specific") {
+                if(type == "skill_specific" || type == "interesting") {
                     Toast.makeText(
                         context, "Show user profile",
                         Toast.LENGTH_SHORT
@@ -110,7 +112,7 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
                         bundleOf("point_of_origin" to type, "userId" to userId)
                     )
                 }
-                else { //personal
+                else if (type == "personal") { //personal
                     Toast.makeText(
                         context, "Edit time slot",
                         Toast.LENGTH_SHORT

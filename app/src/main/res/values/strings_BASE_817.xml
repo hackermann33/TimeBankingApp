@@ -77,16 +77,4 @@
     <string name="no_time_slots_available">No time slots available</string>
     <string name="no_advertisements">No Advertisements</string>
     <string name="there_aren_t_any_offers">Sorry, but at the moment there aren\'t any available offers. Try again later!</string>
-    <string name="fragment_show_profile_review_rating_score">Rating score</string>
-    <string name="rating_bar">Rating Bar</string>
-    <string name="n_reviews">N reviews</string>
-    <string name="deny">Deny</string>
-    <string name="accept">Accept</string>
-    <string name="hint_enter_message">Enter Message</string>
-    <string name="send">Send</string>
-    <string name="show_all_reviews">Show all Reviews</string>
-    <string name="fragment_profile_reviews_label">Reviews</string>
-    <string name="reviews_item_timestamp">Timestamp</string>
-    <string name="reviews_item_review_text">Review Text</string>
-    <string name="your_interesting_offers">Your interesting offers</string>
 </resources>

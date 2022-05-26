@@ -22,6 +22,10 @@ class SkillsListFragment : Fragment(R.layout.fragment_skills_list) {
     private val vm: TimeSlotsViewModel by activityViewModels()
 
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         v = view
@@ -46,8 +50,10 @@ class SkillsListFragment : Fragment(R.layout.fragment_skills_list) {
                     chip.text = skill
                     chip.setOnClickListener { ch ->
                         val text = (ch as Chip).text.toString()
-                        vm.setFilteringSkill( text)
-                        val b = bundleOf("point_of_origin" to "skill")
+                        //vm.setType("skill")
+                        //vm.setType("skill", skill)
+                        vm.setFilteringSkill(skill)
+                        val b = bundleOf("point_of_origin" to "skill_specific")
                         findNavController().navigate(R.id.action_nav_skillsList_to_skillSpecificTimeSlotListFragment, b)
                     }
                     chipGroup.addView(chip)

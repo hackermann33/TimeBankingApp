@@ -15,9 +15,14 @@
             android:title="@string/menu_drawer_show_profile"
             />
         <item
-            android:id="@+id/nav_timeSlotList"
+            android:id="@+id/nav_personalTimeSlotList"
             android:icon="@drawable/ic_baseline_list_24"
             android:title="@string/menu_drawer_timeslots_list"
+            />
+        <item
+            android:id="@+id/nav_interestingTimeSlotList"
+            android:icon="@drawable/ic_baseline_list_24"
+            android:title="@string/your_interesting_offers"
             />
         <item
             android:id="@+id/nav_chatsList"
