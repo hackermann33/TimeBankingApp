@@ -10,14 +10,17 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResultListener
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.auth.FirebaseUser
 import de.hdodenhof.circleimageview.CircleImageView
 import it.polito.timebankingapp.MainActivity
 import it.polito.timebankingapp.R
+import it.polito.timebankingapp.model.review.Review
 import it.polito.timebankingapp.model.user.User
+import it.polito.timebankingapp.ui.chats.chatslist.ChatsListViewAdapter
 import it.polito.timebankingapp.ui.profile.ProfileViewModel
 
 
@@ -28,6 +31,9 @@ class ShowPersonalProfileFragment : Fragment(R.layout.fragment_showprofile) {
 
     private lateinit var v : View
     private lateinit var type : String
+
+    private lateinit var rv : RecyclerView
+    private lateinit var adTmp: ReviewsViewAdapter
 
     val vm : ProfileViewModel by activityViewModels()
 
@@ -97,6 +103,22 @@ class ShowPersonalProfileFragment : Fragment(R.layout.fragment_showprofile) {
                     profilePicCircleView.setImageResource(R.drawable.default_avatar)
                 }
             }
+
+            rv = view.findViewById(R.id.short_reviews_list)
+            rv.layoutManager = LinearLayoutManager(context)
+
+            val review = Review()
+            val tempReviewsList = mutableListOf<Review>()
+
+            tempReviewsList.add(review)
+            tempReviewsList.add(review)
+            tempReviewsList.add(review)
+
+            adTmp = ReviewsViewAdapter(tempReviewsList)
+            rv.adapter = adTmp
+
+
+
 
             //loggedUser = usrVm.userProfile.value!!
             //showProfile(view)

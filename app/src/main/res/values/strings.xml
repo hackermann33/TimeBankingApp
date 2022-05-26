@@ -86,4 +86,6 @@
     <string name="send">Send</string>
     <string name="show_all_reviews">Show all Reviews</string>
     <string name="fragment_profile_reviews_label">Reviews</string>
+    <string name="reviews_item_timestamp">Timestamp</string>
+    <string name="reviews_item_review_text">Review Text</string>
 </resources>
