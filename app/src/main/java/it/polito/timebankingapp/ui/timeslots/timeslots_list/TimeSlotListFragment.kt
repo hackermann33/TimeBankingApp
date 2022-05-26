@@ -15,9 +15,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.ktx.toObject
 import it.polito.timebankingapp.MainActivity
 import it.polito.timebankingapp.R
 import it.polito.timebankingapp.model.timeslot.TimeSlot
+import it.polito.timebankingapp.model.user.User
 import it.polito.timebankingapp.ui.chats.ChatViewModel
 import it.polito.timebankingapp.ui.profile.ProfileViewModel
 import it.polito.timebankingapp.ui.timeslots.TimeSlotsViewModel
@@ -27,7 +30,6 @@ import it.polito.timebankingapp.ui.timeslots.TimeSlotsViewModel
  * A fragment representing a list of Items.
  */
 class TimeSlotListFragment : Fragment(R.layout.fragment_timeslots_list) {
-
 
     private var filterParameter = "Title"
     private var filterKeywords = ""
@@ -45,28 +47,29 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_timeslots_list) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        /*type = arguments?.getString("point_of_origin").toString() type is put inside vm */
-        var mainTitle = ""
-        if (vm.type == "skill") {
-            setHasOptionsMenu(true)
-            mainTitle = "Offers for ${vm.selectedSkill.value.toString()}"
-        } else if (vm.type == "personal")
-            mainTitle = "Your advertisements"
-        else if (vm.type == "interesting")
-            mainTitle = "Your interesting Offers"
-
-        (activity as MainActivity?)?.setActionBarTitle(mainTitle)
+        type = arguments?.getString("point_of_origin").toString()
 
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        var mainTitle = ""
+        if (type == "skill_specific") {
+            setHasOptionsMenu(true)
+            mainTitle = "Offers for ${vm.selectedSkill.value.toString()}"
+        } else if (type == "personal")
+            mainTitle = "Your advertisements"
+        else if (type == "interesting")
+            mainTitle = "Your interesting Offers"
+
+        (activity as MainActivity?)?.setActionBarTitle(mainTitle)
+
 
         rv = view.findViewById(R.id.time_slot_list)
         rv.layoutManager = LinearLayoutManager(context)
 
         val addTimeSlotButton = view.findViewById<FloatingActionButton>(R.id.addTimeSlotButton)
 
-        if (vm.type == "skill" || vm.type == "interesting") {
+        if (type == "skill_specific" || type == "interesting") {
             addTimeSlotButton.visibility = View.GONE
         } else {
             addTimeSlotButton.setOnClickListener {
@@ -97,7 +100,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_timeslots_list) {
             ::selectTimeSlot,
             ::requestTimeSlot,
             ::showRequests,
-            vm.type
+            type
         )
         rv.adapter = adTmp
 */
@@ -113,18 +116,17 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_timeslots_list) {
                     ::selectTimeSlot,
                     ::requestTimeSlot,
                     ::showRequests,
-                    vm.type
+                    type
                 )
 
 //                adTmp.data = it.toMutableList()
                 rv.adapter = adTmp
 
-                if (vm.type == "skill") {
+                if (type == "skill_specific") {
                     setFilteringOptions(view, adTmp)
                     adTmp.setFilter(filterKeywords, filterParameter)
                     adTmp.setOrder(filterParameter, orderingDirection)
                 }
-
             } else {
                 setVoidMessage(view, true)
             }
@@ -213,8 +215,14 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_timeslots_list) {
     }
 
     private fun requestTimeSlot(ts: TimeSlot) {
-        val chatId = vm.requestTimeSlot(userVm.user.value!!, ts)
-        chatVm.selectChat(chatId)
+
+        val offerer = userVm.getUserFromId(ts.userId).addOnSuccessListener {
+
+            val chatId = vm.requestTimeSlot(ts, userVm.user.value!!,  it.toUser()!!)
+            chatVm.selectChat(chatId)
+        }
+
+
     }
 
     private fun showRequests(ts: TimeSlot) {
@@ -253,4 +261,26 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_timeslots_list) {
             else -> super.onOptionsItemSelected(item)
         }
     }
+
+
+    /* Impossibile da importare... */
+    fun DocumentSnapshot.toUser(): User? {
+
+        return try {
+            val pic = get("pic") as String
+            val fullName = get("fullName") as String
+            val nick = get("nick") as String
+            val email = get("email") as String
+            val location = get("location") as String
+            val desc = get("description") as String
+            val balance = get("balance") as Long
+            val skills = get("skills") as MutableList<String>
+
+            User(id, pic, fullName, nick, email, location, desc, balance.toInt(), skills)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
+    }
+
 }

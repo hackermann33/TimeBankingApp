@@ -35,6 +35,8 @@ class ChatsListViewAdapter(
 //            timeText.text = cli.chatMessages[cli.chatMessages.size-1].timestamp.split("-")[1] //se è di oggi mostra l'orario, altrimenti la data
 //            numNotifiesText.text =  "(1)" //logica conteggio non letti da implementare in futuro
             fullNameText.text = cli.userName
+            messageText.text = cli.lastMessageText
+            timeText.text = cli.lastMessageTime
             // sarebbe da mettere il last message della chat dentro il documento in userRooms (per l'anteprima)
             // e anche le altre info riguardo a tempo e conteggio non letti e foto profilo altro utente
 

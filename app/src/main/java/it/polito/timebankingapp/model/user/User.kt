@@ -2,6 +2,7 @@ package it.polito.timebankingapp.model.user
 
 import android.text.TextUtils
 import android.util.Patterns
+import com.google.firebase.firestore.DocumentSnapshot
 import java.io.Serializable
 
 
@@ -31,6 +32,27 @@ class User(
     }
 
     fun hasImage() = pic.isNotEmpty()
+
+
+
+    fun DocumentSnapshot.toUser(): User? {
+
+        return try {
+            val pic = get("pic") as String
+            val fullName = get("fullName") as String
+            val nick = get("nick") as String
+            val email = get("email") as String
+            val location = get("location") as String
+            val desc = get("description") as String
+            val balance = get("balance") as Long
+            val skills = get("skills") as MutableList<String>
+
+            User(id, pic, fullName, nick, email, location, desc, balance.toInt(), skills)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
+    }
 }
 
 

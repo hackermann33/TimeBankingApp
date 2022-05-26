@@ -3,16 +3,19 @@ package it.polito.timebankingapp.model.chat
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import java.io.Serializable
+import java.util.*
 
 data class ChatsListItem(
-    var timeslotId: String = "",
+    var chatId: String,
+    var timeslotId: String ,
 //    var userId: String = "",
-    var userName: String = "",
-    var userPic: String = "",
-    var chatMessages: List<ChatMessage> = listOf(),
-    var chatId : String = ""
+    var userName: String ,
+    var userPic: String ,
+    var lastMessageText: String ,
+    var lastMessageTime: String
 ) : Serializable {
 
-//    override fun toString(): String = "timeslotId:$timeslotId, userId: $userId, chatMessages: $chatMessages"
-    override fun toString(): String = "timeslotId:$timeslotId, userName: $userName, userPic: $userPic, chatMessages: $chatMessages"
+
+
+    override fun toString(): String = "timeslotId:$timeslotId, userName: $userName, userPic: $userPic"
 }

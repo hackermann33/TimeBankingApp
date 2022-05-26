@@ -22,6 +22,7 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import de.hdodenhof.circleimageview.CircleImageView
 import it.polito.timebankingapp.databinding.ActivityMainBinding
+import it.polito.timebankingapp.ui.chats.ChatViewModel
 import it.polito.timebankingapp.ui.profile.ProfileViewModel
 import it.polito.timebankingapp.ui.timeslots.TimeSlotsViewModel
 
@@ -40,6 +41,7 @@ class MainActivity : AppCompatActivity() {
 
     val vm by viewModels<ProfileViewModel>()
     val timeSlotVm by viewModels<TimeSlotsViewModel>()
+    val chatVm by viewModels<ChatViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -85,11 +87,13 @@ class MainActivity : AppCompatActivity() {
             }
 
             if(destination.id == R.id.nav_personalTimeSlotList){
-                timeSlotVm.setType("personal")
+                timeSlotVm.updatePersonalTimeSlots()
             }
             if(destination.id == R.id.nav_interestingTimeSlotList){
-                timeSlotVm.setType("interesting")
+                timeSlotVm.updateInterestingTimeSlots()
             }
+            if(destination.id == R.id.nav_chatsList)
+                chatVm.updateAllChats()
         }
 
 
