@@ -8,8 +8,8 @@
     <com.google.android.material.card.MaterialCardView
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:cardCornerRadius="20dp"
-        app:cardElevation="8dp"
+        app:cardCornerRadius="10dp"
+        app:cardElevation="1dp"
         app:cardUseCompatPadding="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -21,57 +21,81 @@
             android:layout_height="match_parent"
 
             android:paddingStart="16dp"
-            android:paddingTop="16dp"
-            android:paddingBottom="16dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="12dp"
             tools:ignore="RtlSymmetry">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/review_list_item_profile_pic"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@drawable/default_avatar"
+                app:civ_border_color="@color/text_standard"
+                app:civ_border_width="2dp"
+
+                app:layout_constraintHorizontal_weight="1"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/reviews_item_fullName"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
+                android:layout_marginStart="8dp"
                 android:fontFamily="@font/roboto_medium"
-                android:text="@string/time_slots_item_title"
-                android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+                android:text="@string/reviews_list_item_full_name"
+                app:layout_constraintBottom_toBottomOf="@+id/review_list_item_profile_pic"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/review_list_item_profile_pic"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <RatingBar
                 android:id="@+id/reviews_item_rating_bar"
-                style="@style/Widget.AppCompat.RatingBar.Indicator"
+                style="@style/Widget.AppCompat.RatingBar.Small"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
                 android:contentDescription="@string/rating_bar"
                 android:numStars="5"
+                android:layout_marginTop="8dp"
                 android:theme="@style/RatingBar"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/reviews_item_fullName" />
+                app:layout_constraintTop_toBottomOf="@+id/review_list_item_profile_pic" />
+
+            <TextView
+                android:id="@+id/textView7"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Reviewed on:"
+                android:textColor="#757575"
+                android:layout_marginTop="8dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/reviews_item_rating_bar" />
 
             <TextView
                 android:id="@+id/reviews_item_timestamp"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginStart="8dp"
                 android:layout_marginEnd="16dp"
                 android:layout_weight="1"
                 android:text="@string/reviews_item_timestamp"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textColor="#757575"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/textView7"
                 app:layout_constraintTop_toBottomOf="@+id/reviews_item_rating_bar" />
 
             <TextView
                 android:id="@+id/reviews_item_review_text"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
                 android:layout_marginEnd="16dp"
-                android:fontFamily="@font/roboto_medium"
-                android:text= "@string/reviews_item_review_text"
+                android:text="@string/reviews_item_review_text"
+                android:visibility="visible"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

@@ -22,6 +22,7 @@ import it.polito.timebankingapp.model.review.Review
 import it.polito.timebankingapp.model.user.User
 import it.polito.timebankingapp.ui.chats.chatslist.ChatsListViewAdapter
 import it.polito.timebankingapp.ui.profile.ProfileViewModel
+import it.polito.timebankingapp.ui.reviews.ReviewsViewAdapter
 
 
 class ShowPersonalProfileFragment : Fragment(R.layout.fragment_showprofile) {
@@ -117,6 +118,11 @@ class ShowPersonalProfileFragment : Fragment(R.layout.fragment_showprofile) {
             adTmp = ReviewsViewAdapter(tempReviewsList)
             rv.adapter = adTmp
 
+            val showReviewsBtn : Button = v.findViewById(R.id.show_all_reviews)
+
+            showReviewsBtn.setOnClickListener {
+                findNavController().navigate(R.id.action_nav_showProfile_to_nav_reviewsList)
+            }
 
 
 

@@ -1,4 +1,4 @@
-package it.polito.timebankingapp.ui.profile.showprofile
+package it.polito.timebankingapp.ui.reviews
 
 import android.view.LayoutInflater
 import android.view.View

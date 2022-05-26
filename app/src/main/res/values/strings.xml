@@ -89,4 +89,7 @@
     <string name="reviews_item_timestamp">Timestamp</string>
     <string name="reviews_item_review_text">Review Text</string>
     <string name="your_interesting_offers">Your interesting offers</string>
+    <string name="reviews_list_item_full_name">Full Name</string>
+    <string name="add_review_text_hint">Write something here (optional)</string>
+    <string name="add_review">Add Review</string>
 </resources>
