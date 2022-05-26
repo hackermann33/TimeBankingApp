@@ -1,6 +1,7 @@
 package it.polito.timebankingapp.ui.chats.chatslist
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -18,6 +19,11 @@ class ChatsListFragment : Fragment(R.layout.fragment_chats_list_list) {
     private val profileVm : ProfileViewModel by activityViewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        var chatListType: String ? = arguments?.getString("point_of_origin").toString()
+
+        if(chatListType != Type.SPECIFIC) chatListType = Type.GLOBAL
+
+        Log.d("ChatsListFragment", "type: $chatListType" )
 
         rv = view.findViewById(R.id.recycler_chat_list)
         rv.layoutManager = LinearLayoutManager(context)
@@ -35,7 +41,7 @@ class ChatsListFragment : Fragment(R.layout.fragment_chats_list_list) {
 //        tempChatsList.add(chatsListItem)
 //        tempChatsList.add(chatsListItem)
         chatVm.chatsList.observe(viewLifecycleOwner){
-            adTmp = ChatsListViewAdapter(it, ::selectChat, ::updateTimeSlotProfile)
+            adTmp = ChatsListViewAdapter(it, ::selectChat, ::updateTimeSlotProfile, chatListType)
             rv.adapter = adTmp
         }
 
@@ -50,4 +56,12 @@ class ChatsListFragment : Fragment(R.layout.fragment_chats_list_list) {
     fun updateTimeSlotProfile(userId : String){
         profileVm.retrieveTimeSlotProfileData(userId)
     }
+
+    companion object Type{
+        val GLOBAL = "global"
+        val SPECIFIC = "specific"
+
+    }
+
+
 }

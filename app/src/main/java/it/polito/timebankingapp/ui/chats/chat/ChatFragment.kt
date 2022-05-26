@@ -21,6 +21,7 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import de.hdodenhof.circleimageview.CircleImageView
 import it.polito.timebankingapp.R
+import it.polito.timebankingapp.model.Helper
 import it.polito.timebankingapp.model.chat.ChatMessage
 import it.polito.timebankingapp.ui.chats.ChatViewModel
 import it.polito.timebankingapp.ui.profile.ProfileViewModel
@@ -36,7 +37,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat_list) {
     private lateinit var layoutManager: LinearLayoutManager
 
     private val chatVm : ChatViewModel by activityViewModels()
-    private val profileVM : ProfileViewModel by activityViewModels()
+    //private val profileVM : ProfileViewModel by activityViewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
@@ -80,8 +81,11 @@ class ChatFragment : Fragment(R.layout.fragment_chat_list) {
 
         val profilePic = view.findViewById<CircleImageView>(R.id.chat_profile_pic)
 //        loadImageIntoView(profilePic, arguments?.getString("profilePic"))
-        profileVM.timeslotUserImage.observe(viewLifecycleOwner){
-            profilePic.setImageBitmap(it)
+
+
+
+        chatVm.otherProfilePic.observe(viewLifecycleOwner){ picUrl ->
+            Helper.loadImageIntoView(profilePic, picUrl)
         }
         profilePic.setOnClickListener{
             findNavController().navigate(R.id.action_nav_chat_to_nav_showProfile, bundleOf("point_of_origin" to "skill_specific"))
@@ -91,8 +95,8 @@ class ChatFragment : Fragment(R.layout.fragment_chat_list) {
 //            profileVM.retrieveTimeSlotProfileData(arguments?.getString("profileId") ?: "")
             findNavController().navigate(R.id.action_nav_chat_to_nav_showProfile, bundleOf("point_of_origin" to "skill_specific"))
         }
-        profileVM.timeslotUser.observe(viewLifecycleOwner){
-            profileName.text = it.fullName
+        chatVm.otherUserName.observe(viewLifecycleOwner){
+            profileName.text = it
         }
 
 
@@ -116,7 +120,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat_list) {
                     Firebase.auth.currentUser!!.uid,
                     textMessage.text.toString(),
                     Calendar.getInstance(),
-                    profileVM.user.value!!.fullName
+                    chatVm.otherUserName.value!!
                 ))
                 textMessage.text.clear()
 
@@ -157,7 +161,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat_list) {
         chatVm.cleanChats()
     }
 
-    private fun loadImageIntoView(view: CircleImageView, url: String?) {
+    /*private fun loadImageIntoView(view: CircleImageView, url: String?) {
         val storageReference = FirebaseStorage.getInstance().reference
         val picRef = storageReference.child(url ?: "")
         picRef.downloadUrl
@@ -174,7 +178,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat_list) {
                     e
                 )
             }
-    }
+    }*/
 }
 
 

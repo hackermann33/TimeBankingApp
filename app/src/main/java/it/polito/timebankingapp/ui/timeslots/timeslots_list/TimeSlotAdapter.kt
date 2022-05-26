@@ -112,10 +112,12 @@ class TimeSlotAdapter(
 //            val b = bundleOf("profilePic" to item.)
 //            b.putString("profileName", item.userName)
 //            b.putString("profileId", item.userId)
-            Navigation.findNavController(it).navigate(R.id.action_nav_skillSpecificTimeSlotList_to_nav_chat, )
+            val destination = if(type == "skill_specific") R.id.action_nav_skillSpecificTimeSlotList_to_nav_chat else
+                R.id.action_nav_interestingTimeSlotList_to_nav_chat
+            Navigation.findNavController(it).navigate(destination)
         }, showRequestsAction = {
             showRequests!!(item)
-            Navigation.findNavController(it).navigate(R.id.action_nav_personalTimeSlotList_to_nav_chatsList)
+            Navigation.findNavController(it).navigate(R.id.action_nav_personalTimeSlotList_to_nav_timeSlotChatsList)
         })
 
 

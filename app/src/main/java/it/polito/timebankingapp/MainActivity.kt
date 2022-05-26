@@ -86,14 +86,15 @@ class MainActivity : AppCompatActivity() {
                 /* Se vado a nav_showProfile ma ho giànav_timeSlotDetails nello stack... sono TimeSlotProfile*/
             }
 
+            /* Here I'm downloading the right infos when I navigate from drawer*/
             if(destination.id == R.id.nav_personalTimeSlotList){
                 timeSlotVm.updatePersonalTimeSlots()
             }
             if(destination.id == R.id.nav_interestingTimeSlotList){
                 timeSlotVm.updateInterestingTimeSlots()
             }
-//            if(destination.id == R.id.nav_chatsList)
-//                chatVm.updateAllChats()
+            if(destination.id == R.id.nav_allChatsList)
+                chatVm.updateAllChats()
         }
 
 

@@ -12,12 +12,14 @@ import com.bumptech.glide.Glide
 import com.google.firebase.storage.FirebaseStorage
 import de.hdodenhof.circleimageview.CircleImageView
 import it.polito.timebankingapp.R
+import it.polito.timebankingapp.model.Helper
 import it.polito.timebankingapp.model.chat.ChatsListItem
 
 class ChatsListViewAdapter(
     private var data: List<ChatsListItem>,
     private var selectChat: (chatId: String) -> Unit?,
-    private var updateUser: (userId: String) -> Unit?
+    private var updateUser: (userId: String) -> Unit?,
+    val type: String
 ) : RecyclerView.Adapter<ChatsListViewAdapter.ItemViewHolder>() {
 
     private var displayData = data.toMutableList()
@@ -41,29 +43,12 @@ class ChatsListViewAdapter(
             // e anche le altre info riguardo a tempo e conteggio non letti e foto profilo altro utente
 
             // Use Glide HERE!!!
-            loadImageIntoView(imagePic, cli.userPic)
+            Helper.loadImageIntoView(imagePic, cli.userPic)
 
             this.itemView.setOnClickListener(openChatAction)
         }
 
-        private fun loadImageIntoView(view: CircleImageView, url: String) {
-            val storageReference = FirebaseStorage.getInstance().reference
-            val picRef = storageReference.child(url)
-            picRef.downloadUrl
-                .addOnSuccessListener { uri ->
-                    val downloadUrl = uri.toString()
-                    Glide.with(view.context)
-                        .load(downloadUrl)
-                        .into(view)
-                }
-                .addOnFailureListener { e ->
-                    Log.w(
-                        "loadImage",
-                        "Getting download url was not successful.",
-                        e
-                    )
-                }
-        }
+
     }
 
     //inflate the item_layout-based structure inside each ViewHolder
@@ -84,7 +69,9 @@ class ChatsListViewAdapter(
         val item = displayData[position]
         holder.bind(item, openChatAction =
         {
-            val destination = R.id.action_nav_chatsList_to_nav_chat
+            val destination = if(type == ChatsListFragment.GLOBAL) R.id.action_nav_allChatsList_to_nav_chat
+            else
+                R.id.action_nav_timeSlotChatsList_to_nav_chat
             selectChat(item.chatId)
 //            val b = bundleOf("profilePic" to item.userPic)
 //            b.putString("profileName", item.userName)
