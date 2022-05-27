@@ -94,7 +94,7 @@ class ChatViewAdapter(
                 dateText.visibility = View.GONE
 
             timeText.text = hour
-            nameText.text = message.userName
+            /*nameText.text = message.userName*/
 
             //profileImage.setImageBitmap(message.profilePic) //da riabilitare più avanti
 

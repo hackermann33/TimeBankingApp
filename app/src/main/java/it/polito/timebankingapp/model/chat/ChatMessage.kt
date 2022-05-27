@@ -12,8 +12,6 @@ data class ChatMessage(
     var userId: String = "",
     var messageText: String = "",
     var timestamp: Calendar = Calendar.getInstance(),
-    var userName: String = ""
-//    var timestamp: String = ""
 ) : Serializable {
 
     override fun toString(): String = "userId: $userId, timestamp: $timestamp, messageText: $messageText"

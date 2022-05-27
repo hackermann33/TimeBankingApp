@@ -6,7 +6,7 @@ import com.google.firebase.firestore.DocumentSnapshot
 import java.io.Serializable
 
 
-class User(
+data class User(
     var id: String = "",
     var pic: String = "",
     var fullName: String = "",
@@ -32,7 +32,6 @@ class User(
     }
 
     fun hasImage() = pic.isNotEmpty()
-
 
 
     fun DocumentSnapshot.toUser(): User? {

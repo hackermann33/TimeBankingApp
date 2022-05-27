@@ -6,12 +6,29 @@
     app:startDestination="@id/nav_skillsList">
 
     <fragment
+        android:id="@+id/nav_allChatsList"
+        android:name="it.polito.timebankingapp.ui.chats.chatslist.ChatsListFragment"
+        android:label="Available chats"
+        tools:layout="@layout/fragment_chats_list_list">
+        <action
+            android:id="@+id/action_nav_allChatsList_to_nav_chat"
+            app:destination="@id/nav_chat" >
+            <argument
+                android:name="point_of_origin"
+                android:defaultValue="global" />
+        </action>
+    </fragment>
+    <fragment
         android:id="@+id/nav_personalTimeSlotList"
         android:name="it.polito.timebankingapp.ui.timeslots.timeslots_list.TimeSlotListFragment"
         tools:layout="@layout/fragment_timeslots_list">
         <action
-            android:id="@+id/action_nav_personalTimeSlotList_to_nav_chatsList"
-            app:destination="@id/nav_chatsList" />
+            android:id="@+id/action_nav_personalTimeSlotList_to_nav_timeSlotChatsList"
+            app:destination="@id/nav_timeSlotChatsList" >
+            <argument
+                android:name="point_of_origin"
+                android:defaultValue="specific" />
+        </action>
         <action
             android:id="@+id/action_nav_personalTimeSlotList_to_nav_timeSlotDetails"
             app:destination="@id/nav_timeSlotDetails" />
@@ -127,17 +144,21 @@
             app:destination="@id/nav_showProfile" />
     </fragment>
     <fragment
-        android:id="@+id/nav_chatsList"
+        android:id="@+id/nav_timeSlotChatsList"
         android:name="it.polito.timebankingapp.ui.chats.chatslist.ChatsListFragment"
         android:label="Available chats"
         tools:layout="@layout/fragment_chats_list_list" >
         <action
-            android:id="@+id/action_nav_chatsList_to_nav_chat"
+            android:id="@+id/action_nav_timeSlotChatsList_to_nav_chat"
             app:destination="@id/nav_chat"
             app:enterAnim="@anim/nav_default_enter_anim"
             app:exitAnim="@anim/nav_default_exit_anim"
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" >
+            <argument
+                android:name="point_of_origin"
+                android:defaultValue="specific" />
+        </action>
     </fragment>
     <fragment
         android:id="@+id/nav_reviewsList"

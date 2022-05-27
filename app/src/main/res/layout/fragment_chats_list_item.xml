@@ -3,13 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_margin="0dp">
+    android:layout_height="wrap_content">
 
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="2dp"
         android:layout_marginBottom="2dp"
         app:cardCornerRadius="6dp"
         app:cardElevation="3dp"
@@ -19,7 +17,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/linearLayout4"
+            android:id="@+id/constraintLayout4"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -34,73 +32,79 @@
                 app:civ_border_width="2dp"
 
                 app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/chat_list_item_time_slot_title"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintHorizontal_chainStyle="spread_inside"
                 app:layout_constraintHorizontal_weight="1"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.0" />
 
-            <LinearLayout
-                android:id="@+id/linearLayout5"
+            <TextView
+                android:id="@+id/chat_list_item_fullname"
+                android:layout_width="221dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="2dp"
+                android:fontFamily="@font/roboto_medium"
+                android:text="@string/chat_list_item_fullname"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                app:layout_constraintBottom_toTopOf="@+id/chat_list_item_time_slot_title"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toEndOf="@+id/chat_profile_pic"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_chainStyle="packed"
+                tools:text="Antonio Cesaria" />
+
+            <TextView
+                android:id="@+id/chat_list_item_timestamp"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="8dp"
+                android:gravity="center|end"
+                android:paddingEnd="8dp"
+                android:text="@string/chat_list_item_timestamp"
+                android:textColor="#757575"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toBottomOf="@+id/chat_list_item_time_slot_title"
+                app:layout_constraintEnd_toEndOf="parent"
+                tools:text="yesterday" />
+
+            <TextView
+                android:id="@+id/chat_list_item_time_slot_title"
                 android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_margin="8dp"
-                android:orientation="vertical"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="2dp"
+                android:fontFamily="@font/roboto_medium"
+                android:text="time_slot_title"
+                android:textAllCaps="false"
+                android:textStyle="italic"
+                app:layout_constraintBottom_toTopOf="@+id/chat_list_item_last_message"
+                app:layout_constraintEnd_toStartOf="@+id/chat_list_item_timestamp"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@+id/chat_list_item_fullname"
+                app:layout_constraintTop_toBottomOf="@+id/chat_list_item_fullname"
+                tools:text="longellgerlongerlongerlongerr" />
+
+            <TextView
+                android:id="@+id/chat_list_item_last_message"
+                android:layout_width="277dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="12dp"
+                android:singleLine="true"
+                android:text="@string/chat_list_item_message"
+                android:textColor="#757575"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_weight="4"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toEndOf="@+id/chat_profile_pic"
-                app:layout_constraintTop_toTopOf="parent">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/chat_list_item_fullname"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="2"
-                        android:text="@string/chat_list_item_fullname"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Large" />
-
-                    <TextView
-                        android:id="@+id/chat_list_item_timestamp"
-                        android:layout_width="60dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="center|end"
-                        android:paddingEnd="8dp"
-                        android:text="@string/chat_list_item_timestamp"
-                        android:textColor="#757575"
-                        android:textSize="12sp"
-                        tools:ignore="RtlSymmetry" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/chat_list_item_message"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="2"
-                        android:text="@string/chat_list_item_message"
-                        android:textColor="#757575" />
-
-                    <TextView
-                        android:id="@+id/chat_list_item_notifies_number"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="(1)"
-                        android:textColor="@color/blue"
-                        android:textStyle="bold" />
-                </LinearLayout>
-
-            </LinearLayout>
+                app:layout_constraintTop_toBottomOf="@+id/chat_list_item_time_slot_title" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

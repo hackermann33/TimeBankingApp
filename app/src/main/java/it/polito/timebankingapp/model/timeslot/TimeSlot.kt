@@ -21,6 +21,7 @@ data class TimeSlot(
 
     override fun toString(): String = "{ title:$title, description: $description, date: $date, time: $time, duration: $duration, location: $location"
 
+    @Exclude
     fun isValid() : Boolean{
         return title != "" && description != "" && date != "" && time != "" && duration != "" && location != "" && restrictions != "" && relatedSkill != ""
     }

@@ -49,6 +49,8 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_timeslots_list) {
 
         type = arguments?.getString("point_of_origin").toString()
 
+
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -227,7 +229,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_timeslots_list) {
     }
 
     private fun showRequests(ts: TimeSlot) {
-        chatVm.showRequests(ts.id)
+        chatVm.downloadTimeSlotChats(ts.id)
     }
 
     private fun selectTimeSlot(ts: TimeSlot) {
