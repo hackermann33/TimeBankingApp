@@ -1,5 +1,6 @@
 package it.polito.timebankingapp.model
 
+import android.text.format.DateUtils
 import android.util.Log
 import com.bumptech.glide.Glide
 import com.google.firebase.auth.ktx.auth
@@ -7,6 +8,7 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import de.hdodenhof.circleimageview.CircleImageView
 import it.polito.timebankingapp.model.user.User
+import java.util.*
 
 class Helper {
     companion object {
@@ -35,5 +37,10 @@ class Helper {
             else
                 req.offerer ;
         }
+
+        fun isYesterday(d: Date): Boolean {
+            return DateUtils.isToday(d.time + DateUtils.DAY_IN_MILLIS)
+        }
+
     }
 }

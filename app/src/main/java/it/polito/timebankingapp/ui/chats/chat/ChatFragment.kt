@@ -1,8 +1,6 @@
 package it.polito.timebankingapp.ui.chats.chat
 
-import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.View.OnLayoutChangeListener
 import android.widget.Button
@@ -15,16 +13,13 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.FirebaseStorage
 import de.hdodenhof.circleimageview.CircleImageView
 import it.polito.timebankingapp.R
 import it.polito.timebankingapp.model.Helper
 import it.polito.timebankingapp.model.chat.ChatMessage
 import it.polito.timebankingapp.ui.chats.ChatViewModel
-import it.polito.timebankingapp.ui.profile.ProfileViewModel
 import java.util.*
 
 
@@ -120,7 +115,6 @@ class ChatFragment : Fragment(R.layout.fragment_chat_list) {
                     Firebase.auth.currentUser!!.uid,
                     textMessage.text.toString(),
                     Calendar.getInstance(),
-                    chatVm.otherUserName.value!!
                 ))
                 textMessage.text.clear()
 

@@ -1,6 +1,7 @@
 package it.polito.timebankingapp.ui.chats
 
 import android.app.Application
+import android.text.format.DateUtils
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
@@ -19,6 +20,7 @@ import it.polito.timebankingapp.model.chat.ChatMessage
 import it.polito.timebankingapp.model.chat.ChatsListItem
 import java.text.SimpleDateFormat
 import java.util.*
+
 
 class ChatViewModel(application: Application): AndroidViewModel(application) {
     private val _chatId = MutableLiveData<String>()
@@ -64,7 +66,6 @@ class ChatViewModel(application: Application): AndroidViewModel(application) {
             "messageText" to message.messageText,
             "timestamp" to message.timestamp.time,
             "userId" to message.userId,
-            "userName" to message.userName
         )).addOnSuccessListener {
             requestRef.update(mapOf ("lastMessageText" to message.messageText, "lastMessageTime" to message.timestamp.time))
             Log.d("sendMessage", "success")
@@ -92,13 +93,12 @@ class ChatViewModel(application: Application): AndroidViewModel(application) {
             val userId = get("userId") as String
             val messageText = get("messageText") as String
             val timestamp = get("timestamp") as Timestamp
-            val userName = get("userName") as String
 
 
             val cal = Calendar.getInstance()
             cal.time = timestamp.toDate()
 
-            ChatMessage(userId,messageText, cal, userName)
+            ChatMessage(userId,messageText, cal)
         } catch(e: Exception) {
             e.printStackTrace()
             null
@@ -114,28 +114,16 @@ class ChatViewModel(application: Application): AndroidViewModel(application) {
         _chatMessages.value = listOf()
     }
 
+    fun downloadChat() {
+
+    }
+
+
     fun selectChat(chatId: String) {
         _chatId.value = chatId
-        val chatItem : ChatsListItem?
         val chatRef = db.collection("requests").document(chatId)
 
-
-        /* This means that I've already downloaded some chats so try to found that
-        * chat here */
-        if(chatsList.value != null){
-            chatItem = chatsList.value!!.find { it.chatId == chatId }
-            if (chatItem != null) {
-                _otherUserName.postValue( chatItem.userName)
-                _otherProfilePic.postValue(chatItem.userPic)
-                /* Here update also reviews*/
-            }
-            else {
-                downloadChat(chatId)
-            }
-        }
-        else {
-            downloadChat(chatId)
-        }
+        updateUserInfo(chatRef, chatId)
 
         /* Download messages */
         l = chatRef.collection("messages").orderBy("timestamp")
@@ -149,26 +137,33 @@ class ChatViewModel(application: Application): AndroidViewModel(application) {
             }
     }
 
-    fun downloadChat(chatId: String) {
-        val chatRef = db.collection("requests").document(chatId)
-        chatRef.addSnapshotListener {
-                v,e ->
-            if(e == null) {
-                val req = v!!.toObject<Request>()
-                if(req != null) {
-                    val otherUser = Helper.getOtherUser(req)
-                    _otherUserName.postValue(otherUser.fullName)
-                    _otherProfilePic.postValue(otherUser.pic)
-                }
-                else {
-                    Log.d("selectChat", "this should not happen")
-                    throw Exception("chat not found in the DB!!!")
+
+    private fun updateUserInfo(chatRef: DocumentReference, chatId: String) {
+        val chatItem: ChatsListItem? = _chatsList.value?.first { it -> it.chatId == chatId }
+        if (chatItem != null) {
+            _otherUserName.postValue(chatItem.userName)
+            _otherProfilePic.postValue(chatItem.userPic)
+        }
+        else {
+            chatRef.addSnapshotListener { v, e ->
+                if (e == null) {
+                    val req = v!!.toObject<Request>()
+                    if (req != null) {
+                        val otherUser = Helper.getOtherUser(req)
+                        _otherUserName.postValue(otherUser.fullName)
+                        _otherProfilePic.postValue(otherUser.pic)
+                    } else {
+                        Log.d("selectChat", "this should not happen")
+                        throw Exception("chat not found in the DB!!!")
+                    }
                 }
             }
+
         }
     }
 
-//    not used
+
+    //    not used
     fun updateAllChats() {
            Log.d("User", Firebase.auth.uid.toString())
             val currentId = Firebase.auth.uid.toString()
@@ -181,7 +176,7 @@ class ChatViewModel(application: Application): AndroidViewModel(application) {
                             val otherUser = Helper.getOtherUser(r)
                             val timeStr = r.lastMessageTime.toDisplayString()
                             val userId = Firebase.auth.uid.toString()
-                            ChatsListItem(r.requestId, userId,  r.timeSlot.id, otherUser.fullName, otherUser.pic, r.lastMessageText, timeStr )}
+                            ChatsListItem(r.requestId, userId,  r.timeSlot.id, r.timeSlot.title,  otherUser.fullName, otherUser.pic, r.lastMessageText, timeStr )}
                         Log.d("chatsListValue", "success")
                     } else{
                         _chatsList.value = emptyList()
@@ -190,7 +185,9 @@ class ChatViewModel(application: Application): AndroidViewModel(application) {
                 }
         }
 
-    fun showRequests(tsId: String) {
+
+    /* Download all the chat related to a specific offer that current user has published */
+    fun downloadTimeSlotChats(tsId: String) {
 //        Log.d("showRequests", "Arrived at ViewModel $tsId")
         Log.d("User", Firebase.auth.uid.toString())
         l = db.collection("requests").whereEqualTo("offerer.id",Firebase.auth.uid.toString()).whereEqualTo("timeSlot.id", tsId)
@@ -201,7 +198,8 @@ class ChatViewModel(application: Application): AndroidViewModel(application) {
                 _chatsList.value = req.mapNotNull { r ->
                     val timeStr = r.lastMessageTime.toDisplayString()
                     val userId = Firebase.auth.uid.toString()
-                    ChatsListItem(r.requestId, userId, r.timeSlot.id, r.requester.fullName, r.requester.pic, r.lastMessageText, timeStr)
+
+                    ChatsListItem(r.requestId, userId, r.timeSlot.id, r.timeSlot.title, r.requester.fullName, r.requester.pic, r.lastMessageText, timeStr)
                 }
                 Log.d("chatsListValue", "chatList: ${_chatsList.value}")
             } else{
@@ -212,10 +210,16 @@ class ChatViewModel(application: Application): AndroidViewModel(application) {
     }
 }
 
+
 private fun Date.toDisplayString(): String {
 
-    val sdf = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
+    var pattern: String = when {
+        Helper.isYesterday(this) -> return "yesterday"
+        DateUtils.isToday(this.time) -> "dd/MM/yy"
+        else -> "HH:mm"
+    }
 
+    val sdf = SimpleDateFormat(pattern, Locale.getDefault())
     return sdf.format(this)
 
 }
