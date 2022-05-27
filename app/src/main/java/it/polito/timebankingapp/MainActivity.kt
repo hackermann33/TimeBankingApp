@@ -20,6 +20,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+//import com.jakewharton.threetenabp.AndroidThreeTen
 import de.hdodenhof.circleimageview.CircleImageView
 import it.polito.timebankingapp.databinding.ActivityMainBinding
 import it.polito.timebankingapp.ui.chats.ChatViewModel
@@ -44,6 +45,7 @@ class MainActivity : AppCompatActivity() {
     val chatVm by viewModels<ChatViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        //AndroidThreeTen.init(this)
         super.onCreate(savedInstanceState)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -169,7 +171,5 @@ class MainActivity : AppCompatActivity() {
     fun setActionBarTitle(title: String?) {
         supportActionBar?.title = title
     }
-
-
 }
 

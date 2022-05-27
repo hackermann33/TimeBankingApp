@@ -34,5 +34,11 @@
             android:icon="@drawable/ic_baseline_list_24"
             android:title="Add review (TEMP LINK)"
             />
+        <item
+            android:id="@+id/nav_timeSlotMonthCalendar"
+            android:icon="@drawable/ic_baseline_list_24"
+            android:title="Time slots Calendar"
+            />
+
     </group>
 </menu>

@@ -149,6 +149,11 @@
         android:name="it.polito.timebankingapp.ui.reviews.AddReviewFragment"
         android:label="Add new review"
         tools:layout="@layout/fragment_add_review" />
+    <fragment
+        android:id="@+id/nav_timeSlotMonthCalendar"
+        android:name="it.polito.timebankingapp.ui.timeslots.timeslots_calendar.TimeSlotMonthCalendar"
+        android:label="Calendar"
+        tools:layout="@layout/fragment_time_slot_month_calendar" />
 
 </navigation>
 

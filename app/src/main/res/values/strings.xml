@@ -29,9 +29,9 @@
     <string name="time_slots_edit_icon">timeSlotEditIcon</string>
     <string name="time_slots_item_duration">3h</string>
     <string name="time_slots_item_duration_label">Estimated time:</string>
-    <string name="time_slots_item_start">01/01/2022 -00:00</string>
+    <string name="time_slots_item_start">01/01/2022 – 00:00</string>
     <string name="time_slots_item_start_label">Starts at:</string>
-    <string name="time_slots_item_location">Location</string>
+    <string name="time_slots_item_location">Location example</string>
     <string name="menu_drawer_show_profile">Show Profile</string>
     <string name="add_timeslot">add timeslot</string>
     <string name="timeslot_splash">" "</string>
@@ -92,4 +92,9 @@
     <string name="reviews_list_item_full_name">Full Name</string>
     <string name="add_review_text_hint">Write something here (optional)</string>
     <string name="add_review">Add Review</string>
+    <string name="delete">Delete</string>
+    <string name="close">close</string>
+    <string name="dialog_delete_confirmation">Do you want to delete it?</string>
+    <string name="january_1970">January 1970</string>
+    <string name="location_label">Location:</string>
 </resources>
