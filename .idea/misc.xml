@@ -65,6 +65,7 @@
         <entry key="app/src/main/res/layout/fragment_chat_receiver_item.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_chat_sender_item.xml" value="0.21195652173913043" />
         <entry key="app/src/main/res/layout/fragment_chats_list_item.xml" value="0.5" />
+        <entry key="app/src/main/res/layout/fragment_chats_list_list.xml" value="0.28894927536231885" />
         <entry key="app/src/main/res/layout/fragment_editprofile.xml" value="0.3578125" />
         <entry key="app/src/main/res/layout/fragment_login.xml" value="0.33" />
         <entry key="app/src/main/res/layout/fragment_personal_timeslots_list.xml" value="0.3546875" />

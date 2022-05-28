@@ -22,7 +22,8 @@ import it.polito.timebankingapp.R
 import it.polito.timebankingapp.model.Helper
 import it.polito.timebankingapp.model.timeslot.TimeSlot
 import it.polito.timebankingapp.model.user.User
-import it.polito.timebankingapp.ui.chats.ChatViewModel
+import it.polito.timebankingapp.ui.chats.chat.ChatViewModel
+import it.polito.timebankingapp.ui.chats.chatslist.ChatListViewModel
 import it.polito.timebankingapp.ui.profile.ProfileViewModel
 import it.polito.timebankingapp.ui.timeslots.TimeSlotsViewModel
 
@@ -40,6 +41,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_timeslots_list) {
     private val vm: TimeSlotsViewModel by activityViewModels()
     private val userVm: ProfileViewModel by activityViewModels()
     private val chatVm: ChatViewModel by activityViewModels()
+    private val chatListVm: ChatListViewModel by activityViewModels()
 
     private lateinit var type: String
 
@@ -142,7 +144,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_timeslots_list) {
 
     fun showTimeSlotRequest(timeSlot: TimeSlot) {
         val chatId = Helper.makeRequestId(timeSlot.id, Firebase.auth.uid!!)
-        chatVm.selectChat(chatId)
+        chatVm.selectChat(chatId, timeSlot.userId)
         //chatVm.updateUserInfo(timeSlot.userId)
     }
 
@@ -225,17 +227,10 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_timeslots_list) {
         voidMessageSubText.visibility = visibility
     }
 
-    private fun requestTimeSlot(ts: TimeSlot) {
-        val offerer = userVm.getUserFromId(ts.userId).addOnSuccessListener {
-            vm.requestTimeSlot(ts, userVm.user.value!!,  it.toUser()!!)
 
-            val chatId = Helper.makeRequestId(ts.id, Firebase.auth.uid!!)
-            chatVm.selectChat(chatId)
-        }
-    }
 
     private fun showRequests(ts: TimeSlot) {
-        chatVm.downloadTimeSlotChats(ts.id)
+        chatListVm.downloadTimeSlotChats(ts.id)
     }
 
     private fun selectTimeSlot(ts: TimeSlot) {
@@ -296,5 +291,6 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_timeslots_list) {
         //userVm.retrieveTimeSlotProfileData(userId)
         chatVm.updateUserInfo(userId)
     }
+
 
 }

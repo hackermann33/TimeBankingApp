@@ -5,19 +5,15 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
-import com.google.firebase.firestore.QueryDocumentSnapshot
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
 import it.polito.timebankingapp.model.Request
-import it.polito.timebankingapp.model.Request.Companion.STATUS_INTERESTED
 import it.polito.timebankingapp.model.timeslot.TimeSlot
 import it.polito.timebankingapp.model.user.User
-import java.sql.Time
 
 
 class TimeSlotsViewModel(application: Application): AndroidViewModel(application) {
@@ -59,7 +55,7 @@ class TimeSlotsViewModel(application: Application): AndroidViewModel(application
         Log.d("selectedSkill", "updateSkillSpecificTimeSlos: selectedSkill: ${skill}")
         l = db.collection("timeSlots").whereNotEqualTo("userId", Firebase.auth.uid).whereEqualTo("relatedSkill",skill).addSnapshotListener{v,e ->
             if(e == null){
-                _timeSlots.value = v!!.mapNotNull { d -> try { d.toObject() } catch(e: Exception){ null} }
+                _timeSlots.value = v!!.mapNotNull { d -> d.toObject<TimeSlot>() }
             } else _timeSlots.value = emptyList()
         }
     }
@@ -68,10 +64,15 @@ class TimeSlotsViewModel(application: Application): AndroidViewModel(application
     fun updatePersonalTimeSlots() {
         l = db.collection("timeSlots").whereEqualTo("userId", Firebase.auth.uid).addSnapshotListener{v,e ->
             if(e == null){
-                _timeSlots.value = v!!.mapNotNull { d -> try { d.toObject() } catch(e: Exception){ null} }
+                _timeSlots.value = v!!.mapNotNull { d -> d.toObject<TimeSlot>() }
             } else _timeSlots.value = emptyList()
         }
     }
+
+
+
+
+
 
 
     fun updateInterestingTimeSlots() {
@@ -79,7 +80,7 @@ class TimeSlotsViewModel(application: Application): AndroidViewModel(application
         db.collection("requests").whereEqualTo("requester.id", myUid)
             .whereEqualTo("status", Request.STATUS_INTERESTED).addSnapshotListener{ v, e ->
                 if(e == null){
-                    val req = v!!.mapNotNull {  d -> try { d.toObject<Request>() } catch(e: Exception){ null} }
+                    val req = v!!.mapNotNull {  d -> d.toObject<Request>()  }
                     _timeSlots.value = req.mapNotNull {  r -> r.timeSlot }
                 } else {
                     _timeSlots.value = emptyList()
@@ -162,12 +163,27 @@ class TimeSlotsViewModel(application: Application): AndroidViewModel(application
         updateSkillSpecificTimeSlots(skill)
     }
 
-    /* This is used to create a request */
-    fun requestTimeSlot(ts: TimeSlot, requester: User, offerer: User): Task<Void> {
+    /* This is used to contact the offerer through chat */
+    fun requestTimeSlot(ts: TimeSlot, requester: User, offerer: User, selectChat: (String) -> Unit) : String {
         val chatId = ts.id + "_" + requester.id
-        val  req = Request(timeSlot = ts, requester = requester, offerer = offerer)
+        val  req = Request(timeSlot = ts, requester = requester, offerer = offerer, unreadMsg = 0)
+        /* if chat does not already exists, then it is a new chat */
+        db.collection("requests").document(chatId).get()
+            .addOnSuccessListener { doc ->
+                if(!doc.exists())  //if doc is created now
+                    ts.unreadChats = ts.unreadChats+1
+                db.collection("timeSlots").document(ts.id).set(ts)
+                db.collection("requests").document(chatId).set(req)
+                selectChat(chatId)
+//                ci andrebbe selectChat
+            }
+//        ts.unreadChats = ts.unreadChats+1
+//        db.collection("requests").document(chatId).set(req)
+//        db.collection("timeSlots").document(ts.id).set(ts)
+//            .addOnSuccessListener { Log.d("unreadChats", "success") }
+//            .addOnFailureListener { Log.d("unreadChats", "fail") }
 
-        return db.collection("requests").document(chatId).set(req)
+        return chatId
     }
 
 
