@@ -32,19 +32,8 @@ class ChatListFragment : Fragment(R.layout.fragment_chats_list_list) {
         rv.layoutManager = LinearLayoutManager(context)
 
 
-//        val tempMessagesList = mutableListOf<ChatMessage>()
-//
-//        //val res =  BitmapFactory.decodeResource(requireContext().resources,R.drawable.default_avatar)
-//
-//        //chatsList
-//        val chatsListItem = ChatsListItem("timeslotID", "requesterId", tempMessagesList)
-//        val tempChatsList = mutableListOf<ChatsListItem>()
-//
-//        tempChatsList.add(chatsListItem)
-//        tempChatsList.add(chatsListItem)
-//        tempChatsList.add(chatsListItem)
         chatListViewModel.chatsList.observe(viewLifecycleOwner){
-            adTmp = ChatListViewAdapter(it, ::selectChat/*, ::updateTimeSlotProfile*/, chatListType, 6)
+            adTmp = ChatListViewAdapter(it, ::selectChat/*, ::updateTimeSlotProfile*/, chatListType)
             rv.adapter = adTmp
         }
 

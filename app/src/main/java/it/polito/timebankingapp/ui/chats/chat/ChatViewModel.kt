@@ -147,6 +147,8 @@ class ChatViewModel(application: Application): AndroidViewModel(application)  {
             if (e == null) {
                 val req = v!!.toObject<Request>()
                 if (req != null) {
+                    //Helper.getChatItem(req)
+
                     val otherUser = Helper.getOtherUser(req)
                     _otherUserName.postValue(otherUser.fullName)
                     _otherProfilePic.postValue(otherUser.pic)

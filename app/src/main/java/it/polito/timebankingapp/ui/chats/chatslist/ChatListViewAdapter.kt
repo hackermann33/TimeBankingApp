@@ -17,7 +17,6 @@ class ChatListViewAdapter(
     private var selectChat: (chat: ChatsListItem) -> Unit?,
     /*private var updateUser: (userId: String) -> Unit?,*/
     val type: String,
-    private val unreadMsg: Long
 ) : RecyclerView.Adapter<ChatListViewAdapter.ItemViewHolder>() {
 
     private var displayData = data.toMutableList()
@@ -32,7 +31,7 @@ class ChatListViewAdapter(
         private val nUnreadMsg: TextView = itemView.findViewById(R.id.n_unread_msg)
         private val unreadMsgCard: CardView = itemView.findViewById(R.id.unread_msg_card)
 
-        fun bind(cli: ChatsListItem, openChatAction: (v: View) -> Unit, unread: Long) {
+        fun bind(cli: ChatsListItem, openChatAction: (v: View) -> Unit) {
 //            fullNameText.text = "Nome Cognome" //necessario riferimento usr o timeslotusr
 //            messageText.text = cli.chatMessages[cli.chatMessages.size-1].messageText
 //            timeText.text = cli.chatMessages[cli.chatMessages.size-1].timestamp.split("-")[1] //se è di oggi mostra l'orario, altrimenti la data
@@ -40,7 +39,7 @@ class ChatListViewAdapter(
             fullNameText.text = cli.userName
             messageText.text = cli.lastMessageText
             if(cli.nUnreadMsg > 0)
-                nUnreadMsg.text = unread.toString()
+                nUnreadMsg.text = cli.nUnreadMsg.toString()
             else
                 unreadMsgCard.visibility = View.GONE
             timeText.text = cli.lastMessageTime
@@ -88,7 +87,7 @@ class ChatListViewAdapter(
                 destination,
                 //bundleOf("point_of_origin" to type, "userId" to item.userId)
             )
-        }, unreadMsg
+        }
         );
     }
 
