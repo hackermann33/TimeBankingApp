@@ -45,6 +45,9 @@ class ChatViewModel(application: Application): AndroidViewModel(application) {
 
     private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
 
+    private val _nUnreadMsg = MutableLiveData<Long>()
+    val nUnreadMsg: LiveData<Long> = _nUnreadMsg
+
     private lateinit var l: ListenerRegistration
     private lateinit var l2: ListenerRegistration
 
@@ -202,7 +205,7 @@ class ChatViewModel(application: Application): AndroidViewModel(application) {
                             val otherUser = Helper.getOtherUser(r)
                             val timeStr = r.lastMessageTime.toDisplayString()
                             val userId = Firebase.auth.uid.toString()
-                            ChatsListItem(r.requestId, userId,  r.timeSlot.id, r.timeSlot.title,  otherUser.fullName, otherUser.pic, r.lastMessageText, timeStr )}
+                            ChatsListItem(r.requestId, userId,  r.timeSlot.id, r.timeSlot.title,  otherUser.fullName, otherUser.pic, r.lastMessageText, timeStr, r.unreadMsg)}
                         Log.d("chatsListValue", "success")
                     } else{
                         _chatsList.value = emptyList()
@@ -225,7 +228,7 @@ class ChatViewModel(application: Application): AndroidViewModel(application) {
                     val timeStr = r.lastMessageTime.toDisplayString()
                     val userId = Firebase.auth.uid.toString()
 
-                    ChatsListItem(r.requestId, userId, r.timeSlot.id, r.timeSlot.title, r.requester.fullName, r.requester.pic, r.lastMessageText, timeStr)
+                    ChatsListItem(r.requestId, userId, r.timeSlot.id, r.timeSlot.title, r.requester.fullName, r.requester.pic, r.lastMessageText, timeStr, r.unreadMsg)
                 }
                 Log.d("chatsListValue", "chatList: ${_chatsList.value}")
             } else{

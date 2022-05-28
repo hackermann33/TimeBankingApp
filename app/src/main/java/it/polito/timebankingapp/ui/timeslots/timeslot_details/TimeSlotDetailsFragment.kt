@@ -97,11 +97,12 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
             btnRequestService.setOnClickListener{
                 if (ts != null) {
                     profileViewModel.getUserFromId(ts.userId).addOnSuccessListener {
-                        val chatId = globalModel.requestTimeSlot(ts, profileViewModel.user.value!!,  it.toUser()!!).addOnSuccessListener {
+                        val chatId = globalModel.requestTimeSlot(ts, profileViewModel.user.value!!,  it.toUser()!!, ::selectChat)
+                        /*    .addOnSuccessListener {
                             Snackbar.make(view, "Request correctly sent!", Snackbar.LENGTH_SHORT).show()
                         }.addOnFailureListener{
                             Snackbar.make(view, "Oops, something gone wrong!", Snackbar.LENGTH_SHORT).show()
-                        }
+                        }*/
                     }
                 }
             }
@@ -175,5 +176,9 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
         }*/
         val b = bundleOf("timeslot" to timeSlot)
         findNavController().navigate(R.id.action_nav_timeSlotDetails_to_timeSlotEditFragment, b)
+    }
+
+    private fun selectChat(chatId: String){
+        chatVm.selectChat(chatId)
     }
 }
