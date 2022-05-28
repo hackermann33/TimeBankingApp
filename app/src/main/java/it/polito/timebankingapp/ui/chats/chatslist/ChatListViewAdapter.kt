@@ -4,6 +4,7 @@ import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.navigation.Navigation
@@ -26,6 +27,7 @@ class ChatListViewAdapter(
         var tvLastMessage: TextView = itemView.findViewById(R.id.chat_list_item_last_message)
         var tvLastMessageTime: TextView = itemView.findViewById(R.id.chat_list_item_timestamp)
         var tvTimeSlotTitle: TextView = itemView.findViewById(R.id.chat_list_item_time_slot_title)
+        var pbOtherProfilePic: ProgressBar =itemView.findViewById(R.id.progressBar)
 
         private val civImagePic: CircleImageView = itemView.findViewById(R.id.chat_profile_pic)
         private val nUnreadMsg: TextView = itemView.findViewById(R.id.n_unread_msg)
@@ -49,7 +51,7 @@ class ChatListViewAdapter(
             // e anche le altre info riguardo a tempo e conteggio non letti e foto profilo altro utente
 
             // Use Glide HERE!!!
-            Helper.loadImageIntoView(civImagePic, cli.otherProfilePic)
+            Helper.loadImageIntoView(civImagePic, pbOtherProfilePic ,cli.otherProfilePic)
 
             this.itemView.setOnClickListener(openChatAction)
         }

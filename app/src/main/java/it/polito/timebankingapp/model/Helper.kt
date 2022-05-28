@@ -1,14 +1,25 @@
 package it.polito.timebankingapp.model
 
+import android.graphics.drawable.Drawable
 import android.text.format.DateUtils
 import android.util.Log
+import android.view.View
+import android.widget.ProgressBar
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.load.resource.gif.GifDrawable
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.target.SimpleTarget
+import com.bumptech.glide.request.target.Target
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import de.hdodenhof.circleimageview.CircleImageView
+import it.polito.timebankingapp.R
 import it.polito.timebankingapp.model.chat.ChatsListItem
 import it.polito.timebankingapp.model.user.User
 import java.text.SimpleDateFormat
@@ -16,24 +27,48 @@ import java.util.*
 
 class Helper {
     companion object {
-        fun loadImageIntoView(view: CircleImageView, url: String) {
+        const val TAG = "Helper"
+
+        fun loadImageIntoView(view: CircleImageView, progressBar: ProgressBar, url: String) {
             val storageReference = FirebaseStorage.getInstance().reference
-            if (url.isEmpty()) return
+            if (url.isEmpty()){
+                progressBar.visibility = View.GONE;
+                return
+            }
             val picRef = storageReference.child(url)
 
-            val circularProgressDrawable = CircularProgressDrawable(view.context)
 
-            /*circularProgressDrawable.strokeWidth = 5f
-            circularProgressDrawable.centerRadius = 30f*/
-            circularProgressDrawable.start()
 
             picRef.downloadUrl
                 .addOnSuccessListener { uri ->
                     val downloadUrl = uri.toString()
 
                     Glide.with(view.context)
-                        .load(downloadUrl)
-                        .placeholder(circularProgressDrawable)
+                        .load(downloadUrl).listener(object : RequestListener<Drawable> {
+                            override fun onLoadFailed(
+                                p0: GlideException?,
+                                p1: Any?,
+                                target: com.bumptech.glide.request.target.Target<Drawable>?,
+                                p3: Boolean
+                            ): Boolean {
+                                Log.e(TAG, "onLoadFailed")
+                                //do something if error loading
+                                return false
+                            }
+                            override fun onResourceReady(
+                                p0: Drawable?,
+                                p1: Any?,
+                                target: Target<Drawable>?,
+                                p3: DataSource?,
+                                p4: Boolean
+                            ): Boolean {
+                                Log.d(TAG, "OnResourceReady")
+                                //do something when picture already loaded
+                                progressBar.visibility = View.GONE
+                                return false
+                            }
+                        }).diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true)
+
                         .into(view)
                 }
                 .addOnFailureListener { e ->

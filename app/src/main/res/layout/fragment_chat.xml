@@ -34,39 +34,51 @@
                 android:layout_weight="1"
                 android:paddingBottom="8dp">
 
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/chat_profile_pic"
-                    android:layout_width="78dp"
-                    android:layout_height="78dp"
-                    android:layout_margin="8dp"
-                    android:src="@drawable/default_avatar"
-                    app:civ_border_color="@color/text_standard"
-                    app:civ_border_width="2dp"
+                <RelativeLayout
+                    android:id="@+id/fragment_chat_rl_profile_pic"
+                    android:layout_width="100dp"
+                    android:layout_height="match_parent"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.17"
-                    app:layout_constraintHorizontal_chainStyle="packed"
-                    app:layout_constraintHorizontal_weight="1"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent">
 
-                <RatingBar
-                    android:id="@+id/fragment_chat_rb_review_score"
-                    style="@style/Widget.AppCompat.RatingBar.Small"
-                    android:layout_width="wrap_content"
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/chat_profile_pic"
+                        android:layout_width="78dp"
+                        android:layout_height="78dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginBottom="8dp"
+                        android:src="@drawable/default_avatar"
+                        app:civ_border_color="@color/text_standard"
+                        app:civ_border_width="2dp" />
+
+                    <ProgressBar
+                        android:id="@+id/fragment_chat_pb_profile_pic"
+                        style="?android:attr/progressBarStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true" />
+                </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/chat_profile_name"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
-                    android:layout_marginBottom="8dp"
-                    android:contentDescription="@string/rating_bar"
-                    android:numStars="5"
-                    android:theme="@style/RatingBar"
-                    app:layout_constraintBottom_toBottomOf="@+id/chat_profile_pic"
-                    app:layout_constraintEnd_toStartOf="@+id/fragment_chat_tv_reviews_count"
-                    app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintHorizontal_chainStyle="packed"
-                    app:layout_constraintStart_toEndOf="@+id/chat_profile_pic"
-                    app:layout_constraintTop_toBottomOf="@+id/chat_profile_name"
-                    app:layout_constraintVertical_bias="1.0" />
+                    android:layout_marginEnd="16dp"
+                    android:lines="1"
+                    android:text="Nome Cognome"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                    app:autoSizeTextType="none"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.01"
+                    app:layout_constraintStart_toEndOf="@+id/fragment_chat_rl_profile_pic"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.32999998"
+                    app:layout_constraintVertical_chainStyle="packed" />
 
                 <TextView
                     android:id="@+id/fragment_chat_tv_reviews_count"
@@ -75,26 +87,29 @@
                     android:layout_marginStart="8dp"
                     android:text="@string/n_reviews"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="@color/accent"
                     app:layout_constraintBottom_toBottomOf="@+id/fragment_chat_rb_review_score"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toEndOf="@+id/fragment_chat_rb_review_score"
                     app:layout_constraintTop_toTopOf="@+id/fragment_chat_rb_review_score" />
 
-                <TextView
-                    android:id="@+id/chat_profile_name"
+                <RatingBar
+                    android:id="@+id/fragment_chat_rb_review_score"
+                    style="@style/Widget.AppCompat.RatingBar.Small"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
-                    android:layout_marginTop="8dp"
-                    android:lines="1"
-                    android:text="Nome Cognome"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                    app:autoSizeTextType="uniform"
-                    app:layout_constraintEnd_toEndOf="parent"
+                    android:contentDescription="@string/rating_bar"
+                    android:numStars="5"
+                    android:theme="@style/RatingBar"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/fragment_chat_tv_reviews_count"
                     app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintStart_toEndOf="@+id/chat_profile_pic"
-                    app:layout_constraintTop_toTopOf="@+id/chat_profile_pic" />
+                    app:layout_constraintHorizontal_chainStyle="packed"
+                    app:layout_constraintStart_toEndOf="@+id/fragment_chat_rl_profile_pic"
+                    app:layout_constraintTop_toBottomOf="@+id/chat_profile_name"
+                    app:layout_constraintVertical_bias="0.0" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

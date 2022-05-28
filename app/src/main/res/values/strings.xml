@@ -79,7 +79,7 @@
     <string name="there_aren_t_any_offers">Sorry, but at the moment there aren\'t any available offers. Try again later!</string>
     <string name="fragment_show_profile_review_rating_score">Rating score</string>
     <string name="rating_bar">Rating Bar</string>
-    <string name="n_reviews">N reviews</string>
+    <string name="n_reviews">0 reviews</string>
     <string name="deny">Deny</string>
     <string name="accept">Accept</string>
     <string name="hint_enter_message">Enter Message</string>

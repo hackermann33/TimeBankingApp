@@ -4,10 +4,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.View.OnLayoutChangeListener
-import android.widget.Button
-import android.widget.EditText
-import android.widget.RatingBar
-import android.widget.TextView
+import android.widget.*
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -37,6 +34,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
     //private val profileVM : ProfileViewModel by activityViewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
 
 
         /*TODO(Add a void message if no chats are present (from timeSlotList)  */
@@ -103,6 +101,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         val tvProfileName = v.findViewById<TextView>(R.id.chat_profile_name)
         val btnAcceptRequest = v.findViewById<TextView>(R.id.fragment_chat_btn_accept)
         val btnDenyRequest = v.findViewById<TextView>(R.id.fragment_chat_btn_deny)
+        val pbProfilePic = v.findViewById<ProgressBar>(R.id.fragment_chat_pb_profile_pic)
 
 
         when(cli.type){
@@ -111,7 +110,6 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
             Request.CHAT_TYPE_TO_OFFERER -> {
                 btnDenyRequest.visibility = View.GONE
                 btnAcceptRequest.text = "require service"
-
                 when (cli.status) {
                     Request.STATUS_INTERESTED -> Log.d("chatFragment", "STATUS INTERESTED")
                     Request.STATUS_ACCEPTED -> Log.d("chatFragment", "STATUS ACCEPTED")
@@ -130,7 +128,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 
 
 
-        Helper.loadImageIntoView(civProfilePic, cli.otherProfilePic)
+        Helper.loadImageIntoView(civProfilePic,  pbProfilePic, cli.otherProfilePic)
 
         rbReviewScore.rating = cli.avgReviews
         tvReviewsNumber.text = cli.nReviews.toString()
