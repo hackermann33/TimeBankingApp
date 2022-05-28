@@ -38,7 +38,6 @@ class TimeSlotsViewModel(application: Application): AndroidViewModel(application
     private lateinit var l2:ListenerRegistration
     private lateinit var l3:ListenerRegistration
 
-
     private var db: FirebaseFirestore = FirebaseFirestore.getInstance()
 
     init {
