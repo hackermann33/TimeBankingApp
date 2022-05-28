@@ -34,7 +34,7 @@
                     android:layout_height="wrap_content"
                     android:contentDescription="@string/timeslot_splash"
                     android:scaleType="centerCrop"
-                    app:srcCompat="@drawable/timeslot_splash"
+                    app:srcCompat="@drawable/empty_splash"
                     tools:src="@tools:sample/backgrounds/scenic" />
 
                 <de.hdodenhof.circleimageview.CircleImageView

@@ -20,7 +20,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-//import com.jakewharton.threetenabp.AndroidThreeTen
 import de.hdodenhof.circleimageview.CircleImageView
 import it.polito.timebankingapp.databinding.ActivityMainBinding
 import it.polito.timebankingapp.ui.chats.ChatViewModel
@@ -40,12 +39,11 @@ class MainActivity : AppCompatActivity() {
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var navController: NavController
 
-    val vm by viewModels<ProfileViewModel>()
-    val timeSlotVm by viewModels<TimeSlotsViewModel>()
-    val chatVm by viewModels<ChatViewModel>()
+    private val vm by viewModels<ProfileViewModel>()
+    private val timeSlotVm by viewModels<TimeSlotsViewModel>()
+    private val chatVm by viewModels<ChatViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        //AndroidThreeTen.init(this)
         super.onCreate(savedInstanceState)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -120,10 +118,12 @@ class MainActivity : AppCompatActivity() {
             navView.getHeaderView(0).findViewById<ProgressBar>(R.id.profile_pic_progress_bar)
         vm.user.observe(this) {
             val fullName = navView.getHeaderView(0).findViewById<TextView>(R.id.fullName)
-            var emailET = navView.getHeaderView(0).findViewById<TextView>(R.id.emailTextView)
+            val emailET = navView.getHeaderView(0).findViewById<TextView>(R.id.emailTextView)
+            val balance = navView.getHeaderView(0).findViewById<TextView>(R.id.balance)
             if (it != null) {
                 fullName.text = it.fullName
                 emailET.text = it.email
+                balance.text = it.balance.toString().plus(" hours")
 
                 if(!it.hasImage())
                     progressBar.visibility = View.GONE
