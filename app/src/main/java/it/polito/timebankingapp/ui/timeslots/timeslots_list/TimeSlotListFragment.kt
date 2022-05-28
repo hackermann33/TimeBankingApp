@@ -6,7 +6,6 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.widget.*
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResultListener
@@ -15,10 +14,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.DocumentSnapshot
-import com.google.firebase.firestore.ktx.toObject
+import com.google.firebase.ktx.Firebase
 import it.polito.timebankingapp.MainActivity
 import it.polito.timebankingapp.R
+import it.polito.timebankingapp.model.Helper
 import it.polito.timebankingapp.model.timeslot.TimeSlot
 import it.polito.timebankingapp.model.user.User
 import it.polito.timebankingapp.ui.chats.ChatViewModel
@@ -113,12 +114,14 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_timeslots_list) {
         vm.timeSlots.observe(viewLifecycleOwner) {
             if (it.isNotEmpty()) {
                 setVoidMessage(view, false)
+
+
                 val adTmp = TimeSlotAdapter(
                     it.toMutableList(),
                     ::selectTimeSlot,
-                    ::requestTimeSlot,
+                    ::showTimeSlotRequest,
                     ::showRequests,
-                    ::updateUser,
+                    ::downloadUserInfo,
                     type
                 )
 
@@ -137,6 +140,11 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_timeslots_list) {
 
     }
 
+    fun showTimeSlotRequest(timeSlot: TimeSlot) {
+        val chatId = Helper.makeRequestId(timeSlot.id, Firebase.auth.uid!!)
+        chatVm.selectChat(chatId)
+        //chatVm.updateUserInfo(timeSlot.userId)
+    }
 
     private fun setFilteringOptions(view: View, adapter: TimeSlotAdapter) {
         val spinner: Spinner = view.findViewById(R.id.filter_spinner)
@@ -218,14 +226,10 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_timeslots_list) {
     }
 
     private fun requestTimeSlot(ts: TimeSlot) {
-
         val offerer = userVm.getUserFromId(ts.userId).addOnSuccessListener {
-
             val chatId = vm.requestTimeSlot(ts, userVm.user.value!!,  it.toUser()!!)
             chatVm.selectChat(chatId)
         }
-
-
     }
 
     private fun showRequests(ts: TimeSlot) {
@@ -286,8 +290,9 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_timeslots_list) {
         }
     }
 
-    private fun updateUser(userId : String){
-        userVm.retrieveTimeSlotProfileData(userId)
+    private fun downloadUserInfo(userId : String){
+        //userVm.retrieveTimeSlotProfileData(userId)
+        chatVm.updateUserInfo(userId)
     }
 
 }

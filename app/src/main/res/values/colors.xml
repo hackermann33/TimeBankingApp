@@ -9,10 +9,10 @@
     <color name="light_blue">#8991BB</color>
 
     <!-- test material palette https://www.materialpalette.com/indigo/blue -->
-    <color name="primary">#3F51B5</color>
-    <color name="primary_dark">#303F9F</color>
+    <color name="primary">@color/blue</color>
+    <color name="primary_dark">@color/dark_blue</color>
     <color name="primary_light">#C5CAE9</color>
-    <color name="accent">#448AFF</color>
+    <color name="accent">#0288D1</color>
     <color name="primary_text">#212121</color>
     <color name="secondary_text">#757575</color>
     <color name="icons">#FFFFFF</color>

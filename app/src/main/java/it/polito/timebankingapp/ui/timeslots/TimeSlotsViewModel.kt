@@ -58,7 +58,7 @@ class TimeSlotsViewModel(application: Application): AndroidViewModel(application
         Log.d("selectedSkill", "updateSkillSpecificTimeSlos: selectedSkill: ${skill}")
         l = db.collection("timeSlots").whereNotEqualTo("userId", Firebase.auth.uid).whereEqualTo("relatedSkill",skill).addSnapshotListener{v,e ->
             if(e == null){
-                _timeSlots.value = v!!.mapNotNull { d -> d.toObject<TimeSlot>() }
+                _timeSlots.value = v!!.mapNotNull { d -> try { d.toObject() } catch(e: Exception){ null} }
             } else _timeSlots.value = emptyList()
         }
     }
@@ -67,15 +67,10 @@ class TimeSlotsViewModel(application: Application): AndroidViewModel(application
     fun updatePersonalTimeSlots() {
         l = db.collection("timeSlots").whereEqualTo("userId", Firebase.auth.uid).addSnapshotListener{v,e ->
             if(e == null){
-                _timeSlots.value = v!!.mapNotNull { d -> d.toObject<TimeSlot>() }
+                _timeSlots.value = v!!.mapNotNull { d -> try { d.toObject() } catch(e: Exception){ null} }
             } else _timeSlots.value = emptyList()
         }
     }
-
-
-
-
-
 
 
     fun updateInterestingTimeSlots() {
@@ -83,7 +78,7 @@ class TimeSlotsViewModel(application: Application): AndroidViewModel(application
         db.collection("requests").whereEqualTo("requester.id", myUid)
             .whereEqualTo("status", Request.STATUS_INTERESTED).addSnapshotListener{ v, e ->
                 if(e == null){
-                    val req = v!!.mapNotNull {  d -> d.toObject<Request>()  }
+                    val req = v!!.mapNotNull {  d -> try { d.toObject<Request>() } catch(e: Exception){ null} }
                     _timeSlots.value = req.mapNotNull {  r -> r.timeSlot }
                 } else {
                     _timeSlots.value = emptyList()
@@ -166,7 +161,7 @@ class TimeSlotsViewModel(application: Application): AndroidViewModel(application
         updateSkillSpecificTimeSlots(skill)
     }
 
-    /* This is used to contact the offerer through chat */
+    /* This is used to create a request */
     fun requestTimeSlot(ts: TimeSlot, requester: User, offerer: User) : String {
         val chatId = ts.id + "_" + requester.id
         val  req = Request(timeSlot = ts, requester = requester, offerer = offerer)

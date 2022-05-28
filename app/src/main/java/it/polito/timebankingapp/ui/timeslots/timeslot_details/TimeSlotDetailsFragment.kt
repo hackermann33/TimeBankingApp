@@ -12,8 +12,12 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import it.polito.timebankingapp.R
+import it.polito.timebankingapp.model.Helper
 import it.polito.timebankingapp.model.timeslot.TimeSlot
+import it.polito.timebankingapp.ui.chats.ChatViewModel
 import it.polito.timebankingapp.ui.profile.ProfileViewModel
 import it.polito.timebankingapp.ui.timeslots.TimeSlotsViewModel
 
@@ -23,6 +27,8 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
 
     private val globalModel : TimeSlotsViewModel by activityViewModels()
     private val profileViewModel: ProfileViewModel by activityViewModels()
+    private val chatVm: ChatViewModel by activityViewModels()
+
     private lateinit var timeSlotToEdit: TimeSlot
     private lateinit var type: String
     private lateinit var userId: String
@@ -123,6 +129,12 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
             }
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    fun showTimeSlotRequest(timeSlot: TimeSlot) {
+        val chatId = Helper.makeRequestId(timeSlot.id, Firebase.auth.uid!!)
+        chatVm.selectChat(chatId)
+
     }
 
     private fun editTimeslot() {

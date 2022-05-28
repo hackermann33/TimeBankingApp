@@ -55,6 +55,7 @@ class ChatsListFragment : Fragment(R.layout.fragment_chats_list_list) {
 
     fun updateTimeSlotProfile(userId : String){
         profileVm.retrieveTimeSlotProfileData(userId)
+        chatVm.updateUserInfo(userId)
     }
 
     companion object Type{

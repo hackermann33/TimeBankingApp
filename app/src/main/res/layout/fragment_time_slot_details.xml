@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".ui.timeslots.timeslot_details.TimeSlotDetailsFragment">
 
-<!-- versione layout con imageview che non supporta lo scrolling-->
+    <!-- versione layout con imageview che non supporta lo scrolling-->
     <ScrollView
         android:id="@+id/scrollView2"
         android:layout_width="0dp"
@@ -25,21 +25,104 @@
 
             <ImageView
                 android:id="@+id/imageView2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="2"
                 android:adjustViewBounds="true"
                 android:contentDescription="@string/timeslot_splash"
                 android:scaleType="centerCrop"
                 app:srcCompat="@drawable/timeslot_splash"
                 tools:src="@tools:sample/backgrounds/scenic" />
 
-            <LinearLayout
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/ConstraintLayoutProfile"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="16dp"
-                android:orientation="vertical">
+                android:layout_height="0dp"
+                android:layout_weight="0.8"
+                android:orientation="horizontal"
+                android:visibility="visible">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/imageView4"
+                    android:layout_width="0dp"
+                    android:layout_height="70dp"
+                    android:layout_marginTop="8dp"
+                    android:padding="8dp"
+                    android:src="@drawable/default_avatar"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintDimensionRatio="1:1"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+
+                <TextView
+                    android:id="@+id/textView8"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="27dp"
+                    android:fontFamily="sans-serif-medium"
+                    android:text="nickname"
+                    app:layout_constraintEnd_toStartOf="@+id/button4"
+                    app:layout_constraintHorizontal_chainStyle="spread"
+                    app:layout_constraintStart_toEndOf="@+id/imageView4"
+                    app:layout_constraintTop_toTopOf="@+id/button4"
+                    app:layout_constraintVertical_chainStyle="packed" />
+
+                <RatingBar
+                    android:id="@+id/ratingBar2"
+                    style="@style/Widget.AppCompat.RatingBar.Small"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:progressTint="#FBC02D"
+                    android:rating="3"
+                    android:visibility="visible"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/button4"
+                    app:layout_constraintStart_toEndOf="@+id/imageView4"
+                    app:layout_constraintTop_toBottomOf="@+id/textView8"
+                    app:layout_constraintVertical_bias="0.0" />
+
+
+                <Button
+                    android:id="@+id/button4"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginBottom="8dp"
+                    android:backgroundTint="@color/background"
+                    android:backgroundTintMode="add"
+                    android:elevation="2dp"
+                    android:text="ask for information"
+                    android:textColor="@color/accent"
+                    android:visibility="visible"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:strokeColor="@color/accent" />
+
+                <View
+                    android:id="@+id/divider1"
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:background="?android:attr/listDivider"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:padding="16dp">
 
                 <TextView
                     android:id="@+id/time_slot_title"
@@ -47,15 +130,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/roboto_medium"
+                    android:paddingBottom="16dp"
                     android:text="@string/fragment_timeslot_title"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Large" />
-
-                <View
-                    android:id="@+id/divider"
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="8dp"
-                    android:background="?android:attr/listDivider" />
+                    android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
 
                 <TextView
                     style="@style/ItemLabel"
@@ -65,17 +142,9 @@
 
                 <TextView
                     android:id="@+id/time_slot_date"
-                    style="@style/Item"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/fragment_timeslot_date" />
-
-                <View
-                    android:id="@+id/divider2"
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="8dp"
-                    android:background="?android:attr/listDivider" />
 
                 <TextView
                     style="@style/ItemLabel"
@@ -90,13 +159,6 @@
                     android:layout_height="wrap_content"
                     android:text="@string/fragment_timeslot_time" />
 
-                <View
-                    android:id="@+id/divider3"
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="8dp"
-                    android:background="?android:attr/listDivider" />
-
                 <TextView
                     style="@style/ItemLabel"
                     android:layout_width="wrap_content"
@@ -109,13 +171,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/fragment_timeslot_duration" />
-
-                <View
-                    android:id="@+id/divider4"
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="8dp"
-                    android:background="?android:attr/listDivider" />
 
                 <TextView
                     style="@style/ItemLabel"
@@ -130,13 +185,6 @@
                     android:layout_height="wrap_content"
                     android:text="@string/fragment_timeslot_location" />
 
-                <View
-                    android:id="@+id/divider5"
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="8dp"
-                    android:background="?android:attr/listDivider" />
-
                 <TextView
                     style="@style/ItemLabel"
                     android:layout_width="wrap_content"
@@ -149,13 +197,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/fragment_timeslot_description" />
-
-                <View
-                    android:id="@+id/divider6"
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="8dp"
-                    android:background="?android:attr/listDivider" />
 
                 <TextView
                     style="@style/ItemLabel"
@@ -171,13 +212,6 @@
                     android:layout_marginBottom="8dp"
                     android:text="@string/fragment_timeslot_restrictions" />
 
-                <View
-                    android:id="@+id/divider8"
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="8dp"
-                    android:background="?android:attr/listDivider" />
-
                 <TextView
                     style="@style/ItemLabel"
                     android:layout_width="wrap_content"
@@ -187,12 +221,20 @@
                 <com.google.android.material.chip.ChipGroup
                     android:id="@+id/time_slot_skillsGroup"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:layout_marginBottom="20dp"
                     app:chipSpacingVertical="4dp">
 
                 </com.google.android.material.chip.ChipGroup>
+
+                <Button
+                    android:id="@+id/button5"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/primary_dark"
+                    android:text="Require service" />
+
             </LinearLayout>
 
         </LinearLayout>

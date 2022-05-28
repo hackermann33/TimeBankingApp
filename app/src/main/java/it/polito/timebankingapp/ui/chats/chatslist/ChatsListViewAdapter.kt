@@ -43,7 +43,6 @@ class ChatsListViewAdapter(
             // sarebbe da mettere il last message della chat dentro il documento in userRooms (per l'anteprima)
             // e anche le altre info riguardo a tempo e conteggio non letti e foto profilo altro utente
 
-            // Use Glide HERE!!!
             Helper.loadImageIntoView(imagePic, cli.userPic)
 
             this.itemView.setOnClickListener(openChatAction)

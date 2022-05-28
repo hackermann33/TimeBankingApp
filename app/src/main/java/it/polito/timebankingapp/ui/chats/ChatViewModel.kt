@@ -8,16 +8,15 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.firestore.DocumentReference
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.ListenerRegistration
-import com.google.firebase.firestore.QueryDocumentSnapshot
+import com.google.firebase.firestore.*
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
 import it.polito.timebankingapp.model.Helper
+import it.polito.timebankingapp.model.Helper.Companion.toUser
 import it.polito.timebankingapp.model.Request
 import it.polito.timebankingapp.model.chat.ChatMessage
 import it.polito.timebankingapp.model.chat.ChatsListItem
+import it.polito.timebankingapp.model.user.User
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -47,6 +46,7 @@ class ChatViewModel(application: Application): AndroidViewModel(application) {
     private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
 
     private lateinit var l: ListenerRegistration
+    private lateinit var l2: ListenerRegistration
 
 //    fun retrieveChatMessages(timeslotId: String, requesterId: String ){
 //        l = db.collection("chats").document(timeslotId).collection(requesterId).orderBy("timestamp")
@@ -107,7 +107,10 @@ class ChatViewModel(application: Application): AndroidViewModel(application) {
 
     override fun onCleared() {
         super.onCleared()
+
         l.remove()
+        if(this::l2.isInitialized)
+            l2.remove()
     }
 
     fun cleanChats(){
@@ -121,31 +124,53 @@ class ChatViewModel(application: Application): AndroidViewModel(application) {
 
     fun selectChat(chatId: String) {
         _chatId.value = chatId
+
         val chatRef = db.collection("requests").document(chatId)
 
-        updateUserInfo(chatRef, chatId)
+        /* If the chat already exists, download it, otherwise just download offerer profile*/
+        chatRef.get().addOnSuccessListener { docSnapShot ->
+            if(docSnapShot.exists()) {
+                /*Download user profile */
+                updateUserInfo(chatRef, chatId)
 
-        /* Download messages */
-        l = chatRef.collection("messages").orderBy("timestamp")
-            .addSnapshotListener{
-                    v,e ->
-                if(e == null){
-                    _chatId.value = chatId
-                    _chatMessages.value = v!!.mapNotNull { d -> d.toChatMessage() }
-                } else
-                    _chatMessages.value = emptyList()
+                /* Download messages */
+                l = chatRef.collection("messages").orderBy("timestamp")
+                    .addSnapshotListener{
+                            v,e ->
+                        if(e == null){
+                            _chatId.value = chatId
+                            _chatMessages.value = v!!.mapNotNull { d -> d.toChatMessage() }
+                        } else
+                            _chatMessages.value = emptyList()
+                    }
+        }
+        else
+            updateUserInfo(Helper.extractRequesterId(chatId))
+        }
+    }
+
+    fun updateUserInfo(userId: String) {
+        var user: User?
+        l2 = db.collection("users").document(userId)
+            .addSnapshotListener { v, e ->
+                if (e == null) {
+                    if (v != null) {
+                        user = v.toUser()
+                        _otherProfilePic.postValue(user?.pic)
+                        _otherUserName.postValue(user?.fullName)
+                    }
+                }
             }
     }
 
-
-    private fun updateUserInfo(chatRef: DocumentReference, chatId: String) {
+    fun updateUserInfo(chatRef: DocumentReference, chatId: String) {
         val chatItem: ChatsListItem? = _chatsList.value?.first { it -> it.chatId == chatId }
         if (chatItem != null) {
             _otherUserName.postValue(chatItem.userName)
             _otherProfilePic.postValue(chatItem.userPic)
         }
         else {
-            chatRef.addSnapshotListener { v, e ->
+            l2 = chatRef.addSnapshotListener { v, e ->
                 if (e == null) {
                     val req = v!!.toObject<Request>()
                     if (req != null) {
@@ -163,12 +188,12 @@ class ChatViewModel(application: Application): AndroidViewModel(application) {
     }
 
 
-    //    not used
+
     fun updateAllChats() {
            Log.d("User", Firebase.auth.uid.toString())
             val currentId = Firebase.auth.uid.toString()
             l = db.collection("requests").whereArrayContains("users","${Firebase.auth.uid}")
-                .addSnapshotListener{v,e ->
+                .orderBy("lastMessageTime", Query.Direction.DESCENDING).addSnapshotListener{ v, e ->
                     if(e == null){
                         Log.d("chatList", "chatList: ${_chatsList.value}")
                         val requests = v!!.mapNotNull {  d -> d.toObject<Request>()  }
@@ -215,8 +240,8 @@ private fun Date.toDisplayString(): String {
 
     var pattern: String = when {
         Helper.isYesterday(this) -> return "yesterday"
-        DateUtils.isToday(this.time) -> "dd/MM/yy"
-        else -> "HH:mm"
+        DateUtils.isToday(this.time) -> "HH:mm"
+        else -> "dd/MM/yy"
     }
 
     val sdf = SimpleDateFormat(pattern, Locale.getDefault())

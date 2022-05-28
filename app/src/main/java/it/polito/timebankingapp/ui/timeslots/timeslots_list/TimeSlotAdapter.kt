@@ -19,7 +19,7 @@ class TimeSlotAdapter(
     val selectTimeSlot: (t: TimeSlot) ->Unit,
     val requestTimeSlot: ((t: TimeSlot) -> Unit?)?,
     val showRequests: ((t: TimeSlot) -> Unit?)?,
-    val updateUser: (userId : String) -> Unit,
+    val downloadUser: (userId : String) -> Unit,
     val type: String
 ) : RecyclerView.Adapter<TimeSlotAdapter.ItemViewHolder>() {
 
@@ -107,7 +107,7 @@ class TimeSlotAdapter(
                 bundleOf("point_of_origin" to type, "userId" to item.userId)
             )
         }, requestAction = {
-            updateUser(item.userId)
+            //downloadUser(item.userId)
             requestTimeSlot!!(item)
 //            val b = bundleOf("profilePic" to item.)
 //            b.putString("profileName", item.userName)
