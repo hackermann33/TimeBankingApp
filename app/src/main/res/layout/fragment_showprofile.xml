@@ -143,6 +143,7 @@
                     android:background="?android:attr/listDivider" />
 
                 <TextView
+                    android:id="@id/balanceLabel"
                     style="@style/ItemLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
