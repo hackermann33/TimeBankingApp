@@ -39,6 +39,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
 
+        /*TODO(Add a void message if no chats are present (from timeSlotList)  */
         chatVm.chat.observe(viewLifecycleOwner) { cli ->
             updateChatUi(view, cli)
         }

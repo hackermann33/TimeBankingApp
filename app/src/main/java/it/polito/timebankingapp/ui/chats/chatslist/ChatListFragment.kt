@@ -32,8 +32,7 @@ class ChatListFragment : Fragment(R.layout.fragment_chats_list_list) {
         rv.layoutManager = LinearLayoutManager(context)
 
 
-        /*TODO(Add a void message if no chats are present (from timeSlotList)  */
-
+        /*TODO(Distinguish graphically if the chat is a to_offerer or to_requester chat)  */
         chatListViewModel.chatsList.observe(viewLifecycleOwner){
             adTmp = ChatListViewAdapter(it, ::selectChat/*, ::updateTimeSlotProfile*/, chatListType)
             rv.adapter = adTmp
