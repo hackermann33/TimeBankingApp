@@ -15,6 +15,7 @@ data class ChatsListItem(
     val nUnreadMsg: Int
 ) : Serializable {
 
+    val messagesCounter : Int = 0
 
 
 

@@ -20,7 +20,7 @@ import it.polito.timebankingapp.R
 import it.polito.timebankingapp.model.Helper
 import it.polito.timebankingapp.model.Helper.Companion.toUser
 import it.polito.timebankingapp.model.timeslot.TimeSlot
-import it.polito.timebankingapp.ui.chats.ChatViewModel
+import it.polito.timebankingapp.ui.chats.chat.ChatViewModel
 import it.polito.timebankingapp.ui.profile.ProfileViewModel
 import it.polito.timebankingapp.ui.timeslots.TimeSlotsViewModel
 
@@ -162,7 +162,6 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
     fun showTimeSlotRequest(timeSlot: TimeSlot) {
         val chatId = Helper.makeRequestId(timeSlot.id, Firebase.auth.uid!!)
         chatVm.selectChat(chatId)
-
     }
 
     private fun editTimeslot() {

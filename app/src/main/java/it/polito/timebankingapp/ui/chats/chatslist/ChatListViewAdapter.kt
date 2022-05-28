@@ -7,19 +7,18 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.navigation.Navigation
-import com.google.android.material.card.MaterialCardView
 import de.hdodenhof.circleimageview.CircleImageView
 import it.polito.timebankingapp.R
 import it.polito.timebankingapp.model.Helper
 import it.polito.timebankingapp.model.chat.ChatsListItem
 
-class ChatsListViewAdapter(
+class ChatListViewAdapter(
     private var data: List<ChatsListItem>,
-    private var selectChat: (chatId: String) -> Unit?,
-    private var updateUser: (userId: String) -> Unit?,
+    private var selectChat: (chat: ChatsListItem) -> Unit?,
+    /*private var updateUser: (userId: String) -> Unit?,*/
     val type: String,
     private val unreadMsg: Long
-) : RecyclerView.Adapter<ChatsListViewAdapter.ItemViewHolder>() {
+) : RecyclerView.Adapter<ChatListViewAdapter.ItemViewHolder>() {
 
     private var displayData = data.toMutableList()
 
@@ -77,14 +76,14 @@ class ChatsListViewAdapter(
         val item = displayData[position]
         holder.bind(item, openChatAction =
         {
-            val destination = if(type == ChatsListFragment.GLOBAL) R.id.action_nav_allChatsList_to_nav_chat
+            val destination = if(type == ChatListFragment.GLOBAL) R.id.action_nav_allChatsList_to_nav_chat
             else
                 R.id.action_nav_timeSlotChatsList_to_nav_chat
-            selectChat(item.chatId)
+            selectChat(item)
 //            val b = bundleOf("profilePic" to item.userPic)
 //            b.putString("profileName", item.userName)
 //            b.putString("profileId", item.userId)
-            updateUser(item.userId)
+            //updateUser(item.userId)
             Navigation.findNavController(it).navigate(
                 destination,
                 //bundleOf("point_of_origin" to type, "userId" to item.userId)

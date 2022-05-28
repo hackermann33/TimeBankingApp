@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/nav_allChatsList"
-        android:name="it.polito.timebankingapp.ui.chats.chatslist.ChatsListFragment"
+        android:name="it.polito.timebankingapp.ui.chats.chatslist.ChatListFragment"
         android:label="Available chats"
         tools:layout="@layout/fragment_chats_list_list">
         <action
@@ -145,7 +145,7 @@
     </fragment>
     <fragment
         android:id="@+id/nav_timeSlotChatsList"
-        android:name="it.polito.timebankingapp.ui.chats.chatslist.ChatsListFragment"
+        android:name="it.polito.timebankingapp.ui.chats.chatslist.ChatListFragment"
         android:label="Available chats"
         tools:layout="@layout/fragment_chats_list_list" >
         <action

@@ -18,9 +18,9 @@ data class Request(
 
 
 
-
     companion object {
         const val STATUS_INTERESTED = 0
+        const val STATUS_ACCEPTED = 1
     }
 }
 

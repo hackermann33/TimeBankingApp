@@ -20,9 +20,11 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+//import com.jakewharton.threetenabp.AndroidThreeTen
 import de.hdodenhof.circleimageview.CircleImageView
 import it.polito.timebankingapp.databinding.ActivityMainBinding
-import it.polito.timebankingapp.ui.chats.ChatViewModel
+import it.polito.timebankingapp.ui.chats.chatslist.ChatListViewModel
+
 import it.polito.timebankingapp.ui.profile.ProfileViewModel
 import it.polito.timebankingapp.ui.timeslots.TimeSlotsViewModel
 
@@ -39,11 +41,13 @@ class MainActivity : AppCompatActivity() {
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var navController: NavController
 
-    private val vm by viewModels<ProfileViewModel>()
-    private val timeSlotVm by viewModels<TimeSlotsViewModel>()
-    private val chatVm by viewModels<ChatViewModel>()
+    val vm by viewModels<ProfileViewModel>()
+    val timeSlotVm by viewModels<TimeSlotsViewModel>()
+    val chatVm by viewModels<ChatListViewModel>()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        //AndroidThreeTen.init(this)
         super.onCreate(savedInstanceState)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -118,12 +122,10 @@ class MainActivity : AppCompatActivity() {
             navView.getHeaderView(0).findViewById<ProgressBar>(R.id.profile_pic_progress_bar)
         vm.user.observe(this) {
             val fullName = navView.getHeaderView(0).findViewById<TextView>(R.id.fullName)
-            val emailET = navView.getHeaderView(0).findViewById<TextView>(R.id.emailTextView)
-            val balance = navView.getHeaderView(0).findViewById<TextView>(R.id.balance)
+            var emailET = navView.getHeaderView(0).findViewById<TextView>(R.id.emailTextView)
             if (it != null) {
                 fullName.text = it.fullName
                 emailET.text = it.email
-                balance.text = it.balance.toString().plus(" hours")
 
                 if(!it.hasImage())
                     progressBar.visibility = View.GONE

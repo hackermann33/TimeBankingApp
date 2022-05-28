@@ -8,14 +8,17 @@ import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import it.polito.timebankingapp.R
-import it.polito.timebankingapp.ui.chats.ChatViewModel
+import it.polito.timebankingapp.model.chat.ChatsListItem
+import it.polito.timebankingapp.ui.chats.chat.ChatViewModel
 import it.polito.timebankingapp.ui.profile.ProfileViewModel
 
-class ChatsListFragment : Fragment(R.layout.fragment_chats_list_list) {
+class ChatListFragment : Fragment(R.layout.fragment_chats_list_list) {
 
     private lateinit var rv : RecyclerView
-    private lateinit var adTmp: ChatsListViewAdapter
-    private val chatVm : ChatViewModel by activityViewModels()
+    private lateinit var adTmp: ChatListViewAdapter
+    private val chatListViewModel : ChatListViewModel by activityViewModels()
+    private val chatViewModel : ChatViewModel by activityViewModels()
+
     private val profileVm : ProfileViewModel by activityViewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -40,8 +43,8 @@ class ChatsListFragment : Fragment(R.layout.fragment_chats_list_list) {
 //        tempChatsList.add(chatsListItem)
 //        tempChatsList.add(chatsListItem)
 //        tempChatsList.add(chatsListItem)
-        chatVm.chatsList.observe(viewLifecycleOwner){
-            adTmp = ChatsListViewAdapter(it, ::selectChat, ::updateTimeSlotProfile, chatListType, chatVm.nUnreadMsg.value!!)
+        chatListViewModel.chatsList.observe(viewLifecycleOwner){
+            adTmp = ChatListViewAdapter(it, ::selectChat/*, ::updateTimeSlotProfile*/, chatListType, 6)
             rv.adapter = adTmp
         }
 
@@ -49,13 +52,13 @@ class ChatsListFragment : Fragment(R.layout.fragment_chats_list_list) {
 //        rv.adapter = adTmp
     }
 
-    fun selectChat(chatId : String){
-        chatVm.selectChat(chatId)
+    fun selectChat(chat : ChatsListItem){
+        chatViewModel.selectChat(chat)
     }
 
     fun updateTimeSlotProfile(userId : String){
         profileVm.retrieveTimeSlotProfileData(userId)
-        chatVm.updateUserInfo(userId)
+        chatViewModel.updateUserInfo(userId)
     }
 
     companion object Type{

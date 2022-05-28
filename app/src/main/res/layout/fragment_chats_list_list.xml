@@ -10,5 +10,5 @@
     android:layout_marginRight="16dp"
 
     app:layoutManager="LinearLayoutManager"
-    tools:context=".ui.chats.chatslist.ChatsListFragment"
+    tools:context=".ui.chats.chatslist.ChatListFragment"
     tools:listitem="@layout/fragment_chats_list_item" />
