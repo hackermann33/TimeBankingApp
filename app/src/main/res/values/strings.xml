@@ -48,7 +48,7 @@
     <string name="login_error">Login error</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="fragment_timeslot_related_skill">Related skill</string>
-    <string name="menu_drawer_all_published_offers">All offers</string>
+    <string name="menu_drawer_all_published_offers">All available offers</string>
     <string name="skills_list_title">Select a skill</string>
     <string name="drawer_open">Drawer open</string>
     <string name="drawer_close">Drawer close</string>
@@ -99,4 +99,9 @@
     <string name="location_label">Location:</string>
     <string name="all_reviews_of_label">All reviews of:</string>
     <string name="calendar_item_ts_title">Time slot Title</string>
+    <string name="ads_you_re_interested_in">Ads you\'re interested in</string>
+    <string name="time_slots_calendar">Time slots Calendar</string>
+    <string name="email">email</string>
+    <string name="balance_label">0 hours</string>
+    <string name="balance_l">Balance:</string>
 </resources>
