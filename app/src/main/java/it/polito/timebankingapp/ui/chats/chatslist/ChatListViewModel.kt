@@ -12,6 +12,7 @@ import com.google.firebase.firestore.*
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
 import it.polito.timebankingapp.model.Helper
+import it.polito.timebankingapp.model.Helper.Companion.fromRequestToChat
 import it.polito.timebankingapp.model.Helper.Companion.toUser
 import it.polito.timebankingapp.model.Request
 import it.polito.timebankingapp.model.chat.ChatMessage
@@ -81,11 +82,9 @@ class ChatListViewModel(application: Application): AndroidViewModel(application)
                         Log.d("chatList", "chatList: ${_chatsList.value}")
                         val requests = v!!.mapNotNull {  d -> d.toObject<Request>()  }
                         _chatsList.value = requests.mapNotNull {  r ->
-                            val otherUser = Helper.getOtherUser(r)
-                            val timeStr = r.lastMessageTime.toDisplayString()
-                            val userId = Firebase.auth.uid.toString()
-                            ChatsListItem(r.requestId, userId,  r.timeSlot.id, r.timeSlot.title,  otherUser.fullName, otherUser.pic, r.lastMessageText, timeStr, r.unreadMsg)}
-                        Log.d("chatsListValue", "success")
+                            fromRequestToChat(r)
+                        }
+                            Log.d("chatsListValue", "success")
                     } else{
                         _chatsList.value = emptyList()
                         Log.d("chatsListValue", "failed")
@@ -102,14 +101,11 @@ class ChatListViewModel(application: Application): AndroidViewModel(application)
             .addSnapshotListener{v,e ->
             if(e == null){
                 Log.d("chatList", "chatList: ${_chatsList.value}")
-                val req = v!!.mapNotNull {  d -> d.toObject<Request>()  }
-                _chatsList.value = req.mapNotNull { r ->
-                    val timeStr = r.lastMessageTime.toDisplayString()
-                    val userId = Firebase.auth.uid.toString()
-
-                    ChatsListItem(r.requestId, userId, r.timeSlot.id, r.timeSlot.title, r.requester.fullName, r.requester.pic, r.lastMessageText, timeStr, r.unreadMsg)
+                val requests = v!!.mapNotNull {  d -> d.toObject<Request>()  }
+                _chatsList.value = requests.mapNotNull {  r ->
+                    fromRequestToChat(r)
                 }
-                Log.d("chatsListValue", "chatList: ${_chatsList.value}")
+                Log.d("chatsListValue", "success")
             } else{
                 _chatsList.value = emptyList()
                 Log.d("chatsListValue", "failed")
@@ -120,15 +116,4 @@ class ChatListViewModel(application: Application): AndroidViewModel(application)
 }
 
 
-private fun Date.toDisplayString(): String {
 
-    var pattern: String = when {
-        Helper.isYesterday(this) -> return "yesterday"
-        DateUtils.isToday(this.time) -> "HH:mm"
-        else -> "dd/MM/yy"
-    }
-
-    val sdf = SimpleDateFormat(pattern, Locale.getDefault())
-    return sdf.format(this)
-
-}

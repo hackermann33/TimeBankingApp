@@ -94,15 +94,18 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
                 findNavController().navigate(R.id.nav_chat)
             }
 
+
+            /* Rememeber to update number of chats for that timeSlot*/
             btnRequestService.setOnClickListener{
                 if (ts != null) {
                     profileViewModel.getUserFromId(ts.userId).addOnSuccessListener {
-                        val chatId = globalModel.requestTimeSlot(ts, profileViewModel.user.value!!,  it.toUser()!!, ::selectChat)
-                        /*    .addOnSuccessListener {
+                        val chatId = globalModel.requestTimeSlot(ts, profileViewModel.user.value!!,  it.toUser()!!)
+                            .addOnSuccessListener {
                             Snackbar.make(view, "Request correctly sent!", Snackbar.LENGTH_SHORT).show()
+
                         }.addOnFailureListener{
                             Snackbar.make(view, "Oops, something gone wrong!", Snackbar.LENGTH_SHORT).show()
-                        }*/
+                        }
                     }
                 }
             }
@@ -159,9 +162,10 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
         }
     }
 
+    /* Show chat from the current user to the current timeSlot */
     fun showTimeSlotRequest(timeSlot: TimeSlot) {
         val chatId = Helper.makeRequestId(timeSlot.id, Firebase.auth.uid!!)
-        chatVm.selectChat(chatId, timeSlot.userId)
+        chatVm.selectToOffererChatFromTimeSlot(timeSlot)
     }
 
     private fun editTimeslot() {
@@ -175,9 +179,5 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
         }*/
         val b = bundleOf("timeslot" to timeSlot)
         findNavController().navigate(R.id.action_nav_timeSlotDetails_to_timeSlotEditFragment, b)
-    }
-
-    private fun selectChat(chatId: String){
-        chatVm.selectChat(chatId, timeSlot.userId)
     }
 }

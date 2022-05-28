@@ -14,12 +14,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.DocumentSnapshot
-import com.google.firebase.ktx.Firebase
 import it.polito.timebankingapp.MainActivity
 import it.polito.timebankingapp.R
-import it.polito.timebankingapp.model.Helper
 import it.polito.timebankingapp.model.timeslot.TimeSlot
 import it.polito.timebankingapp.model.user.User
 import it.polito.timebankingapp.ui.chats.chat.ChatViewModel
@@ -143,8 +140,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_timeslots_list) {
     }
 
     fun showTimeSlotRequest(timeSlot: TimeSlot) {
-        val chatId = Helper.makeRequestId(timeSlot.id, Firebase.auth.uid!!)
-        chatVm.selectChat(chatId, timeSlot.userId)
+        chatVm.selectToOffererChatFromTimeSlot(timeSlot)
         //chatVm.updateUserInfo(timeSlot.userId)
     }
 

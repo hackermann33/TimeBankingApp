@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
@@ -163,12 +164,13 @@ class TimeSlotsViewModel(application: Application): AndroidViewModel(application
         updateSkillSpecificTimeSlots(skill)
     }
 
-    /* This is used to contact the offerer through chat */
-    fun requestTimeSlot(ts: TimeSlot, requester: User, offerer: User, selectChat: (String) -> Unit) : String {
+    /* This is used to create a request to the offerer through chat */
+    fun requestTimeSlot(ts: TimeSlot, requester: User, offerer: User) : Task<Void> {
         val chatId = ts.id + "_" + requester.id
         val  req = Request(timeSlot = ts, requester = requester, offerer = offerer, unreadMsg = 0)
-        /* if chat does not already exists, then it is a new chat */
-        db.collection("requests").document(chatId).get()
+
+            /*
+            UPDATE UNREAD CHATS
             .addOnSuccessListener { doc ->
                 if(!doc.exists())  //if doc is created now
                     ts.unreadChats = ts.unreadChats+1
@@ -176,14 +178,15 @@ class TimeSlotsViewModel(application: Application): AndroidViewModel(application
                 db.collection("requests").document(chatId).set(req)
                 selectChat(chatId)
 //                ci andrebbe selectChat
-            }
+            }*/
 //        ts.unreadChats = ts.unreadChats+1
 //        db.collection("requests").document(chatId).set(req)
 //        db.collection("timeSlots").document(ts.id).set(ts)
 //            .addOnSuccessListener { Log.d("unreadChats", "success") }
 //            .addOnFailureListener { Log.d("unreadChats", "fail") }
 
-        return chatId
+        return db.collection("requests").document(chatId).set(req)
+
     }
 
 
