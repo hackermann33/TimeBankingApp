@@ -1,6 +1,5 @@
 package it.polito.timebankingapp.model
 
-import android.content.Context
 import android.text.format.DateUtils
 import android.util.Log
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
@@ -84,7 +83,7 @@ class Helper {
         }
 
         fun getChatType(req: Request): Int {
-            return if(req.offerer.id == Firebase.auth.uid) Request.TYPE_REQUEST_CHAT else Request.TYPE_OFFER_CHAT
+            return if(req.offerer.id == Firebase.auth.uid) Request.CHAT_TYPE_TO_REQUESTER else Request.CHAT_TYPE_TO_OFFERER
         }
 
         fun fromRequestToChat(r: Request): ChatsListItem {

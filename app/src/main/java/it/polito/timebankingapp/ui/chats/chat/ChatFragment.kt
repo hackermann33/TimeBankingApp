@@ -12,11 +12,9 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.findNavController
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.ktx.Firebase
 import de.hdodenhof.circleimageview.CircleImageView
 import it.polito.timebankingapp.R
@@ -24,11 +22,6 @@ import it.polito.timebankingapp.model.Helper
 import it.polito.timebankingapp.model.Request
 import it.polito.timebankingapp.model.chat.ChatMessage
 import it.polito.timebankingapp.model.chat.ChatsListItem
-import it.polito.timebankingapp.model.timeslot.TimeSlot
-import it.polito.timebankingapp.model.user.User
-import it.polito.timebankingapp.ui.profile.ProfileViewModel
-import it.polito.timebankingapp.ui.timeslots.TimeSlotsViewModel
-import org.w3c.dom.Text
 import java.util.*
 
 
@@ -104,14 +97,36 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 
     private fun updateChatUi(v: View, cli: ChatsListItem) {
         val civProfilePic = v.findViewById<CircleImageView>(R.id.chat_profile_pic)
-        val rbReviewScore = v.findViewById<RatingBar>(R.id.ratingBar)
-        val tvReviewsNumber = v.findViewById<TextView>(R.id.fragment_login_tv_reviews_count)
+        val rbReviewScore = v.findViewById<RatingBar>(R.id.fragment_chat_rb_review_score)
+        val tvReviewsNumber = v.findViewById<TextView>(R.id.fragment_chat_tv_reviews_count)
         val tvProfileName = v.findViewById<TextView>(R.id.chat_profile_name)
+        val btnAcceptRequest = v.findViewById<TextView>(R.id.fragment_chat_btn_accept)
+        val btnDenyRequest = v.findViewById<TextView>(R.id.fragment_chat_btn_deny)
 
-        when (cli.status) {
-            Request.STATUS_INTERESTED -> Log.d("chatFragment", "STATUS INTERESTED")
-            Request.STATUS_ACCEPTED -> Log.d("chatFragment", "STATUS ACCEPTED")
+
+        when(cli.type){
+
+            /* Chatting to the offerer */
+            Request.CHAT_TYPE_TO_OFFERER -> {
+                btnDenyRequest.visibility = View.GONE
+                btnAcceptRequest.text = "require service"
+
+                when (cli.status) {
+                    Request.STATUS_INTERESTED -> Log.d("chatFragment", "STATUS INTERESTED")
+                    Request.STATUS_ACCEPTED -> Log.d("chatFragment", "STATUS ACCEPTED")
+                }
+            }
+            Request.CHAT_TYPE_TO_REQUESTER -> {
+                when (cli.status) {
+                    Request.STATUS_INTERESTED -> Log.d("chatFragment", "STATUS INTERESTED")
+                    Request.STATUS_ACCEPTED -> Log.d("chatFragment", "STATUS ACCEPTED")
+                }
+
+            }
+
         }
+
+
 
 
         Helper.loadImageIntoView(civProfilePic, cli.otherProfilePic)

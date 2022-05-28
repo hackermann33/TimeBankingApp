@@ -51,7 +51,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <RatingBar
-                    android:id="@+id/ratingBar"
+                    android:id="@+id/fragment_chat_rb_review_score"
                     style="@style/Widget.AppCompat.RatingBar.Small"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -61,7 +61,7 @@
                     android:numStars="5"
                     android:theme="@style/RatingBar"
                     app:layout_constraintBottom_toBottomOf="@+id/chat_profile_pic"
-                    app:layout_constraintEnd_toStartOf="@+id/fragment_login_tv_reviews_count"
+                    app:layout_constraintEnd_toStartOf="@+id/fragment_chat_tv_reviews_count"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintHorizontal_chainStyle="packed"
                     app:layout_constraintStart_toEndOf="@+id/chat_profile_pic"
@@ -69,17 +69,17 @@
                     app:layout_constraintVertical_bias="1.0" />
 
                 <TextView
-                    android:id="@+id/fragment_login_tv_reviews_count"
+                    android:id="@+id/fragment_chat_tv_reviews_count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:text="@string/n_reviews"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                    app:layout_constraintBottom_toBottomOf="@+id/ratingBar"
+                    app:layout_constraintBottom_toBottomOf="@+id/fragment_chat_rb_review_score"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintStart_toEndOf="@+id/ratingBar"
-                    app:layout_constraintTop_toTopOf="@+id/ratingBar" />
+                    app:layout_constraintStart_toEndOf="@+id/fragment_chat_rb_review_score"
+                    app:layout_constraintTop_toTopOf="@+id/fragment_chat_rb_review_score" />
 
                 <TextView
                     android:id="@+id/chat_profile_name"
@@ -104,7 +104,7 @@
                 android:orientation="horizontal">
 
                 <Button
-                    android:id="@+id/button2"
+                    android:id="@+id/fragment_chat_btn_deny"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
@@ -115,7 +115,7 @@
                     android:visibility="visible" />
 
                 <Button
-                    android:id="@+id/button3"
+                    android:id="@+id/fragment_chat_btn_accept"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"

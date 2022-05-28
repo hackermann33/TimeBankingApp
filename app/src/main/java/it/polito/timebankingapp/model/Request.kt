@@ -20,8 +20,8 @@ data class Request(
 
     companion object {
 
-        const val TYPE_OFFER_CHAT =  1
-        const val TYPE_REQUEST_CHAT = 0
+        const val CHAT_TYPE_TO_OFFERER =  1
+        const val CHAT_TYPE_TO_REQUESTER = 0
         const val STATUS_INTERESTED = 0
         const val STATUS_ACCEPTED = 1
     }
