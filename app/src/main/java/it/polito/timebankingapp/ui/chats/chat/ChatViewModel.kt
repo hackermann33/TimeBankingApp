@@ -107,8 +107,8 @@ class ChatViewModel(application: Application): AndroidViewModel(application)  {
         }
 
 
-    /* Coming from TimeSlotDetail, check if requests exists, otherwise download just the userProfile */
-    fun selectChat(chatId: String) {
+    /* Coming from TimeSlotDetail or TimeSlotList, check if requests exists, otherwise download just the userProfile */
+    fun selectChat(chatId: String, offererId: String) {
         _chatId.value = chatId
 
         val chatRef = db.collection("requests").document(chatId)
@@ -131,7 +131,7 @@ class ChatViewModel(application: Application): AndroidViewModel(application)  {
                     }
             }
             else
-                updateUserInfo(Helper.extractRequesterId(chatId))
+                updateUserInfo(offererId)
         }
     }
 

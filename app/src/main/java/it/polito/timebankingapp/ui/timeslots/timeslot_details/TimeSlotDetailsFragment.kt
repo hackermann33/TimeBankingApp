@@ -161,7 +161,7 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
 
     fun showTimeSlotRequest(timeSlot: TimeSlot) {
         val chatId = Helper.makeRequestId(timeSlot.id, Firebase.auth.uid!!)
-        chatVm.selectChat(chatId)
+        chatVm.selectChat(chatId, timeSlot.userId)
     }
 
     private fun editTimeslot() {
@@ -178,6 +178,6 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
     }
 
     private fun selectChat(chatId: String){
-        chatVm.selectChat(chatId)
+        chatVm.selectChat(chatId, timeSlot.userId)
     }
 }
