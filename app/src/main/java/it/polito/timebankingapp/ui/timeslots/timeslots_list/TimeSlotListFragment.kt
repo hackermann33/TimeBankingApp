@@ -227,7 +227,9 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_timeslots_list) {
 
     private fun requestTimeSlot(ts: TimeSlot) {
         val offerer = userVm.getUserFromId(ts.userId).addOnSuccessListener {
-            val chatId = vm.requestTimeSlot(ts, userVm.user.value!!,  it.toUser()!!)
+            vm.requestTimeSlot(ts, userVm.user.value!!,  it.toUser()!!)
+
+            val chatId = Helper.makeRequestId(ts.id, Firebase.auth.uid!!)
             chatVm.selectChat(chatId)
         }
     }

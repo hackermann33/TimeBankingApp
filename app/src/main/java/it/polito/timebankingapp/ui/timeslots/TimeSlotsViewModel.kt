@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
@@ -162,13 +163,11 @@ class TimeSlotsViewModel(application: Application): AndroidViewModel(application
     }
 
     /* This is used to create a request */
-    fun requestTimeSlot(ts: TimeSlot, requester: User, offerer: User) : String {
+    fun requestTimeSlot(ts: TimeSlot, requester: User, offerer: User): Task<Void> {
         val chatId = ts.id + "_" + requester.id
         val  req = Request(timeSlot = ts, requester = requester, offerer = offerer)
 
-        db.collection("requests").document(chatId).set(req)
-
-        return chatId
+        return db.collection("requests").document(chatId).set(req)
     }
 
 

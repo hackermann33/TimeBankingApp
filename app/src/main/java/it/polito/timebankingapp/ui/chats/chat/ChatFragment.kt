@@ -122,6 +122,12 @@ class ChatFragment : Fragment(R.layout.fragment_chat_list) {
         }
 
     }
+
+    override fun onDetach() {
+        chatVm.clearChats()
+        super.onDetach()
+
+    }
         /*
         textMessage.setOnEditorActionListener { v, actionId, event ->
             var handled = false
@@ -150,10 +156,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat_list) {
         chatVm.sendMessage(chatMessage)
     }
 
-    override fun onDetach() {
-        super.onDetach()
-        chatVm.cleanChats()
-    }
+
 
     /*private fun loadImageIntoView(view: CircleImageView, url: String?) {
         val storageReference = FirebaseStorage.getInstance().reference

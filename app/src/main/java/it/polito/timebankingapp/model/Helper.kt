@@ -1,7 +1,9 @@
 package it.polito.timebankingapp.model
 
+import android.content.Context
 import android.text.format.DateUtils
 import android.util.Log
+import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.bumptech.glide.Glide
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.DocumentSnapshot
@@ -18,12 +20,19 @@ class Helper {
             if (url.isEmpty()) return
             val picRef = storageReference.child(url)
 
+            val circularProgressDrawable = CircularProgressDrawable(view.context)
+
+            /*circularProgressDrawable.strokeWidth = 5f
+            circularProgressDrawable.centerRadius = 30f*/
+            circularProgressDrawable.start()
+
             picRef.downloadUrl
                 .addOnSuccessListener { uri ->
                     val downloadUrl = uri.toString()
 
                     Glide.with(view.context)
                         .load(downloadUrl)
+                        .placeholder(circularProgressDrawable)
                         .into(view)
                 }
                 .addOnFailureListener { e ->

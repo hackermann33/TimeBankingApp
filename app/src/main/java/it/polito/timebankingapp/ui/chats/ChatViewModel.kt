@@ -113,7 +113,8 @@ class ChatViewModel(application: Application): AndroidViewModel(application) {
             l2.remove()
     }
 
-    fun cleanChats(){
+    fun clearChats(){
+        _otherProfilePic.postValue("")
         _chatMessages.value = listOf()
     }
 
@@ -233,6 +234,7 @@ class ChatViewModel(application: Application): AndroidViewModel(application) {
             }
         }
     }
+
 }
 
 

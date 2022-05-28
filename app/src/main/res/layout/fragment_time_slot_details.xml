@@ -24,7 +24,6 @@
             android:weightSum="3">
 
             <ImageView
-                android:id="@+id/imageView2"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="2"
@@ -35,12 +34,12 @@
                 tools:src="@tools:sample/backgrounds/scenic" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/ConstraintLayoutProfile"
+                android:id="@+id/layout_offerer"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="0.8"
                 android:orientation="horizontal"
-                android:visibility="visible">
+                android:visibility="gone">
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/imageView4"
@@ -64,10 +63,10 @@
                     android:layout_marginEnd="27dp"
                     android:fontFamily="sans-serif-medium"
                     android:text="nickname"
-                    app:layout_constraintEnd_toStartOf="@+id/button4"
+                    app:layout_constraintEnd_toStartOf="@+id/openChatButton"
                     app:layout_constraintHorizontal_chainStyle="spread"
                     app:layout_constraintStart_toEndOf="@+id/imageView4"
-                    app:layout_constraintTop_toTopOf="@+id/button4"
+                    app:layout_constraintTop_toTopOf="@+id/openChatButton"
                     app:layout_constraintVertical_chainStyle="packed" />
 
                 <RatingBar
@@ -79,16 +78,15 @@
                     android:layout_marginEnd="8dp"
                     android:progressTint="#FBC02D"
                     android:rating="3"
-                    android:visibility="visible"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/button4"
+                    app:layout_constraintEnd_toStartOf="@+id/openChatButton"
                     app:layout_constraintStart_toEndOf="@+id/imageView4"
                     app:layout_constraintTop_toBottomOf="@+id/textView8"
                     app:layout_constraintVertical_bias="0.0" />
 
 
                 <Button
-                    android:id="@+id/button4"
+                    android:id="@+id/openChatButton"
                     style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -100,7 +98,6 @@
                     android:elevation="2dp"
                     android:text="ask for information"
                     android:textColor="@color/accent"
-                    android:visibility="visible"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
@@ -229,11 +226,12 @@
                 </com.google.android.material.chip.ChipGroup>
 
                 <Button
-                    android:id="@+id/button5"
+                    android:id="@+id/button_request_service"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:backgroundTint="@color/primary_dark"
-                    android:text="Require service" />
+                    android:text="Require service"
+                    android:visibility="gone" />
 
             </LinearLayout>
 
