@@ -43,6 +43,10 @@ class ChatFragment : Fragment(R.layout.fragment_chat_list) {
         rv = view.findViewById(R.id.recycler_gchat)
         rv.layoutManager = LinearLayoutManager(context)
 
+        adTmp = ChatViewAdapter(mutableListOf(), ::sendMessage)
+        rv.adapter = adTmp
+        rv.scrollToPosition(adTmp.itemCount-1)
+
         val tempList = mutableListOf<ChatMessage>()
         chatVm.chatMessages.observe(viewLifecycleOwner) {
             adTmp = ChatViewAdapter(it.toMutableList(), ::sendMessage)
