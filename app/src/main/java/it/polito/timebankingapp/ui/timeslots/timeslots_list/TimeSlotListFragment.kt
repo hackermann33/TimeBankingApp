@@ -227,10 +227,10 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_timeslots_list) {
 
     private fun requestTimeSlot(ts: TimeSlot) {
         val offerer = userVm.getUserFromId(ts.userId).addOnSuccessListener {
-            vm.requestTimeSlot(ts, userVm.user.value!!,  it.toUser()!!)
+            vm.requestTimeSlot(ts, userVm.user.value!!,  it.toUser()!!, ::selectChat)
 
             val chatId = Helper.makeRequestId(ts.id, Firebase.auth.uid!!)
-            chatVm.selectChat(chatId)
+//            chatVm.selectChat(chatId)
         }
     }
 
@@ -295,6 +295,10 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_timeslots_list) {
     private fun downloadUserInfo(userId : String){
         //userVm.retrieveTimeSlotProfileData(userId)
         chatVm.updateUserInfo(userId)
+    }
+
+    private fun selectChat(chatId: String){
+        chatVm.selectChat(chatId)
     }
 
 }

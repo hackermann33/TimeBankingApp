@@ -14,12 +14,17 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.ktx.Firebase
 import de.hdodenhof.circleimageview.CircleImageView
 import it.polito.timebankingapp.R
 import it.polito.timebankingapp.model.Helper
 import it.polito.timebankingapp.model.chat.ChatMessage
+import it.polito.timebankingapp.model.timeslot.TimeSlot
+import it.polito.timebankingapp.model.user.User
 import it.polito.timebankingapp.ui.chats.ChatViewModel
+import it.polito.timebankingapp.ui.profile.ProfileViewModel
+import it.polito.timebankingapp.ui.timeslots.TimeSlotsViewModel
 import java.util.*
 
 
@@ -32,7 +37,6 @@ class ChatFragment : Fragment(R.layout.fragment_chat_list) {
     private lateinit var layoutManager: LinearLayoutManager
 
     private val chatVm : ChatViewModel by activityViewModels()
-    //private val profileVM : ProfileViewModel by activityViewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
@@ -116,11 +120,32 @@ class ChatFragment : Fragment(R.layout.fragment_chat_list) {
                     textMessage.text.toString(),
                     Calendar.getInstance(),
                 ))
+
                 textMessage.text.clear()
 
             }
         }
 
+    }
+
+
+    fun DocumentSnapshot.toUser(): User? {
+
+        return try {
+            val pic = get("pic") as String
+            val fullName = get("fullName") as String
+            val nick = get("nick") as String
+            val email = get("email") as String
+            val location = get("location") as String
+            val desc = get("description") as String
+            val balance = get("balance") as Long
+            val skills = get("skills") as MutableList<String>
+
+            User(id, pic, fullName, nick, email, location, desc, balance.toInt(), skills)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
     }
 
     override fun onDetach() {

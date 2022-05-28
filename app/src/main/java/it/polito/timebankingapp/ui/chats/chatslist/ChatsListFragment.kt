@@ -41,7 +41,7 @@ class ChatsListFragment : Fragment(R.layout.fragment_chats_list_list) {
 //        tempChatsList.add(chatsListItem)
 //        tempChatsList.add(chatsListItem)
         chatVm.chatsList.observe(viewLifecycleOwner){
-            adTmp = ChatsListViewAdapter(it, ::selectChat, ::updateTimeSlotProfile, chatListType)
+            adTmp = ChatsListViewAdapter(it, ::selectChat, ::updateTimeSlotProfile, chatListType, chatVm.nUnreadMsg.value!!)
             rv.adapter = adTmp
         }
 

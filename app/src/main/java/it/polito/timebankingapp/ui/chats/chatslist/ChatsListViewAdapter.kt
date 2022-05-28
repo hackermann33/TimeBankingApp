@@ -5,19 +5,20 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.cardview.widget.CardView
 import androidx.navigation.Navigation
+import com.google.android.material.card.MaterialCardView
 import de.hdodenhof.circleimageview.CircleImageView
 import it.polito.timebankingapp.R
 import it.polito.timebankingapp.model.Helper
 import it.polito.timebankingapp.model.chat.ChatsListItem
-import java.util.*
 
 class ChatsListViewAdapter(
     private var data: List<ChatsListItem>,
     private var selectChat: (chatId: String) -> Unit?,
     private var updateUser: (userId: String) -> Unit?,
-    val type: String
+    val type: String,
+    private val unreadMsg: Long
 ) : RecyclerView.Adapter<ChatsListViewAdapter.ItemViewHolder>() {
 
     private var displayData = data.toMutableList()
@@ -29,21 +30,27 @@ class ChatsListViewAdapter(
         var timeSlotTitle: TextView = itemView.findViewById(R.id.chat_list_item_time_slot_title)
         /*var numNotifiesText: TextView = itemView.findViewById(R.id.chat_list_item_notifies_number)*/
         private val imagePic: CircleImageView = itemView.findViewById(R.id.chat_profile_pic)
+        private val nUnreadMsg: TextView = itemView.findViewById(R.id.n_unread_msg)
+        private val unreadMsgCard: CardView = itemView.findViewById(R.id.unread_msg_card)
 
-        fun bind(cli: ChatsListItem, openChatAction: (v: View) -> Unit) {
+        fun bind(cli: ChatsListItem, openChatAction: (v: View) -> Unit, unread: Long) {
 //            fullNameText.text = "Nome Cognome" //necessario riferimento usr o timeslotusr
 //            messageText.text = cli.chatMessages[cli.chatMessages.size-1].messageText
 //            timeText.text = cli.chatMessages[cli.chatMessages.size-1].timestamp.split("-")[1] //se è di oggi mostra l'orario, altrimenti la data
 //            numNotifiesText.text =  "(1)" //logica conteggio non letti da implementare in futuro
             fullNameText.text = cli.userName
             messageText.text = cli.lastMessageText
-
+            if(cli.nUnreadMsg > 0)
+                nUnreadMsg.text = unread.toString()
+            else
+                unreadMsgCard.visibility = View.GONE
             timeText.text = cli.lastMessageTime
             timeSlotTitle.text = cli.timeSlotTitle
             cli.lastMessageTime
             // sarebbe da mettere il last message della chat dentro il documento in userRooms (per l'anteprima)
             // e anche le altre info riguardo a tempo e conteggio non letti e foto profilo altro utente
 
+            // Use Glide HERE!!!
             Helper.loadImageIntoView(imagePic, cli.userPic)
 
             this.itemView.setOnClickListener(openChatAction)
@@ -82,7 +89,7 @@ class ChatsListViewAdapter(
                 destination,
                 //bundleOf("point_of_origin" to type, "userId" to item.userId)
             )
-        }
+        }, unreadMsg
         );
     }
 

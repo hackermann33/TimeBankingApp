@@ -11,8 +11,10 @@ data class ChatsListItem(
     var userName: String,
     var userPic: String,
     var lastMessageText: String,
-    var lastMessageTime: String
+    var lastMessageTime: String,
+    val nUnreadMsg: Int
 ) : Serializable {
+
 
 
 
