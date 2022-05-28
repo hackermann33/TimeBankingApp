@@ -20,9 +20,8 @@ import it.polito.timebankingapp.MainActivity
 import it.polito.timebankingapp.R
 import it.polito.timebankingapp.model.review.Review
 import it.polito.timebankingapp.model.user.User
-import it.polito.timebankingapp.ui.chats.chatslist.ChatsListViewAdapter
 import it.polito.timebankingapp.ui.profile.ProfileViewModel
-import it.polito.timebankingapp.ui.reviews.ReviewsViewAdapter
+import it.polito.timebankingapp.ui.reviews.reviewslist.ReviewsViewAdapter
 
 
 class ShowPersonalProfileFragment : Fragment(R.layout.fragment_showprofile) {
@@ -56,10 +55,13 @@ class ShowPersonalProfileFragment : Fragment(R.layout.fragment_showprofile) {
         val profilePicCircleView = view.findViewById<CircleImageView>(R.id.profile_pic)
         val progressBar = view.findViewById<ProgressBar>(R.id.profile_pic_progress_bar)
 
+        val tempReviewsList = mutableListOf<Review>()
+        var bundle : Bundle = Bundle()
 
         if (type == "skill_specific") {
             vm.timeslotUser.observe(viewLifecycleOwner) {
                 timeSlotUser = it //oppure it
+                bundle = bundleOf("profile" to timeSlotUser, type to "timeslot") //per le recensioni
                 showProfile(view, timeSlotUser)
             }
 
@@ -68,8 +70,6 @@ class ShowPersonalProfileFragment : Fragment(R.layout.fragment_showprofile) {
                 profilePicCircleView.setImageBitmap(vm.timeslotUserImage.value)
                 progressBar.visibility = View.GONE
             }*/
-
-
             vm.timeslotUserImage.observe(viewLifecycleOwner) {
                 if (it != null) {
                     profilePicCircleView.setImageBitmap(it)
@@ -84,9 +84,17 @@ class ShowPersonalProfileFragment : Fragment(R.layout.fragment_showprofile) {
                 }
             }
 
+            //recensioni time slot user
+            val review = Review()
+            //NOTA: visualizza solo le prime 3 in base al timestamp più recente! (esegui sort)
+            tempReviewsList.add(review)
+            tempReviewsList.add(review)
+            tempReviewsList.add(review)
+
         } else { //personal
             vm.user.observe(viewLifecycleOwner) {
                 user = it //oppure it
+                bundle = bundleOf("profile" to user, type to "personal") //per le recensioni
                 showProfile(view, user)
             }
 
@@ -105,53 +113,12 @@ class ShowPersonalProfileFragment : Fragment(R.layout.fragment_showprofile) {
                 }
             }
 
-            rv = view.findViewById(R.id.short_reviews_list)
-            rv.layoutManager = LinearLayoutManager(context)
-
+            //recensioni personali
             val review = Review()
-            val tempReviewsList = mutableListOf<Review>()
-
+            //NOTA: visualizza solo le prime 3 in base al timestamp più recente! (esegui sort)
             tempReviewsList.add(review)
             tempReviewsList.add(review)
             tempReviewsList.add(review)
-
-            adTmp = ReviewsViewAdapter(tempReviewsList)
-            rv.adapter = adTmp
-
-            val showReviewsBtn : Button = v.findViewById(R.id.show_all_reviews)
-
-            showReviewsBtn.setOnClickListener {
-                findNavController().navigate(R.id.action_nav_showProfile_to_nav_reviewsList)
-            }
-
-
-
-            //loggedUser = usrVm.userProfile.value!!
-            //showProfile(view)
-
-            /*sharedPref = requireActivity().getPreferences(android.content.Context.MODE_PRIVATE)
-
-        val profile = sharedPref.getString("profile", "")
-        usr = if (sharedPref.contains("profile")) GsonBuilder().create()
-            .fromJson(profile, User::class.java)
-        else User()
-
-         */
-
-            //usr = savedInstanceState?.getSerializable("user") as User
-
-
-            /*setFragmentResultListener("profile") { requestKey, bundle ->
-            usr = bundle.getSerializable("user") as User
-            showProfile(view)
-            val jsonString = GsonBuilder().create().toJson(usr)
-            with(sharedPref.edit()) {
-                putString("profile", jsonString)
-                apply()
-            }
-        }
-
-        showProfile(view) */
 
             setFragmentResultListener("editProfile") { _, bundle ->
                 val result = bundle.getBoolean("editProfileConfirm")
@@ -163,6 +130,19 @@ class ShowPersonalProfileFragment : Fragment(R.layout.fragment_showprofile) {
                 }
             }
         }
+
+        //definizione rw per le recensioni
+        rv = view.findViewById(R.id.short_reviews_list)
+        rv.layoutManager = LinearLayoutManager(context)
+        adTmp = ReviewsViewAdapter(tempReviewsList)
+        rv.adapter = adTmp
+
+        val showReviewsBtn : Button = v.findViewById(R.id.show_all_reviews)
+
+        showReviewsBtn.setOnClickListener {
+            findNavController().navigate(R.id.action_nav_showProfile_to_nav_reviewsList, bundle)
+        }
+
     }
 
     private fun showProfile(view: View, usr: User) {

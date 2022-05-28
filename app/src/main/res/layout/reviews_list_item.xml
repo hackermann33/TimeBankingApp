@@ -38,7 +38,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/calendar_item_ts_title"
+                android:id="@+id/review_list_item_full_name"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
@@ -65,7 +65,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/review_list_item_profile_pic" />
 
             <TextView
-                android:id="@+id/calendar_item_ts_label1"
+                android:id="@+id/reviews_item_label1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Reviewed on:"
@@ -75,7 +75,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/reviews_item_rating_bar" />
 
             <TextView
-                android:id="@+id/calendar_item_ts_timestamp"
+                android:id="@+id/reviews_item_rating_timestamp"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
@@ -85,7 +85,7 @@
                 android:text="@string/reviews_item_timestamp"
                 android:textColor="#757575"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/calendar_item_ts_label1"
+                app:layout_constraintStart_toEndOf="@+id/reviews_item_label1"
                 app:layout_constraintTop_toBottomOf="@+id/reviews_item_rating_bar" />
 
             <TextView
@@ -99,7 +99,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/calendar_item_ts_timestamp" />
+                app:layout_constraintTop_toBottomOf="@+id/reviews_item_rating_timestamp" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

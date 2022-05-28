@@ -1,9 +1,12 @@
-package it.polito.timebankingapp.ui.reviews
+package it.polito.timebankingapp.ui.reviews.reviewslist
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.RatingBar
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import de.hdodenhof.circleimageview.CircleImageView
 import it.polito.timebankingapp.R
 import it.polito.timebankingapp.model.review.Review
 
@@ -12,28 +15,23 @@ class ReviewsViewAdapter(
     var data: MutableList<Review>
 ) : RecyclerView.Adapter<ReviewsViewAdapter.ItemViewHolder>() {
 
-    //private var filter: Boolean = false
     private var displayData = data.toMutableList()
 
-
-
     class ItemViewHolder(private val mainView: View ) : RecyclerView.ViewHolder(mainView) {
-        /*private val title: TextView = mainView.findViewById(R.id.time_slots_item_title)
-        private val location: TextView = mainView.findViewById(R.id.time_slots_item_location)
-        private val start: TextView = mainView.findViewById(R.id.time_slots_item_start)
-        private val duration: TextView = mainView.findViewById(R.id.time_slots_item_duration)
-        private lateinit var editButton: ImageView
-        private lateinit var chatButton: ImageBadgeView*/
+        private val fullName: TextView = mainView.findViewById(R.id.review_list_item_full_name)
+        private val ratingBar: RatingBar = mainView.findViewById(R.id.reviews_item_rating_bar)
+        private val timestamp: TextView = mainView.findViewById(R.id.reviews_item_rating_timestamp)
+        private val reviewText: TextView = mainView.findViewById(R.id.reviews_item_review_text)
+        private var profilePic: CircleImageView = mainView.findViewById(R.id.review_list_item_profile_pic)
 
         fun bind(rw: Review, editAction: (v: View) -> Unit, detailAction: (v: View) -> Unit, requestAction: (v: View) -> Unit, showRequestsAction: (v: View) -> Unit) {
-           /* title.text = ts.title
-            location.text = ts.location
-            start.text = ts.date.plus(" ").plus(ts.time)
-            duration.text = ts.duration.plus(" hour(s)")
-            editButton = mainView.findViewById(R.id.time_slots_edit_button)
-            chatButton = mainView.findViewById(R.id.imageView3)*/
-
+           /* fullName.text = ts.title
+            ratingBar.numStars = rw.numStars
+            timestamp.text = rw.timestamp
+            reviewText.text = rw.reviewText
+            profilePic = qualcosa con glide?
             //this.mainView.setOnClickListener(detailAction)
+            */
         }
 
     }
@@ -54,6 +52,7 @@ class ReviewsViewAdapter(
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
  /*
         val item = displayData[position]
+
         holder.bind(item, editAction =  {//1:17:00
             val pos = data.indexOf(item)
             if (pos != -1) {

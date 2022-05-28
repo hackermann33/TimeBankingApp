@@ -1,4 +1,4 @@
-package it.polito.timebankingapp.ui.reviews
+package it.polito.timebankingapp.ui.reviews.addreview
 
 import android.os.Bundle
 import android.view.View
