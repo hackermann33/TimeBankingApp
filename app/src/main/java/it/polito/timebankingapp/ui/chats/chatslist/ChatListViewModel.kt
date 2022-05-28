@@ -30,8 +30,7 @@ class ChatListViewModel(application: Application): AndroidViewModel(application)
 
     private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
 
-    private val _nUnreadMsg = MutableLiveData<Long>()
-    val nUnreadMsg: LiveData<Long> = _nUnreadMsg
+
 
     private lateinit var l: ListenerRegistration
     private lateinit var l2: ListenerRegistration

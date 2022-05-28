@@ -45,6 +45,9 @@ class ChatViewModel(application: Application): AndroidViewModel(application)  {
     private val _chat = MutableLiveData<String>()
     val chat: LiveData<String> = _chat
 
+    private val _nUnreadMsg = MutableLiveData<Long>()
+    val nUnreadMsg: LiveData<Long> = _nUnreadMsg
+
     private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
 
     private lateinit var messagesListener: ListenerRegistration
@@ -53,12 +56,17 @@ class ChatViewModel(application: Application): AndroidViewModel(application)  {
 
     fun sendMessage(message: ChatMessage) {
         val requestRef = db.collection("requests").document(chatId.value!!)
+        requestRef.addSnapshotListener { v, e ->
+            if(e == null)
+                _nUnreadMsg.postValue(v?.getLong("unreadMsg"))
+        }
         requestRef.collection("messages").document().set( mapOf(
             "messageText" to message.messageText,
             "timestamp" to message.timestamp.time,
             "userId" to message.userId,
         )).addOnSuccessListener {
-            requestRef.update(mapOf ("lastMessageText" to message.messageText, "lastMessageTime" to message.timestamp.time))
+            requestRef.update(mapOf ("lastMessageText" to message.messageText, "lastMessageTime" to message.timestamp.time, "unreadMsg" to _nUnreadMsg.value!!+1))
+            _nUnreadMsg.postValue(_nUnreadMsg.value!! +1)
             Log.d("sendMessage", "success")
 
         }.addOnFailureListener { Log.d("sendMessage", "failure")}
