@@ -37,7 +37,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 
 
 
-        /*TODO(Add a void message if no chats are present (from timeSlotList)  */
+        /*TODO(To remove glitch between transictions (require -> offerer) use a bundle to understand where are you come from)  */
         chatVm.chat.observe(viewLifecycleOwner) { cli ->
             updateChatUi(view, cli)
         }
@@ -99,7 +99,8 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         val rbReviewScore = v.findViewById<RatingBar>(R.id.fragment_chat_rb_review_score)
         val tvReviewsNumber = v.findViewById<TextView>(R.id.fragment_chat_tv_reviews_count)
         val tvProfileName = v.findViewById<TextView>(R.id.chat_profile_name)
-        val btnAcceptRequest = v.findViewById<TextView>(R.id.fragment_chat_btn_accept)
+        val btnAcceptRequest = v.findViewById<Button>(R.id.fragment_chat_btn_accept)
+        val btnRequireService = v.findViewById<Button>(R.id.fragment_chat_btn_require_service)
         val btnDenyRequest = v.findViewById<TextView>(R.id.fragment_chat_btn_deny)
         val pbProfilePic = v.findViewById<ProgressBar>(R.id.fragment_chat_pb_profile_pic)
 
@@ -109,7 +110,8 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
             /* Chatting to the offerer */
             Request.CHAT_TYPE_TO_OFFERER -> {
                 btnDenyRequest.visibility = View.GONE
-                btnAcceptRequest.text = "require service"
+                btnAcceptRequest.visibility = View.GONE
+                btnRequireService.visibility = View.VISIBLE
                 when (cli.status) {
                     Request.STATUS_INTERESTED -> Log.d("chatFragment", "STATUS INTERESTED")
                     Request.STATUS_ACCEPTED -> Log.d("chatFragment", "STATUS ACCEPTED")
