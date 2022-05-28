@@ -321,40 +321,45 @@ class EditProfileFragment : Fragment(R.layout.fragment_editprofile) {
 
         val nameEditLay = v.findViewById<TextInputLayout>(R.id.editFullNameLay)
         val nameEdit = v.findViewById<TextInputEditText>(R.id.editFullName)
-        if (nameEdit.text?.isEmpty() == true)
-            nameEditLay.error = "Field cannot be empty!"
-        else
-            nameEditLay.error = null
+
+        when {
+            nameEdit.text?.isEmpty() == true -> nameEditLay.error = "Field cannot be empty!"
+            nameEdit.text?.length ?: 0 > 45  -> nameEditLay.error = "Required field too long!"
+            else -> nameEditLay.error = null
+        }
 
         val nickEditLay = v.findViewById<TextInputLayout>(R.id.editNicknameLay)
         val nickEdit = v.findViewById<TextInputEditText>(R.id.editNickname)
-        if (nickEdit.text?.isEmpty() == true)
-            nickEditLay.error = "Field cannot be empty!"
-        else
-            nickEditLay.error = null
+        when {
+            nickEdit.text?.isEmpty() == true -> nickEditLay.error = "Field cannot be empty!"
+            nickEdit.text?.length ?: 0 > 20 -> nickEditLay.error = "Required field too long!"
+            else -> nickEditLay.error = null
+        }
 
         val emailEditLay = v.findViewById<TextInputLayout>(R.id.editEmailLay)
         val emailEdit = v.findViewById<TextInputEditText>(R.id.editEmail)
-        if (emailEdit.text?.isEmpty() == true)
-            emailEditLay.error = "Field cannot be empty!"
-        else if (!Patterns.EMAIL_ADDRESS.matcher(emailEdit.text.toString()).matches())
-            emailEditLay.error = "Insert a valid e-mail!"
-        else
-            emailEditLay.error = null
+        when {
+            emailEdit.text?.isEmpty() == true -> emailEditLay.error = "Field cannot be empty!"
+            !Patterns.EMAIL_ADDRESS.matcher(emailEdit.text.toString()).matches() -> emailEditLay.error = "Insert a valid e-mail!"
+            emailEdit.text?.length ?: 0 > 45 -> emailEditLay.error = "Required field too long!"
+            else -> emailEditLay.error = null
+        }
 
         val locationEditLay = v.findViewById<TextInputLayout>(R.id.editLocationLay)
         val locationEdit = v.findViewById<TextInputEditText>(R.id.editLocation)
-        if (locationEdit.text?.isEmpty() == true)
-            locationEditLay.error = "Field cannot be empty!"
-        else
-            locationEditLay.error = null
+        when {
+            locationEdit.text?.isEmpty() == true -> locationEditLay.error = "Field cannot be empty!"
+            locationEdit.text?.length ?: 0 > 50 -> locationEditLay.error = "Required field too long!"
+            else -> locationEditLay.error = null
+        }
 
         val descriptionEditLay = v.findViewById<TextInputLayout>(R.id.editDescriptionLay)
         val descriptionEdit = v.findViewById<TextInputEditText>(R.id.editDescription)
-        if (descriptionEdit.text?.isEmpty() == true)
-            descriptionEditLay.error = "Field cannot be empty!"
-        else
-            descriptionEditLay.error = null
+        when {
+            descriptionEdit.text?.isEmpty() == true -> descriptionEditLay.error = "Field cannot be empty!"
+            descriptionEdit.text?.length ?: 0 > 200 -> descriptionEditLay.error = "Required field too long!"
+            else -> descriptionEditLay.error = null
+        }
 
     }
 

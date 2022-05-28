@@ -73,8 +73,7 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
                             usr = User().also {
                                 it.id = fireBaseUser.value!!.uid; it.fullName =
                                 fireBaseUser.value!!.displayName!!; it.email =
-                                fireBaseUser.value!!.email!!
-                                //it.pic = "images/".plus(UUID.randomUUID().toString());
+                                fireBaseUser.value!!.email!!; it.balance = 3
                             }
                             db.collection("users").document(fireBaseUser.value!!.uid)
                                 .set(usr)

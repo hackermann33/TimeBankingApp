@@ -20,7 +20,11 @@ data class User(
 
     /*Here, I'm not checking that String is not empty, because if it's empty it will be used default image*/
     fun isValid(): Boolean {
-        return fullName.isNotEmpty() && nick.isNotEmpty() && isValidEmail() && location.isNotEmpty() && description.isNotEmpty()
+        return (fullName.isNotEmpty() && fullName.length <= 45)
+                && (nick.isNotEmpty() && nick.length <= 20)
+                && (isValidEmail() && email.length <= 45)
+                && (location.isNotEmpty() && location.length <= 50)
+                && (description.isNotEmpty() && description.length <= 200)
     }
 
     private fun isValidEmail(): Boolean {

@@ -83,6 +83,9 @@ class ShowPersonalProfileFragment : Fragment(R.layout.fragment_showprofile) {
                     )
                 }
             }
+            view.findViewById<TextView>(R.id.balanceLabel).visibility  = View.GONE
+            view.findViewById<TextView>(R.id.balance).visibility  = View.GONE
+            view.findViewById<View>(R.id.divider13).visibility  = View.GONE
 
             //recensioni time slot user
             val review = Review()

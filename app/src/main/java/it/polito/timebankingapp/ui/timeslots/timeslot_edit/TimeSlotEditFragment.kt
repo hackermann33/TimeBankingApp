@@ -32,12 +32,14 @@ import it.polito.timebankingapp.model.timeslot.TimeSlot
 import it.polito.timebankingapp.ui.profile.ProfileViewModel
 import it.polito.timebankingapp.ui.timeslots.TimeSlotsViewModel
 import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.*
 
 /** TODO: When edit is confirmed, global view model should be updated (DB)
  **/
 
-val DEBUG = true
+val DEBUG = true //DA DISATTIVARE QUANDO SI CONSEGNA IL LAB
 
 
 
@@ -135,6 +137,7 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
                 .replaceFirstChar { it.uppercase() }
 
             if (skillStr.isNotEmpty()) {
+
                 if (tsToEdit.relatedSkill != skillStr && usrVm.user.value?.skills?.contains(skillStr)!! ) {
                     tsToEdit.relatedSkill = skillStr
                     addSkillChip(skillStr)
@@ -249,12 +252,13 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
 
         if (addMode && DEBUG) {
             titleEditText.setText("titleTmp")
-            dateEditText.setText("22/02/2022")
+            dateEditText.setText(LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")).toString())
             timeEditText.setText("00:00")
             durationEditText.setText("1")
             locationEditText.setText("testLocation")
             descriptionEditText.setText("testDescription")
             restrictionsEditText.setText("testRestrictions")
+            tsToEdit.relatedSkill = "Gardening"
             addSkillChip("Gardening")
         }
 
@@ -367,17 +371,25 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
     private fun evidenceWrongFields() {
 
         val titleLay = v.findViewById<TextInputLayout>(R.id.edit_timeslot_TitleLay)
-        if (titleEditText.text?.isEmpty() == true)
-            titleLay.error = "Field cannot be empty!"
-        else
-            titleLay.error = null
+        when {
+            titleEditText.text?.isEmpty() == true -> titleLay.error = "Field cannot be empty!"
+            titleEditText.text?.length ?: 0 > 30 -> titleLay.error = "Required field too long!"
+            else -> titleLay.error = null
+        }
 
         val dateLay = v.findViewById<TextInputLayout>(R.id.edit_timeslot_DateLay)
 
         if (dateEditText.text?.isEmpty() == true)
             dateLay.error = "Field cannot be empty!"
-        else
-            dateLay.error = null
+        else {
+            val todayDate = LocalDate.now()
+            val fields = dateEditText.text!!.split("/")
+            val thisDate = LocalDate.of(fields[2].toInt(),fields[1].toInt(),fields[0].toInt())
+            if (thisDate.isBefore(todayDate))
+                dateLay.error = "Chosen date is too old!"
+            else
+                dateLay.error = null
+        }
 
         val timeLay = v.findViewById<TextInputLayout>(R.id.edit_timeslot_TimeLay)
 
@@ -387,39 +399,49 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
             timeLay.error = null
 
         val durationLay = v.findViewById<TextInputLayout>(R.id.edit_timeslot_DurationLay)
-
-        if (durationEditText.text?.isEmpty() == true)
-            durationLay.error = "Field cannot be empty!"
-        else
-            durationLay.error = null
+        var durationFlag = true
+        val duration = durationEditText.text?.toString() ?: "0"
+        if (duration.length <= 2){
+            if(duration.toInt() < 24)
+                durationFlag = false
+        }
+        when {
+            durationEditText.text?.isEmpty() == true -> durationLay.error = "Field cannot be empty!"
+            durationFlag -> durationLay.error = "Can't exceed 24 hours!"
+            else -> durationLay.error = null
+        }
 
         val locationLay = v.findViewById<TextInputLayout>(R.id.edit_timeslot_LocationLay)
 
-        if (locationEditText.text?.isEmpty() == true)
-            locationLay.error = "Field cannot be empty!"
-        else
-            locationLay.error = null
+        when {
+            locationEditText.text?.isEmpty() == true -> locationLay.error = "Field cannot be empty!"
+            locationEditText.text?.length ?: 0 > 50 -> locationLay.error = "Required field too long!"
+            else -> locationLay.error = null
+        }
 
         val descriptionLay = v.findViewById<TextInputLayout>(R.id.edit_timeslot_DescriptionLay)
 
-        if (descriptionEditText.text?.isEmpty() == true)
-            descriptionLay.error = "Field cannot be empty!"
-        else
-            descriptionLay.error = null
+        when {
+            descriptionEditText.text?.isEmpty() == true -> descriptionLay.error = "Field cannot be empty!"
+            descriptionEditText.text?.length ?: 0 > 200 -> descriptionLay.error = "Required field too long!"
+            else -> descriptionLay.error = null
+        }
 
         val restrictionsLay = v.findViewById<TextInputLayout>(R.id.edit_timeslot_RestrictionsLay)
 
-        if (restrictionsEditText.text?.isEmpty() == true)
-            restrictionsLay.error = "Field cannot be empty!"
-        else
-            restrictionsLay.error = null
+        when {
+            restrictionsEditText.text?.isEmpty() == true -> restrictionsLay.error = "Field cannot be empty!"
+            restrictionsEditText.text?.length ?: 0 > 100 -> restrictionsLay.error = "Required field too long!"
+            else -> restrictionsLay.error = null
+        }
 
         val relatedSkillLay = v.findViewById<TextInputLayout>(R.id.edit_timeslot_RelatedSkillLay)
 
-        if (tsToEdit.relatedSkill == "")
-            relatedSkillLay.error = "Timeslot needs a related skill!"
-        else
-            relatedSkillLay.error = null
+        when {
+            tsToEdit.relatedSkill == "" -> relatedSkillLay.error = "Timeslot needs a related skill!"
+            tsToEdit.relatedSkill.length > 30 -> relatedSkillLay.error = "Required field too long!"
+            else -> relatedSkillLay.error = null
+        }
 
     }
 

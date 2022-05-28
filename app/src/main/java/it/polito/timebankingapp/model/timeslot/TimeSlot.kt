@@ -4,6 +4,8 @@ import android.util.Log
 import com.google.firebase.firestore.Exclude
 import java.io.Serializable
 import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.*
 
 data class TimeSlot(
@@ -24,22 +26,28 @@ data class TimeSlot(
 
     @Exclude
     fun isValid() : Boolean{
-        return title != "" && description != "" && date != "" && time != "" && duration != "" && location != "" && restrictions != "" && relatedSkill != ""
-    }
 
+        val todayDate = LocalDate.now()
+        val fields = date.split("/")
+        val thisDate = LocalDate.of(fields[2].toInt(),fields[1].toInt(),fields[0].toInt())
+        val dateFlag = !thisDate.isBefore(todayDate)
 
-    /*Here, I'm not checking that String is not empty, because if it's empty it will be used default image*/
-    /*fun isValid(): Boolean {
-        return fullName.isNotEmpty() && nick.isNotEmpty() && isValidEmail() && location.isNotEmpty() && description.isNotEmpty()
-    }
-
-    private fun isValidEmail(): Boolean {
-        return if (TextUtils.isEmpty(email)) {
-            false
-        } else {
-            Patterns.EMAIL_ADDRESS.matcher(email).matches()
+        var durationFlag = false
+        if (duration.length <= 2){
+            if(duration.toInt() < 24)
+                durationFlag = true
         }
-    }*/
+
+        return (title != "" && title.length <= 30)
+                && (description != "" && description.length <= 200)
+                && (date != "" && dateFlag)
+                && time != ""
+                && (duration != "" && durationFlag)
+                && (location != "" && location.length <= 50)
+                && (restrictions != "" && restrictions.length <= 100 )
+                && (relatedSkill != "" && relatedSkill.length <= 30)
+    }
+
     @Exclude
     fun getCalendar(): Calendar {
         val cal = Calendar.getInstance(TimeZone.getDefault())
