@@ -6,45 +6,28 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import it.polito.timebankingapp.R
+import it.polito.timebankingapp.model.timeslot.TimeSlot
 import java.time.LocalDate
 
-
-data class Event(val id: String, val text: String, val date: LocalDate)
+data class Event(val id: String, val ts: TimeSlot, val date: LocalDate)
 
 class TimeSlotMonthCalendarEventsAdapter(val onClick: (Event) -> Unit) :
     RecyclerView.Adapter<TimeSlotMonthCalendarEventsAdapter.ItemViewHolder>() {
 
     val events = mutableListOf<Event>()
 
-    /* override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TimeSlotMonthCalendarEventsViewHolder {
-
-         return TimeSlotMonthCalendarEventsViewHolder(
-             TimeSlotMonthCalendarEventItemBinding.inflate(parent.context.layoutInflater, parent, false)
-         )
-     }
-
-     inner class TimeSlotMonthCalendarEventsViewHolder(private val binding: TimeSlotMonthCalendarEventItemBinding) :
-         RecyclerView.ViewHolder(binding.root) {
-
-         init {
-             itemView.setOnClickListener {
-                 onClick(events[bindingAdapterPosition])
-             }
-         }
-
-         fun bind(event: Event) {
-             binding.itemEventText.text = event.text
-         }
-     }
- */
-
     class ItemViewHolder(private val mainView: View) : RecyclerView.ViewHolder(mainView) {
-        private val itemEventText: TextView = mainView.findViewById(R.id.itemEventText)
+        private val tsEstimatedTime: TextView = mainView.findViewById(R.id.calendar_item_ts_duration)
+        private val tsTitle: TextView = mainView.findViewById(R.id.calendar_item_ts_title)
+        private val tsLocation: TextView = mainView.findViewById(R.id.calendar_item_ts_location)
+        private val tsTimestamp: TextView = mainView.findViewById(R.id.calendar_item_ts_timestamp)
 
         fun bind(event: Event) {
-            itemEventText.text = event.text
+            tsTitle.text = event.ts.title
+            tsLocation.text = event.ts.location
+            tsTimestamp.text = event.ts.date.plus(" - ").plus(event.ts.time)
+            tsEstimatedTime.text = event.ts.duration
         }
-
     }
 
     //inflate the item_layout-based structure inside each ViewHolder
@@ -58,8 +41,6 @@ class TimeSlotMonthCalendarEventsAdapter(val onClick: (Event) -> Unit) :
 
         return ItemViewHolder(vg)
     }
-
-
 
     override fun onBindViewHolder(viewHolder: ItemViewHolder, position: Int) {
         viewHolder.bind(events[position])
