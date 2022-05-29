@@ -27,7 +27,6 @@
                 android:id="@+id/fragment_chats_list_item_rl_profile_pic"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
@@ -65,7 +64,7 @@
                 app:layout_constraintBottom_toTopOf="@+id/chat_list_item_time_slot_title"
                 app:layout_constraintStart_toEndOf="@+id/fragment_chats_list_item_rl_profile_pic"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.63"
+                app:layout_constraintVertical_bias="0.75"
                 app:layout_constraintVertical_chainStyle="packed"
                 tools:text="Antonio Cesaria" />
 
@@ -81,18 +80,20 @@
                 android:textSize="12sp"
                 app:layout_constraintBottom_toBottomOf="@+id/chat_list_item_time_slot_title"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/chat_list_item_time_slot_title"
                 tools:text="yesterday" />
 
             <TextView
                 android:id="@+id/chat_list_item_time_slot_title"
-                android:layout_width="225dp"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:fontFamily="@font/roboto_medium"
+                android:layout_marginEnd="32dp"
                 android:text="@string/time_slot_title"
                 android:textAllCaps="false"
                 android:textStyle="italic"
                 app:layout_constraintBottom_toTopOf="@+id/chat_list_item_last_message"
+                app:layout_constraintEnd_toStartOf="@+id/chat_list_item_timestamp"
                 app:layout_constraintStart_toEndOf="@+id/fragment_chats_list_item_rl_profile_pic"
                 app:layout_constraintTop_toBottomOf="@+id/chat_list_item_fullname" />
 
@@ -103,7 +104,6 @@
 
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
                 android:singleLine="true"
                 android:text="@string/chat_list_item_message"
                 android:textColor="#757575"
@@ -115,8 +115,8 @@
                 android:id="@+id/unread_msg_card"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:backgroundTint="@color/primary_dark"
+                android:layout_marginEnd="16dp"
+                android:backgroundTint="@color/primary"
                 android:minWidth="24dp"
                 android:minHeight="24dp"
                 app:cardCornerRadius="16dp"
@@ -140,11 +140,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
+                android:textColor="@color/white"
                 android:textSize="14sp"
                 android:textStyle="bold"
                 app:chipMinHeight="24dp"
                 app:ensureMinTouchTargetSize="false"
                 app:layout_constraintBottom_toTopOf="@+id/chat_list_item_fullname"
+                app:layout_constraintEnd_toEndOf="@+id/chat_list_item_fullname"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="@+id/chat_list_item_fullname"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:ignore="TouchTargetSizeCheck" />

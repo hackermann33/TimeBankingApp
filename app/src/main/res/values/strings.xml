@@ -108,5 +108,5 @@
     <string name="rating_score_warning_label">Rating score is mandatory</string>
     <string name="time_slots_item_type_label">Type:</string>
     <string name="time_slot_title">time_slot_title</string>
-    <string name="requester_or_offerer">Requester or Offerer</string> 
+    <string name="requester_or_offerer">Requester or Offerer</string>
 </resources>

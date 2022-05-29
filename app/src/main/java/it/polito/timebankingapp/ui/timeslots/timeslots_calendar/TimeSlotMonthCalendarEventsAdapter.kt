@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.chip.Chip
 import it.polito.timebankingapp.R
 import it.polito.timebankingapp.model.timeslot.TimeSlot
 import java.time.LocalDate
@@ -24,19 +25,20 @@ class TimeSlotMonthCalendarEventsAdapter(val onClick: (Event) -> Unit) :
         private val tsTitle: TextView = mainView.findViewById(R.id.calendar_item_ts_title)
         private val tsLocation: TextView = mainView.findViewById(R.id.calendar_item_ts_location)
         private val tsTimestamp: TextView = mainView.findViewById(R.id.calendar_item_ts_timestamp)
-        private val tsType: TextView = mainView.findViewById(R.id.calendar_item_ts_type)
+        private val tsType: Chip = mainView.findViewById(R.id.calendar_item_ts_type)
 
         fun bind(event: Event) {
             tsTitle.text = event.ts.title
             tsLocation.text = event.ts.location
             tsTimestamp.text = event.ts.date.plus(" - ").plus(event.ts.time)
             tsEstimatedTime.text = event.ts.duration.plus(" hours")
+
             if(event.isOffered) {
                 tsType.text = "Offered"
-                tsType.setTextColor(Color.parseColor("#00D100"));
+                tsType.setChipBackgroundColorResource(R.color.accent)
             } else {
                 tsType.text = "Requested"
-                tsType.setTextColor(Color.parseColor("#0000FF"));
+                tsType.setChipBackgroundColorResource(R.color.primary_dark)
             }
         }
     }
