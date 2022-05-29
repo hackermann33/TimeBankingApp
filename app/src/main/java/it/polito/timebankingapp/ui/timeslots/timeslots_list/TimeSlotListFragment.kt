@@ -236,6 +236,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_timeslots_list) {
     }
 
     private fun selectTimeSlot(ts: TimeSlot) {
+        userVm.retrieveTimeSlotProfileData(ts.userId)
         vm.setSelectedTimeSlot(ts)
     }
 
