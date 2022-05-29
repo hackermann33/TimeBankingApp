@@ -1,9 +1,11 @@
 package it.polito.timebankingapp.model.chat
 
+import it.polito.timebankingapp.model.Helper
+import it.polito.timebankingapp.model.Request
 import java.io.Serializable
 
 data class ChatsListItem(
-    var chatId: String = "" ,
+    var chatId: String = "",
     var userId: String = "",
     var timeSlotId: String = "",
     var timeSlotTitle: String = "",
@@ -15,7 +17,7 @@ data class ChatsListItem(
     var lastMessageTime: String = "",
     var nUnreadMsg: Int = 0,
     val nTotMsg: Int = 0,
-    val status: Int = 0,
+    val status: Int = Request.STATUS_UNINTERESTED,
     val type: Int = 0
 ) : Serializable {
 
@@ -27,5 +29,9 @@ data class ChatsListItem(
 
     fun incUnreadMsg(): ChatsListItem {
         return this.copy(nUnreadMsg = nUnreadMsg+1)
+    }
+
+    fun sendFirstMessage(cm: ChatMessage): ChatsListItem{
+        return this.copy(type = Request.STATUS_INTERESTED, nTotMsg = 1, lastMessageText = cm.messageText, lastMessageTime = Helper.dateToDisplayString(cm.timestamp.time))
     }
 }

@@ -32,6 +32,7 @@ class ChatListFragment : Fragment(R.layout.fragment_chats_list_list) {
         rv.layoutManager = LinearLayoutManager(context)
 
 
+
         /*TODO(Distinguish graphically if the chat is a to_offerer or to_requester chat)  */
         chatListViewModel.chatsList.observe(viewLifecycleOwner){
             adTmp = ChatListViewAdapter(it, ::selectChat/*, ::updateTimeSlotProfile*/, chatListType)
@@ -44,11 +45,6 @@ class ChatListFragment : Fragment(R.layout.fragment_chats_list_list) {
 
     fun selectChat(chat : ChatsListItem){
         chatViewModel.selectChat(chat)
-    }
-
-    fun updateTimeSlotProfile(userId : String){
-        profileVm.retrieveTimeSlotProfileData(userId)
-        chatViewModel.updateUserInfo(userId)
     }
 
     companion object Type{

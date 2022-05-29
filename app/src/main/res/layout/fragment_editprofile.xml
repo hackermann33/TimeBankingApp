@@ -37,15 +37,13 @@
                     app:srcCompat="@drawable/empty_splash"
                     tools:src="@tools:sample/backgrounds/scenic" />
 
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/profile_pic"
+                <ImageView
+                    android:id="@+id/fragment_show_profile_iv_profile_pic"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center|center_horizontal"
-                    android:src="@drawable/default_avatar"
-                    app:civ_border_color="@color/primary"
-                    app:civ_border_width="2dp"
-                    android:padding="16dp"/>
+                    android:padding="16dp"
+                    android:src="@drawable/default_avatar" />
 
                 <ImageButton
                     android:id="@+id/uploadProfilePicButton"
@@ -57,6 +55,13 @@
                     android:minHeight="48dp"
                     app:srcCompat="@android:drawable/ic_menu_camera"
                     tools:ignore="SpeakableTextPresentCheck,RedundantDescriptionCheck,ImageContrastCheck" />
+
+                <ProgressBar
+                    android:id="@+id/fragment_show_profile_pb_profile_pic"
+                    style="?android:attr/progressBarStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center" />
             </FrameLayout>
 
             <LinearLayout

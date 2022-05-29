@@ -3,6 +3,7 @@ package it.polito.timebankingapp
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.activity.viewModels
@@ -23,6 +24,7 @@ import com.google.firebase.ktx.Firebase
 //import com.jakewharton.threetenabp.AndroidThreeTen
 import de.hdodenhof.circleimageview.CircleImageView
 import it.polito.timebankingapp.databinding.ActivityMainBinding
+import it.polito.timebankingapp.model.Helper
 import it.polito.timebankingapp.ui.chats.chatslist.ChatListViewModel
 
 import it.polito.timebankingapp.ui.profile.ProfileViewModel
@@ -118,8 +120,12 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        val progressBar =
+        val pBUserPic =
             navView.getHeaderView(0).findViewById<ProgressBar>(R.id.profile_pic_progress_bar)
+        val profilePic =
+            navView.getHeaderView(0).findViewById<ImageView>(R.id.fragment_show_profile_iv_profile_pic)
+
+
         vm.user.observe(this) {
             val fullName = navView.getHeaderView(0).findViewById<TextView>(R.id.fullName)
             var emailET = navView.getHeaderView(0).findViewById<TextView>(R.id.emailTextView)
@@ -127,24 +133,12 @@ class MainActivity : AppCompatActivity() {
                 fullName.text = it.fullName
                 emailET.text = it.email
 
-                if(!it.hasImage())
-                    progressBar.visibility = View.GONE
-
+                Helper.loadImageIntoView(profilePic, pBUserPic, it.profilePicUrl)
             }
         }
 
 
-        val profilePic =
-            navView.getHeaderView(0).findViewById<CircleImageView>(R.id.profile_pic)
 
-        vm.userImage.observe(this) {
-            if (it != null) {
-                profilePic.setImageBitmap(it)
-                progressBar.visibility = View.GONE
-            } else {
-                profilePic.setImageResource(R.drawable.default_avatar)
-            }
-        }
 
 
     }

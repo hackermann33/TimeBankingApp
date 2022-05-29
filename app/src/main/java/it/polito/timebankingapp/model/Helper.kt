@@ -4,23 +4,23 @@ import android.graphics.drawable.Drawable
 import android.text.format.DateUtils
 import android.util.Log
 import android.view.View
+import android.widget.ImageView
 import android.widget.ProgressBar
-import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.engine.GlideException
-import com.bumptech.glide.load.resource.gif.GifDrawable
 import com.bumptech.glide.request.RequestListener
-import com.bumptech.glide.request.target.SimpleTarget
+import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import de.hdodenhof.circleimageview.CircleImageView
-import it.polito.timebankingapp.R
+import it.polito.timebankingapp.model.chat.ChatMessage
 import it.polito.timebankingapp.model.chat.ChatsListItem
+import it.polito.timebankingapp.model.timeslot.TimeSlot
 import it.polito.timebankingapp.model.user.User
 import java.text.SimpleDateFormat
 import java.util.*
@@ -29,7 +29,8 @@ class Helper {
     companion object {
         const val TAG = "Helper"
 
-        fun loadImageIntoView(view: CircleImageView, progressBar: ProgressBar, url: String) {
+
+        fun loadImageIntoView(view: ImageView, progressBar: ProgressBar, url: String) {
             val storageReference = FirebaseStorage.getInstance().reference
             if (url.isEmpty()){
                 progressBar.visibility = View.GONE;
@@ -38,13 +39,12 @@ class Helper {
             val picRef = storageReference.child(url)
 
 
-
             picRef.downloadUrl
                 .addOnSuccessListener { uri ->
                     val downloadUrl = uri.toString()
 
                     Glide.with(view.context)
-                        .load(downloadUrl).listener(object : RequestListener<Drawable> {
+                        .load(downloadUrl).circleCrop().listener(object : RequestListener<Drawable> {
                             override fun onLoadFailed(
                                 p0: GlideException?,
                                 p1: Any?,
@@ -68,7 +68,6 @@ class Helper {
                                 return false
                             }
                         }).diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true)
-
                         .into(view)
                 }
                 .addOnFailureListener { e ->
@@ -91,16 +90,26 @@ class Helper {
             return DateUtils.isToday(d.time + DateUtils.DAY_IN_MILLIS)
         }
 
+        const val KEY_PROFILE_PIC_URL = "profilePicUrl"
+        const val KEY_PROFILE_PIC_FULL_NAME = "fullName"
+        const val KEY_PROFILE_PIC_NICK = "nick"
+        const val KEY_PROFILE_PIC_EMAIL = "email"
+        const val KEY_PROFILE_PIC_LOCATION = "location"
+        const val KEY_PROFILE_PIC_DESCRIPTION = "description"
+        const val KEY_PROFILE_PIC_BALANCE = "balance"
+        const val KEY_PROFILE_PIC_SKILLS = "skills"
+
+
         fun DocumentSnapshot.toUser(): User? {
             return try {
-                val pic = get("pic") as String
-                val fullName = get("fullName") as String
-                val nick = get("nick") as String
-                val email = get("email") as String
-                val location = get("location") as String
-                val desc = get("description") as String
-                val balance = get("balance") as Long
-                val skills = get("skills") as MutableList<String>
+                val pic = get(KEY_PROFILE_PIC_URL) as String
+                val fullName = get(KEY_PROFILE_PIC_FULL_NAME) as String
+                val nick = get(KEY_PROFILE_PIC_NICK) as String
+                val email = get(KEY_PROFILE_PIC_EMAIL) as String
+                val location = get(KEY_PROFILE_PIC_LOCATION) as String
+                val desc = get(KEY_PROFILE_PIC_DESCRIPTION) as String
+                val balance = get(KEY_PROFILE_PIC_BALANCE) as Long
+                val skills = get(KEY_PROFILE_PIC_SKILLS) as MutableList<String>
 
                 User(id, pic, fullName, nick, email, location, desc, balance.toInt(), skills)
             } catch (e: Exception) {
@@ -123,22 +132,24 @@ class Helper {
 
         fun fromRequestToChat(r: Request): ChatsListItem {
             val otherUser = Helper.getOtherUser(r)
-            val timeStr = r.lastMessageTime.toDisplayString()
+            val timeStr = dateToDisplayString(r.lastMessageTime)
             val userId = Firebase.auth.uid.toString()
-            return ChatsListItem(r.requestId, userId,  r.timeSlot.id, r.timeSlot.title,  otherUser.fullName, otherUser.pic,
+            return ChatsListItem(r.requestId, userId,  r.timeSlot.id, r.timeSlot.title,  otherUser.fullName, otherUser.profilePicUrl,
                 4.5f, 6,  r.lastMessageText, timeStr, r.unreadMsg, 0, r.status, Helper.getChatType(r))
         }
 
-        private fun Date.toDisplayString(): String {
 
+
+
+        fun dateToDisplayString(d: Date): String {
             var pattern: String = when {
-                Helper.isYesterday(this) -> return "yesterday"
-                DateUtils.isToday(this.time) -> "HH:mm"
+                Helper.isYesterday(d) -> return "yesterday"
+                DateUtils.isToday(d.time) -> "HH:mm"
                 else -> "dd/MM/yy"
             }
 
             val sdf = SimpleDateFormat(pattern, Locale.getDefault())
-            return sdf.format(this)
+            return sdf.format(d)
 
         }
     }

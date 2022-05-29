@@ -15,21 +15,19 @@
 
 
     <FrameLayout
-        android:id="@+id/frame_layout_pic"
+        android:id="@+id/fragment_show_profile_fl_profile_pic"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:background="@android:color/transparent"
         android:padding="10dp">
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/profile_pic"
+        <ImageView
+            android:id="@+id/fragment_show_profile_iv_profile_pic"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:cropToPadding="false"
-            android:src="@drawable/default_avatar"
-            app:civ_border_color="@color/text_standard"
-            app:civ_border_width="2dp" />
+            android:src="@drawable/default_avatar" />
 
         <ProgressBar
             android:id="@+id/profile_pic_progress_bar"

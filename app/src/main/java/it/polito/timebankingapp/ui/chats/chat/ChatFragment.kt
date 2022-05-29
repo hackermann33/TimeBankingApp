@@ -35,8 +35,6 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
-
-
         /*TODO(To remove glitch between transictions (require -> offerer) use a bundle to understand where are you come from)  */
         chatVm.chat.observe(viewLifecycleOwner) { cli ->
             updateChatUi(view, cli)
@@ -98,13 +96,16 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         val civProfilePic = v.findViewById<CircleImageView>(R.id.chat_profile_pic)
         val rbReviewScore = v.findViewById<RatingBar>(R.id.fragment_chat_rb_review_score)
         val tvReviewsNumber = v.findViewById<TextView>(R.id.fragment_chat_tv_reviews_count)
+        val tvTimeSlotTitle = v.findViewById<TextView>(R.id.fragment_chat_tv_offer_title)
         val tvProfileName = v.findViewById<TextView>(R.id.chat_profile_name)
         val btnAcceptRequest = v.findViewById<Button>(R.id.fragment_chat_btn_accept)
         val btnRequireService = v.findViewById<Button>(R.id.fragment_chat_btn_require_service)
         val btnDenyRequest = v.findViewById<TextView>(R.id.fragment_chat_btn_deny)
         val pbProfilePic = v.findViewById<ProgressBar>(R.id.fragment_chat_pb_profile_pic)
 
+        Helper.loadImageIntoView(civProfilePic,  pbProfilePic, cli.otherProfilePic)
 
+        /* TODO(When image is clicked, navigation is not to the correct profile !!!) */
         when(cli.type){
 
             /* Chatting to the offerer */
@@ -112,25 +113,29 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
                 btnDenyRequest.visibility = View.GONE
                 btnAcceptRequest.visibility = View.GONE
                 btnRequireService.visibility = View.VISIBLE
+                Log.d(TAG, "TYPE TO OFFERER")
                 when (cli.status) {
-                    Request.STATUS_INTERESTED -> Log.d("chatFragment", "STATUS INTERESTED")
-                    Request.STATUS_ACCEPTED -> Log.d("chatFragment", "STATUS ACCEPTED")
+                    Request.STATUS_UNINTERESTED -> Log.d(TAG, "STATUS UNIINTERESTED")
+                    Request.STATUS_INTERESTED -> {
+                        Log.d(TAG, "STATUS INTERESTED")
+                        btnRequireService.isEnabled = false
+                        btnRequireService.text = "Service required"
+                    }
+                    Request.STATUS_ACCEPTED -> Log.d(TAG, "STATUS ACCEPTED")
                 }
             }
             Request.CHAT_TYPE_TO_REQUESTER -> {
+                Log.d(TAG, "TYPE TO REQUESTER")
                 when (cli.status) {
-                    Request.STATUS_INTERESTED -> Log.d("chatFragment", "STATUS INTERESTED")
-                    Request.STATUS_ACCEPTED -> Log.d("chatFragment", "STATUS ACCEPTED")
+                    Request.STATUS_UNINTERESTED -> Log.d(TAG, "STATUS UNIINTERESTED")
+                    Request.STATUS_INTERESTED -> Log.d(TAG, "STATUS INTERESTED")
+                    Request.STATUS_ACCEPTED -> Log.d(TAG, "STATUS ACCEPTED")
                 }
 
             }
 
         }
 
-
-
-
-        Helper.loadImageIntoView(civProfilePic,  pbProfilePic, cli.otherProfilePic)
 
         rbReviewScore.rating = cli.avgReviews
         tvReviewsNumber.text = cli.nReviews.toString()
@@ -143,6 +148,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
             )
         }
 
+        tvTimeSlotTitle.text = cli.timeSlotTitle
         tvProfileName.text = cli.otherUserName
 
         tvProfileName.setOnClickListener {
@@ -156,6 +162,10 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 
     fun sendMessage(chatMessage: ChatMessage) {
         chatVm.sendMessage(chatMessage)
+    }
+
+    companion object {
+        const val TAG = "ChatFragment"
     }
 
 }

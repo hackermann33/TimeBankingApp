@@ -142,7 +142,7 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
                         context, "Show user profile",
                         Toast.LENGTH_SHORT
                     ).show()
-                    profileViewModel.clearTimeSlotUserImage()
+
                     profileViewModel.retrieveTimeSlotProfileData(userId)
                     findNavController().navigate(
                         R.id.action_nav_timeSlotDetails_to_nav_showProfile,
@@ -165,7 +165,7 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
     /* Show chat from the current user to the current timeSlot */
     fun showTimeSlotRequest(timeSlot: TimeSlot) {
         val chatId = Helper.makeRequestId(timeSlot.id, Firebase.auth.uid!!)
-        chatVm.selectToOffererChatFromTimeSlot(timeSlot)
+        chatVm.selectChatFromTimeSlot(timeSlot)
     }
 
     private fun editTimeslot() {

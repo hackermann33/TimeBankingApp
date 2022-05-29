@@ -6,162 +6,175 @@
     android:layout_height="match_parent">
 
 
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/cardview"
-        android:layout_width="match_parent"
+    <RelativeLayout
+        android:id="@+id/fragment_chat_rl_profile_pic"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:cardCornerRadius="10dp"
-        app:cardPreventCornerOverlap="false"
-        app:cardElevation="4dp"
-        app:cardUseCompatPadding="true"
-        app:layout_constraintBottom_toTopOf="@+id/recycler_gchat"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="8dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <LinearLayout
-            android:id="@+id/linearLayout3"
-            android:layout_width="match_parent"
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/chat_profile_pic"
+            android:layout_width="78dp"
+            android:layout_height="78dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:src="@drawable/default_avatar"
+            app:civ_border_color="@color/text_standard"
+            app:civ_border_width="2dp" />
+
+        <ProgressBar
+            android:id="@+id/fragment_chat_pb_profile_pic"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp"
-            android:orientation="vertical">
+            android:layout_centerInParent="true" />
+    </RelativeLayout>
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/linearLayout2"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:paddingBottom="8dp">
+    <TextView
+        android:id="@+id/fragment_chat_tv_offer_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="24dp"
+        android:fontFamily="@font/roboto_medium"
+        android:text="Offer Title "
+        android:textAllCaps="true"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        app:autoSizeTextType="none"
+        app:layout_constraintBottom_toTopOf="@+id/chat_profile_name"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/fragment_chat_rl_profile_pic"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.36"
+        app:layout_constraintVertical_chainStyle="spread_inside" />
 
-                <RelativeLayout
-                    android:id="@+id/fragment_chat_rl_profile_pic"
-                    android:layout_width="100dp"
-                    android:layout_height="match_parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
+    <TextView
+        android:id="@+id/chat_profile_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="4dp"
+        android:lines="1"
+        android:text="Nome Surname"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        app:autoSizeTextType="none"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/fragment_chat_rl_profile_pic"
+        app:layout_constraintTop_toBottomOf="@+id/fragment_chat_tv_offer_title" />
 
-                    <de.hdodenhof.circleimageview.CircleImageView
-                        android:id="@+id/chat_profile_pic"
-                        android:layout_width="78dp"
-                        android:layout_height="78dp"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginEnd="8dp"
-                        android:layout_marginBottom="8dp"
-                        android:src="@drawable/default_avatar"
-                        app:civ_border_color="@color/text_standard"
-                        app:civ_border_width="2dp" />
+    <LinearLayout
+        android:id="@+id/linearLayout3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/fragment_chat_rl_profile_pic"
+        app:layout_constraintTop_toBottomOf="@+id/chat_profile_name"
+        app:layout_constraintVertical_bias="0.0">
 
-                    <ProgressBar
-                        android:id="@+id/fragment_chat_pb_profile_pic"
-                        style="?android:attr/progressBarStyle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true" />
-                </RelativeLayout>
+        <RatingBar
+            android:id="@+id/fragment_chat_rb_review_score"
+            style="@style/Widget.AppCompat.RatingBar.Small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/rating_bar"
+            android:numStars="5"
+            android:theme="@style/RatingBar" />
 
-                <TextView
-                    android:id="@+id/chat_profile_name"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="16dp"
-                    android:lines="1"
-                    android:text="Nome Cognome"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                    app:autoSizeTextType="none"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.01"
-                    app:layout_constraintStart_toEndOf="@+id/fragment_chat_rl_profile_pic"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.32999998"
-                    app:layout_constraintVertical_chainStyle="packed" />
+        <TextView
+            android:id="@+id/fragment_chat_tv_reviews_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="4dp"
+            android:text="@string/n_reviews"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:textColor="@color/accent" />
+    </LinearLayout>
 
-                <TextView
-                    android:id="@+id/fragment_chat_tv_reviews_count"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:text="@string/n_reviews"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                    android:textColor="@color/accent"
-                    app:layout_constraintBottom_toBottomOf="@+id/fragment_chat_rb_review_score"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintStart_toEndOf="@+id/fragment_chat_rb_review_score"
-                    app:layout_constraintTop_toTopOf="@+id/fragment_chat_rb_review_score" />
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="16dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/divider19"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout3">
 
-                <RatingBar
-                    android:id="@+id/fragment_chat_rb_review_score"
-                    style="@style/Widget.AppCompat.RatingBar.Small"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:contentDescription="@string/rating_bar"
-                    android:numStars="5"
-                    android:theme="@style/RatingBar"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/fragment_chat_tv_reviews_count"
-                    app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintHorizontal_chainStyle="packed"
-                    app:layout_constraintStart_toEndOf="@+id/fragment_chat_rl_profile_pic"
-                    app:layout_constraintTop_toBottomOf="@+id/chat_profile_name"
-                    app:layout_constraintVertical_bias="0.0" />
+        <Button
+            android:id="@+id/fragment_chat_btn_deny"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="8dp"
+            android:layout_weight="1"
+            android:backgroundTint="#B71C1C"
+            android:text="@string/deny"
+            android:visibility="visible" />
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+        <Button
+            android:id="@+id/fragment_chat_btn_accept"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="16dp"
+            android:layout_weight="1"
+            android:text="@string/accept"
+            android:visibility="visible" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+        <Button
+            android:id="@+id/fragment_chat_btn_require_service"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Require service"
+            android:visibility="gone" />
+    </LinearLayout>
 
-                <Button
-                    android:id="@+id/fragment_chat_btn_deny"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_weight="1"
-                    android:backgroundTint="#B71C1C"
-                    android:text="@string/deny" />
-
-                <Button
-                    android:id="@+id/fragment_chat_btn_accept"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginEnd="16dp"
-                    android:layout_weight="1"
-                    android:text="@string/accept" />
-
-                <Button
-                    android:id="@+id/fragment_chat_btn_require_service"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Require service"
-                    android:visibility="gone" />
-            </LinearLayout>
-        </LinearLayout>
-    </com.google.android.material.card.MaterialCardView>
+    <View
+        android:id="@+id/divider19"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="8dp"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout2" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_gchat"
         android:name="it.polito.timebankingapp.ui.chat.ChatFragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="4dp"
         app:layoutManager="LinearLayoutManager"
         app:layout_constrainedHeight="true"
-        app:layout_constraintBottom_toTopOf="@+id/divider7"
+        app:layout_constraintBottom_toTopOf="@+id/layout_gchat_chatbox"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cardview"
+        app:layout_constraintTop_toBottomOf="@+id/divider19"
+        app:layout_constraintVertical_bias="0.0"
         tools:context=".ui.chats.chat.ChatFragment">
 
     </androidx.recyclerview.widget.RecyclerView>
+
 
     <View
         android:id="@+id/divider7"
@@ -176,6 +189,7 @@
         android:id="@+id/layout_gchat_chatbox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="2dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">

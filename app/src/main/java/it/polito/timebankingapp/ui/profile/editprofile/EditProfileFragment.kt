@@ -3,8 +3,6 @@ package it.polito.timebankingapp.ui.profile.editprofile
 
 import android.R.attr
 import android.app.Activity.RESULT_OK
-import android.content.Context
-import android.content.ContextWrapper
 import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.Bitmap
@@ -31,11 +29,10 @@ import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
-import de.hdodenhof.circleimageview.CircleImageView
 import it.polito.timebankingapp.R
+import it.polito.timebankingapp.model.Helper
 import it.polito.timebankingapp.model.user.User
 import it.polito.timebankingapp.ui.profile.ProfileViewModel
-import java.io.*
 
 
 /* Global lists of skills,
@@ -57,7 +54,10 @@ const val REQUEST_PIC = 1
 
 class EditProfileFragment : Fragment(R.layout.fragment_editprofile) {
 
-    private lateinit var profilePicCircleView: CircleImageView
+    private lateinit var ivProfilePic: ImageView
+    private lateinit var pbProfilePic: ProgressBar
+
+
     private var usr: User = User()
     private lateinit var skillsGroup: ChipGroup
 
@@ -77,40 +77,20 @@ class EditProfileFragment : Fragment(R.layout.fragment_editprofile) {
         usr = arguments?.getSerializable("profile") as User? ?: User()
 
 
-        profilePicCircleView = view.findViewById(R.id.profile_pic)
 
+        ivProfilePic = view.findViewById(R.id.fragment_show_profile_iv_profile_pic)
 
-        vm.userImage.observe(viewLifecycleOwner){
-            if(it!=null)
-                profilePicCircleView.setImageBitmap(it)
+        pbProfilePic = view.findViewById<ProgressBar>(R.id.fragment_show_profile_pb_profile_pic)
+        vm.user.observe(viewLifecycleOwner) {
+            Helper.loadImageIntoView(ivProfilePic, pbProfilePic, it.profilePicUrl)
         }
+
 
         val sv = view.findViewById<ScrollView>(R.id.editScrollView2)
-        val editPic = view.findViewById<FrameLayout>(R.id.editPic)
+        setProfilePicSize(view, sv)
 
-        if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
-            sv.viewTreeObserver.addOnGlobalLayoutListener(object :
-                ViewTreeObserver.OnGlobalLayoutListener {
-                override fun onGlobalLayout() {
-                    val h = sv.height
-                    val w = sv.width
-                    editPic.post { editPic.layoutParams = LinearLayout.LayoutParams(w, h / 3) }
-                    sv.viewTreeObserver.removeOnGlobalLayoutListener(this)
-                }
-            })
-        }
-
-        /*
-        try {
-            val f = File(usr.tempImagePath)
-            val bitmap = BitmapFactory.decodeStream(FileInputStream(f))
-            profilePic.setImageBitmap(bitmap)
-        } catch (e: FileNotFoundException) {
-            e.printStackTrace()
-        }*/
-
-        val picEdit = view.findViewById<ImageButton>(R.id.uploadProfilePicButton)
-        picEdit.setOnClickListener {
+        val btnEditPic = view.findViewById<ImageButton>(R.id.uploadProfilePicButton)
+        btnEditPic.setOnClickListener {
 
             val galleryIntent = Intent(Intent.ACTION_PICK)
             galleryIntent.type = "image/*"
@@ -125,12 +105,12 @@ class EditProfileFragment : Fragment(R.layout.fragment_editprofile) {
             startActivityForResult(chooser, REQUEST_PIC)
         }
 
-        val addSkillButton = view.findViewById<Button>(R.id.addSkillButton)
+        val btnAddSkill = view.findViewById<Button>(R.id.addSkillButton)
         skillsGroup = view.findViewById(R.id.editSkillsGroup)
 
         val newSkillView = updateSkillsHints()
 
-        addSkillButton.setOnClickListener {
+        btnAddSkill.setOnClickListener {
             var skillStr = newSkillView.text.toString()
             skillStr = skillStr.lowercase()
                 .replace("\n", " ")
@@ -152,7 +132,7 @@ class EditProfileFragment : Fragment(R.layout.fragment_editprofile) {
             }
         }
 
-        addSkillButton.textSize = (4 * resources.displayMetrics.density)
+        btnAddSkill.textSize = (4 * resources.displayMetrics.density)
 
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
             handleProfileConfirmation()
@@ -160,7 +140,22 @@ class EditProfileFragment : Fragment(R.layout.fragment_editprofile) {
 
         showProfile(view)
 
+    }
 
+    private fun setProfilePicSize(view: View, sv: ScrollView) {
+        val editPic = view.findViewById<FrameLayout>(R.id.editPic)
+
+        if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
+            sv.viewTreeObserver.addOnGlobalLayoutListener(object :
+                ViewTreeObserver.OnGlobalLayoutListener {
+                override fun onGlobalLayout() {
+                    val h = sv.height
+                    val w = sv.width
+                    editPic.post { editPic.layoutParams = LinearLayout.LayoutParams(w, h / 3) }
+                    sv.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                }
+            })
+        }
     }
 
     private fun showProfile(view: View) {
@@ -247,7 +242,7 @@ class EditProfileFragment : Fragment(R.layout.fragment_editprofile) {
                 ExifInterface.TAG_ORIENTATION,
                 ExifInterface.ORIENTATION_UNDEFINED
             )*/
-
+            pbProfilePic.visibility = View.VISIBLE
             val rotatedBitmap: Bitmap? = when (attr.orientation) {
                 ExifInterface.ORIENTATION_ROTATE_90 -> rotateImage(imageBitmap!!, 90)
                 ExifInterface.ORIENTATION_ROTATE_180 -> rotateImage(imageBitmap!!, 180)
@@ -255,7 +250,9 @@ class EditProfileFragment : Fragment(R.layout.fragment_editprofile) {
                 ExifInterface.ORIENTATION_NORMAL -> imageBitmap
                 else -> imageBitmap
             }
-            profilePicCircleView.setImageBitmap(rotatedBitmap)
+            /*ivProfilePic.setImageBitmap(rotatedBitmap)*/
+
+
             vm.editUserImage(rotatedBitmap)
         }
     }

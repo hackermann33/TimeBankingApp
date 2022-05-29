@@ -1,7 +1,6 @@
 package it.polito.timebankingapp.ui.profile.showprofile
 
 import android.content.res.Configuration
-import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.view.*
 import android.widget.*
@@ -15,9 +14,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.google.android.material.snackbar.Snackbar
-import de.hdodenhof.circleimageview.CircleImageView
 import it.polito.timebankingapp.MainActivity
 import it.polito.timebankingapp.R
+import it.polito.timebankingapp.model.Helper
 import it.polito.timebankingapp.model.review.Review
 import it.polito.timebankingapp.model.user.User
 import it.polito.timebankingapp.ui.profile.ProfileViewModel
@@ -48,11 +47,11 @@ class ShowPersonalProfileFragment : Fragment(R.layout.fragment_showprofile) {
             setHasOptionsMenu(true)
     }
 
+    /*TODO (Anche questo fragment potrebbe essere unificato) */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         v = view
 
-        val profilePicCircleView = view.findViewById<CircleImageView>(R.id.profile_pic)
         val progressBar = view.findViewById<ProgressBar>(R.id.profile_pic_progress_bar)
 
         val tempReviewsList = mutableListOf<Review>()
@@ -65,24 +64,6 @@ class ShowPersonalProfileFragment : Fragment(R.layout.fragment_showprofile) {
                 showProfile(view, timeSlotUser)
             }
 
-            /*if(vm.timeslotUserImage.value != null){ *//* Check this because if image is alreaady set
-                                                  , observer won't be triggered *//*
-                profilePicCircleView.setImageBitmap(vm.timeslotUserImage.value)
-                progressBar.visibility = View.GONE
-            }*/
-            vm.timeslotUserImage.observe(viewLifecycleOwner) {
-                if (it != null) {
-                    profilePicCircleView.setImageBitmap(it)
-                    progressBar.visibility = View.GONE
-                } else {
-                    profilePicCircleView.setImageBitmap(
-                        BitmapFactory.decodeResource(
-                            resources,
-                            R.drawable.default_avatar
-                        )
-                    )
-                }
-            }
             view.findViewById<TextView>(R.id.balanceLabel).visibility  = View.GONE
             view.findViewById<TextView>(R.id.balance).visibility  = View.GONE
             view.findViewById<View>(R.id.divider13).visibility  = View.GONE
@@ -99,21 +80,6 @@ class ShowPersonalProfileFragment : Fragment(R.layout.fragment_showprofile) {
                 user = it //oppure it
                 bundle = bundleOf("profile" to user, type to "personal") //per le recensioni
                 showProfile(view, user)
-            }
-
-
-            if (vm.userImage.value == null)
-                progressBar.visibility = View.GONE
-
-
-
-            vm.userImage.observe(viewLifecycleOwner) {
-                if (it != null) {
-                    profilePicCircleView.setImageBitmap(it)
-                    progressBar.visibility = View.GONE
-                } else {
-                    profilePicCircleView.setImageResource(R.drawable.default_avatar)
-                }
             }
 
             //recensioni personali
@@ -149,42 +115,17 @@ class ShowPersonalProfileFragment : Fragment(R.layout.fragment_showprofile) {
     }
 
     private fun showProfile(view: View, usr: User) {
-        val frameLayout = view.findViewById<FrameLayout>(R.id.frame_layout_pic)
+        val flProfilePic = view.findViewById<FrameLayout>(R.id.fragment_show_profile_fl_profile_pic)
         val sv = view.findViewById<ScrollView>(R.id.scrollView2)
-        val progressBar = view.findViewById<ProgressBar>(R.id.profile_pic_progress_bar)
+        val pb = view.findViewById<ProgressBar>(R.id.profile_pic_progress_bar)
+        val profilePicCircleView = view.findViewById<ImageView>(R.id.fragment_show_profile_iv_profile_pic)
 
-        if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
-            sv.viewTreeObserver.addOnGlobalLayoutListener(object :
-                ViewTreeObserver.OnGlobalLayoutListener {
-                override fun onGlobalLayout() {
-                    val h = sv.height
-                    val w = sv.width
-                    /*profilePic.post {
-                        profilePic.layoutParams = LinearLayout.LayoutParams(w, h / 3)
-                    }
-                    sv.viewTreeObserver.removeOnGlobalLayoutListener(this)*/
-                    frameLayout.post { frameLayout.layoutParams = LinearLayout.LayoutParams(w, h / 3) }
-                    sv.viewTreeObserver.removeOnGlobalLayoutListener(this)
-                }
-            })
-        }
 
         if(!usr.hasImage()){
-            progressBar.visibility = View.GONE
+            pb.visibility = View.GONE
         }
-        /*try {
-            if(usr.tempImagePath == "") {
-                val cw = ContextWrapper(requireContext())
-                vm.retrieveAndSetProfilePic(usr, profilePic, progressBar,cw)
-            }else {
-                progressBar.visibility = View.GONE
-                val f = File(usr.tempImagePath) //loggedUser.photoUrl (già salvata in locale)
-                val bitmap = BitmapFactory.decodeStream(FileInputStream(f))
-                profilePic.setImageBitmap(bitmap)
-            }
-        } catch (e: FileNotFoundException) {
-            e.printStackTrace()
-        }*/
+        val dim :Pair<Int,Int> = setProfilePicSize(sv, flProfilePic)
+        Helper.loadImageIntoView(profilePicCircleView, pb, usr.profilePicUrl)
 
         val nameView = view.findViewById<TextView>(R.id.fullName)
         nameView.text = usr.fullName
@@ -217,6 +158,28 @@ class ShowPersonalProfileFragment : Fragment(R.layout.fragment_showprofile) {
             chipGroup.addView(chip)
         }
     }
+
+    private fun setProfilePicSize(sv: ScrollView, flProfilePic: FrameLayout): Pair<Int, Int>{
+        var h = 0
+        var w = 0
+
+        if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
+
+            sv.viewTreeObserver.addOnGlobalLayoutListener(object :
+                ViewTreeObserver.OnGlobalLayoutListener {
+                override fun onGlobalLayout() {
+                     h = sv.height
+                     w = sv.width
+                    flProfilePic.post {
+                        flProfilePic.layoutParams = LinearLayout.LayoutParams(w, h / 3)
+                    }
+                    sv.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                }
+            })
+        }
+        return Pair(h,w)
+    }
+
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         if(type != "skill_specific")

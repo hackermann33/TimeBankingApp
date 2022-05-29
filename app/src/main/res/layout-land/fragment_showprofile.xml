@@ -8,7 +8,7 @@
     tools:context=".ui.profile.showprofile.ShowPersonalProfileFragment">
 
     <FrameLayout
-        android:id="@+id/frame_layout_pic"
+        android:id="@+id/fragment_show_profile_fl_profile_pic"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:background="@android:color/transparent"
@@ -31,7 +31,7 @@
             tools:src="@tools:sample/backgrounds/scenic" />
 
         <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/profile_pic"
+            android:id="@+id/fragment_show_profile_iv_profile_pic"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center|center_horizontal"
@@ -61,7 +61,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintHorizontal_weight="2"
-        app:layout_constraintStart_toEndOf="@+id/frame_layout_pic"
+        app:layout_constraintStart_toEndOf="@+id/fragment_show_profile_fl_profile_pic"
         app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout

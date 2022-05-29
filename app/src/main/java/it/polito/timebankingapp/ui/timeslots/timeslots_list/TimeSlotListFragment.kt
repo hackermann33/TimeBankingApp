@@ -120,7 +120,6 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_timeslots_list) {
                     ::selectTimeSlot,
                     ::showTimeSlotRequest,
                     ::showRequests,
-                    ::downloadUserInfo,
                     type
                 )
 
@@ -140,7 +139,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_timeslots_list) {
     }
 
     fun showTimeSlotRequest(timeSlot: TimeSlot) {
-        chatVm.selectToOffererChatFromTimeSlot(timeSlot)
+        chatVm.selectChatFromTimeSlot(timeSlot)
         //chatVm.updateUserInfo(timeSlot.userId)
     }
 
@@ -281,11 +280,6 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_timeslots_list) {
             e.printStackTrace()
             null
         }
-    }
-
-    private fun downloadUserInfo(userId : String){
-        //userVm.retrieveTimeSlotProfileData(userId)
-        chatVm.updateUserInfo(userId)
     }
 
 

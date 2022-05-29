@@ -14,9 +14,12 @@ import com.google.firebase.firestore.QueryDocumentSnapshot
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
 import it.polito.timebankingapp.model.Helper
+import it.polito.timebankingapp.model.Helper.Companion.fromRequestToChat
+
 import it.polito.timebankingapp.model.Helper.Companion.makeRequestId
 import it.polito.timebankingapp.model.Helper.Companion.toUser
 import it.polito.timebankingapp.model.Request
+import it.polito.timebankingapp.model.Request.Companion.STATUS_INTERESTED
 import it.polito.timebankingapp.model.chat.ChatMessage
 import it.polito.timebankingapp.model.chat.ChatsListItem
 import it.polito.timebankingapp.model.timeslot.TimeSlot
@@ -42,16 +45,38 @@ class ChatViewModel(application: Application): AndroidViewModel(application)  {
 
         val requestRef = db.collection("requests").document(chat.value!!.chatId)
         requestRef.addSnapshotListener { v, e ->
-            if(e == null)
-                _chat.value = chat.value!!.copy(nUnreadMsg = v?.getLong("unreadMsg")?.toInt() ?: 0)
+
+            if (e == null) {
+                if(!v!!.exists()) {/* Creation of the request (status interested) because of a message*/
+                    assert(_chat.value!!.status == Request.STATUS_UNINTERESTED)
+                    val cli =  _chat.value!!
+
+                    /* TODO(Add additional info -> offerer, requester, timeslot, ..) */
+                    val req = Request(requestId = _chat.value!!.chatId, lastMessageText = message.messageText, status = STATUS_INTERESTED)
+
+                    requestRef.set(req).addOnSuccessListener {
+                        _chat.value = fromRequestToChat(req)
+                    }.addOnFailureListener {
+                        Log.d("sendMessages","$it")
+                    }
+                }
+                else
+                    _chat.value = chat.value!!.copy(nUnreadMsg = v?.getLong("unreadMsg")?.toInt() ?: 0)
+            }
         }
         requestRef.collection("messages").document().set( mapOf(
             "messageText" to message.messageText,
             "timestamp" to message.timestamp.time,
             "userId" to message.userId,
         )).addOnSuccessListener {
-            requestRef.update(mapOf ("lastMessageText" to message.messageText, "lastMessageTime" to message.timestamp.time, "unreadMsg" to chat.value!!.nUnreadMsg+1))
 
+            /*  TODO(Check this nUnreadMsg increment: How can you distinguish
+                 between yout unreadmsg and the otherUnreadMsg?)*/
+            requestRef.update(mapOf (
+                "lastMessageText" to message.messageText,
+                "lastMessageTime" to message.timestamp.time,
+                "unreadMsg" to chat.value!!.nUnreadMsg+1,
+            ))
             _chat.value = chat.value!!.incUnreadMsg()
             Log.d("sendMessage", "success")
 
@@ -91,9 +116,10 @@ class ChatViewModel(application: Application): AndroidViewModel(application)  {
 
 
     /* Coming from TimeSlotDetail or TimeSlotList, check if requests from current user to timeSlot exists, otherwise download just the userProfile */
-    fun selectToOffererChatFromTimeSlot(timeSlot: TimeSlot) {
+    fun selectChatFromTimeSlot(timeSlot: TimeSlot) {
 
         val chatId = makeRequestId(timeSlot.id, Firebase.auth.uid!!)
+
 
         val chatRef = db.collection("requests").document(chatId)
 
@@ -113,20 +139,28 @@ class ChatViewModel(application: Application): AndroidViewModel(application)  {
                             _chatMessages.value = emptyList()
                     }
             }
-            else
-                updateUserInfo(timeSlot.userId)
+            else {
+                clearMessages()
+                updateChatInfo(timeSlot)
+            }
         }
     }
 
-    /* Update userInfo from users table*/
-    fun updateUserInfo(userId: String) {
+    /* Update chatInfo from users table given a timeSlot*/
+
+    /*TODO( Quando metteremo le recensioni nello user qui dovranno essere aggiunte)*/
+    fun updateChatInfo(timeSlot: TimeSlot) {
         var user: User?
-        requestListener = db.collection("users").document(userId)
+        requestListener = db.collection("users").document(timeSlot.userId)
             .addSnapshotListener { v, e ->
                 if (e == null) {
                     if (v != null) {
                         user = v.toUser()
-                        _chat.value = _chat.value!!.copy(otherProfilePic = user?.pic!!, otherUserName = user?.fullName!!)
+                        if(user!= null)
+                            _chat.value = ChatsListItem().copy(chatId = makeRequestId(timeSlot.id, Firebase.auth.uid!!), otherProfilePic = user?.profilePicUrl!!, otherUserName = user?.fullName!!,
+                                timeSlotTitle = timeSlot.title, status = Request.STATUS_UNINTERESTED, type = Request.CHAT_TYPE_TO_OFFERER)
+                        else
+                            Log.d("updateUserInfo", "Something went wrong: check all the fields: $v")
                     }
                 }
             }
@@ -155,6 +189,10 @@ class ChatViewModel(application: Application): AndroidViewModel(application)  {
 
     fun clearChat(){
         _chat.postValue( ChatsListItem())
+        _chatMessages.value = listOf()
+    }
+
+    fun clearMessages() {
         _chatMessages.value = listOf()
     }
 

@@ -19,7 +19,6 @@ class TimeSlotAdapter(
     val selectTimeSlot: (t: TimeSlot) ->Unit,
     val requestTimeSlot: ((t: TimeSlot) -> Unit?)?,
     val showRequests: ((t: TimeSlot) -> Unit?)?,
-    val downloadUser: (userId : String) -> Unit,
     val type: String
 ) : RecyclerView.Adapter<TimeSlotAdapter.ItemViewHolder>() {
 
