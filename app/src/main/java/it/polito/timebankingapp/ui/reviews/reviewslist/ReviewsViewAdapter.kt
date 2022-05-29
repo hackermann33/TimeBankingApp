@@ -9,13 +9,22 @@ import androidx.recyclerview.widget.RecyclerView
 import de.hdodenhof.circleimageview.CircleImageView
 import it.polito.timebankingapp.R
 import it.polito.timebankingapp.model.review.Review
+import it.polito.timebankingapp.ui.chats.chat.ChatViewAdapter
 
 
 class ReviewsViewAdapter(
     var data: MutableList<Review>
-) : RecyclerView.Adapter<ReviewsViewAdapter.ItemViewHolder>() {
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
+    private val VIEW_TYPE_REVIEWS = 1
+    private val VIEW_TYPE_EMPTY_MESSAGE = 2
 
     private var displayData = data.toMutableList()
+    private var isEmpty: Boolean = displayData.isEmpty()
+    init {
+        if(isEmpty)
+            displayData.add(Review()) //singolo elemento == messaggio di lista vuota
+    }
 
     class ItemViewHolder(private val mainView: View ) : RecyclerView.ViewHolder(mainView) {
         private val fullName: TextView = mainView.findViewById(R.id.review_list_item_full_name)
@@ -24,67 +33,54 @@ class ReviewsViewAdapter(
         private val reviewText: TextView = mainView.findViewById(R.id.reviews_item_review_text)
         private var profilePic: CircleImageView = mainView.findViewById(R.id.review_list_item_profile_pic)
 
-        fun bind(rw: Review, editAction: (v: View) -> Unit, detailAction: (v: View) -> Unit, requestAction: (v: View) -> Unit, showRequestsAction: (v: View) -> Unit) {
-           /* fullName.text = ts.title
-            ratingBar.numStars = rw.numStars
-            timestamp.text = rw.timestamp
+        fun bind(rw: Review, detailAction: (v: View) -> Unit) {
+            fullName.text = rw.reviewer.getValue("fullName")
+            ratingBar.rating = rw.stars.toFloat()
+            timestamp.text = rw.timestamp.toString()
             reviewText.text = rw.reviewText
-            profilePic = qualcosa con glide?
+            //profilePic = qualcosa con glide?
             //this.mainView.setOnClickListener(detailAction)
-            */
         }
+    }
 
+    class EmptyItemViewHolder(private val mainView: View ) : RecyclerView.ViewHolder(mainView) {
+        fun bind() {
+             //empty
+        }
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        return if (!isEmpty) {
+            VIEW_TYPE_REVIEWS
+        } else {
+            VIEW_TYPE_EMPTY_MESSAGE
+        }
     }
 
     //inflate the item_layout-based structure inside each ViewHolder
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
-        val destination =  R.layout.reviews_list_item
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
 
-        val vg = LayoutInflater
-            .from(parent.context)
-            .inflate(destination, parent, false) //attachToRoot: take all you measures
-        //but do not attach it immediately to the ViewHolder tree of components (could be a ghost item)
-
-        return ItemViewHolder(vg)
+        val vg: View
+        return if (viewType == VIEW_TYPE_REVIEWS) {
+            vg = LayoutInflater
+                    .from(parent.context)
+                .inflate(R.layout.reviews_list_item, parent, false)
+            ItemViewHolder(vg)
+        } else { // (viewType == VIEW_TYPE_EMPTY_MESSAGE) {
+            vg = LayoutInflater
+                .from(parent.context)
+                .inflate(R.layout.reviews_list_item_emtpy, parent, false)
+            EmptyItemViewHolder(vg)
+        }
     }
 
     //populate data for each inflated ViewHolder
-    override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
- /*
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val item = displayData[position]
-
-        holder.bind(item, editAction =  {//1:17:00
-            val pos = data.indexOf(item)
-            if (pos != -1) {
-                //click on edit button
-                if(type != "skill_specific") {
-                    Navigation.findNavController(it).navigate(
-                        R.id.action_nav_skillSpecificTimeSlotList_to_nav_timeSlotEdit,
-                        //bundleOf( Pair("id",item.id)) //da fixare la prossima volta appena si aggiunge la shared activity viewmodel
-                        bundleOf("timeslot" to item, "position" to position) //temp
-                    )
-                }
-            }
-        }, detailAction = {
-            val destination =
-                R.id.action_skillSpecificTimeSlotListFragment_to_nav_timeSlotDetails
-
-
-            selectTimeSlot(item)
-            Navigation.findNavController(it).navigate(
-                destination,
-                bundleOf("point_of_origin" to type, "userId" to item.userId)
-            )
-        }, requestAction = {
-
-            requestTimeSlot!!(item)
-            Navigation.findNavController(it).navigate(R.id.action_nav_timeSlotList_to_nav_chat)
-        }, showRequestsAction = {
-            showRequests!!(item)
-            Navigation.findNavController(it).navigate(R.id.action_nav_timeSlotList_to_nav_chatsList)
-        })
-
-*/
+        when (holder.itemViewType) {
+            VIEW_TYPE_REVIEWS -> (holder as ItemViewHolder).bind(item,detailAction = {} )
+            VIEW_TYPE_EMPTY_MESSAGE -> (holder as EmptyItemViewHolder).bind()
+        }
     }
 
     //how many items?

@@ -28,6 +28,7 @@ class ShowPersonalProfileFragment : Fragment(R.layout.fragment_showprofile) {
 
     private lateinit var user: User
     private lateinit var timeSlotUser: User
+    private lateinit var reviews: List<Review>
 
     private lateinit var v : View
     private lateinit var type : String
@@ -54,19 +55,42 @@ class ShowPersonalProfileFragment : Fragment(R.layout.fragment_showprofile) {
         super.onViewCreated(view, savedInstanceState)
         v = view
 
-        val progressBar = view.findViewById<ProgressBar>(R.id.profile_pic_progress_bar)
-
-        val tempReviewsList = mutableListOf<Review>()
-        var bundle : Bundle = Bundle()
+        //val progressBar = view.findViewById<ProgressBar>(R.id.profile_pic_progress_bar)
+        var bundle = Bundle()
 
         rvm.reviews.observe(viewLifecycleOwner) {
-            print(it)
+            //print(it)
+            reviews = it
+
+            //definizione rw per le recensioni
+            rv = view.findViewById(R.id.short_reviews_list)
+            rv.layoutManager = LinearLayoutManager(context)
+            adTmp = ReviewsViewAdapter(reviews.take(2).toMutableList())
+            rv.adapter = adTmp
+
+            val showReviewsBtn : Button = v.findViewById(R.id.show_all_reviews)
+
+            showReviewsBtn.setOnClickListener {
+                findNavController().navigate(R.id.action_nav_showProfile_to_nav_reviewsList, bundle)
+            }
+
+            val ratingBar = v.findViewById<RatingBar>(R.id.profile_reviews_rating_score)
+
+            if(reviews.isNotEmpty()) {
+                var den = 0
+                var num = 0
+                for (i in reviews.indices) {
+                    den++
+                    num += reviews[i].stars
+                }
+                ratingBar.rating = (num / den).toFloat()
+            }
         }
 
         if (type == "skill_specific") {
             vm.timeslotUser.observe(viewLifecycleOwner) {
                 timeSlotUser = it //oppure it
-                bundle = bundleOf("profile" to timeSlotUser, type to "timeslot") //per le recensioni
+                bundle = bundleOf("profile" to timeSlotUser, "type" to "timeslot") //per le recensioni
                 rvm.retrieveAllReviews(/*it.id*/ " ry0npG5mapRq0ccreqTEQjvdqQa2")
                 showProfile(view, timeSlotUser)
             }
@@ -75,26 +99,14 @@ class ShowPersonalProfileFragment : Fragment(R.layout.fragment_showprofile) {
             view.findViewById<TextView>(R.id.balance).visibility  = View.GONE
             view.findViewById<View>(R.id.divider13).visibility  = View.GONE
 
-            //recensioni time slot user
-            val review = Review()
-            //NOTA: visualizza solo le prime 3 in base al timestamp più recente! (esegui sort)
-            tempReviewsList.add(review)
-            tempReviewsList.add(review)
-            tempReviewsList.add(review)
 
         } else { //personal
             vm.user.observe(viewLifecycleOwner) {
                 user = it //oppure it
-                bundle = bundleOf("profile" to user, type to "personal") //per le recensioni
+                bundle = bundleOf("profile" to user, "type" to "personal") //per le recensioni
+                rvm.retrieveAllReviews(/*it.id*/ " ry0npG5mapRq0ccreqTEQjvdqQa2")
                 showProfile(view, user)
             }
-
-            //recensioni personali
-            val review = Review()
-            //NOTA: visualizza solo le prime 3 in base al timestamp più recente! (esegui sort)
-            tempReviewsList.add(review)
-            tempReviewsList.add(review)
-            tempReviewsList.add(review)
 
             setFragmentResultListener("editProfile") { _, bundle ->
                 val result = bundle.getBoolean("editProfileConfirm")
@@ -105,18 +117,6 @@ class ShowPersonalProfileFragment : Fragment(R.layout.fragment_showprofile) {
                     snackBar.setAction("DISMISS") { snackBar.dismiss() }.show()
                 }
             }
-        }
-
-        //definizione rw per le recensioni
-        rv = view.findViewById(R.id.short_reviews_list)
-        rv.layoutManager = LinearLayoutManager(context)
-        adTmp = ReviewsViewAdapter(tempReviewsList)
-        rv.adapter = adTmp
-
-        val showReviewsBtn : Button = v.findViewById(R.id.show_all_reviews)
-
-        showReviewsBtn.setOnClickListener {
-            findNavController().navigate(R.id.action_nav_showProfile_to_nav_reviewsList, bundle)
         }
 
     }
@@ -165,6 +165,7 @@ class ShowPersonalProfileFragment : Fragment(R.layout.fragment_showprofile) {
             chipGroup.addView(chip)
         }
     }
+
 
     private fun setProfilePicSize(sv: ScrollView, flProfilePic: FrameLayout): Pair<Int, Int>{
         var h = 0

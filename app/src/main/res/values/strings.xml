@@ -104,4 +104,5 @@
     <string name="email">email</string>
     <string name="balance_label">0 hours</string>
     <string name="balance_l">Balance:</string>
+    <string name="reviews_list_item_empty_message">Sadly, there are no reviews yet for this user</string>
 </resources>
