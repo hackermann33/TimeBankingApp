@@ -110,6 +110,12 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_timeslots_list) {
 
         //var skill = arguments?.getString("skill")
 
+        vm.isEmpty.observe(viewLifecycleOwner) {
+            if(it == true) { //is empty
+                setVoidMessage(view, true)
+            }
+        }
+
         vm.timeSlots.observe(viewLifecycleOwner) {
             if (it.isNotEmpty()) {
                 setVoidMessage(view, false)
@@ -131,9 +137,10 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_timeslots_list) {
                     adTmp.setFilter(filterKeywords, filterParameter)
                     adTmp.setOrder(filterParameter, orderingDirection)
                 }
-            } else {
-                setVoidMessage(view, true)
-            }
+            } /*else {
+                if(vm.justUpdated)
+                    setVoidMessage(view, true)
+            }*/
         }
 
     }
@@ -234,6 +241,8 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_timeslots_list) {
 
     override fun onDetach() {
         vm.clearTimeSlots()
+        vm.setIsEmptyFlag(false)
+        //vm.justUpdated = false
         super.onDetach()
     }
 

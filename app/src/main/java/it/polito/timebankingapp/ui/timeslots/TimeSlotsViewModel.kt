@@ -41,6 +41,11 @@ class TimeSlotsViewModel(application: Application): AndroidViewModel(application
 
     private var db: FirebaseFirestore = FirebaseFirestore.getInstance()
 
+    //var justUpdated = false
+
+    private val _isEmpty = MutableLiveData<Boolean?>()
+    var isEmpty: LiveData<Boolean?> = _isEmpty
+
     init {
         Firebase.auth.addAuthStateListener {
             if (it.currentUser != null) {
@@ -51,12 +56,21 @@ class TimeSlotsViewModel(application: Application): AndroidViewModel(application
         }
     }
 
+    fun setIsEmptyFlag(value: Boolean) {
+        _isEmpty.value = value
+    }
+
     fun updateSkillSpecificTimeSlots(skill: String) {
         Log.d("selectedSkill", "updateSkillSpecificTimeSlos: selectedSkill: ${skill}")
         l = db.collection("timeSlots").whereNotEqualTo("userId", Firebase.auth.uid).whereEqualTo("relatedSkill",skill).addSnapshotListener{v,e ->
             if(e == null){
                 _timeSlots.value = v!!.mapNotNull { d -> d.toObject<TimeSlot>() }
-            } else _timeSlots.value = emptyList()
+                _isEmpty.value = _timeSlots.value!!.isEmpty()
+            } else {
+                _timeSlots.value = emptyList()
+                _isEmpty.value = true
+            }
+            //justUpdated = true
         }
     }
 
@@ -65,16 +79,16 @@ class TimeSlotsViewModel(application: Application): AndroidViewModel(application
         l = db.collection("timeSlots").whereEqualTo("userId", Firebase.auth.uid).addSnapshotListener{v,e ->
             if(e == null){
                 _timeSlots.value = v!!.mapNotNull { d -> d.toObject<TimeSlot>() }
-            } else _timeSlots.value = emptyList()
+                _isEmpty.value = _timeSlots.value!!.isEmpty()
+            } else {
+                _timeSlots.value = emptyList()
+                _isEmpty.value = true
+            }
+            //justUpdated = true
         }
     }
 
-
-
-
-
-
-
+ 
     fun updateInterestingTimeSlots() {
         val myUid = Firebase.auth.uid!!
         db.collection("requests").whereEqualTo("requester.id", myUid)
@@ -82,8 +96,10 @@ class TimeSlotsViewModel(application: Application): AndroidViewModel(application
                 if(e == null){
                     val req = v!!.mapNotNull {  d -> d.toObject<Request>()  }
                     _timeSlots.value = req.mapNotNull {  r -> r.timeSlot }
+                    _isEmpty.value = _timeSlots.value!!.isEmpty()
                 } else {
                     _timeSlots.value = emptyList()
+                    _isEmpty.value = true
                 }
             }
         }
