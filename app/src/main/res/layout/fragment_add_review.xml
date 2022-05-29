@@ -111,6 +111,7 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <RatingBar
+                    android:stepSize="1"
                     android:layout_marginTop="10dp"
                     android:id="@+id/add_review_rating_bar"
                     android:layout_width="wrap_content"
@@ -120,6 +121,15 @@
                     android:isIndicator="false"
                     android:numStars="5"
                     android:theme="@style/RatingBar" />
+
+                <TextView
+                    android:id="@+id/ratingWarningLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textColor="#F44336"
+                    android:text="@string/rating_score_warning_label"
+                    android:visibility="invisible" />
 
                 <Button
                     android:id="@+id/add_review_button"

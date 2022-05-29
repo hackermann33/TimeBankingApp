@@ -36,7 +36,7 @@ class ShowPersonalProfileFragment : Fragment(R.layout.fragment_showprofile) {
     private lateinit var rv : RecyclerView
     private lateinit var adTmp: ReviewsViewAdapter
 
-    val vm : ProfileViewModel by activityViewModels()
+    private val vm : ProfileViewModel by activityViewModels()
 
     private val rvm by activityViewModels<ReviewsViewModel>()
 
@@ -83,7 +83,7 @@ class ShowPersonalProfileFragment : Fragment(R.layout.fragment_showprofile) {
                     den++
                     num += reviews[i].stars
                 }
-                ratingBar.rating = (num / den).toFloat()
+                ratingBar.rating = num.toFloat() / den
             }
         }
 

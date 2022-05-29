@@ -28,8 +28,8 @@ class ReviewsViewModel(application: Application): AndroidViewModel(application) 
             .document(review.reviewer.getValue("id")).collection("userReviews").document()
 
         newReviewRef.set(review).addOnSuccessListener{
-            Log.d("timeSlots_add","Successfully added")
-        }.addOnFailureListener{ Log.d("timeSlots_add", "Error on adding")}
+            Log.d("reviews_add","Successfully added")
+        }.addOnFailureListener{ Log.d("reviews_add", "Error on adding")}
     }
 
     fun retrieveAllReviews(userId: String) {

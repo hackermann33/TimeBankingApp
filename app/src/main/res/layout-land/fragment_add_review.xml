@@ -128,6 +128,7 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <RatingBar
+                    android:stepSize="1"
                     android:layout_marginTop="10dp"
                     android:id="@+id/add_review_rating_bar"
                     android:layout_width="wrap_content"
