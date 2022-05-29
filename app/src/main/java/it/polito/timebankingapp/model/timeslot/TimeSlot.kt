@@ -62,5 +62,9 @@ data class TimeSlot(
         return cal
     }
 
+    fun toCompactTimeSlot(): CompactTimeSlot {
+        return CompactTimeSlot(id, title, getCalendar().time, duration, unreadChats )
+    }
+
 }
 

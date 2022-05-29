@@ -1,25 +1,16 @@
 package it.polito.timebankingapp.ui.chats.chatslist
 
 import android.app.Application
-import android.text.format.DateUtils
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.google.firebase.Timestamp
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.*
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
-import it.polito.timebankingapp.model.Helper
 import it.polito.timebankingapp.model.Helper.Companion.fromRequestToChat
-import it.polito.timebankingapp.model.Helper.Companion.toUser
-import it.polito.timebankingapp.model.Request
-import it.polito.timebankingapp.model.chat.ChatMessage
-import it.polito.timebankingapp.model.chat.ChatsListItem
-import it.polito.timebankingapp.model.user.User
-import java.text.SimpleDateFormat
-import java.util.*
+import it.polito.timebankingapp.model.ChatsListItem
 
 
 class ChatListViewModel(application: Application): AndroidViewModel(application) {
@@ -80,7 +71,7 @@ class ChatListViewModel(application: Application): AndroidViewModel(application)
                 .orderBy("lastMessageTime", Query.Direction.DESCENDING).addSnapshotListener{ v, e ->
                     if(e == null){
                         Log.d("chatList", "chatList: ${_chatsList.value}")
-                        val requests = v!!.mapNotNull {  d -> d.toObject<Request>()  }
+                        val requests = v!!.mapNotNull {  d -> d.toObject<ChatsListItem>()  }
                         _chatsList.value = requests.mapNotNull {  r ->
                             fromRequestToChat(r)
                         }
@@ -101,7 +92,7 @@ class ChatListViewModel(application: Application): AndroidViewModel(application)
             .addSnapshotListener{v,e ->
             if(e == null){
                 Log.d("chatList", "chatList: ${_chatsList.value}")
-                val requests = v!!.mapNotNull {  d -> d.toObject<Request>()  }
+                val requests = v!!.mapNotNull {  d -> d.toObject<ChatsListItem>()  }
                 _chatsList.value = requests.mapNotNull {  r ->
                     fromRequestToChat(r)
                 }

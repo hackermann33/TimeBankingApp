@@ -210,6 +210,10 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
                 } else _timeslotUser.value = User()
             }
     }
+
+    fun updateCurrentUser() {
+        TODO("Not yet implemented")
+    }
 }
 
 fun getResizedBitmap(image: Bitmap, maxSize: Int): Bitmap? {

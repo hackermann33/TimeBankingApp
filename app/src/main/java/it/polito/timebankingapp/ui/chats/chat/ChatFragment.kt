@@ -16,9 +16,9 @@ import com.google.firebase.ktx.Firebase
 import de.hdodenhof.circleimageview.CircleImageView
 import it.polito.timebankingapp.R
 import it.polito.timebankingapp.model.Helper
-import it.polito.timebankingapp.model.Request
+import it.polito.timebankingapp.model.ChatsListItem
 import it.polito.timebankingapp.model.chat.ChatMessage
-import it.polito.timebankingapp.model.chat.ChatsListItem
+import it.polito.timebankingapp.model.user.CompactUser
 import java.util.*
 
 
@@ -103,7 +103,8 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         val btnDenyRequest = v.findViewById<TextView>(R.id.fragment_chat_btn_deny)
         val pbProfilePic = v.findViewById<ProgressBar>(R.id.fragment_chat_pb_profile_pic)
 
-        Helper.loadImageIntoView(civProfilePic,  pbProfilePic, cli.otherProfilePic)
+        val otherUser: CompactUser = Helper.getOtherUser(cli)
+        Helper.loadImageIntoView(civProfilePic,  pbProfilePic, otherUser.profilePicUrl)
 
         /* TODO(When image is clicked, navigation is not to the correct profile !!!) */
         when(cli.type){
@@ -115,21 +116,23 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
                 btnRequireService.visibility = View.VISIBLE
                 Log.d(TAG, "TYPE TO OFFERER")
                 when (cli.status) {
-                    Request.STATUS_UNINTERESTED -> Log.d(TAG, "STATUS UNIINTERESTED")
-                    Request.STATUS_INTERESTED -> {
+                    ChatsListItem.STATUS_UNINTERESTED -> Log.d(TAG, "STATUS UNIINTERESTED")
+                    ChatsListItem.STATUS_INTERESTED -> {
                         Log.d(TAG, "STATUS INTERESTED")
                         btnRequireService.isEnabled = false
                         btnRequireService.text = "Service requested"
                     }
-                    Request.STATUS_ACCEPTED -> Log.d(TAG, "STATUS ACCEPTED")
+                    ChatsListItem.STATUS_ACCEPTED -> Log.d(TAG, "STATUS ACCEPTED")
                 }
             }
             ChatsListItem.CHAT_TYPE_TO_REQUESTER -> {
+                rbReviewScore.rating = otherUser.asRequesterReview.score.toFloat()
+                tvReviewsNumber.text = "${otherUser.asRequesterReview.number} reviews}"
                 Log.d(TAG, "TYPE TO REQUESTER")
                 when (cli.status) {
-                    Request.STATUS_UNINTERESTED -> Log.d(TAG, "STATUS UNIINTERESTED")
-                    Request.STATUS_INTERESTED -> Log.d(TAG, "STATUS INTERESTED")
-                    Request.STATUS_ACCEPTED -> Log.d(TAG, "STATUS ACCEPTED")
+                    ChatsListItem.STATUS_UNINTERESTED -> Log.d(TAG, "STATUS UNIINTERESTED")
+                    ChatsListItem.STATUS_INTERESTED -> Log.d(TAG, "STATUS INTERESTED")
+                    ChatsListItem.STATUS_ACCEPTED -> Log.d(TAG, "STATUS ACCEPTED")
                 }
 
             }
@@ -137,8 +140,6 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         }
 
 
-        rbReviewScore.rating = cli.avgReviews
-        tvReviewsNumber.text = cli.nReviews.toString()
 
         btnRequireService.setOnClickListener{
             btnRequireService.isEnabled = false /*TODO(Reabilitate if error happens during requests) */
@@ -152,8 +153,8 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
             )
         }
 
-        tvTimeSlotTitle.text = cli.timeSlotTitle
-        tvProfileName.text = cli.otherUserName
+        tvTimeSlotTitle.text = cli.timeSlot.title
+        tvProfileName.text = otherUser.nick
 
         tvProfileName.setOnClickListener {
             v.findNavController().navigate(
@@ -166,8 +167,8 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 
     fun sendMessage(chatMessage: ChatMessage) {
         when(chatVm.chat.value!!.status){
-            Request.STATUS_UNINTERESTED -> chatVm.sendFirstMessage(chatMessage) /* This means that we're creating the request also*/
-            Request.STATUS_INTERESTED -> chatVm.sendMessage(chatMessage)
+            ChatsListItem.STATUS_UNINTERESTED -> chatVm.sendFirstMessage(chatMessage) /* This means that we're creating the request also*/
+            ChatsListItem.STATUS_INTERESTED -> chatVm.sendMessage(chatMessage)
         }
     }
 

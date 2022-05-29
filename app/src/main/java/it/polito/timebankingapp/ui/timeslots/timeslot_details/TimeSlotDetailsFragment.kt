@@ -104,8 +104,9 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
             /* Rememeber to update number of chats for that timeSlot*/
             btnRequestService.setOnClickListener{
                 if (ts != null) {
+                    profileViewModel.updateCurrentUser()
                     profileViewModel.getUserFromId(ts.userId).addOnSuccessListener {
-                        val chatId = globalModel.requestTimeSlot(ts, profileViewModel.user.value!!,  it.toUser()!!)
+                        globalModel.requestTimeSlot(ts, profileViewModel.user.value!!,  it.toUser()!!)
                             .addOnSuccessListener {
                             Snackbar.make(view, "Request correctly sent!", Snackbar.LENGTH_SHORT).show()
 
@@ -177,7 +178,7 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
     /* Show chat from the current user to the current timeSlot */
     fun showTimeSlotRequest(timeSlot: TimeSlot) {
         val chatId = Helper.makeRequestId(timeSlot.id, Firebase.auth.uid!!)
-        chatVm.selectChatFromTimeSlot(timeSlot)
+        chatVm.selectChatFromTimeSlot(timeSlot, profileViewModel.user.value!!.toCompactUser())
     }
 
     private fun editTimeslot() {

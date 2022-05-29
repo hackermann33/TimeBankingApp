@@ -8,7 +8,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import it.polito.timebankingapp.R
-import it.polito.timebankingapp.model.chat.ChatsListItem
+import it.polito.timebankingapp.model.ChatsListItem
 import it.polito.timebankingapp.ui.chats.chat.ChatViewModel
 import it.polito.timebankingapp.ui.profile.ProfileViewModel
 

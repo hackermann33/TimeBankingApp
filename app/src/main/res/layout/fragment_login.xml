@@ -12,14 +12,15 @@
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
         android:layout_marginTop="64dp"
         android:src="@drawable/app_logo"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/app_logo2" />
 
     <TextView
         android:id="@+id/textView6"
@@ -68,13 +69,13 @@
 
     <Button
         android:id="@+id/sign_in_button"
-        android:layout_width="0dp"
+        style="@style/FirebaseUI.Button.AccountChooser.GoogleButton"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
-        android:drawableStart="@drawable/googleg_standard_color_18"
         android:padding="16dp"
-        android:text="@string/common_signin_button_text_long"
+        android:text="@string/fui_sign_in_with_google"
         android:textAllCaps="false"
         app:cornerRadius="50dp"
         app:layout_constraintBottom_toBottomOf="parent"

@@ -1,8 +1,5 @@
 package it.polito.timebankingapp.ui.chats.chatslist
 
-import android.annotation.SuppressLint
-import android.content.res.ColorStateList
-import android.content.res.Resources
 import android.graphics.Color
 import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
@@ -11,18 +8,14 @@ import android.view.ViewGroup
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.cardview.widget.CardView
-import androidx.core.content.ContextCompat
-import androidx.core.graphics.toColor
 import androidx.navigation.Navigation
-import com.google.android.material.card.MaterialCardView
 import com.google.android.material.chip.Chip
-import com.google.android.material.color.MaterialColors
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import de.hdodenhof.circleimageview.CircleImageView
 import it.polito.timebankingapp.R
+import it.polito.timebankingapp.model.ChatsListItem
 import it.polito.timebankingapp.model.Helper
-import it.polito.timebankingapp.model.chat.ChatsListItem
 
 class ChatListViewAdapter(
     private var data: List<ChatsListItem>,
@@ -45,27 +38,29 @@ class ChatListViewAdapter(
         private val unreadMsgCard: CardView = itemView.findViewById(R.id.unread_msg_card)
         private val chipOffreq: Chip = itemView.findViewById(R.id.chipOffReq)
 
-        @SuppressLint("ResourceAsColor")
         fun bind(cli: ChatsListItem, openChatAction: (v: View) -> Unit) {
 //            fullNameText.text = "Nome Cognome" //necessario riferimento usr o timeslotusr
 //            messageText.text = cli.chatMessages[cli.chatMessages.size-1].messageText
 //            timeText.text = cli.chatMessages[cli.chatMessages.size-1].timestamp.split("-")[1] //se è di oggi mostra l'orario, altrimenti la data
 //            numNotifiesText.text =  "(1)" //logica conteggio non letti da implementare in futuro
-            tvOtherFullName.text = cli.otherUserName
+
+            val otherUser = Helper.getOtherUser(cli)
+            tvOtherFullName.text = otherUser.nick
             tvLastMessage.text = cli.lastMessageText
-            if(cli.nUnreadMsg > 0)
-                nUnreadMsg.text = cli.nUnreadMsg.toString()
+            if(cli.nUnreadMsgs > 0)
+                nUnreadMsg.text = cli.nUnreadMsgs.toString()
             else
                 unreadMsgCard.visibility = View.GONE
-            tvLastMessageTime.text = cli.lastMessageTime
-            tvTimeSlotTitle.text = cli.timeSlotTitle
+            tvLastMessageTime.text = Helper.dateToDisplayString(cli.lastMessageTime)
+            tvTimeSlotTitle.text = cli.timeSlot.title
             cli.lastMessageTime
             // sarebbe da mettere il last message della chat dentro il documento in userRooms (per l'anteprima)
             // e anche le altre info riguardo a tempo e conteggio non letti e foto profilo altro utente
 
-            // Use Glide HERE!!!
-            Helper.loadImageIntoView(civImagePic, pbOtherProfilePic ,cli.otherProfilePic)
-            if(cli.chatId.contains(Firebase.auth.uid.toString())) {
+            if(cli.type == ChatsListItem.CHAT_TYPE_TO_OFFERER){
+                // Use Glide HERE!!!
+                Helper.loadImageIntoView(civImagePic, pbOtherProfilePic , otherUser.profilePicUrl)
+
                 /* I am the requester */
                 chipOffreq.text = "you as Requester"
                 chipOffreq.setChipBackgroundColorResource(R.color.primary_dark)
@@ -73,10 +68,13 @@ class ChatListViewAdapter(
 //                chipOffreq.setBackgroundColor(Color.GREEN)
             }
             else { /* The other is the requester */
+                Helper.loadImageIntoView(civImagePic, pbOtherProfilePic , otherUser.profilePicUrl)
                 chipOffreq.text = "you as Offerer"
                 chipOffreq.setChipBackgroundColorResource(R.color.accent)
 //                chipOffreq.setBackgroundColor(Color.YELLOW)
             }
+
+
             this.itemView.setOnClickListener(openChatAction)
         }
 

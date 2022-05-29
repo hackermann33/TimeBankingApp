@@ -120,7 +120,6 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_timeslots_list) {
             if (it.isNotEmpty()) {
                 setVoidMessage(view, false)
 
-
                 val adTmp = TimeSlotAdapter(
                     it.toMutableList(),
                     ::selectTimeSlot,
@@ -146,7 +145,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_timeslots_list) {
     }
 
     fun showTimeSlotRequest(timeSlot: TimeSlot) {
-        chatVm.selectChatFromTimeSlot(timeSlot)
+        chatVm.selectChatFromTimeSlot(timeSlot, userVm.user.value!!.toCompactUser())
         //chatVm.updateUserInfo(timeSlot.userId)
     }
 

@@ -12,7 +12,8 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
-import it.polito.timebankingapp.model.Request
+import it.polito.timebankingapp.model.ChatsListItem
+import it.polito.timebankingapp.model.Helper
 import it.polito.timebankingapp.model.timeslot.TimeSlot
 import it.polito.timebankingapp.model.user.User
 
@@ -92,9 +93,9 @@ class TimeSlotsViewModel(application: Application): AndroidViewModel(application
     fun updateInterestingTimeSlots() {
         val myUid = Firebase.auth.uid!!
         db.collection("requests").whereEqualTo("requester.id", myUid)
-            .whereEqualTo("status", Request.STATUS_INTERESTED).addSnapshotListener{ v, e ->
+            .whereEqualTo("status", ChatsListItem.STATUS_INTERESTED).addSnapshotListener{ v, e ->
                 if(e == null){
-                    val req = v!!.mapNotNull {  d -> d.toObject<Request>()  }
+                    val req = v!!.mapNotNull {  d -> d.toObject<ChatsListItem>()  }
                     _timeSlots.value = req.mapNotNull {  r -> r.timeSlot }
                     _isEmpty.value = _timeSlots.value!!.isEmpty()
                 } else {
@@ -181,9 +182,10 @@ class TimeSlotsViewModel(application: Application): AndroidViewModel(application
     }
 
     /* This is used to create a request to the offerer through chat */
-    fun requestTimeSlot(ts: TimeSlot, requester: User, offerer: User) : Task<Void> {
-        val chatId = ts.id + "_" + requester.id
-        val  req = Request(timeSlot = ts, requester = requester, offerer = offerer, unreadMsg = 0)
+    fun requestTimeSlot(ts: TimeSlot, currentUser: User, offerer: User) : Task<Void> {
+        val chatId = Helper.makeRequestId(ts.id, currentUser.id)
+        val  req = ChatsListItem(timeSlot = ts, requester = currentUser.toCompactUser(),
+            offerer = offerer.toCompactUser(), status = ChatsListItem.STATUS_INTERESTED, nUnreadMsgs = 0)
 
             /*
             UPDATE UNREAD CHATS

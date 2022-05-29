@@ -18,11 +18,12 @@ import it.polito.timebankingapp.model.Helper.Companion.fromRequestToChat
 
 import it.polito.timebankingapp.model.Helper.Companion.makeRequestId
 import it.polito.timebankingapp.model.Helper.Companion.toUser
-import it.polito.timebankingapp.model.Request
-import it.polito.timebankingapp.model.Request.Companion.STATUS_INTERESTED
+import it.polito.timebankingapp.model.ChatsListItem
+import it.polito.timebankingapp.model.ChatsListItem.Companion.STATUS_INTERESTED
 import it.polito.timebankingapp.model.chat.ChatMessage
-import it.polito.timebankingapp.model.chat.ChatsListItem
+import it.polito.timebankingapp.model.timeslot.CompactTimeSlot
 import it.polito.timebankingapp.model.timeslot.TimeSlot
+import it.polito.timebankingapp.model.user.CompactUser
 import it.polito.timebankingapp.model.user.User
 import java.util.*
 
@@ -41,21 +42,15 @@ class ChatViewModel(application: Application): AndroidViewModel(application) {
     private lateinit var requestListener: ListenerRegistration
 
 
+    /* Function invoked when first message is sent ( and the request isn't been created)*/
     fun sendFirstMessage(message: ChatMessage) {
-        val requestRef = db.collection("requests").document(chat.value!!.chatId)
+        val requestRef = db.collection("requests").document(chat.value!!.requestId)
         requestRef.addSnapshotListener { v, e ->
             if (e == null) {
                 if (!v!!.exists()) {/* Creation of the request (status interested) because of a message*/
-                    assert(_chat.value!!.status == Request.STATUS_UNINTERESTED)
-                    val cli = _chat.value!!
+                    assert(_chat.value!!.status == ChatsListItem.STATUS_UNINTERESTED)
 
-                    /* TODO(Add additional info -> offerer, requester, timeslot, ..) */
-                    val req = Request(
-                        requestId = _chat.value!!.chatId,
-                        lastMessageText = message.messageText,
-                        status = STATUS_INTERESTED
-                    )
-
+                    val req = _chat.value!!
 
                     requestRef.set(req).addOnSuccessListener {
                         _chat.value = fromRequestToChat(req)
@@ -77,10 +72,10 @@ class ChatViewModel(application: Application): AndroidViewModel(application) {
 
     fun sendMessage(message: ChatMessage) {
 
-        val requestRef = db.collection("requests").document(chat.value!!.chatId)
+        val requestRef = db.collection("requests").document(chat.value!!.requestId)
         requestRef.addSnapshotListener { v, e ->
             if (e == null) {
-                _chat.value = chat.value!!.copy(nUnreadMsg = v!!.getLong("unreadMsg")?.toInt() ?: 0)
+                _chat.value = chat.value!!.copy(nUnreadMsgs = v!!.getLong("unreadMsgs")?.toInt() ?: 0)
             }
         }
 
@@ -98,7 +93,7 @@ class ChatViewModel(application: Application): AndroidViewModel(application) {
                 mapOf(
                     "lastMessageText" to message.messageText,
                     "lastMessageTime" to message.timestamp.time,
-                    "unreadMsg" to chat.value!!.nUnreadMsg + 1,
+                    "unreadMsg" to chat.value!!.nUnreadMsgs + 1,
                 )
             )
             _chat.value = chat.value!!.incUnreadMsg()
@@ -129,7 +124,7 @@ class ChatViewModel(application: Application): AndroidViewModel(application) {
     fun selectChat(chat: ChatsListItem) {
         _chat.value = chat
 
-        messagesListener = db.collection("requests").document(chat.chatId).collection("messages")
+        messagesListener = db.collection("requests").document(chat.requestId).collection("messages")
             .orderBy("timestamp")
             .addSnapshotListener { v, e ->
                 if (e == null) {
@@ -141,7 +136,7 @@ class ChatViewModel(application: Application): AndroidViewModel(application) {
 
 
     /* Coming from TimeSlotDetail or TimeSlotList, check if requests from current user to timeSlot exists, otherwise download just the userProfile */
-    fun selectChatFromTimeSlot(timeSlot: TimeSlot) {
+    fun selectChatFromTimeSlot(timeSlot: TimeSlot, currentUser: CompactUser) {
         val chatId = makeRequestId(timeSlot.id, Firebase.auth.uid!!)
         val chatRef = db.collection("requests").document(chatId)
 
@@ -161,7 +156,7 @@ class ChatViewModel(application: Application): AndroidViewModel(application) {
                     }
             } else {
                 clearMessages()
-                updateChatInfo(timeSlot)
+                updateChatInfo(timeSlot, currentUser)
             }
         }
     }
@@ -169,27 +164,21 @@ class ChatViewModel(application: Application): AndroidViewModel(application) {
     /* Update chatInfo from users table given a timeSlot*/
 
     /*TODO( Quando metteremo le recensioni nello user qui dovranno essere aggiunte)*/
-    fun updateChatInfo(timeSlot: TimeSlot) {
-        var user: User?
+    fun updateChatInfo(timeSlot: TimeSlot, currentUser: CompactUser) {
+        var user: User
         requestListener = db.collection("users").document(timeSlot.userId)
             .addSnapshotListener { v, e ->
                 if (e == null) {
                     if (v != null) {
-                        user = v.toUser()
-                        if (user != null)
-                            _chat.value = ChatsListItem().copy(
-                                chatId = makeRequestId(timeSlot.id, Firebase.auth.uid!!),
-                                otherProfilePic = user?.profilePicUrl!!,
-                                otherUserName = user?.fullName!!,
-                                timeSlotTitle = timeSlot.title,
-                                status = Request.STATUS_UNINTERESTED,
-                                type = ChatsListItem.CHAT_TYPE_TO_OFFERER
-                            )
-                        else
-                            Log.d(
-                                "updateUserInfo",
-                                "Something went wrong: check all the fields: $v"
-                            )
+                        user = v.toUser()!! /* If u get an exception here, something is not updated in db */
+
+                        _chat.value = ChatsListItem().copy(
+                            timeSlot = timeSlot,
+                            offerer = user.toCompactUser(),
+                            requester = currentUser,
+                            status = ChatsListItem.STATUS_UNINTERESTED,
+                            type = ChatsListItem.CHAT_TYPE_TO_OFFERER
+                        )
                     }
                 }
             }
@@ -199,7 +188,7 @@ class ChatViewModel(application: Application): AndroidViewModel(application) {
     fun updateChatInfo(chatRef: DocumentReference) {
         requestListener = chatRef.addSnapshotListener { v, e ->
             if (e == null) {
-                val req = v!!.toObject<Request>()
+                val req = v!!.toObject<ChatsListItem>()
                 if (req != null) {
                     //Helper.getChatItem(req)
                     val otherUser = Helper.getOtherUser(req)
@@ -225,18 +214,14 @@ class ChatViewModel(application: Application): AndroidViewModel(application) {
     }
 
     fun requestService() {
-        val requestRef = db.collection("requests").document(chat.value!!.chatId)
+        val requestRef = db.collection("requests").document(chat.value!!.requestId)
 
-
-        db.collection("requests").document(chat.value!!.chatId).addSnapshotListener() { v, e ->
-            assert(_chat.value!!.status == Request.STATUS_UNINTERESTED)
+        db.collection("requests").document(chat.value!!.requestId).addSnapshotListener() { v, e ->
+            assert(_chat.value!!.status == ChatsListItem.STATUS_UNINTERESTED)
             val cli = _chat.value!!
 
-            /* TODO(Add additional info -> TUTTO IN CHAT_LIST_ITEM -> offerer, requester, timeslot, ..)
-            *   Remove useless info from requests collection (take just main parts of users and timeslots) */
-            val req = Request(
-                requestId = _chat.value!!.chatId,
-                status = Request.STATUS_UNINTERESTED
+            val req = cli.copy(
+                status = ChatsListItem.STATUS_INTERESTED
             )
 
             requestRef.set(req).addOnSuccessListener {

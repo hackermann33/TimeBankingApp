@@ -15,4 +15,9 @@ data class Review(
 ) : Serializable {
 
     override fun toString(): String = "reviewText:$reviewText, numStars: $stars, timestamp: $timestamp"
+
+    companion object {
+        const val AS_OFFERER_TYPE = 0
+        const val AS_REQUESTER_TYPE = 1
+    }
 }

@@ -11,16 +11,12 @@ import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
-import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
-import de.hdodenhof.circleimageview.CircleImageView
-import it.polito.timebankingapp.model.chat.ChatMessage
-import it.polito.timebankingapp.model.chat.ChatsListItem
-import it.polito.timebankingapp.model.timeslot.TimeSlot
+import it.polito.timebankingapp.model.user.CompactUser
 import it.polito.timebankingapp.model.user.User
 import java.text.SimpleDateFormat
 import java.util.*
@@ -79,11 +75,11 @@ class Helper {
                 }
         }
 
-        fun getOtherUser(req: Request): User {
-            return if(req.offerer.id == Firebase.auth.uid)
-                req.requester
+        fun getOtherUser(req: ChatsListItem): CompactUser {
+            return if(req.type == ChatsListItem.CHAT_TYPE_TO_OFFERER)
+                req.offerer
             else
-                req.offerer ;
+                req.requester ;
         }
 
         fun isYesterday(d: Date): Boolean {
@@ -126,16 +122,12 @@ class Helper {
             return requestId.split("_").last()
         }
 
-        fun getChatType(req: Request): Int {
+        fun getChatType(req: ChatsListItem): Int {
             return if(req.offerer.id == Firebase.auth.uid) ChatsListItem.CHAT_TYPE_TO_REQUESTER else ChatsListItem.CHAT_TYPE_TO_OFFERER
         }
 
-        fun fromRequestToChat(r: Request): ChatsListItem {
-            val otherUser = Helper.getOtherUser(r)
-            val timeStr = dateToDisplayString(r.lastMessageTime)
-            val userId = Firebase.auth.uid.toString()
-            return ChatsListItem(r.requestId, userId,  r.timeSlot.id, r.timeSlot.title,  otherUser.fullName, otherUser.profilePicUrl,
-                4.5f, 6,  r.lastMessageText, timeStr, r.unreadMsg, 0, r.status, Helper.getChatType(r))
+        fun fromRequestToChat(r: ChatsListItem): ChatsListItem {
+            return r // to remove
         }
 
 
