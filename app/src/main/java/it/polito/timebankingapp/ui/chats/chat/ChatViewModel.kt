@@ -50,10 +50,10 @@ class ChatViewModel(application: Application): AndroidViewModel(application) {
                 if (!v!!.exists()) {/* Creation of the request (status interested) because of a message*/
                     assert(_chat.value!!.status == ChatsListItem.STATUS_UNINTERESTED)
 
-                    val req = _chat.value!!
+                    val req = _chat.value!!.copy(status = ChatsListItem.STATUS_INTERESTED)
 
                     requestRef.set(req).addOnSuccessListener {
-                        _chat.value = fromRequestToChat(req)
+                        _chat.value = req
 
                         requestRef.collection("messages").document().set(
                             mapOf(
