@@ -61,10 +61,5 @@ data class TimeSlot(
         Log.d("getCalendar", cal.timeInMillis.toString())
         return cal
     }
-
-    fun toCompactTimeSlot(): CompactTimeSlot {
-        return CompactTimeSlot(id, title, getCalendar().time, duration, unreadChats )
-    }
-
 }
 
