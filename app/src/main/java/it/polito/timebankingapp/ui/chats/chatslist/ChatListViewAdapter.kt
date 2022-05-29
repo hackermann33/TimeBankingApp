@@ -2,6 +2,7 @@ package it.polito.timebankingapp.ui.chats.chatslist
 
 import android.annotation.SuppressLint
 import android.content.res.ColorStateList
+import android.content.res.Resources
 import android.graphics.Color
 import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
@@ -10,9 +11,11 @@ import android.view.ViewGroup
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.cardview.widget.CardView
+import androidx.core.content.ContextCompat
 import androidx.core.graphics.toColor
 import androidx.navigation.Navigation
 import com.google.android.material.card.MaterialCardView
+import com.google.android.material.chip.Chip
 import com.google.android.material.color.MaterialColors
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -40,7 +43,7 @@ class ChatListViewAdapter(
         private val civImagePic: CircleImageView = itemView.findViewById(R.id.chat_profile_pic)
         private val nUnreadMsg: TextView = itemView.findViewById(R.id.n_unread_msg)
         private val unreadMsgCard: CardView = itemView.findViewById(R.id.unread_msg_card)
-        private val tvReqOff: TextView = itemView.findViewById(R.id.tvOffReq)
+        private val chipOffreq: Chip = itemView.findViewById(R.id.chipOffReq)
 
         @SuppressLint("ResourceAsColor")
         fun bind(cli: ChatsListItem, openChatAction: (v: View) -> Unit) {
@@ -64,12 +67,15 @@ class ChatListViewAdapter(
             Helper.loadImageIntoView(civImagePic, pbOtherProfilePic ,cli.otherProfilePic)
             if(cli.chatId.contains(Firebase.auth.uid.toString())) {
                 /* I am the requester */
-                tvReqOff.text = "you as Requester"
-                tvReqOff.setBackgroundColor(Color.GREEN)
+                chipOffreq.text = "you as Requester"
+                chipOffreq.setChipBackgroundColorResource(R.color.primary_dark)
+                chipOffreq.setTextColor(Color.WHITE)
+//                chipOffreq.setBackgroundColor(Color.GREEN)
             }
             else { /* The other is the requester */
-                tvReqOff.text = "you as Offerer"
-                tvReqOff.setBackgroundColor(Color.YELLOW)
+                chipOffreq.text = "you as Offerer"
+                chipOffreq.setChipBackgroundColorResource(R.color.accent)
+//                chipOffreq.setBackgroundColor(Color.YELLOW)
             }
             this.itemView.setOnClickListener(openChatAction)
         }
