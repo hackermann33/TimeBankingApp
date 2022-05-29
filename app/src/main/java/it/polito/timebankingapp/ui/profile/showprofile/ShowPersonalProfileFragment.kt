@@ -20,6 +20,7 @@ import it.polito.timebankingapp.model.Helper
 import it.polito.timebankingapp.model.review.Review
 import it.polito.timebankingapp.model.user.User
 import it.polito.timebankingapp.ui.profile.ProfileViewModel
+import it.polito.timebankingapp.ui.reviews.ReviewsViewModel
 import it.polito.timebankingapp.ui.reviews.reviewslist.ReviewsViewAdapter
 
 
@@ -36,6 +37,7 @@ class ShowPersonalProfileFragment : Fragment(R.layout.fragment_showprofile) {
 
     val vm : ProfileViewModel by activityViewModels()
 
+    private val rvm by activityViewModels<ReviewsViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,10 +59,15 @@ class ShowPersonalProfileFragment : Fragment(R.layout.fragment_showprofile) {
         val tempReviewsList = mutableListOf<Review>()
         var bundle : Bundle = Bundle()
 
+        rvm.reviews.observe(viewLifecycleOwner) {
+            print(it)
+        }
+
         if (type == "skill_specific") {
             vm.timeslotUser.observe(viewLifecycleOwner) {
                 timeSlotUser = it //oppure it
                 bundle = bundleOf("profile" to timeSlotUser, type to "timeslot") //per le recensioni
+                rvm.retrieveAllReviews(/*it.id*/ " ry0npG5mapRq0ccreqTEQjvdqQa2")
                 showProfile(view, timeSlotUser)
             }
 

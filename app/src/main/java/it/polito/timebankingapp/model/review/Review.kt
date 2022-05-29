@@ -1,14 +1,18 @@
 package it.polito.timebankingapp.model.review
 
 import java.io.Serializable
-import java.sql.Timestamp
+import java.util.Date
+
+
 
 
 data class Review(
     var reviewText: String ="",
-    var numStars: Int = 5,
-    var timestamp: Timestamp = Timestamp(0),
+    var stars: Int = 0,
+    var role: String = "",
+    var reviewer: Map<String, String> = mapOf("" to "id", "" to "fullName", "" to "profilePicUrl"),
+    var timestamp: Date = Date(0),
 ) : Serializable {
 
-    override fun toString(): String = "reviewText:$reviewText, numStars: $numStars, timestamp: $timestamp"
+    override fun toString(): String = "reviewText:$reviewText, numStars: $stars, timestamp: $timestamp"
 }
