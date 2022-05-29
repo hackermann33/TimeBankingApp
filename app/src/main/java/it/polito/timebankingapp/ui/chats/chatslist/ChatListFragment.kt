@@ -44,7 +44,7 @@ class ChatListFragment : Fragment(R.layout.fragment_chats_list_list) {
     }
 
     fun selectChat(chat : ChatsListItem){
-        chatViewModel.selectChat(chat)
+        chatViewModel.registerMessagesListener(chat)
     }
 
     companion object Type{

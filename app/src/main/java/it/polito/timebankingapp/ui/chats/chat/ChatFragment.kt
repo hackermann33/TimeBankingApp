@@ -120,7 +120,12 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
                 btnRequireService.visibility = View.VISIBLE
                 Log.d(TAG, "TYPE TO OFFERER")
                 when (cli.status) {
-                    ChatsListItem.STATUS_UNINTERESTED -> Log.d(TAG, "STATUS UNIINTERESTED")
+                    ChatsListItem.STATUS_UNINTERESTED -> {
+                        btnRequireService.setOnClickListener{
+                            btnRequireService.isEnabled = false /*TODO(Reabilitate if error happens during requests) */
+                            chatVm.requestService()
+                            Log.d(TAG, "STATUS UNIINTERESTED")
+                    }}
                     ChatsListItem.STATUS_INTERESTED -> {
                         Log.d(TAG, "STATUS INTERESTED")
                         btnRequireService.isEnabled = false
@@ -128,6 +133,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
                     }
                     ChatsListItem.STATUS_ACCEPTED -> Log.d(TAG, "STATUS ACCEPTED")
                 }
+
             }
             ChatsListItem.CHAT_TYPE_TO_REQUESTER -> {
                 rbReviewScore.rating = otherUser.asRequesterReview.score.toFloat()
@@ -145,10 +151,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 
 
 
-        btnRequireService.setOnClickListener{
-            btnRequireService.isEnabled = false /*TODO(Reabilitate if error happens during requests) */
-            chatVm.requestService()
-        }
+
 
         civProfilePic.setOnClickListener {
             v.findNavController().navigate(

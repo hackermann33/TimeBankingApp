@@ -185,7 +185,7 @@ class TimeSlotsViewModel(application: Application): AndroidViewModel(application
     fun requestTimeSlot(ts: TimeSlot, currentUser: User, offerer: User) : Task<Void> {
         val chatId = Helper.makeRequestId(ts.id, currentUser.id)
         val  req = ChatsListItem(timeSlot = ts, requester = currentUser.toCompactUser(),
-            offerer = offerer.toCompactUser(), status = ChatsListItem.STATUS_INTERESTED, nUnreadMsgs = 0)
+            offerer = offerer.toCompactUser(), status = ChatsListItem.STATUS_INTERESTED, unreadMsgs = 0)
 
             /*
             UPDATE UNREAD CHATS

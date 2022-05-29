@@ -10,8 +10,6 @@ import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.navigation.Navigation
 import com.google.android.material.chip.Chip
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
 import de.hdodenhof.circleimageview.CircleImageView
 import it.polito.timebankingapp.R
 import it.polito.timebankingapp.model.ChatsListItem
@@ -47,8 +45,8 @@ class ChatListViewAdapter(
             val otherUser = Helper.getOtherUser(cli)
             tvOtherFullName.text = otherUser.nick
             tvLastMessage.text = cli.lastMessageText
-            if(cli.nUnreadMsgs > 0)
-                nUnreadMsg.text = cli.nUnreadMsgs.toString()
+            if(cli.unreadMsgs > 0)
+                nUnreadMsg.text = cli.unreadMsgs.toString()
             else
                 unreadMsgCard.visibility = View.GONE
             tvLastMessageTime.text = Helper.dateToDisplayString(cli.lastMessageTime)

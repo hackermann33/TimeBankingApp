@@ -1,10 +1,11 @@
 package it.polito.timebankingapp.model
 
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.Exclude
+import com.google.firebase.ktx.Firebase
 import it.polito.timebankingapp.model.chat.ChatMessage
-import it.polito.timebankingapp.model.timeslot.CompactTimeSlot
 import it.polito.timebankingapp.model.timeslot.TimeSlot
 import it.polito.timebankingapp.model.user.CompactUser
-import it.polito.timebankingapp.model.user.User
 import java.util.*
 
 data class ChatsListItem(
@@ -12,10 +13,12 @@ data class ChatsListItem(
     val lastMessageText: String = "",
     val lastMessageTime: Date = Date(),
     val status: Int = STATUS_UNINTERESTED,
-    val type: Int = CHAT_TYPE_TO_OFFERER,
     var users: List<String> = listOf(),
-    var nUnreadMsgs: Int = 1 //needed to check or condition (request is or as a requester or as an offerer)
+    var unreadMsgs: Int = 1 //needed to check or condition (request is or as a requester or as an offerer)
 ) {
+    @Exclude
+    val type: Int = if(requester.id == Firebase.auth.uid) CHAT_TYPE_TO_OFFERER else CHAT_TYPE_TO_REQUESTER
+
     val requestId: String = timeSlot.id + "_" + requester.id
 
 
@@ -30,11 +33,11 @@ data class ChatsListItem(
 
 
     fun incUnreadMsg(): ChatsListItem {
-        return this.copy(nUnreadMsgs = nUnreadMsgs+1)
+        return this.copy(unreadMsgs = unreadMsgs+1)
     }
 
     fun sendFirstMessage(cm: ChatMessage): ChatsListItem {
-        return this.copy(type = STATUS_INTERESTED, lastMessageText = cm.messageText, lastMessageTime = cm.timestamp.time)
+        return this.copy(status = STATUS_INTERESTED, lastMessageText = cm.messageText, lastMessageTime = cm.timestamp.time)
     }
 
     companion object {
