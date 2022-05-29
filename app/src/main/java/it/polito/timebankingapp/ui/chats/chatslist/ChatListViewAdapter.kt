@@ -57,7 +57,7 @@ class ChatListViewAdapter(
             // sarebbe da mettere il last message della chat dentro il documento in userRooms (per l'anteprima)
             // e anche le altre info riguardo a tempo e conteggio non letti e foto profilo altro utente
 
-            if(cli.type == ChatsListItem.CHAT_TYPE_TO_OFFERER){
+            if(cli.type == ChatsListItem.CHAT_TYPE_TO_REQUESTER){
                 // Use Glide HERE!!!
                 Helper.loadImageIntoView(civImagePic, pbOtherProfilePic , otherUser.profilePicUrl)
 
