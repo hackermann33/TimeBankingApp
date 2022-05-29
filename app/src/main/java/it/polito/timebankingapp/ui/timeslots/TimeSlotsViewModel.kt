@@ -169,6 +169,7 @@ class TimeSlotsViewModel(application: Application): AndroidViewModel(application
     }
 
     fun setSelectedTimeSlot(ts: TimeSlot){
+
         _selectedTimeSlot.value = ts
     }
 

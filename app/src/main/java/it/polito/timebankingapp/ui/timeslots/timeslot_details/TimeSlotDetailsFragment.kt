@@ -3,6 +3,7 @@ package it.polito.timebankingapp.ui.timeslots.timeslot_details
 import android.os.Bundle
 import android.view.*
 import android.widget.Button
+import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -16,6 +17,7 @@ import com.google.android.material.chip.ChipGroup
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import de.hdodenhof.circleimageview.CircleImageView
 import it.polito.timebankingapp.R
 import it.polito.timebankingapp.model.Helper
 import it.polito.timebankingapp.model.Helper.Companion.toUser
@@ -40,6 +42,7 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
         super.onCreate(savedInstanceState)
         userId = arguments?.getString("userId").toString()
         type = arguments?.getString("point_of_origin").toString() //skill_specific or personal
+//        profileViewModel.retrieveTimeSlotProfileData(userId)
         setHasOptionsMenu(true)
     }
 
@@ -89,6 +92,9 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
             view.findViewById<ConstraintLayout>(R.id.layout_offerer).also { it.visibility = View.VISIBLE }
             val btnRequestService = view.findViewById<Button>(R.id.button_request_service).also { it.visibility = View.VISIBLE }
             val btnOpenChat = view.findViewById<Button>(R.id.openChatButton)
+            val civOffererPic = view.findViewById<CircleImageView>(R.id.offerer_pic)
+            val pb = view.findViewById<ProgressBar>(R.id.progressBar3)
+            val tvOffererName = view.findViewById<TextView>(R.id.offerer_name)
             btnOpenChat.setOnClickListener{
                 showTimeSlotRequest(timeSlot)
                 findNavController().navigate(R.id.nav_chat)
@@ -108,6 +114,12 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
                         }
                     }
                 }
+            }
+
+//            Helper.loadImageIntoView(civOffererPic, pb, profileViewModel.timeslotUser.value!!.profilePicUrl)
+            profileViewModel.timeslotUser.observe(viewLifecycleOwner){
+                tvOffererName.text = it.nick
+                Helper.loadImageIntoView(civOffererPic, pb, it.profilePicUrl)
             }
 
         }
