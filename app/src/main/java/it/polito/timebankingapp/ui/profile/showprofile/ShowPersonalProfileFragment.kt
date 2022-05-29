@@ -91,7 +91,7 @@ class ShowPersonalProfileFragment : Fragment(R.layout.fragment_showprofile) {
             vm.timeslotUser.observe(viewLifecycleOwner) {
                 timeSlotUser = it //oppure it
                 bundle = bundleOf("profile" to timeSlotUser, "type" to "timeslot") //per le recensioni
-                rvm.retrieveAllReviews(/*it.id*/ " ry0npG5mapRq0ccreqTEQjvdqQa2")
+                rvm.retrieveAllReviews(it.id /*" ry0npG5mapRq0ccreqTEQjvdqQa2"*/)
                 showProfile(view, timeSlotUser)
             }
 
@@ -104,7 +104,7 @@ class ShowPersonalProfileFragment : Fragment(R.layout.fragment_showprofile) {
             vm.user.observe(viewLifecycleOwner) {
                 user = it //oppure it
                 bundle = bundleOf("profile" to user, "type" to "personal") //per le recensioni
-                rvm.retrieveAllReviews(/*it.id*/ " ry0npG5mapRq0ccreqTEQjvdqQa2")
+                rvm.retrieveAllReviews(it.id /*" ry0npG5mapRq0ccreqTEQjvdqQa2"*/)
                 showProfile(view, user)
             }
 

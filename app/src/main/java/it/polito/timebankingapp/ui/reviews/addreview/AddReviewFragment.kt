@@ -40,7 +40,7 @@ class AddReviewFragment : Fragment(R.layout.fragment_add_review) {
         pvm.user.observe(viewLifecycleOwner) {
             user = it
             val tempMap = mutableMapOf<String, String>()
-            tempMap["id"] = " ry0npG5mapRq0ccreqTEQjvdqQa2" //vanno temporaneamente tutte all'account di debug
+            tempMap["id"] = "ry0npG5mapRq0ccreqTEQjvdqQa2" //vanno temporaneamente tutte all'account di debug
             tempMap["fullName"] = user.fullName
             tempMap["profilePicUrl"] = user.profilePicUrl
             newReview = Review(reviewer = tempMap, role= "requester")
