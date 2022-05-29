@@ -55,19 +55,18 @@ class ChatListViewAdapter(
             // sarebbe da mettere il last message della chat dentro il documento in userRooms (per l'anteprima)
             // e anche le altre info riguardo a tempo e conteggio non letti e foto profilo altro utente
 
-            if(cli.type == ChatsListItem.CHAT_TYPE_TO_REQUESTER){
-                // Use Glide HERE!!!
+            if(cli.getType() == ChatsListItem.CHAT_TYPE_TO_REQUESTER){
                 Helper.loadImageIntoView(civImagePic, pbOtherProfilePic , otherUser.profilePicUrl)
 
-                /* I am the requester */
-                chipOffreq.text = "you as Requester"
+                /* I am the offerer */
+                chipOffreq.text = "Offer"
                 chipOffreq.setChipBackgroundColorResource(R.color.primary_dark)
                 chipOffreq.setTextColor(Color.WHITE)
 //                chipOffreq.setBackgroundColor(Color.GREEN)
             }
             else { /* The other is the requester */
                 Helper.loadImageIntoView(civImagePic, pbOtherProfilePic , otherUser.profilePicUrl)
-                chipOffreq.text = "you as Offerer"
+                chipOffreq.text = "Request"
                 chipOffreq.setChipBackgroundColorResource(R.color.accent)
 //                chipOffreq.setBackgroundColor(Color.YELLOW)
             }

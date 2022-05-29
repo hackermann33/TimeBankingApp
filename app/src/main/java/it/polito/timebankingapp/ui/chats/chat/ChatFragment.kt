@@ -111,7 +111,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         Helper.loadImageIntoView(civProfilePic,  pbProfilePic, otherUser.profilePicUrl)
 
         /* TODO(When image is clicked, navigation is not to the correct profile !!!) */
-        when(cli.type){
+        when(cli.getType()){
 
             /* Chatting to the offerer */
             ChatsListItem.CHAT_TYPE_TO_OFFERER -> {

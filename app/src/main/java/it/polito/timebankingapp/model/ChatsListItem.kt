@@ -16,8 +16,7 @@ data class ChatsListItem(
     var users: List<String> = listOf(),
     var unreadMsgs: Int = 1 //needed to check or condition (request is or as a requester or as an offerer)
 ) {
-    @Exclude
-    val type: Int = if(requester.id == Firebase.auth.uid) CHAT_TYPE_TO_OFFERER else CHAT_TYPE_TO_REQUESTER
+
 
     val requestId: String = timeSlot.id + "_" + requester.id
 
@@ -40,8 +39,14 @@ data class ChatsListItem(
         return this.copy(status = STATUS_INTERESTED, lastMessageText = cm.messageText, lastMessageTime = cm.timestamp.time)
     }
 
-    companion object {
 
+    @Exclude
+    fun getType(): Int {
+        /* If the current user is the requester, the chat will be a chat to an offer*/
+        return if(requester.id == Firebase.auth.uid) CHAT_TYPE_TO_OFFERER else CHAT_TYPE_TO_REQUESTER
+    }
+
+    companion object {
         const val CHAT_TYPE_TO_REQUESTER = 0
         const val CHAT_TYPE_TO_OFFERER = 1
         const val STATUS_UNINTERESTED = -1

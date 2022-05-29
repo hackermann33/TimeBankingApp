@@ -14,6 +14,7 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.Exclude
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import it.polito.timebankingapp.model.user.CompactUser
@@ -75,8 +76,12 @@ class Helper {
                 }
         }
 
+        /* If the current user is the requester, the chat will be a chat to an offer*/
+        fun getType(cli: ChatsListItem): Int = if (cli.requestId== Firebase.auth.uid) ChatsListItem.CHAT_TYPE_TO_OFFERER else ChatsListItem.CHAT_TYPE_TO_REQUESTER
+
+
         fun getOtherUser(req: ChatsListItem): CompactUser {
-            return if(req.type == ChatsListItem.CHAT_TYPE_TO_OFFERER)
+            return if(req.getType() == ChatsListItem.CHAT_TYPE_TO_OFFERER)
                 req.offerer
             else
                 req.requester
