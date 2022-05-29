@@ -100,25 +100,27 @@ class TimeSlotMonthCalendar : Fragment(R.layout.fragment_time_slot_month_calenda
         }
 
         //dati statici
+        //isOffered == true  --> offered
+//                  == false --> requested
         var tempDate = LocalDate.now().plusDays(1)
         for (i in 0..4) {
             val ts = TimeSlot("","","Time slot Title ".plus(i+1),"",tempDate.toString(),"1".plus(i).plus(":00"),"3","Turin","","")
             tempDate?.let {
-                events[it] = events[it].orEmpty().plus(Event(UUID.randomUUID().toString(), ts, it))
+                events[it] = events[it].orEmpty().plus(Event(UUID.randomUUID().toString(), ts, it, i%2 == 0))
                 //updateAdapterForDate(it)
             }
         }
         tempDate = LocalDate.now().minusDays(1)
         val ts2 = TimeSlot("","","Time slot Title","",tempDate.toString(),"8:00","3","Turin","","")
         tempDate?.let {
-            events[it] = events[it].orEmpty().plus(Event(UUID.randomUUID().toString(), ts2, it))
+            events[it] = events[it].orEmpty().plus(Event(UUID.randomUUID().toString(), ts2, it, false))
             //updateAdapterForDate(it)
         }
 
         tempDate = LocalDate.now()
         val ts3 = TimeSlot("","","Time slot Title","",tempDate.toString(),"12:00","3","Turin","","")
         tempDate?.let {
-            events[it] = events[it].orEmpty().plus(Event(UUID.randomUUID().toString(), ts3, it))
+            events[it] = events[it].orEmpty().plus(Event(UUID.randomUUID().toString(), ts3, it, true))
             updateAdapterForDate(it) //lasciata solo qui per chiamare notifyDataSetChanged solo a fine inserimento dati statici
         }
         //fine dati statici
