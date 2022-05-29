@@ -62,8 +62,12 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
                 )
                 textMessage.text.clear()
             }
-
         }
+    }
+
+    override fun onDestroy() {
+        chatVm.clearChat()
+        super.onDestroy()
     }
 
     private fun setRecyclerViewAdapter(v: View) {
