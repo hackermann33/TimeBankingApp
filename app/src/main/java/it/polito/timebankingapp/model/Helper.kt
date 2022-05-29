@@ -127,7 +127,7 @@ class Helper {
         }
 
         fun getChatType(req: Request): Int {
-            return if(req.offerer.id == Firebase.auth.uid) Request.CHAT_TYPE_TO_REQUESTER else Request.CHAT_TYPE_TO_OFFERER
+            return if(req.offerer.id == Firebase.auth.uid) ChatsListItem.CHAT_TYPE_TO_REQUESTER else ChatsListItem.CHAT_TYPE_TO_OFFERER
         }
 
         fun fromRequestToChat(r: Request): ChatsListItem {

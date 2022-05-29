@@ -35,7 +35,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
-        /*TODO(To remove glitch between transictions (require -> offerer) use a bundle to understand where are you come from)  */
+        /*TODO(To remove glitch between transictions (require -> offerer) use a bundle to understand where do you come from)  */
         chatVm.chat.observe(viewLifecycleOwner) { cli ->
             updateChatUi(view, cli)
         }
@@ -109,7 +109,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         when(cli.type){
 
             /* Chatting to the offerer */
-            Request.CHAT_TYPE_TO_OFFERER -> {
+            ChatsListItem.CHAT_TYPE_TO_OFFERER -> {
                 btnDenyRequest.visibility = View.GONE
                 btnAcceptRequest.visibility = View.GONE
                 btnRequireService.visibility = View.VISIBLE
@@ -119,12 +119,12 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
                     Request.STATUS_INTERESTED -> {
                         Log.d(TAG, "STATUS INTERESTED")
                         btnRequireService.isEnabled = false
-                        btnRequireService.text = "Service required"
+                        btnRequireService.text = "Service requested"
                     }
                     Request.STATUS_ACCEPTED -> Log.d(TAG, "STATUS ACCEPTED")
                 }
             }
-            Request.CHAT_TYPE_TO_REQUESTER -> {
+            ChatsListItem.CHAT_TYPE_TO_REQUESTER -> {
                 Log.d(TAG, "TYPE TO REQUESTER")
                 when (cli.status) {
                     Request.STATUS_UNINTERESTED -> Log.d(TAG, "STATUS UNIINTERESTED")
@@ -140,6 +140,10 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         rbReviewScore.rating = cli.avgReviews
         tvReviewsNumber.text = cli.nReviews.toString()
 
+        btnRequireService.setOnClickListener{
+            btnRequireService.isEnabled = false /*TODO(Reabilitate if error happens during requests) */
+            chatVm.requestService()
+        }
 
         civProfilePic.setOnClickListener {
             v.findNavController().navigate(
@@ -161,7 +165,10 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 
 
     fun sendMessage(chatMessage: ChatMessage) {
-        chatVm.sendMessage(chatMessage)
+        when(chatVm.chat.value!!.status){
+            Request.STATUS_UNINTERESTED -> chatVm.sendFirstMessage(chatMessage) /* This means that we're creating the request also*/
+            Request.STATUS_INTERESTED -> chatVm.sendMessage(chatMessage)
+        }
     }
 
     companion object {

@@ -34,4 +34,9 @@ data class ChatsListItem(
     fun sendFirstMessage(cm: ChatMessage): ChatsListItem{
         return this.copy(type = Request.STATUS_INTERESTED, nTotMsg = 1, lastMessageText = cm.messageText, lastMessageTime = Helper.dateToDisplayString(cm.timestamp.time))
     }
+
+companion object {
+    const val CHAT_TYPE_TO_REQUESTER = 0
+    const val CHAT_TYPE_TO_OFFERER = 1
+}
 }

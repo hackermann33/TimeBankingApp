@@ -26,7 +26,7 @@ import it.polito.timebankingapp.model.timeslot.TimeSlot
 import it.polito.timebankingapp.model.user.User
 import java.util.*
 
-class ChatViewModel(application: Application): AndroidViewModel(application)  {
+class ChatViewModel(application: Application): AndroidViewModel(application) {
 
     private val _chatMessages = MutableLiveData<List<ChatMessage>>()
     val chatMessages: LiveData<List<ChatMessage>> = _chatMessages
@@ -41,49 +41,73 @@ class ChatViewModel(application: Application): AndroidViewModel(application)  {
     private lateinit var requestListener: ListenerRegistration
 
 
+    fun sendFirstMessage(message: ChatMessage) {
+        val requestRef = db.collection("requests").document(chat.value!!.chatId)
+        requestRef.addSnapshotListener { v, e ->
+            if (e == null) {
+                if (!v!!.exists()) {/* Creation of the request (status interested) because of a message*/
+                    assert(_chat.value!!.status == Request.STATUS_UNINTERESTED)
+                    val cli = _chat.value!!
+
+                    /* TODO(Add additional info -> offerer, requester, timeslot, ..) */
+                    val req = Request(
+                        requestId = _chat.value!!.chatId,
+                        lastMessageText = message.messageText,
+                        status = STATUS_INTERESTED
+                    )
+
+
+                    requestRef.set(req).addOnSuccessListener {
+                        _chat.value = fromRequestToChat(req)
+
+                        requestRef.collection("messages").document().set(
+                            mapOf(
+                                "messageText" to message.messageText,
+                                "timestamp" to message.timestamp.time,
+                                "userId" to message.userId,
+                            )
+                        )
+                    }.addOnFailureListener {
+                        Log.d("sendMessages", "$it")
+                    }
+                }
+            }
+        }
+    }
+
     fun sendMessage(message: ChatMessage) {
 
         val requestRef = db.collection("requests").document(chat.value!!.chatId)
         requestRef.addSnapshotListener { v, e ->
-
             if (e == null) {
-                if(!v!!.exists()) {/* Creation of the request (status interested) because of a message*/
-                    assert(_chat.value!!.status == Request.STATUS_UNINTERESTED)
-                    val cli =  _chat.value!!
-
-                    /* TODO(Add additional info -> offerer, requester, timeslot, ..) */
-                    val req = Request(requestId = _chat.value!!.chatId, lastMessageText = message.messageText, status = STATUS_INTERESTED)
-
-                    requestRef.set(req).addOnSuccessListener {
-                        _chat.value = fromRequestToChat(req)
-                    }.addOnFailureListener {
-                        Log.d("sendMessages","$it")
-                    }
-                }
-                else
-                    _chat.value = chat.value!!.copy(nUnreadMsg = v?.getLong("unreadMsg")?.toInt() ?: 0)
+                _chat.value = chat.value!!.copy(nUnreadMsg = v!!.getLong("unreadMsg")?.toInt() ?: 0)
             }
         }
-        requestRef.collection("messages").document().set( mapOf(
-            "messageText" to message.messageText,
-            "timestamp" to message.timestamp.time,
-            "userId" to message.userId,
-        )).addOnSuccessListener {
+
+        requestRef.collection("messages").document().set(
+            mapOf(
+                "messageText" to message.messageText,
+                "timestamp" to message.timestamp.time,
+                "userId" to message.userId,
+            )
+        ).addOnSuccessListener {
 
             /*  TODO(Check this nUnreadMsg increment: How can you distinguish
                  between yout unreadmsg and the otherUnreadMsg?)*/
-            requestRef.update(mapOf (
-                "lastMessageText" to message.messageText,
-                "lastMessageTime" to message.timestamp.time,
-                "unreadMsg" to chat.value!!.nUnreadMsg+1,
-            ))
+            requestRef.update(
+                mapOf(
+                    "lastMessageText" to message.messageText,
+                    "lastMessageTime" to message.timestamp.time,
+                    "unreadMsg" to chat.value!!.nUnreadMsg + 1,
+                )
+            )
             _chat.value = chat.value!!.incUnreadMsg()
             Log.d("sendMessage", "success")
 
-        }.addOnFailureListener { Log.d("sendMessage", "failure")}
+        }.addOnFailureListener { Log.d("sendMessage", "failure") }
     }
 
-    private fun QueryDocumentSnapshot.toChatMessage() : ChatMessage? {
+    private fun QueryDocumentSnapshot.toChatMessage(): ChatMessage? {
         return try {
             //val messageId = get("messageId") as String
             val userId = get("userId") as String
@@ -94,8 +118,8 @@ class ChatViewModel(application: Application): AndroidViewModel(application)  {
             val cal = Calendar.getInstance()
             cal.time = timestamp.toDate()
 
-            ChatMessage(userId,messageText, cal)
-        } catch(e: Exception) {
+            ChatMessage(userId, messageText, cal)
+        } catch (e: Exception) {
             e.printStackTrace()
             null
         }
@@ -105,41 +129,37 @@ class ChatViewModel(application: Application): AndroidViewModel(application)  {
     fun selectChat(chat: ChatsListItem) {
         _chat.value = chat
 
-        messagesListener = db.collection("requests").document(chat.chatId).collection("messages").orderBy("timestamp")
+        messagesListener = db.collection("requests").document(chat.chatId).collection("messages")
+            .orderBy("timestamp")
             .addSnapshotListener { v, e ->
                 if (e == null) {
                     _chatMessages.value = v!!.mapNotNull { d -> d.toChatMessage() }
                 } else
                     _chatMessages.value = emptyList()
             }
-        }
+    }
 
 
     /* Coming from TimeSlotDetail or TimeSlotList, check if requests from current user to timeSlot exists, otherwise download just the userProfile */
     fun selectChatFromTimeSlot(timeSlot: TimeSlot) {
-
         val chatId = makeRequestId(timeSlot.id, Firebase.auth.uid!!)
-
-
         val chatRef = db.collection("requests").document(chatId)
 
         /* If the request already exists, download it, otherwise just download offerer profile and don't make the request. */
         chatRef.get().addOnSuccessListener { docSnapShot ->
-            if(docSnapShot.exists()) {
+            if (docSnapShot.exists()) {
                 /*Download user profile */
                 updateChatInfo(chatRef)
 
                 /* Download messages */
                 messagesListener = chatRef.collection("messages").orderBy("timestamp")
-                    .addSnapshotListener{
-                            v,e ->
-                        if(e == null){
+                    .addSnapshotListener { v, e ->
+                        if (e == null) {
                             _chatMessages.value = v!!.mapNotNull { d -> d.toChatMessage() }
                         } else
                             _chatMessages.value = emptyList()
                     }
-            }
-            else {
+            } else {
                 clearMessages()
                 updateChatInfo(timeSlot)
             }
@@ -156,11 +176,20 @@ class ChatViewModel(application: Application): AndroidViewModel(application)  {
                 if (e == null) {
                     if (v != null) {
                         user = v.toUser()
-                        if(user!= null)
-                            _chat.value = ChatsListItem().copy(chatId = makeRequestId(timeSlot.id, Firebase.auth.uid!!), otherProfilePic = user?.profilePicUrl!!, otherUserName = user?.fullName!!,
-                                timeSlotTitle = timeSlot.title, status = Request.STATUS_UNINTERESTED, type = Request.CHAT_TYPE_TO_OFFERER)
+                        if (user != null)
+                            _chat.value = ChatsListItem().copy(
+                                chatId = makeRequestId(timeSlot.id, Firebase.auth.uid!!),
+                                otherProfilePic = user?.profilePicUrl!!,
+                                otherUserName = user?.fullName!!,
+                                timeSlotTitle = timeSlot.title,
+                                status = Request.STATUS_UNINTERESTED,
+                                type = ChatsListItem.CHAT_TYPE_TO_OFFERER
+                            )
                         else
-                            Log.d("updateUserInfo", "Something went wrong: check all the fields: $v")
+                            Log.d(
+                                "updateUserInfo",
+                                "Something went wrong: check all the fields: $v"
+                            )
                     }
                 }
             }
@@ -178,7 +207,6 @@ class ChatViewModel(application: Application): AndroidViewModel(application)  {
                     _chat.value = Helper.fromRequestToChat(req)
 
 
-
                 } else {
                     Log.d("selectChat", "this should not happen")
                     throw Exception("chat not found in the DB!!!")
@@ -187,8 +215,8 @@ class ChatViewModel(application: Application): AndroidViewModel(application)  {
         }
     }
 
-    fun clearChat(){
-        _chat.postValue( ChatsListItem())
+    fun clearChat() {
+        _chat.postValue(ChatsListItem())
         _chatMessages.value = listOf()
     }
 
@@ -196,6 +224,24 @@ class ChatViewModel(application: Application): AndroidViewModel(application)  {
         _chatMessages.value = listOf()
     }
 
+    fun requestService() {
+        val requestRef = db.collection("requests").document(chat.value!!.chatId)
 
 
+        db.collection("requests").document(chat.value!!.chatId).addSnapshotListener() { v, e ->
+            assert(_chat.value!!.status == Request.STATUS_UNINTERESTED)
+            val cli = _chat.value!!
+
+            /* TODO(Add additional info -> TUTTO IN CHAT_LIST_ITEM -> offerer, requester, timeslot, ..)
+            *   Remove useless info from requests collection (take just main parts of users and timeslots) */
+            val req = Request(
+                requestId = _chat.value!!.chatId,
+                status = Request.STATUS_UNINTERESTED
+            )
+
+            requestRef.set(req).addOnSuccessListener {
+                _chat.value = fromRequestToChat(req)
+            }
+        }
+    }
 }

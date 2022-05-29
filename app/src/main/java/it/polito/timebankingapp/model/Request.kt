@@ -6,7 +6,7 @@ import java.util.*
 
 data class Request(
     var requestId: String = " ", val timeSlot: TimeSlot = TimeSlot(), val requester: User = User(), val offerer: User = User(), val lastMessageText: String = "",
-    val lastMessageTime: Date = Date(), val status: Int = STATUS_INTERESTED, var users: List<String> = listOf(), var unreadMsg: Int = 1 //needed to check or condition (request is or as a requester or as an offerer)
+    val lastMessageTime: Date = Date(), val status: Int = STATUS_UNINTERESTED, var users: List<String> = listOf(), var unreadMsg: Int = 1 //needed to check or condition (request is or as a requester or as an offerer)
 ) {
 
 
@@ -20,8 +20,6 @@ data class Request(
 
     companion object {
 
-        const val CHAT_TYPE_TO_REQUESTER = 0
-        const val CHAT_TYPE_TO_OFFERER =  1
 
 
         const val STATUS_UNINTERESTED = -1
