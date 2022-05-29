@@ -77,9 +77,9 @@ class Helper {
 
         fun getOtherUser(req: ChatsListItem): CompactUser {
             return if(req.type == ChatsListItem.CHAT_TYPE_TO_OFFERER)
-                req.offerer
+                req.requester
             else
-                req.requester ;
+                req.offerer
         }
 
         fun isYesterday(d: Date): Boolean {
