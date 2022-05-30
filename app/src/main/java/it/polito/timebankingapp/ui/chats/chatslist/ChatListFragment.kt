@@ -33,7 +33,7 @@ class ChatListFragment : Fragment(R.layout.fragment_chats_list_list) {
 
 
 
-        /*TODO(Distinguish graphically if the chat is a to_offerer or to_requester chat)  */
+        /*DONE (Distinguish graphically if the chat is a to_offerer or to_requester chat)  */
         chatListViewModel.chatsList.observe(viewLifecycleOwner){
             adTmp = ChatListViewAdapter(it, ::selectChat/*, ::updateTimeSlotProfile*/, chatListType)
             rv.adapter = adTmp

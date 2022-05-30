@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.View
 import android.view.View.OnLayoutChangeListener
 import android.widget.*
+import androidx.cardview.widget.CardView
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -17,6 +18,7 @@ import de.hdodenhof.circleimageview.CircleImageView
 import it.polito.timebankingapp.R
 import it.polito.timebankingapp.model.Helper
 import it.polito.timebankingapp.model.Chat
+import it.polito.timebankingapp.model.Chat.Companion.STATUS_DISCARDED
 import it.polito.timebankingapp.model.chat.ChatMessage
 import it.polito.timebankingapp.model.user.CompactUser
 import java.util.*
@@ -43,11 +45,21 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         setRecyclerViewAdapter(view)
 
         chatVm.chatMessages.observe(viewLifecycleOwner) {
-            adTmp = ChatViewAdapter(it.toMutableList(), ::sendMessage)
+            adTmp = ChatViewAdapter(
+                it.toMutableList(),
+                ::sendMessage,
+                chatVm.chat.value?.status == STATUS_DISCARDED
+            )
             rv.adapter = adTmp
             rv.scrollToPosition(adTmp.itemCount - 1)
         }
 
+        val sendMsgBar : RelativeLayout = view.findViewById(R.id.layout_gchat_chatbox)
+        val cardChatDiscarded : CardView = view.findViewById(R.id.card_chat_discarded)
+        if(chatVm.chat.value?.status == STATUS_DISCARDED) {
+            sendMsgBar.visibility = View.GONE
+            cardChatDiscarded.visibility = View.VISIBLE
+        }
         textMessage = view.findViewById(R.id.edit_gchat_message)
         val sendButton = view.findViewById<Button>(R.id.button_gchat_send)
 
@@ -75,7 +87,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         rv = v.findViewById(R.id.recycler_gchat)
         rv.layoutManager = LinearLayoutManager(context)
 
-        adTmp = ChatViewAdapter(mutableListOf(), ::sendMessage)
+        adTmp = ChatViewAdapter(mutableListOf(), ::sendMessage, chatVm.chat.value?.status == STATUS_DISCARDED)
         rv.adapter = adTmp
         rv.scrollToPosition(adTmp.itemCount - 1)
 
