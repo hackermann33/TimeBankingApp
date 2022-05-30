@@ -71,7 +71,8 @@ class ChatListViewModel(application: Application): AndroidViewModel(application)
                 .orderBy("lastMessage.timestamp", Query.Direction.DESCENDING).addSnapshotListener{ v, e ->
                     if(e == null){
                         Log.d("chatList", "chatList: ${_chatsList.value}")
-                        _chatsList.value = v!!.mapNotNull {  d -> d.toObject<Chat>()  }
+                        _chatsList.value = v!!.mapNotNull {  d -> d.toObject<Chat>() }
+
                             Log.d("chatsListValue", "success")
                     } else{
                         _chatsList.value = emptyList()

@@ -72,13 +72,28 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
         val reqDocRef =  db.collection("requests").document(cid.requestId)
         val msgsDocRef =  db.collection("requests").document(cid.requestId).collection("messages").document()
         val timeSlotDocRef = db.collection("timeSlots").document(cid.timeSlotId)
+        val incrementUnreadChats =
+            if(cid.requester.id == Firebase.auth.uid) {
+                if (cid.status == Chat.STATUS_UNINTERESTED) //I am requester, new request
+                    true
+                else
+                    cid.lastMessage.userId != Firebase.auth.uid
+            }
+            else
+                false
+
 
         cid.sendMessage(message)
+
+
 
         db.runBatch { batch ->
             batch.set(reqDocRef, cid)
             batch.set(msgsDocRef, message)
-            batch.update(timeSlotDocRef,"unreadChats", FieldValue.increment(1))
+            if(incrementUnreadChats) {
+                batch.update(timeSlotDocRef, "unreadChats", FieldValue.increment(1))
+                batch.update(reqDocRef, "timeSlot.unreadChats", FieldValue.increment(1))
+            }
         }.addOnSuccessListener {
 
             if(!::messagesListener.isInitialized)
