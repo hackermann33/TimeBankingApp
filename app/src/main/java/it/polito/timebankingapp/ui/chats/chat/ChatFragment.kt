@@ -126,7 +126,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         btnRequireService.setOnClickListener {
             btnRequireService.isEnabled =
                 false /*TODO(Reabilitate if error happens during requests) */
-            chatVm.requestService()
+            chatVm.requestService(cli)
         }
 
         btnAcceptRequest.setOnClickListener {
