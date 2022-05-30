@@ -161,7 +161,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
             }
             Chat.CHAT_TYPE_TO_REQUESTER -> {
                 rbReviewScore.rating = otherUser.asRequesterReview.score.toFloat()
-                tvReviewsNumber.text = "${otherUser.asRequesterReview.number} reviews}"
+                tvReviewsNumber.text = "${otherUser.asRequesterReview.number} reviews"
                 Log.d(TAG, "TYPE TO REQUESTER")
                 when (cli.status) {
                     Chat.STATUS_UNINTERESTED -> Log.d(TAG, "STATUS UNIINTERESTED")

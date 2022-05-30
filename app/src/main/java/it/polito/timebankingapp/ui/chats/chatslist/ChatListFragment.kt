@@ -31,8 +31,8 @@ class ChatListFragment : Fragment(R.layout.fragment_chats_list_list) {
         rv = view.findViewById(R.id.recycler_chat_list)
         rv.layoutManager = LinearLayoutManager(context)
 
-
-
+        adTmp = ChatListViewAdapter(listOf(), ::selectChat, chatListType)
+        rv.adapter = adTmp
         /*DONE (Distinguish graphically if the chat is a to_offerer or to_requester chat)  */
         chatListViewModel.chatsList.observe(viewLifecycleOwner){
             adTmp = ChatListViewAdapter(it, ::selectChat/*, ::updateTimeSlotProfile*/, chatListType)

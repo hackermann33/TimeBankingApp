@@ -65,16 +65,18 @@ class ChatListViewModel(application: Application): AndroidViewModel(application)
     }
 
     fun updateAllChats() {
+        Log.d("chatsListValue", "started")
            Log.d("User", Firebase.auth.uid.toString())
             val currentId = Firebase.auth.uid.toString()
             l = db.collection("requests").whereArrayContains("users","${Firebase.auth.uid}")
-                .orderBy("lastMessageTime", Query.Direction.DESCENDING).addSnapshotListener{ v, e ->
+                .orderBy("lastMessage.timestamp", Query.Direction.DESCENDING).addSnapshotListener{ v, e ->
                     if(e == null){
                         Log.d("chatList", "chatList: ${_chatsList.value}")
                         val requests = v!!.mapNotNull {  d -> d.toObject<Chat>()  }
                         _chatsList.value = requests.mapNotNull {  r ->
                             fromRequestToChat(r)
                         }
+                        Log.d("chatList", "chatList: ${_chatsList.value}")
                             Log.d("chatsListValue", "success")
                     } else{
                         _chatsList.value = emptyList()
