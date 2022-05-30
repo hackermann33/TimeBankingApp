@@ -21,11 +21,14 @@ import de.hdodenhof.circleimageview.CircleImageView
 import it.polito.timebankingapp.R
 import it.polito.timebankingapp.model.Helper
 import it.polito.timebankingapp.model.Helper.Companion.toUser
+import it.polito.timebankingapp.model.chat.ChatMessage
 import it.polito.timebankingapp.model.timeslot.TimeSlot
+import it.polito.timebankingapp.model.user.CompactUser
+import it.polito.timebankingapp.model.user.User
 import it.polito.timebankingapp.ui.chats.chat.ChatViewModel
 import it.polito.timebankingapp.ui.profile.ProfileViewModel
 import it.polito.timebankingapp.ui.timeslots.TimeSlotsViewModel
-
+import java.util.*
 
 
 class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
@@ -104,11 +107,17 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
             /* Rememeber to update number of chats for that timeSlot*/
             btnRequestService.setOnClickListener{
                 if (ts != null) {
-                    profileViewModel.updateCurrentUser()
-                    profileViewModel.getUserFromId(ts.userId).addOnSuccessListener {
-                        globalModel.requestTimeSlot(ts, profileViewModel.user.value!!,  it.toUser()!!)
+//                    profileViewModel.updateCurrentUser()
+                    val chatId = Helper.makeRequestId(ts.id, Firebase.auth.uid!!)
+                    var offerer: User
+                    profileViewModel.getUserFromId(ts.userId).addOnSuccessListener { _offerer ->
+                        offerer = _offerer.toUser()!!
+                        globalModel.requestTimeSlot(ts, profileViewModel.user.value!!, _offerer.toUser()!!)
                             .addOnSuccessListener {
-                            Snackbar.make(view, "Request correctly sent!", Snackbar.LENGTH_SHORT).show()
+                                /* here I need to update chat */
+                                chatVm.updateChatInfo(ts, profileViewModel.timeslotUser.value!!.toCompactUser(), offerer.toCompactUser(), true)
+
+                                Snackbar.make(view, "Request correctly sent!", Snackbar.LENGTH_SHORT).show()
 
                         }.addOnFailureListener{
                             Snackbar.make(view, "Oops, something gone wrong!", Snackbar.LENGTH_SHORT).show()
@@ -179,7 +188,7 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
     fun showTimeSlotRequest(timeSlot: TimeSlot) {
         val chatId = Helper.makeRequestId(timeSlot.id, Firebase.auth.uid!!)
         profileViewModel.getUserFromId(timeSlot.userId).addOnSuccessListener {
-            it.toUser()?.let { it1 -> chatVm.selectChatFromTimeSlot(timeSlot, it1.toCompactUser()) }
+            it.toUser()?.let { it1 -> chatVm.selectChatFromTimeSlot(timeSlot, profileViewModel.user.value!!.toCompactUser(), it1.toCompactUser() ) }
         }
     }
 

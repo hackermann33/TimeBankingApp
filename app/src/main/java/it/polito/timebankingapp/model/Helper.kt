@@ -16,6 +16,7 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
+import it.polito.timebankingapp.model.user.CompactReview
 import it.polito.timebankingapp.model.user.CompactUser
 import it.polito.timebankingapp.model.user.User
 import java.text.SimpleDateFormat
@@ -151,6 +152,34 @@ class Helper {
             return "Hi ${cli.offerer.nick}, I'm ${cli.requester.nick} and I'm interested" +
                     " to your service (${cli.timeSlot.title})"
 
+        }
+
+        fun requestMessage(offNick : String, tsTitle: String): String {
+            return "Hi ${offNick}, I'm ${Firebase.auth.uid} and I'm interested" +
+                    " to your service (${tsTitle})"
+        }
+
+        fun compactUserFromUser(user: User) : CompactUser {
+            var asOffAvg : Double = 0.0
+            for(r in user.asOffererReviews)
+                asOffAvg += r.stars
+            asOffAvg /= user.asOffererReviews.size
+
+            var asReqAvg : Double = 0.0
+            for(r in user.asRequesterReviews)
+                asReqAvg += r.stars
+            asReqAvg /= user.asRequesterReviews.size
+
+            return CompactUser(
+                user.id,
+                user.profilePicUrl,
+                user.nick,
+                user.location,
+                CompactReview(asOffAvg, user.asOffererReviews.size),
+                CompactReview(asReqAvg, user.asRequesterReviews.size),
+                user.asOffererReviews.size + user.asRequesterReviews.size,
+                user.balance
+                )
         }
     }
 

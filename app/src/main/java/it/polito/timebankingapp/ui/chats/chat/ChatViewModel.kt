@@ -85,8 +85,6 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
 
         cid.sendMessage(message)
 
-
-
         db.runBatch { batch ->
             batch.set(reqDocRef, cid)
             batch.set(msgsDocRef, message)
@@ -165,14 +163,11 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
                 } else
                     _chatMessages.value = emptyList()
             }
-
-
-
     }
 
 
     /* Coming from TimeSlotDetail or TimeSlotList, check if requests from current user to timeSlot exists, otherwise download just the userProfile */
-    fun selectChatFromTimeSlot(timeSlot: TimeSlot, otherUser: CompactUser) {
+    fun selectChatFromTimeSlot(timeSlot: TimeSlot, requester: CompactUser, offerer: CompactUser) {
         val chatId = makeRequestId(timeSlot.id, Firebase.auth.uid!!)
         val chatRef = db.collection("requests").document(chatId)
 
@@ -185,7 +180,6 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
                 updateChatInfo(chatRef)
 
 
-
                 /* Download messages */
                 messagesListener = chatRef.collection("messages").orderBy("timestamp")
                     .addSnapshotListener { v, e ->
@@ -196,30 +190,44 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
                     }
             } else {
                 clearMessages()
-                updateChatInfo(timeSlot, otherUser)
+                updateChatInfo(timeSlot, requester, offerer)
             }
         }
     }
 
     /* Update chatInfo from users table given a timeSlot*/
-    fun updateChatInfo(timeSlot: TimeSlot, otherUser: CompactUser) {
+    fun updateChatInfo(timeSlot: TimeSlot, currentUser: CompactUser, offerer: CompactUser, requestService: Boolean = false) {
         var user: User
-        otherUserListener = db.collection("users").document(timeSlot.userId)
+
+        val chat = Chat(timeSlot = timeSlot,
+            offerer = offerer,
+            requester = currentUser,
+            status = Chat.STATUS_UNINTERESTED)
+
+
+
+//        Log.d("ChatViewModel", "chat: ${_chat.value!!}")
+
+        if(requestService)
+            requestService(chat)
+
+        _chat.postValue(chat)
+        /*otherUserListener = db.collection("users").document(timeSlot.userId)
             .addSnapshotListener { v, e ->
                 if (e == null) {
                     if (v != null) {
                         user =
-                            v.toUser()!! /* If u get an exception here, something is not updated in db */
+                            v.toUser()!! *//* If u get an exception here, something is not updated in db *//*
 
                         _chat.value = Chat().copy(
                             timeSlot = timeSlot,
-                            offerer = user.toCompactUser(),
-                            requester = otherUser,
+                            offerer = offerer ?: user.toCompactUser(),
+                            requester = currentUser,
                             status = Chat.STATUS_UNINTERESTED,
                         )
                     }
                 }
-            }
+            }*/
     }
 
     /* Update userInfo from the requests table */
@@ -264,14 +272,16 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     /* Function to call to get Interested */
-    fun requestService() {
-        val requestRef = db.collection("requests").document(chat.value!!.requestId)
-        val cli = _chat.value!!
+    fun requestService(chat : Chat) {
+//        Log.d("chatViewModel", _chat.value!!.toString())
+        val requestRef = db.collection("requests").document(chat.requestId)
+        val cli = chat
         val req = cli.copy(
             status = Chat.STATUS_INTERESTED
         )
 
         requestRef.set(req).addOnSuccessListener{ v ->
+            _chat.postValue(chat)
             sendMessageAndUpdate(ChatMessage(messageText = Helper.requestMessage(cli), userId = cli.requester.id, timestamp = Date()))
         }
     }
