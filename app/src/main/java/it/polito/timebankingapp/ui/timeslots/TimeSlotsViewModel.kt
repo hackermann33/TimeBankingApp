@@ -99,7 +99,7 @@ class TimeSlotsViewModel(application: Application): AndroidViewModel(application
         }
     }
 
- 
+
     fun updateInterestingTimeSlots() {
         val myUid = Firebase.auth.uid!!
         db.collection("requests").whereEqualTo("requester.id", myUid)
@@ -114,11 +114,31 @@ class TimeSlotsViewModel(application: Application): AndroidViewModel(application
                 }
             }
         }
+    // db.collection("requests").whereArrayContains("users", myuid).whereEqualTo("status", Chat.STATUS_COMPLETED)
 
     fun updateCompletedTimeSlots() {
         val myUid = Firebase.auth.uid!!
-        db.collection("requests").whereEqualTo("requester.id", myUid)
+        db.collection("requests").whereArrayContains("users", myUid)
             .whereEqualTo("status", Chat.STATUS_COMPLETED).addSnapshotListener{ v, e ->
+        //db.collection("requests").whereEqualTo("requester.id", myUid)
+        //    .whereEqualTo("status", Chat.STATUS_COMPLETED).addSnapshotListener{ v, e ->
+                if(e == null){
+                    val req = v!!.mapNotNull {  d -> d.toObject<Chat>()  }
+                    _timeSlots.value = req.mapNotNull {  r -> r.timeSlot }
+                    _isEmpty.value = _timeSlots.value!!.isEmpty()
+                } else {
+                    _timeSlots.value = emptyList()
+                    _isEmpty.value = true
+                }
+            }
+    }
+
+    fun updateCalendarTimeSlots() {
+        val myUid = Firebase.auth.uid!!
+        //db.collection("requests").whereEqualTo("requester.id", myUid)
+        db.collection("requests").whereArrayContains("users", myUid)
+            //.whereIn("status", listOf(Chat.STATUS_ACCEPTED)).addSnapshotListener{ v, e ->
+            .whereEqualTo("status", Chat.STATUS_ACCEPTED).addSnapshotListener{ v, e ->
                 if(e == null){
                     val req = v!!.mapNotNull {  d -> d.toObject<Chat>()  }
                     _timeSlots.value = req.mapNotNull {  r -> r.timeSlot }

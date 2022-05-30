@@ -14,6 +14,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.children
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -28,6 +29,9 @@ import it.polito.timebankingapp.databinding.FragmentTimeSlotMonthCalendarBinding
 import it.polito.timebankingapp.databinding.TimeSlotMonthCalendarDayBinding
 import it.polito.timebankingapp.databinding.TimeSlotMonthCalendarHeaderBinding
 import it.polito.timebankingapp.model.timeslot.TimeSlot
+import it.polito.timebankingapp.ui.profile.ProfileViewModel
+import it.polito.timebankingapp.ui.timeslots.TimeSlotsViewModel
+import it.polito.timebankingapp.ui.timeslots.timeslots_list.TimeSlotAdapter
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.YearMonth
@@ -36,6 +40,10 @@ import java.time.temporal.WeekFields
 import java.util.*
 
 class TimeSlotMonthCalendar : Fragment(R.layout.fragment_time_slot_month_calendar) {
+
+    private val vm: TimeSlotsViewModel by activityViewModels()
+    private val userVm: ProfileViewModel by activityViewModels()
+
 
     private val eventsAdapter = TimeSlotMonthCalendarEventsAdapter {
         AlertDialog.Builder(requireContext())
@@ -99,9 +107,29 @@ class TimeSlotMonthCalendar : Fragment(R.layout.fragment_time_slot_month_calenda
             addItemDecoration(DividerItemDecoration(requireContext(), RecyclerView.VERTICAL))
         }
 
+
+        vm.timeSlots.observe(viewLifecycleOwner) { it ->
+            if (it.isNotEmpty()) {
+                //setVoidMessage(view, false)
+                val acceptedTimeSlots = it
+
+                for (i in it.indices) {
+                    val values = acceptedTimeSlots[i].date.split("/")
+                    val tempDate = LocalDate.of(values[2].toInt(), values[1].toInt(),values[0].toInt())
+                    tempDate?.let {
+                        val isOffered = userVm.user.value?.id ?: "" == acceptedTimeSlots[i].userId
+                        events[it] = events[it].orEmpty().plus(Event(UUID.randomUUID().toString(), acceptedTimeSlots[i], it, isOffered))
+                        if(i == acceptedTimeSlots.size-1)
+                            updateAdapterForDate(it)
+                    }
+                }
+            }
+        }
+
         //dati statici
         //isOffered == true  --> offered
 //                  == false --> requested
+        /*
         var tempDate = LocalDate.now().plusDays(1)
         for (i in 0..4) {
             val ts = TimeSlot("","","Time slot Title ".plus(i+1),"",tempDate.toString(),"1".plus(i).plus(":00"),"3","Turin","","")
@@ -123,7 +151,7 @@ class TimeSlotMonthCalendar : Fragment(R.layout.fragment_time_slot_month_calenda
             events[it] = events[it].orEmpty().plus(Event(UUID.randomUUID().toString(), ts3, it, true))
             updateAdapterForDate(it) //lasciata solo qui per chiamare notifyDataSetChanged solo a fine inserimento dati statici
         }
-        //fine dati statici
+        //fine dati statici*/
 
         val daysOfWeek = daysOfWeekFromLocale()
         val currentMonth = YearMonth.now()
