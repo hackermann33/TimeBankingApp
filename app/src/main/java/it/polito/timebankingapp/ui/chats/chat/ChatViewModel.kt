@@ -85,8 +85,6 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
 
         cid.sendMessage(message)
 
-
-
         db.runBatch { batch ->
             batch.set(reqDocRef, cid)
             batch.set(msgsDocRef, message)
@@ -196,7 +194,7 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
                     }
             } else {
                 clearMessages()
-                updateChatInfo(timeSlot, otherUser)
+                updateChatInfo(timeSlot, requester, offerer)
             }
         }
     }
@@ -264,9 +262,10 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     /* Function to call to get Interested */
-    fun requestService() {
-        val requestRef = db.collection("requests").document(chat.value!!.requestId)
-        val cli = _chat.value!!
+    fun requestService(chat : Chat) {
+//        Log.d("chatViewModel", _chat.value!!.toString())
+        val requestRef = db.collection("requests").document(chat.requestId)
+        val cli = chat
         val req = cli.copy(
             status = Chat.STATUS_INTERESTED
         )
