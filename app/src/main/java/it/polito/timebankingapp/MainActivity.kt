@@ -68,7 +68,6 @@ class MainActivity : AppCompatActivity() {
                 counterView.visibility = View.VISIBLE
             }
             else {
-
                 counterView.visibility = View.GONE
             }
         }
