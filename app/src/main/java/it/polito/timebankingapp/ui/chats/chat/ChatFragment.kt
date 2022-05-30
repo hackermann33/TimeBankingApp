@@ -10,6 +10,7 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.ktx.auth
@@ -27,7 +28,7 @@ import java.util.*
 class ChatFragment : Fragment(R.layout.fragment_chat) {
 
     private lateinit var rv: RecyclerView
-
+    private lateinit var currentChat: Chat
     private lateinit var adTmp: ChatViewAdapter
     private lateinit var textMessage: EditText
     private lateinit var layoutManager: LinearLayoutManager
@@ -39,6 +40,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 
         /*TODO(To remove glitch between transictions (require -> offerer) use a bundle to understand where do you come from)  */
         chatVm.chat.observe(viewLifecycleOwner) { cli ->
+            currentChat = cli
             updateChatUi(view, cli)
         }
 
@@ -124,8 +126,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 
 
         btnRequireService.setOnClickListener {
-            btnRequireService.isEnabled =
-                false /*TODO(Reabilitate if error happens during requests) */
+            btnRequireService.isEnabled = false /*TODO(Reabilitate if error happens during requests) */
             chatVm.requestService(cli)
         }
 
@@ -178,8 +179,6 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 
 
 
-
-
         civProfilePic.setOnClickListener {
             v.findNavController().navigate(
                 R.id.action_nav_chat_to_nav_showProfile,
@@ -200,10 +199,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 
 
     fun sendMessage(chatMessage: ChatMessage) {
-        when (chatVm.chat.value!!.status) {
-            Chat.STATUS_UNINTERESTED -> chatVm.sendMessageAndUpdate(chatMessage) /* This means that we're creating the request also*/
-            Chat.STATUS_INTERESTED -> chatVm.sendMessageAndUpdate(chatMessage)
-        }
+        chatVm.sendMessageAndUpdate(currentChat, chatMessage ) /* This means that we're creating the request also*/
     }
 
     companion object {

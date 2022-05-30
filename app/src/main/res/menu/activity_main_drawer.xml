@@ -35,6 +35,7 @@
             android:id="@+id/nav_allChatsList"
             android:icon="@drawable/ic_baseline_chat_24"
             android:title="@string/chats"
+            app:actionLayout="@layout/nav_counter"
             />
         <!--<item
             android:id="@+id/nav_addReview"

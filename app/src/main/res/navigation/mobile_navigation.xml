@@ -75,6 +75,9 @@
         <action
             android:id="@+id/action_nav_timeSlotDetails_to_nav_showProfile"
             app:destination="@id/nav_showProfile" />
+        <action
+            android:id="@+id/action_nav_timeSlotDetails_to_nav_chat"
+            app:destination="@id/nav_chat" />
     </fragment>
 
     <fragment

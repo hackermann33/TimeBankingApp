@@ -85,7 +85,6 @@
                 android:id="@+id/imageView3"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:backgroundTint="?attr/colorPrimary"
                 android:visibility="visible"
                 app:ibv_badgePadding="2dp"
                 app:ibv_badgePosition="top_right"

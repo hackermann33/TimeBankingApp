@@ -19,6 +19,7 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import de.hdodenhof.circleimageview.CircleImageView
 import it.polito.timebankingapp.R
+import it.polito.timebankingapp.model.Chat
 import it.polito.timebankingapp.model.Helper
 import it.polito.timebankingapp.model.timeslot.TimeSlot
 import it.polito.timebankingapp.ui.chats.chat.ChatViewModel
@@ -36,6 +37,10 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
     private lateinit var type: String
     private lateinit var userId: String
 
+    private lateinit var btnRequestService: Button
+
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         userId = arguments?.getString("userId").toString()
@@ -49,12 +54,20 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
 
 
         val ts = globalModel.selectedTimeSlot.value
+        var status = chatVm.chat.value?.status ?: Chat.STATUS_UNINTERESTED
+
+        chatVm.chat.observe(viewLifecycleOwner) {
+            status = it.status
+            btnRequestService.isEnabled = status == Chat.STATUS_UNINTERESTED
+        }
+
+
         globalModel.selectedTimeSlot.observe(viewLifecycleOwner) {
             timeSlot = ts ?: TimeSlot()
             /*if (ts != null) {
                 if(ts.date.isNotEmpty()) ts.date.replace("_", "/")
             }*/
-            showTimeSlot(view, it)
+            showTimeSlot(view, it, status)
         }
 
         //showTimeSlot(view, arguments?.getSerializable("timeslot") as TimeSlot?) //temp
@@ -77,7 +90,7 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
     }
 
 
-    private fun showTimeSlot(view: View, ts: TimeSlot?) {
+    private fun showTimeSlot(view: View, ts: TimeSlot?, status: Int) {
         view.findViewById<TextView>(R.id.time_slot_title).text = (ts?.title)
         view.findViewById<TextView>(R.id.time_slot_date).text = ts?.date
         view.findViewById<TextView>(R.id.time_slot_time).text = ts?.time
@@ -87,10 +100,19 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
         view.findViewById<TextView>(R.id.time_slot_restrictions).text = ts?.restrictions
 
         if (type == "skill_specific") {
+
+            //se esiste già una richiesta, disabilita btnRequestService
+
+
             view.findViewById<ConstraintLayout>(R.id.layout_offerer)
                 .also { it.visibility = View.VISIBLE }
-            val btnRequestService = view.findViewById<Button>(R.id.button_request_service)
-                .also { it.visibility = View.VISIBLE }
+            btnRequestService = view.findViewById<Button>(R.id.button_request_service)
+                .also {  it.visibility = View.VISIBLE }
+
+            if(status != Chat.STATUS_UNINTERESTED){
+                btnRequestService.isEnabled = false
+            }
+
             val btnAskInfo = view.findViewById<Button>(R.id.openChatButton)
             val civOffererPic = view.findViewById<CircleImageView>(R.id.offerer_pic)
             val pb = view.findViewById<ProgressBar>(R.id.progressBar3)
@@ -108,12 +130,12 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
 
             /* Rememeber to update number of chats for that timeSlot*/
             btnRequestService.setOnClickListener {
-                val timeSlotToRequest = ts
+                /*val timeSlotToRequest = ts
                 val chatId = Helper.makeRequestId(ts.id, Firebase.auth.uid!!)
 
                 globalModel.makeTimeSlotRequest(ts, profileViewModel.user.value!!)
                     .addOnSuccessListener {
-                        /* here I need to update chat */
+                        *//* here I need to update chat *//*
                         chatVm.updateChatInfo(
                             ts,
                             ts.offerer,
@@ -121,11 +143,12 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
                         )
 
                         Snackbar.make(view, "Request correctly sent!", Snackbar.LENGTH_SHORT).show()
-
+                        findNavController().navigate(R.id.action_nav_timeSlotDetails_to_nav_chat)
                     }.addOnFailureListener {
                         Snackbar.make(view, "Oops, something gone wrong!", Snackbar.LENGTH_SHORT)
                             .show()
-                    }
+                    }*/
+                chatVm.requestService(Chat(timeSlot = ts, requester = profileViewModel.user.value!!.toCompactUser(), offerer = ts.offerer))
             }
 
         }

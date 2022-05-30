@@ -98,15 +98,17 @@
 
             <TextView
                 android:id="@+id/chat_list_item_last_message"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
 
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
                 android:singleLine="true"
                 android:text="@string/chat_list_item_message"
                 android:textColor="#757575"
                 app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/unread_msg_card"
                 app:layout_constraintStart_toEndOf="@+id/fragment_chats_list_item_rl_profile_pic"
                 app:layout_constraintTop_toBottomOf="@+id/chat_list_item_nick_name" />
 
@@ -114,15 +116,13 @@
                 android:id="@+id/unread_msg_card"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
+                android:layout_marginEnd="8dp"
                 android:backgroundTint="@color/primary"
                 android:minWidth="24dp"
                 android:minHeight="24dp"
                 app:cardCornerRadius="16dp"
                 app:layout_constraintBottom_toBottomOf="@+id/chat_list_item_last_message"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="1.0"
-                app:layout_constraintStart_toEndOf="@+id/chat_list_item_last_message"
                 app:layout_constraintTop_toTopOf="@+id/chat_list_item_last_message">
 
                 <TextView

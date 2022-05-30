@@ -12,7 +12,6 @@ import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
 
 import it.polito.timebankingapp.model.Helper.Companion.makeRequestId
-import it.polito.timebankingapp.model.Helper.Companion.toUser
 import it.polito.timebankingapp.model.Chat
 import it.polito.timebankingapp.model.Helper
 import it.polito.timebankingapp.model.chat.ChatMessage
@@ -66,36 +65,36 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
     }
 
 
-    fun sendMessageAndUpdate(message: ChatMessage){
-        val cid = chat.value!!
+    fun sendMessageAndUpdate(chat: Chat, message: ChatMessage){
+        if(!::messagesListener.isInitialized)
+            registerMessagesListener(chat)
 
-        val reqDocRef =  db.collection("requests").document(cid.requestId)
-        val msgsDocRef =  db.collection("requests").document(cid.requestId).collection("messages").document()
-        val timeSlotDocRef = db.collection("timeSlots").document(cid.timeSlotId)
+
+        val reqDocRef =  db.collection("requests").document(chat.requestId)
+        val msgsDocRef =  db.collection("requests").document(chat.requestId).collection("messages").document()
+        val timeSlotDocRef = db.collection("timeSlots").document(chat.timeSlotId)
+
         val incrementUnreadChats =
-            if(cid.requester.id == Firebase.auth.uid) {
-                if (cid.status == Chat.STATUS_UNINTERESTED) //I am requester, new request
+            if(chat.requester.id == Firebase.auth.uid) {
+                if (chat.status == Chat.STATUS_UNINTERESTED) //I am requester, new request
                     true
                 else
-                    cid.lastMessage.userId != Firebase.auth.uid
+                    chat.lastMessage.userId != Firebase.auth.uid
             }
             else
                 false
 
 
-        cid.sendMessage(message)
+        chat.sendMessage(message)
 
         db.runBatch { batch ->
-            batch.set(reqDocRef, cid)
+            batch.set(reqDocRef, chat)
             batch.set(msgsDocRef, message)
             if(incrementUnreadChats) {
                 batch.update(timeSlotDocRef, "unreadChats", FieldValue.increment(1))
                 batch.update(reqDocRef, "timeSlot.unreadChats", FieldValue.increment(1))
             }
         }.addOnSuccessListener {
-
-            if(!::messagesListener.isInitialized)
-                registerMessagesListener(cid)
             Log.d("sendMessageAndUpdate","Everything updated")
         }.addOnFailureListener{
             Log.d("sendMessageAndUpdate","Oh, no")
@@ -281,7 +280,9 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
 
         requestRef.set(req).addOnSuccessListener{ v ->
             _chat.postValue(chat)
-            sendMessageAndUpdate(ChatMessage(messageText = Helper.requestMessage(cli), userId = cli.requester.id, timestamp = Date()))
+
+            val msg = ChatMessage(messageText = Helper.requestMessage(cli), userId = cli.requester.id, timestamp = Date())
+            sendMessageAndUpdate(cli, msg)
         }
     }
 
