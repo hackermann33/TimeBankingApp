@@ -23,18 +23,15 @@
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintHorizontal_weight="1"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
 
             <ImageView
                 android:id="@+id/fragment_review_list_iv_profile_pic"
                 android:layout_width="64dp"
                 android:layout_height="64dp"
-                android:layout_marginStart="16dp"
+                android:layout_marginStart="8dp"
 
                 android:layout_marginTop="16dp"
+                android:layout_marginEnd="8dp"
                 android:layout_marginBottom="16dp"
                 android:src="@drawable/default_avatar" />
 
@@ -42,7 +39,13 @@
                 android:id="@+id/fragment_review_list_pb_profile_pic"
                 style="?android:attr/progressBarStyle"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/fragment_review_list_iv_profile_pic"
+                android:layout_alignBottom="@+id/fragment_review_list_iv_profile_pic"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="-64dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="16dp" />
         </RelativeLayout>
 
         <TextView

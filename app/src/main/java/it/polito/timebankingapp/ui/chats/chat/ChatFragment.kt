@@ -160,6 +160,9 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 
             }
             Chat.CHAT_TYPE_TO_REQUESTER -> {
+                btnRequireService.visibility = View.GONE
+                btnDiscardRequest.visibility = View.VISIBLE
+                btnAcceptRequest.visibility = View.VISIBLE
                 rbReviewScore.rating = otherUser.asRequesterReview.score.toFloat()
                 tvReviewsNumber.text = "${otherUser.asRequesterReview.number} reviews"
                 Log.d(TAG, "TYPE TO REQUESTER")
