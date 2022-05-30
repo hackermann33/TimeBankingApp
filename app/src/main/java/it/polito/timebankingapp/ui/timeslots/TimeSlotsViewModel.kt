@@ -57,7 +57,7 @@ class TimeSlotsViewModel(application: Application): AndroidViewModel(application
     init {
         Firebase.auth.addAuthStateListener {
             if (it.currentUser != null) {
-                updatePersonalTimeSlots()
+                //updatePersonalTimeSlots()
                 /*updateSkillSpecificTimeSlots(skill)*/
                 retrieveSkillList()
             }
