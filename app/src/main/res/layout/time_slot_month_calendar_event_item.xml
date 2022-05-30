@@ -31,41 +31,55 @@
                 android:id="@+id/calendar_item_ts_title"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:textSize="20sp"
+                android:layout_marginEnd="8dp"
                 android:fontFamily="@font/roboto_medium"
                 android:text="@string/calendar_item_ts_title"
-                app:layout_constraintEnd_toEndOf="parent"
+                android:textSize="20sp"
+                app:layout_constraintEnd_toStartOf="@+id/calendar_item_ts_complete"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <View
                 android:id="@+id/divider18"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="1dp"
+                android:layout_marginEnd="8dp"
                 android:background="?android:attr/listDivider"
                 app:layout_constraintBottom_toTopOf="@+id/calendar_item_ts_location"
-                app:layout_constraintTop_toBottomOf="@+id/calendar_item_ts_title"
-                tools:layout_editor_absoluteX="16dp" />
+                app:layout_constraintEnd_toStartOf="@+id/calendar_item_ts_complete"
+                app:layout_constraintTop_toBottomOf="@+id/calendar_item_ts_title" />
+
+            <ImageButton
+                android:id="@+id/calendar_item_ts_complete"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:backgroundTint="?attr/colorPrimary"
+                android:contentDescription="@string/complete_task"
+                android:visibility="visible"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_baseline_check_circle_outline_24"
+                app:tint="#FFFFFF" />
 
             <TextView
-                android:textColor="#8E8E8E"
                 android:id="@+id/textView9"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="16dp"
                 android:text="@string/location_label"
+                android:textColor="#8E8E8E"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/calendar_item_ts_title" />
 
             <TextView
-                android:textColor="#8E8E8E"
                 android:id="@+id/calendar_item_ts_location"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-
                 android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
+
                 android:text="@string/time_slots_item_location"
+                android:textColor="#8E8E8E"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/textView9"
                 app:layout_constraintTop_toBottomOf="@+id/calendar_item_ts_title" />

@@ -9,7 +9,6 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.annotation.ColorRes
 import androidx.annotation.LayoutRes
-import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.core.view.children
 import androidx.core.view.isVisible
@@ -28,10 +27,8 @@ import it.polito.timebankingapp.R
 import it.polito.timebankingapp.databinding.FragmentTimeSlotMonthCalendarBinding
 import it.polito.timebankingapp.databinding.TimeSlotMonthCalendarDayBinding
 import it.polito.timebankingapp.databinding.TimeSlotMonthCalendarHeaderBinding
-import it.polito.timebankingapp.model.timeslot.TimeSlot
 import it.polito.timebankingapp.ui.profile.ProfileViewModel
 import it.polito.timebankingapp.ui.timeslots.TimeSlotsViewModel
-import it.polito.timebankingapp.ui.timeslots.timeslots_list.TimeSlotAdapter
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.YearMonth
@@ -45,15 +42,7 @@ class TimeSlotMonthCalendar : Fragment(R.layout.fragment_time_slot_month_calenda
     private val userVm: ProfileViewModel by activityViewModels()
 
 
-    private val eventsAdapter = TimeSlotMonthCalendarEventsAdapter {
-        AlertDialog.Builder(requireContext())
-            .setMessage(R.string.dialog_delete_confirmation)
-            .setPositiveButton(R.string.delete) { _, _ ->
-                deleteEvent(it)
-            }
-            .setNegativeButton(R.string.close, null)
-            .show()
-    }
+    private val eventsAdapter = TimeSlotMonthCalendarEventsAdapter(vm)
 /*
     private val inputDialog by lazy {
         val editText = AppCompatEditText(requireContext())
