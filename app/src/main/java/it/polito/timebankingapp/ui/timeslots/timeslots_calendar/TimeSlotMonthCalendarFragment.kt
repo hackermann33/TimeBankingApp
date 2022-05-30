@@ -267,6 +267,13 @@ class TimeSlotMonthCalendar : Fragment(R.layout.fragment_time_slot_month_calenda
         }
         binding.exThreeSelectedDateText.text = selectionFormatter.format(date)
     }
+
+    override fun onDetach() {
+        vm.clearTimeSlots()
+        vm.setIsEmptyFlag(false)
+        //vm.justUpdated = false
+        super.onDetach()
+    }
 }
 
 private fun View.makeVisible() {
