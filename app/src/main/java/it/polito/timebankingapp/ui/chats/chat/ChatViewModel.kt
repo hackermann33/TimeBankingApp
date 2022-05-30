@@ -167,18 +167,17 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
 
 
     /* Coming from TimeSlotDetail or TimeSlotList, check if requests from current user to timeSlot exists, otherwise download just the userProfile */
-    fun selectChatFromTimeSlot(timeSlot: TimeSlot, requester: CompactUser, offerer: CompactUser) {
+    fun selectChatFromTimeSlot(timeSlot: TimeSlot, requester: CompactUser) {
         val chatId = makeRequestId(timeSlot.id, Firebase.auth.uid!!)
         val chatRef = db.collection("requests").document(chatId)
 
-
+        Log.d("selectChatFromTimeSlot", "timeSlot: $timeSlot requester: $requester, offerer: ${timeSlot.offerer}")
 
         /* If the request already exists, download it, otherwise just download offerer profile and don't make the request. */
         chatRef.get().addOnSuccessListener { docSnapShot ->
             if (docSnapShot.exists()) {
                 /*Download user profile */
                 updateChatInfo(chatRef)
-
 
                 /* Download messages */
                 messagesListener = chatRef.collection("messages").orderBy("timestamp")
@@ -190,20 +189,21 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
                     }
             } else {
                 clearMessages()
-                updateChatInfo(timeSlot, requester, offerer)
+                updateChatInfo(timeSlot, requester)
             }
         }
     }
 
-    /* Update chatInfo from users table given a timeSlot*/
-    fun updateChatInfo(timeSlot: TimeSlot, currentUser: CompactUser, offerer: CompactUser, requestService: Boolean = false) {
+    /* Update chatInfo (chat not yet created on db) from users table given a timeSlot*/
+    fun updateChatInfo(timeSlot: TimeSlot, currentUser: CompactUser, requestService: Boolean = false) {
         var user: User
 
         val chat = Chat(timeSlot = timeSlot,
-            offerer = offerer,
+            offerer = timeSlot.offerer,
             requester = currentUser,
             status = Chat.STATUS_UNINTERESTED)
 
+        _chat.postValue(chat)
 
 
 //        Log.d("ChatViewModel", "chat: ${_chat.value!!}")
@@ -211,7 +211,6 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
         if(requestService)
             requestService(chat)
 
-        _chat.postValue(chat)
         /*otherUserListener = db.collection("users").document(timeSlot.userId)
             .addSnapshotListener { v, e ->
                 if (e == null) {

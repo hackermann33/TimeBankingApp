@@ -70,6 +70,7 @@ class TimeSlotsViewModel(application: Application): AndroidViewModel(application
 
     fun updateSkillSpecificTimeSlots(skill: String) {
         Log.d("selectedSkill", "updateSkillSpecificTimeSlos: selectedSkill: ${skill}")
+
         l = db.collection("timeSlots").whereNotEqualTo("userId", Firebase.auth.uid).whereEqualTo("relatedSkill",skill).addSnapshotListener{v,e ->
             if(e == null){
                 _timeSlots.value = v!!.mapNotNull { d -> d.toObject<TimeSlot>() }
@@ -222,15 +223,18 @@ class TimeSlotsViewModel(application: Application): AndroidViewModel(application
     fun setFilteringSkill(skill: String) {
 
         Log.d("selectedSkill", "setFilteringSkill: $skill")
+        if(skill != _selectedSkill.value){
+            clearTimeSlots()
+        }
         _selectedSkill.postValue(skill)
         updateSkillSpecificTimeSlots(skill)
     }
 
     /* This is used to create a request to the offerer through chat */
-    fun requestTimeSlot(ts: TimeSlot, currentUser: User, offerer: User) : Task<Void> {
+    fun makeTimeSlotRequest(ts: TimeSlot, currentUser: User) : Task<Void> {
         val chatId = Helper.makeRequestId(ts.id, currentUser.id)
         val  req = Chat(timeSlot = ts, requester = currentUser.toCompactUser(),
-            offerer = offerer.toCompactUser(), status = Chat.STATUS_INTERESTED, unreadMsgs = 0)
+            offerer = ts.offerer, status = Chat.STATUS_INTERESTED, unreadMsgs = 0)
 
             /*
             UPDATE UNREAD CHATS
