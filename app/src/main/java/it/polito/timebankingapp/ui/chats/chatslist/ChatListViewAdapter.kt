@@ -27,10 +27,10 @@ class ChatListViewAdapter(
     private var displayData = data.toMutableList()
 
     class ItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private var tvOtherFullName: TextView = itemView.findViewById(R.id.chat_list_item_fullname)
+        private var tvTimeSlotTitle: TextView = itemView.findViewById(R.id.chat_list_item_time_slot_title)
         var tvLastMessage: TextView = itemView.findViewById(R.id.chat_list_item_last_message)
         var tvLastMessageTime: TextView = itemView.findViewById(R.id.chat_list_item_timestamp)
-        var tvTimeSlotTitle: TextView = itemView.findViewById(R.id.chat_list_item_time_slot_title)
+        var otherUserNick: TextView = itemView.findViewById(R.id.chat_list_item_nick_name)
         var pbOtherProfilePic: ProgressBar =itemView.findViewById(R.id.progressBar)
 
         private val civImagePic: CircleImageView = itemView.findViewById(R.id.chat_profile_pic)
@@ -45,7 +45,7 @@ class ChatListViewAdapter(
 //            numNotifiesText.text =  "(1)" //logica conteggio non letti da implementare in futuro
 
             val otherUser = Helper.getOtherUser(cli)
-            tvOtherFullName.text = otherUser.nick
+            tvTimeSlotTitle.text = cli.timeSlot.title
             tvLastMessage.text = cli.lastMessage.messageText
             if(cli.lastMessage.userId != Firebase.auth.uid) {
                 if (cli.unreadMsgs > 0)
@@ -56,7 +56,7 @@ class ChatListViewAdapter(
             else
                 unreadMsgCard.visibility = View.GONE
             tvLastMessageTime.text = Helper.dateToDisplayString(cli.lastMessage.timestamp)
-            tvTimeSlotTitle.text = cli.timeSlot.title
+            otherUserNick.text =  otherUser.nick
             // sarebbe da mettere il last message della chat dentro il documento in userRooms (per l'anteprima)
             // e anche le altre info riguardo a tempo e conteggio non letti e foto profilo altro utente
 

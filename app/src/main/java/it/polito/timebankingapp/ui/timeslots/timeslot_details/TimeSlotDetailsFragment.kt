@@ -116,7 +116,7 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
                         /* here I need to update chat */
                         chatVm.updateChatInfo(
                             ts,
-                            profileViewModel.timeslotUser.value!!.toCompactUser(),
+                            ts.offerer,
                             true
                         )
 
@@ -128,17 +128,17 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
                     }
             }
 
-            val chipGroup = view.findViewById<ChipGroup>(R.id.time_slot_skillsGroup)
-
-            chipGroup.removeAllViews()
-            val chip = layoutInflater.inflate(
-                R.layout.chip_layout_show,
-                chipGroup!!.parent.parent as ViewGroup,
-                false
-            ) as Chip
-            chip.text = ts?.relatedSkill
-            chipGroup.addView(chip)
         }
+        val chipGroup = view.findViewById<ChipGroup>(R.id.time_slot_skillsGroup)
+
+        chipGroup.removeAllViews()
+        val chip = layoutInflater.inflate(
+            R.layout.chip_layout_show,
+            chipGroup!!.parent.parent as ViewGroup,
+            false
+        ) as Chip
+        chip.text = ts?.relatedSkill
+        chipGroup.addView(chip)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
