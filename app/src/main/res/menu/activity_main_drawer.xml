@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:showIn="navigation_view">
 
     <group android:checkableBehavior="single">
@@ -18,6 +19,7 @@
             android:id="@+id/nav_personalTimeSlotList"
             android:icon="@drawable/ic_baseline_ts_list_add_24"
             android:title="@string/menu_drawer_timeslots_list"
+            app:actionLayout="@layout/nav_counter"
             />
         <item
             android:id="@+id/nav_interestingTimeSlotList"

@@ -37,13 +37,12 @@
                 android:id="@+id/layout_offerer"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="0.8"
-                android:orientation="horizontal"
-                android:visibility="gone">
+                android:layout_weight="0.7"
+                android:orientation="horizontal">
 
 
                 <RelativeLayout
-                    android:id="@+id/recyclerView"
+                    android:id="@+id/relativeLayout"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     android:layout_marginStart="8dp"
@@ -71,18 +70,19 @@
                     android:id="@+id/offerer_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
-                    android:layout_marginBottom="8dp"
                     android:fontFamily="sans-serif-medium"
                     android:text="nickname"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                     android:textStyle="bold"
                     app:layout_constraintBottom_toTopOf="@+id/ratingBar2"
                     app:layout_constraintEnd_toStartOf="@+id/openChatButton"
-                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintHorizontal_chainStyle="spread"
-                    app:layout_constraintStart_toEndOf="@+id/recyclerView"
+                    app:layout_constraintStart_toEndOf="@+id/relativeLayout"
                     app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.25"
                     app:layout_constraintVertical_chainStyle="packed" />
 
                 <RatingBar
@@ -90,14 +90,15 @@
                     style="@style/Widget.AppCompat.RatingBar.Small"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
                     android:contentDescription="@string/rating_bar"
                     android:numStars="5"
                     android:rating="3"
                     android:theme="@style/RatingBar"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/openChatButton"
-                    app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintStart_toEndOf="@+id/recyclerView"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toEndOf="@+id/relativeLayout"
                     app:layout_constraintTop_toBottomOf="@+id/offerer_name" />
 
 
@@ -133,7 +134,6 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:orientation="vertical"
                 android:padding="16dp">
 

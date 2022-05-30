@@ -60,6 +60,19 @@ class MainActivity : AppCompatActivity() {
         val drawerLayout: DrawerLayout = binding.drawerLayout
         val navView: NavigationView = binding.navView
 
+        val counterView = navView.menu.findItem(R.id.nav_personalTimeSlotList).actionView.findViewById<TextView>(R.id.counter)
+
+        timeSlotVm.unreadChats.observe(this){
+            if(it > 0){
+                counterView.text = it.toString()
+                counterView.visibility = View.VISIBLE
+            }
+            else {
+
+                counterView.visibility = View.GONE
+            }
+        }
+
 
 
         navController = findNavController(R.id.nav_host_fragment_content_main)

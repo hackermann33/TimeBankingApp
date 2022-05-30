@@ -8,7 +8,7 @@ import it.polito.timebankingapp.model.timeslot.TimeSlot
 import it.polito.timebankingapp.model.user.CompactUser
 import java.util.*
 
-data class ChatsListItem(
+data class Chat(
     val timeSlot: TimeSlot = TimeSlot(), val requester: CompactUser = CompactUser(), val offerer: CompactUser = CompactUser(),
     val lastMessageText: String = "",
     val lastMessageTime: Date = Date(),
@@ -23,18 +23,14 @@ data class ChatsListItem(
     /* This could be useless, put just to be safe*/
     val timeSlotId: String = timeSlot.id
 
-
-    init {
-        val users = listOf(requester.id, offerer.id)
-
-}
+    val users = listOf(requester.id, offerer.id)
 
 
-    fun incUnreadMsg(): ChatsListItem {
+    fun incUnreadMsg(): Chat {
         return this.copy(unreadMsgs = unreadMsgs+1)
     }
 
-    fun sendFirstMessage(cm: ChatMessage): ChatsListItem {
+    fun sendFirstMessage(cm: ChatMessage): Chat {
         return this.copy(status = STATUS_INTERESTED, lastMessageText = cm.messageText, lastMessageTime = cm.timestamp.time)
     }
 
@@ -48,9 +44,11 @@ data class ChatsListItem(
     companion object {
         const val CHAT_TYPE_TO_REQUESTER = 0
         const val CHAT_TYPE_TO_OFFERER = 1
+
         const val STATUS_UNINTERESTED = -1
         const val STATUS_INTERESTED = 0
         const val STATUS_ACCEPTED = 1
+        const val STATUS_DISCARDED = 2
     }
 }
 

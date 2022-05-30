@@ -7,18 +7,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.firestore.DocumentReference
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.ListenerRegistration
-import com.google.firebase.firestore.QueryDocumentSnapshot
+import com.google.firebase.firestore.*
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
-import it.polito.timebankingapp.R
-import it.polito.timebankingapp.model.Helper.Companion.fromRequestToChat
 
 import it.polito.timebankingapp.model.Helper.Companion.makeRequestId
 import it.polito.timebankingapp.model.Helper.Companion.toUser
-import it.polito.timebankingapp.model.ChatsListItem
+import it.polito.timebankingapp.model.Chat
 import it.polito.timebankingapp.model.Helper
 import it.polito.timebankingapp.model.chat.ChatMessage
 import it.polito.timebankingapp.model.timeslot.TimeSlot
@@ -31,8 +26,8 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
     private val _chatMessages = MutableLiveData<List<ChatMessage>>()
     val chatMessages: LiveData<List<ChatMessage>> = _chatMessages
 
-    private val _chat = MutableLiveData<ChatsListItem>()
-    val chat: LiveData<ChatsListItem> = _chat
+    private val _chat = MutableLiveData<Chat>()
+    val chat: LiveData<Chat> = _chat
 
 
     private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
@@ -43,10 +38,10 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
 
     /* Function invoked when first message is sent ( and the request isn't been created)*/
     fun sendFirstMessage(message: ChatMessage) {
-        val req = _chat.value!!.copy(status = ChatsListItem.STATUS_INTERESTED)
+        val req = _chat.value!!.copy(status = Chat.STATUS_INTERESTED)
         val requestRef = db.collection("requests").document(chat.value!!.requestId)
         requestRef.set(req).addOnSuccessListener {
-            assert(_chat.value!!.status == ChatsListItem.STATUS_UNINTERESTED)
+            assert(_chat.value!!.status == Chat.STATUS_UNINTERESTED)
 
             requestRef.collection("messages").document().set(
                 mapOf(
@@ -55,6 +50,9 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
                     "userId" to message.userId,
                 )
             ).addOnSuccessListener {
+                /*update unreadChats*/
+                db.collection("timeSlots").document(chat.value!!.timeSlotId).update("unreadChats", FieldValue.increment(1))
+
                 _chatMessages.postValue(listOf(message))
                 registerMessagesListener(req)
             }
@@ -76,10 +74,10 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
         val requestRef = db.collection("requests").document(chat.value!!.requestId)
 
         requestRef.get().addOnSuccessListener { /* Chat correctly taken -> sendTheMessage */
-            _chat.value =
+            /*_chat.value =
                 chat.value!!.copy(unreadMsgs = it.getLong("unreadMsgs")?.toInt() ?: 0)
-            Log.d("sendMessage", "{$_chat.value}")
-
+                Log.d("sendMessage", "{$_chat.value}")
+*/
             requestRef.collection("messages").document().set(
                 mapOf(
                     "messageText" to message.messageText,
@@ -95,7 +93,9 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
                         "unreadMsgs" to chat.value!!.unreadMsgs + 1,
                     )
                 ).addOnSuccessListener { //Field correctly updated -> update View Model
-                    _chat.value = chat.value!!.incUnreadMsg()
+                    //_chat.value = chat.value!!.incUnreadMsg()
+                    _chat.value!!.incUnreadMsg()
+
                     Log.d("sendMessage", "success")
                 }
             }.addOnFailureListener { Log.d("sendMessage", "failure") }
@@ -121,8 +121,13 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     /* Coming from a chatListFragment -> download just the messages */
-    fun registerMessagesListener(chat: ChatsListItem) {
+    fun registerMessagesListener(chat: Chat) {
         _chat.value = chat
+
+
+        db.collection("requests").document(chat.requestId) .update("unreadMsgs", 0)
+        db.collection("timeSlots").document(chat.timeSlotId) .update("unreadMsgs", 0)
+
 
         messagesListener = db.collection("requests").document(chat.requestId).collection("messages")
             .orderBy("timestamp")
@@ -132,6 +137,9 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
                 } else
                     _chatMessages.value = emptyList()
             }
+
+
+
     }
 
 
@@ -171,11 +179,11 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
                         user =
                             v.toUser()!! /* If u get an exception here, something is not updated in db */
 
-                        _chat.value = ChatsListItem().copy(
+                        _chat.value = Chat().copy(
                             timeSlot = timeSlot,
                             offerer = user.toCompactUser(),
                             requester = otherUser,
-                            status = ChatsListItem.STATUS_UNINTERESTED,
+                            status = Chat.STATUS_UNINTERESTED,
                         )
                     }
                 }
@@ -186,7 +194,7 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
     fun updateChatInfo(chatRef: DocumentReference) {
         otherUserListener = chatRef.addSnapshotListener { v, e ->
             if (e == null) {
-                val req = v!!.toObject<ChatsListItem>()
+                val req = v!!.toObject<Chat>()
                 if (req != null) {
                     _chat.value = (req)
 
@@ -199,7 +207,7 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun clearChat() {
-        _chat.postValue(ChatsListItem())
+        _chat.postValue(Chat())
         _chatMessages.value = listOf()
     }
 
@@ -213,11 +221,20 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
 
         val cli = _chat.value!!
         val req = cli.copy(
-            status = ChatsListItem.STATUS_INTERESTED
+            status = Chat.STATUS_INTERESTED
         )
 
         requestRef.set(req).addOnSuccessListener{ v ->
             sendFirstMessage(ChatMessage(messageText = Helper.requestMessage(cli), userId = cli.requester.id))
         }
     }
+
+    fun acceptRequest() {
+        _chat.value = chat.value?.copy(status=Chat.STATUS_ACCEPTED)
+    }
+
+    fun discardRequest() {
+        _chat.value = chat.value?.copy(status=Chat.STATUS_DISCARDED)
+    }
+
 }

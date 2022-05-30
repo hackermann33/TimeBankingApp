@@ -12,7 +12,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
-import it.polito.timebankingapp.model.ChatsListItem
+import it.polito.timebankingapp.model.Chat
 import it.polito.timebankingapp.model.Helper
 import it.polito.timebankingapp.model.timeslot.TimeSlot
 import it.polito.timebankingapp.model.user.User
@@ -28,6 +28,10 @@ class TimeSlotsViewModel(application: Application): AndroidViewModel(application
 
     private val _selectedTimeSlot =  MutableLiveData<TimeSlot>()
     val selectedTimeSlot: LiveData<TimeSlot> = _selectedTimeSlot
+
+    private val _unreadChats = MutableLiveData<Int>()
+    val unreadChats : LiveData<Int> = _unreadChats
+
 
     lateinit var type: String
     private set
@@ -50,8 +54,8 @@ class TimeSlotsViewModel(application: Application): AndroidViewModel(application
     init {
         Firebase.auth.addAuthStateListener {
             if (it.currentUser != null) {
-                /*updatePersonalTimeSlots()
-                updateSkillSpecificTimeSlots(skill)*/
+                updatePersonalTimeSlots()
+                /*updateSkillSpecificTimeSlots(skill)*/
                 retrieveSkillList()
             }
         }
@@ -80,6 +84,9 @@ class TimeSlotsViewModel(application: Application): AndroidViewModel(application
         l = db.collection("timeSlots").whereEqualTo("userId", Firebase.auth.uid).addSnapshotListener{v,e ->
             if(e == null){
                 _timeSlots.value = v!!.mapNotNull { d -> d.toObject<TimeSlot>() }
+                var cnt = 0
+                _timeSlots.value!!.forEach{ ts -> if(ts.unreadChats > 0) cnt++}
+                _unreadChats.postValue(cnt)
                 _isEmpty.value = _timeSlots.value!!.isEmpty()
             } else {
                 _timeSlots.value = emptyList()
@@ -93,9 +100,9 @@ class TimeSlotsViewModel(application: Application): AndroidViewModel(application
     fun updateInterestingTimeSlots() {
         val myUid = Firebase.auth.uid!!
         db.collection("requests").whereEqualTo("requester.id", myUid)
-            .whereEqualTo("status", ChatsListItem.STATUS_INTERESTED).addSnapshotListener{ v, e ->
+            .whereEqualTo("status", Chat.STATUS_INTERESTED).addSnapshotListener{ v, e ->
                 if(e == null){
-                    val req = v!!.mapNotNull {  d -> d.toObject<ChatsListItem>()  }
+                    val req = v!!.mapNotNull {  d -> d.toObject<Chat>()  }
                     _timeSlots.value = req.mapNotNull {  r -> r.timeSlot }
                     _isEmpty.value = _timeSlots.value!!.isEmpty()
                 } else {
@@ -184,8 +191,8 @@ class TimeSlotsViewModel(application: Application): AndroidViewModel(application
     /* This is used to create a request to the offerer through chat */
     fun requestTimeSlot(ts: TimeSlot, currentUser: User, offerer: User) : Task<Void> {
         val chatId = Helper.makeRequestId(ts.id, currentUser.id)
-        val  req = ChatsListItem(timeSlot = ts, requester = currentUser.toCompactUser(),
-            offerer = offerer.toCompactUser(), status = ChatsListItem.STATUS_INTERESTED, unreadMsgs = 0)
+        val  req = Chat(timeSlot = ts, requester = currentUser.toCompactUser(),
+            offerer = offerer.toCompactUser(), status = Chat.STATUS_INTERESTED, unreadMsgs = 0)
 
             /*
             UPDATE UNREAD CHATS

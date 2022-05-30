@@ -14,7 +14,6 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.DocumentSnapshot
-import com.google.firebase.firestore.Exclude
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import it.polito.timebankingapp.model.user.CompactUser
@@ -77,11 +76,11 @@ class Helper {
         }
 
         /* If the current user is the requester, the chat will be a chat to an offer*/
-        fun getType(cli: ChatsListItem): Int = if (cli.requestId== Firebase.auth.uid) ChatsListItem.CHAT_TYPE_TO_OFFERER else ChatsListItem.CHAT_TYPE_TO_REQUESTER
+        fun getType(cli: Chat): Int = if (cli.requestId== Firebase.auth.uid) Chat.CHAT_TYPE_TO_OFFERER else Chat.CHAT_TYPE_TO_REQUESTER
 
 
-        fun getOtherUser(req: ChatsListItem): CompactUser {
-            return if(req.getType() == ChatsListItem.CHAT_TYPE_TO_OFFERER)
+        fun getOtherUser(req: Chat): CompactUser {
+            return if(req.getType() == Chat.CHAT_TYPE_TO_OFFERER)
                 req.offerer
             else
                 req.requester
@@ -127,15 +126,13 @@ class Helper {
             return requestId.split("_").last()
         }
 
-        fun getChatType(req: ChatsListItem): Int {
-            return if(req.offerer.id == Firebase.auth.uid) ChatsListItem.CHAT_TYPE_TO_REQUESTER else ChatsListItem.CHAT_TYPE_TO_OFFERER
+        fun getChatType(req: Chat): Int {
+            return if(req.offerer.id == Firebase.auth.uid) Chat.CHAT_TYPE_TO_REQUESTER else Chat.CHAT_TYPE_TO_OFFERER
         }
 
-        fun fromRequestToChat(r: ChatsListItem): ChatsListItem {
+        fun fromRequestToChat(r: Chat): Chat {
             return r // to remove
         }
-
-
 
 
         fun dateToDisplayString(d: Date): String {
@@ -150,9 +147,9 @@ class Helper {
 
         }
 
-        fun requestMessage(cli: ChatsListItem): String {
+        fun requestMessage(cli: Chat): String {
             return "Hi ${cli.offerer.nick}, I'm ${cli.requester.nick} and I'm interested" +
-                    "to your service (${cli.timeSlot.title}"
+                    " to your service (${cli.timeSlot.title})"
 
         }
     }

@@ -10,14 +10,14 @@ import com.google.firebase.firestore.*
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
 import it.polito.timebankingapp.model.Helper.Companion.fromRequestToChat
-import it.polito.timebankingapp.model.ChatsListItem
+import it.polito.timebankingapp.model.Chat
 
 
 class ChatListViewModel(application: Application): AndroidViewModel(application) {
 
 
-    private val _chatsList = MutableLiveData<List<ChatsListItem>>()
-    val chatsList : LiveData<List<ChatsListItem>> = _chatsList
+    private val _chatsList = MutableLiveData<List<Chat>>()
+    val chatsList : LiveData<List<Chat>> = _chatsList
 
 
     private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
@@ -71,7 +71,7 @@ class ChatListViewModel(application: Application): AndroidViewModel(application)
                 .orderBy("lastMessageTime", Query.Direction.DESCENDING).addSnapshotListener{ v, e ->
                     if(e == null){
                         Log.d("chatList", "chatList: ${_chatsList.value}")
-                        val requests = v!!.mapNotNull {  d -> d.toObject<ChatsListItem>()  }
+                        val requests = v!!.mapNotNull {  d -> d.toObject<Chat>()  }
                         _chatsList.value = requests.mapNotNull {  r ->
                             fromRequestToChat(r)
                         }
@@ -92,7 +92,7 @@ class ChatListViewModel(application: Application): AndroidViewModel(application)
             .addSnapshotListener{v,e ->
             if(e == null){
                 Log.d("chatList", "chatList: ${_chatsList.value}")
-                val requests = v!!.mapNotNull {  d -> d.toObject<ChatsListItem>()  }
+                val requests = v!!.mapNotNull {  d -> d.toObject<Chat>()  }
                 _chatsList.value = requests.mapNotNull {  r ->
                     fromRequestToChat(r)
                 }

@@ -118,14 +118,14 @@
         app:layout_constraintTop_toBottomOf="@+id/linearLayout3">
 
         <Button
-            android:id="@+id/fragment_chat_btn_deny"
+            android:id="@+id/fragment_chat_btn_discard"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="8dp"
             android:layout_weight="1"
             android:backgroundTint="#B71C1C"
-            android:text="@string/deny"
+            android:text="@string/discard"
             android:visibility="visible" />
 
         <Button

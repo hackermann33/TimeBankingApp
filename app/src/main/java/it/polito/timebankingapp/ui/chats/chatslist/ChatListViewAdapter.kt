@@ -12,12 +12,12 @@ import androidx.navigation.Navigation
 import com.google.android.material.chip.Chip
 import de.hdodenhof.circleimageview.CircleImageView
 import it.polito.timebankingapp.R
-import it.polito.timebankingapp.model.ChatsListItem
+import it.polito.timebankingapp.model.Chat
 import it.polito.timebankingapp.model.Helper
 
 class ChatListViewAdapter(
-    private var data: List<ChatsListItem>,
-    private var selectChat: (chat: ChatsListItem) -> Unit?,
+    private var data: List<Chat>,
+    private var selectChat: (chat: Chat) -> Unit?,
     /*private var updateUser: (userId: String) -> Unit?,*/
     val type: String,
 ) : RecyclerView.Adapter<ChatListViewAdapter.ItemViewHolder>() {
@@ -36,7 +36,7 @@ class ChatListViewAdapter(
         private val unreadMsgCard: CardView = itemView.findViewById(R.id.unread_msg_card)
         private val chipOffreq: Chip = itemView.findViewById(R.id.chipOffReq)
 
-        fun bind(cli: ChatsListItem, openChatAction: (v: View) -> Unit) {
+        fun bind(cli: Chat, openChatAction: (v: View) -> Unit) {
 //            fullNameText.text = "Nome Cognome" //necessario riferimento usr o timeslotusr
 //            messageText.text = cli.chatMessages[cli.chatMessages.size-1].messageText
 //            timeText.text = cli.chatMessages[cli.chatMessages.size-1].timestamp.split("-")[1] //se è di oggi mostra l'orario, altrimenti la data
@@ -55,7 +55,7 @@ class ChatListViewAdapter(
             // sarebbe da mettere il last message della chat dentro il documento in userRooms (per l'anteprima)
             // e anche le altre info riguardo a tempo e conteggio non letti e foto profilo altro utente
 
-            if(cli.getType() == ChatsListItem.CHAT_TYPE_TO_REQUESTER){
+            if(cli.getType() == Chat.CHAT_TYPE_TO_REQUESTER){
                 Helper.loadImageIntoView(civImagePic, pbOtherProfilePic , otherUser.profilePicUrl)
 
                 /* I am the offerer */

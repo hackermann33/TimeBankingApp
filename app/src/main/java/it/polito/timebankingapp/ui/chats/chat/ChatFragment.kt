@@ -16,7 +16,7 @@ import com.google.firebase.ktx.Firebase
 import de.hdodenhof.circleimageview.CircleImageView
 import it.polito.timebankingapp.R
 import it.polito.timebankingapp.model.Helper
-import it.polito.timebankingapp.model.ChatsListItem
+import it.polito.timebankingapp.model.Chat
 import it.polito.timebankingapp.model.chat.ChatMessage
 import it.polito.timebankingapp.model.user.CompactUser
 import java.util.*
@@ -96,7 +96,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
     }
 
 
-    private fun updateChatUi(v: View, cli: ChatsListItem) {
+    private fun updateChatUi(v: View, cli: Chat) {
         val civProfilePic = v.findViewById<CircleImageView>(R.id.chat_profile_pic)
         val rbReviewScore = v.findViewById<RatingBar>(R.id.fragment_chat_rb_review_score)
         val tvReviewsNumber = v.findViewById<TextView>(R.id.fragment_chat_tv_reviews_count)
@@ -104,45 +104,57 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         val tvProfileName = v.findViewById<TextView>(R.id.chat_profile_name)
         val btnAcceptRequest = v.findViewById<Button>(R.id.fragment_chat_btn_accept)
         val btnRequireService = v.findViewById<Button>(R.id.fragment_chat_btn_require_service)
-        val btnDenyRequest = v.findViewById<TextView>(R.id.fragment_chat_btn_deny)
+        val btnDiscardRequest = v.findViewById<TextView>(R.id.fragment_chat_btn_discard)
         val pbProfilePic = v.findViewById<ProgressBar>(R.id.fragment_chat_pb_profile_pic)
 
         val otherUser: CompactUser = Helper.getOtherUser(cli)
-        Helper.loadImageIntoView(civProfilePic,  pbProfilePic, otherUser.profilePicUrl)
+        Helper.loadImageIntoView(civProfilePic, pbProfilePic, otherUser.profilePicUrl)
+
+
+        btnRequireService.setOnClickListener {
+            btnRequireService.isEnabled =
+                false /*TODO(Reabilitate if error happens during requests) */
+            chatVm.requestService()
+        }
+
+        btnAcceptRequest.setOnClickListener {
+            chatVm.acceptRequest()
+        }
+
+        btnDiscardRequest.setOnClickListener {
+            chatVm.discardRequest()
+        }
 
         /* TODO(When image is clicked, navigation is not to the correct profile !!!) */
-        when(cli.getType()){
+        when (cli.getType()) {
 
             /* Chatting to the offerer */
-            ChatsListItem.CHAT_TYPE_TO_OFFERER -> {
-                btnDenyRequest.visibility = View.GONE
+            Chat.CHAT_TYPE_TO_OFFERER -> {
+                btnDiscardRequest.visibility = View.GONE
                 btnAcceptRequest.visibility = View.GONE
                 btnRequireService.visibility = View.VISIBLE
                 Log.d(TAG, "TYPE TO OFFERER")
                 when (cli.status) {
-                    ChatsListItem.STATUS_UNINTERESTED -> {
-                        btnRequireService.setOnClickListener{
-                            btnRequireService.isEnabled = false /*TODO(Reabilitate if error happens during requests) */
-                            chatVm.requestService()
-                            Log.d(TAG, "STATUS UNIINTERESTED")
-                    }}
-                    ChatsListItem.STATUS_INTERESTED -> {
+                    Chat.STATUS_UNINTERESTED -> {
+                        Log.d(TAG, "STATUS UNIINTERESTED")
+                    }
+                    Chat.STATUS_INTERESTED -> {
                         Log.d(TAG, "STATUS INTERESTED")
                         btnRequireService.isEnabled = false
                         btnRequireService.text = "Service requested"
                     }
-                    ChatsListItem.STATUS_ACCEPTED -> Log.d(TAG, "STATUS ACCEPTED")
+                    Chat.STATUS_ACCEPTED -> Log.d(TAG, "STATUS ACCEPTED")
                 }
 
             }
-            ChatsListItem.CHAT_TYPE_TO_REQUESTER -> {
+            Chat.CHAT_TYPE_TO_REQUESTER -> {
                 rbReviewScore.rating = otherUser.asRequesterReview.score.toFloat()
                 tvReviewsNumber.text = "${otherUser.asRequesterReview.number} reviews}"
                 Log.d(TAG, "TYPE TO REQUESTER")
                 when (cli.status) {
-                    ChatsListItem.STATUS_UNINTERESTED -> Log.d(TAG, "STATUS UNIINTERESTED")
-                    ChatsListItem.STATUS_INTERESTED -> Log.d(TAG, "STATUS INTERESTED")
-                    ChatsListItem.STATUS_ACCEPTED -> Log.d(TAG, "STATUS ACCEPTED")
+                    Chat.STATUS_UNINTERESTED -> Log.d(TAG, "STATUS UNIINTERESTED")
+                    Chat.STATUS_INTERESTED -> Log.d(TAG, "STATUS INTERESTED")
+                    Chat.STATUS_ACCEPTED -> Log.d(TAG, "STATUS ACCEPTED")
                 }
 
             }
@@ -173,9 +185,9 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 
 
     fun sendMessage(chatMessage: ChatMessage) {
-        when(chatVm.chat.value!!.status){
-            ChatsListItem.STATUS_UNINTERESTED -> chatVm.sendFirstMessage(chatMessage) /* This means that we're creating the request also*/
-            ChatsListItem.STATUS_INTERESTED -> chatVm.sendMessage(chatMessage)
+        when (chatVm.chat.value!!.status) {
+            Chat.STATUS_UNINTERESTED -> chatVm.sendFirstMessage(chatMessage) /* This means that we're creating the request also*/
+            Chat.STATUS_INTERESTED -> chatVm.sendMessage(chatMessage)
         }
     }
 

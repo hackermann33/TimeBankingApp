@@ -80,7 +80,7 @@
     <string name="fragment_show_profile_review_rating_score">Rating score</string>
     <string name="rating_bar">Rating Bar</string>
     <string name="n_reviews">0 reviews</string>
-    <string name="deny">Deny</string>
+    <string name="discard">Discard</string>
     <string name="accept">Accept</string>
     <string name="hint_enter_message">Enter Message</string>
     <string name="send">Send</string>
