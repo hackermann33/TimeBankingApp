@@ -55,7 +55,8 @@ class ChatViewAdapter(
 
 //            dateText.text = message.timestamp /*if(message.timestamp. =split("-")[0]= "skip") "" else message.timestamp.split("-")[0]*/
 //            timeText.text = message.timestamp /*.split("-")[1]*/
-            val cal = message.timestamp
+            val cal = Calendar.getInstance()
+            cal.time = message.timestamp
             val pattern = "MMM d, yyyy"
             val sdf  = SimpleDateFormat(pattern, Locale.getDefault())
             val date = sdf.format(cal.time)
@@ -84,7 +85,9 @@ class ChatViewAdapter(
         fun bind(message: ChatMessage, showDate: Boolean, chatDisabled: Boolean) {
             messageText.text = message.messageText
 
-            val cal = message.timestamp
+            val cal = Calendar.getInstance()
+            cal.time = message.timestamp
+
             val pattern = "MMM d, yyyy"
             val sdf  = SimpleDateFormat(pattern)
             val date = sdf.format(cal.time)
@@ -125,7 +128,8 @@ class ChatViewAdapter(
     //populate data for each inflated ViewHolder
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         var putDateText = false
-        if(position == 0 || messageList[position-1].timestamp[Calendar.DATE] != messageList[position].timestamp[Calendar.DATE] )
+
+        if(position == 0 || messageList[position-1].timestamp.date != messageList[position].timestamp.date )
           putDateText = true
 
         val message: ChatMessage = messageList[position] //text_gchat_date_me

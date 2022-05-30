@@ -68,8 +68,8 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
                 sendMessage(
                     ChatMessage(
                         Firebase.auth.currentUser!!.uid,
-                        textMessage.text.toString(),
-                        Calendar.getInstance(),
+                        textMessage.text.toString()/*,
+                        Calendar.getInstance(),*/
                     )
                 )
                 textMessage.text.clear()
@@ -198,8 +198,8 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 
     fun sendMessage(chatMessage: ChatMessage) {
         when (chatVm.chat.value!!.status) {
-            Chat.STATUS_UNINTERESTED -> chatVm.sendFirstMessage(chatMessage) /* This means that we're creating the request also*/
-            Chat.STATUS_INTERESTED -> chatVm.sendMessage(chatMessage)
+            Chat.STATUS_UNINTERESTED -> chatVm.sendMessageAndUpdate(chatMessage) /* This means that we're creating the request also*/
+            Chat.STATUS_INTERESTED -> chatVm.sendMessageAndUpdate(chatMessage)
         }
     }
 

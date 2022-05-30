@@ -1,5 +1,8 @@
 package it.polito.timebankingapp.model.timeslot
 
+/*
+not used
+
 import java.util.*
 
 data class CompactTimeSlot(
@@ -9,4 +12,4 @@ data class CompactTimeSlot(
     var fee: String = "",
     var nUnreadChats: Int = 0
 ) {
-}
+}*/

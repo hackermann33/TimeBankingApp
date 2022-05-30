@@ -44,11 +44,7 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
             assert(_chat.value!!.status == Chat.STATUS_UNINTERESTED)
 
             requestRef.collection("messages").document().set(
-                mapOf(
-                    "messageText" to message.messageText,
-                    "timestamp" to message.timestamp.time,
-                    "userId" to message.userId,
-                )
+                message
             ).addOnSuccessListener {
                 /*update unreadChats*/
                 db.collection("timeSlots").document(chat.value!!.timeSlotId).update("unreadChats", FieldValue.increment(1))
@@ -69,10 +65,32 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
         super.onCleared()
     }
 
+
+    fun sendMessageAndUpdate(message: ChatMessage){
+        val cid = chat.value!!
+        val reqDocRef =  db.collection("requests").document(cid.requestId)
+        val msgsDocRef =  db.collection("requests").document(cid.requestId).collection("messages").document()
+        val timeSlotDocRef = db.collection("timeSlots").document(cid.timeSlotId)
+
+        cid.sendMessage(message)
+
+        db.runBatch { batch ->
+            batch.set(reqDocRef, cid)
+            batch.set(msgsDocRef, message)
+            batch.update(timeSlotDocRef,"unreadChats", FieldValue.increment(1))
+        }.addOnSuccessListener {
+
+            if(!::messagesListener.isInitialized)
+                registerMessagesListener(cid)
+            Log.d("sendMessageAndUpdate","Everything updated")
+        }.addOnFailureListener{
+            Log.d("sendMessageAndUpdate","Oh, no")
+        }
+    }
+
+
     fun sendMessage(message: ChatMessage) {
-
         val requestRef = db.collection("requests").document(chat.value!!.requestId)
-
         requestRef.get().addOnSuccessListener { /* Chat correctly taken -> sendTheMessage */
             /*_chat.value =
                 chat.value!!.copy(unreadMsgs = it.getLong("unreadMsgs")?.toInt() ?: 0)
@@ -113,7 +131,7 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
             val cal = Calendar.getInstance()
             cal.time = timestamp.toDate()
 
-            ChatMessage(userId, messageText, cal)
+            ChatMessage(userId, messageText/*, cal*/)
         } catch (e: Exception) {
             e.printStackTrace()
             null
@@ -123,11 +141,6 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
     /* Coming from a chatListFragment -> download just the messages */
     fun registerMessagesListener(chat: Chat) {
         _chat.value = chat
-
-
-        db.collection("requests").document(chat.requestId) .update("unreadMsgs", 0)
-        db.collection("timeSlots").document(chat.timeSlotId) .update("unreadMsgs", 0)
-
 
         messagesListener = db.collection("requests").document(chat.requestId).collection("messages")
             .orderBy("timestamp")
@@ -218,14 +231,13 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
     /* Function to call to get Interested */
     fun requestService() {
         val requestRef = db.collection("requests").document(chat.value!!.requestId)
-
         val cli = _chat.value!!
         val req = cli.copy(
             status = Chat.STATUS_INTERESTED
         )
 
         requestRef.set(req).addOnSuccessListener{ v ->
-            sendFirstMessage(ChatMessage(messageText = Helper.requestMessage(cli), userId = cli.requester.id))
+            sendMessageAndUpdate(ChatMessage(messageText = Helper.requestMessage(cli), userId = cli.requester.id, timestamp = Date()))
         }
     }
 

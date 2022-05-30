@@ -8,13 +8,16 @@ import androidx.lifecycle.MutableLiveData
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.DocumentReference
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
 import it.polito.timebankingapp.model.Chat
 import it.polito.timebankingapp.model.Helper
+import it.polito.timebankingapp.model.chat.ChatMessage
 import it.polito.timebankingapp.model.timeslot.TimeSlot
+import it.polito.timebankingapp.model.user.CompactUser
 import it.polito.timebankingapp.model.user.User
 
 
@@ -231,3 +234,20 @@ class TimeSlotsViewModel(application: Application): AndroidViewModel(application
 
 
 }
+/*
+private fun DocumentSnapshot.toChat(): Chat? {
+        return try {
+            val timeSlot = get("timeSlot") as TimeSlot
+            val requester = get("requester") as CompactUser
+            val offerer = get("offerer") as CompactUser
+            val lastMessage = get("lastMessage") as ChatMessage
+            val status = get("status") as Long
+            val unreadMsgs= get("unreadMsgs") as Long
+
+            Chat(timeSlot, requester, offerer, lastMessage, status.toInt(), unreadMsgs.toInt())
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
+
+}*/

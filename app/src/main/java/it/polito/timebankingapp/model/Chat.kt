@@ -10,9 +10,8 @@ import java.util.*
 
 data class Chat(
     val timeSlot: TimeSlot = TimeSlot(), val requester: CompactUser = CompactUser(), val offerer: CompactUser = CompactUser(),
-    val lastMessageText: String = "",
-    val lastMessageTime: Date = Date(),
-    val status: Int = STATUS_UNINTERESTED,
+    var lastMessage: ChatMessage = ChatMessage(),
+    var status: Int = STATUS_UNINTERESTED,
     var unreadMsgs: Int = 1 //needed to check or condition (request is or as a requester or as an offerer)
 ) {
 
@@ -30,8 +29,12 @@ data class Chat(
         return this.copy(unreadMsgs = unreadMsgs+1)
     }
 
-    fun sendFirstMessage(cm: ChatMessage): Chat {
-        return this.copy(status = STATUS_INTERESTED, lastMessageText = cm.messageText, lastMessageTime = cm.timestamp.time)
+    fun sendFirstMessage(cm: ChatMessage) {
+        this.status = STATUS_INTERESTED
+        lastMessage = cm
+
+        timeSlot.unreadChats++
+        unreadMsgs = 1
     }
 
 
@@ -39,6 +42,16 @@ data class Chat(
     fun getType(): Int {
         /* If the current user is the requester, the chat will be a chat to an offer*/
         return if(requester.id == Firebase.auth.uid) CHAT_TYPE_TO_OFFERER else CHAT_TYPE_TO_REQUESTER
+    }
+
+    fun sendMessage(message: ChatMessage) {
+        if(status == STATUS_UNINTERESTED){ //FIRST MESSAGE
+            this.status = STATUS_INTERESTED
+            timeSlot.unreadChats++
+            unreadMsgs = 1
+        }
+        lastMessage = message
+        unreadMsgs++
     }
 
     companion object {

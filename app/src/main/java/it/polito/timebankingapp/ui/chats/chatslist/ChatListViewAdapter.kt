@@ -44,14 +44,13 @@ class ChatListViewAdapter(
 
             val otherUser = Helper.getOtherUser(cli)
             tvOtherFullName.text = otherUser.nick
-            tvLastMessage.text = cli.lastMessageText
+            tvLastMessage.text = cli.lastMessage.messageText
             if(cli.unreadMsgs > 0)
                 nUnreadMsg.text = cli.unreadMsgs.toString()
             else
                 unreadMsgCard.visibility = View.GONE
-            tvLastMessageTime.text = Helper.dateToDisplayString(cli.lastMessageTime)
+            tvLastMessageTime.text = Helper.dateToDisplayString(cli.lastMessage.timestamp)
             tvTimeSlotTitle.text = cli.timeSlot.title
-            cli.lastMessageTime
             // sarebbe da mettere il last message della chat dentro il documento in userRooms (per l'anteprima)
             // e anche le altre info riguardo a tempo e conteggio non letti e foto profilo altro utente
 
