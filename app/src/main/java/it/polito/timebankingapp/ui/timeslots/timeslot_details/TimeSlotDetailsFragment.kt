@@ -188,7 +188,7 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
     fun showTimeSlotRequest(timeSlot: TimeSlot) {
         val chatId = Helper.makeRequestId(timeSlot.id, Firebase.auth.uid!!)
         profileViewModel.getUserFromId(timeSlot.userId).addOnSuccessListener {
-            it.toUser()?.let { it1 -> chatVm.selectChatFromTimeSlot(timeSlot, it1.toCompactUser()) }
+            it.toUser()?.let { it1 -> chatVm.selectChatFromTimeSlot(timeSlot, profileViewModel.user.value!!.toCompactUser(), it1.toCompactUser() ) }
         }
     }
 

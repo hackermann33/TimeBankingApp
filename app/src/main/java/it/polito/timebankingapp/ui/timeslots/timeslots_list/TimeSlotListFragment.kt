@@ -147,7 +147,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_timeslots_list) {
     }
 
     fun showTimeSlotRequest(timeSlot: TimeSlot) {
-        chatVm.selectChatFromTimeSlot(timeSlot, userVm.user.value!!.toCompactUser())
+        chatVm.selectChatFromTimeSlot(timeSlot, userVm.timeslotUser.value!!.toCompactUser(), userVm.user.value!!.toCompactUser())
         //chatVm.updateUserInfo(timeSlot.userId)
     }
 
