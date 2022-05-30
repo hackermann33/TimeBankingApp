@@ -13,18 +13,20 @@ import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.QueryDocumentSnapshot
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
+import it.polito.timebankingapp.R
 import it.polito.timebankingapp.model.Helper.Companion.fromRequestToChat
 
 import it.polito.timebankingapp.model.Helper.Companion.makeRequestId
 import it.polito.timebankingapp.model.Helper.Companion.toUser
 import it.polito.timebankingapp.model.ChatsListItem
+import it.polito.timebankingapp.model.Helper
 import it.polito.timebankingapp.model.chat.ChatMessage
 import it.polito.timebankingapp.model.timeslot.TimeSlot
 import it.polito.timebankingapp.model.user.CompactUser
 import it.polito.timebankingapp.model.user.User
 import java.util.*
 
-class ChatViewModel(application: Application): AndroidViewModel(application) {
+class ChatViewModel(application: Application) : AndroidViewModel(application) {
 
     private val _chatMessages = MutableLiveData<List<ChatMessage>>()
     val chatMessages: LiveData<List<ChatMessage>> = _chatMessages
@@ -36,71 +38,68 @@ class ChatViewModel(application: Application): AndroidViewModel(application) {
     private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
 
     private lateinit var messagesListener: ListenerRegistration
-    private lateinit var requestListener: ListenerRegistration
+    private lateinit var otherUserListener: ListenerRegistration
 
 
     /* Function invoked when first message is sent ( and the request isn't been created)*/
     fun sendFirstMessage(message: ChatMessage) {
+        val req = _chat.value!!.copy(status = ChatsListItem.STATUS_INTERESTED)
         val requestRef = db.collection("requests").document(chat.value!!.requestId)
-        requestRef.addSnapshotListener { v, e ->
-            if (e == null) {
-                if (!v!!.exists()) {/* Creation of the request (status interested) because of a message*/
-                    assert(_chat.value!!.status == ChatsListItem.STATUS_UNINTERESTED)
+        requestRef.set(req).addOnSuccessListener {
+            assert(_chat.value!!.status == ChatsListItem.STATUS_UNINTERESTED)
 
-                    val req = _chat.value!!.copy(status = ChatsListItem.STATUS_INTERESTED)
-
-                    requestRef.set(req).addOnSuccessListener {
-                        _chat.value = req
-
-                        requestRef.collection("messages").document().set(
-                            mapOf(
-                                "messageText" to message.messageText,
-                                "timestamp" to message.timestamp.time,
-                                "userId" to message.userId,
-                            )
-                        ).addOnSuccessListener {
-                            _chatMessages.postValue(listOf(message))
-                            registerMessagesListener(req)
-                        }
-                    }.addOnFailureListener {
-                        Log.d("sendMessages", "$it")
-                    }
-                }
+            requestRef.collection("messages").document().set(
+                mapOf(
+                    "messageText" to message.messageText,
+                    "timestamp" to message.timestamp.time,
+                    "userId" to message.userId,
+                )
+            ).addOnSuccessListener {
+                _chatMessages.postValue(listOf(message))
+                registerMessagesListener(req)
             }
+        }.addOnFailureListener {
+            Log.d("sendMessages", "$it")
         }
+    }
+
+
+    override fun onCleared() {
+        if (::messagesListener.isInitialized)
+            messagesListener.remove()
+        otherUserListener.remove()
+        super.onCleared()
     }
 
     fun sendMessage(message: ChatMessage) {
 
         val requestRef = db.collection("requests").document(chat.value!!.requestId)
-        requestRef.addSnapshotListener { v, e ->
-            if (e == null) {
-                _chat.value = chat.value!!.copy(unreadMsgs = v!!.getLong("unreadMsgs")?.toInt() ?: 0)
-                Log.d("sendMessage", "{$_chat.value}")
-            }
-        }
 
-        requestRef.collection("messages").document().set(
-            mapOf(
-                "messageText" to message.messageText,
-                "timestamp" to message.timestamp.time,
-                "userId" to message.userId,
-            )
-        ).addOnSuccessListener {
+        requestRef.get().addOnSuccessListener { /* Chat correctly taken -> sendTheMessage */
+            _chat.value =
+                chat.value!!.copy(unreadMsgs = it.getLong("unreadMsgs")?.toInt() ?: 0)
+            Log.d("sendMessage", "{$_chat.value}")
 
-            /*  TODO(Check this nUnreadMsg increment: How can you distinguish
-                 between yout unreadmsg and the otherUnreadMsg?)*/
-            requestRef.update(
+            requestRef.collection("messages").document().set(
                 mapOf(
-                    "lastMessageText" to message.messageText,
-                    "lastMessageTime" to message.timestamp.time,
-                    "unreadMsgs" to chat.value!!.unreadMsgs + 1,
+                    "messageText" to message.messageText,
+                    "timestamp" to message.timestamp.time,
+                    "userId" to message.userId,
                 )
-            )
-            _chat.value = chat.value!!.incUnreadMsg()
-            Log.d("sendMessage", "success")
+            ).addOnSuccessListener { //Message Correctly sent -> updateLastMessageField
 
-        }.addOnFailureListener { Log.d("sendMessage", "failure") }
+                requestRef.update(
+                    mapOf(
+                        "lastMessageText" to message.messageText,
+                        "lastMessageTime" to message.timestamp.time,
+                        "unreadMsgs" to chat.value!!.unreadMsgs + 1,
+                    )
+                ).addOnSuccessListener { //Field correctly updated -> update View Model
+                    _chat.value = chat.value!!.incUnreadMsg()
+                    Log.d("sendMessage", "success")
+                }
+            }.addOnFailureListener { Log.d("sendMessage", "failure") }
+        }
     }
 
     private fun QueryDocumentSnapshot.toChatMessage(): ChatMessage? {
@@ -165,11 +164,12 @@ class ChatViewModel(application: Application): AndroidViewModel(application) {
     /* Update chatInfo from users table given a timeSlot*/
     fun updateChatInfo(timeSlot: TimeSlot, otherUser: CompactUser) {
         var user: User
-        requestListener = db.collection("users").document(timeSlot.userId)
+        otherUserListener = db.collection("users").document(timeSlot.userId)
             .addSnapshotListener { v, e ->
                 if (e == null) {
                     if (v != null) {
-                        user = v.toUser()!! /* If u get an exception here, something is not updated in db */
+                        user =
+                            v.toUser()!! /* If u get an exception here, something is not updated in db */
 
                         _chat.value = ChatsListItem().copy(
                             timeSlot = timeSlot,
@@ -184,7 +184,7 @@ class ChatViewModel(application: Application): AndroidViewModel(application) {
 
     /* Update userInfo from the requests table */
     fun updateChatInfo(chatRef: DocumentReference) {
-        requestListener = chatRef.addSnapshotListener { v, e ->
+        otherUserListener = chatRef.addSnapshotListener { v, e ->
             if (e == null) {
                 val req = v!!.toObject<ChatsListItem>()
                 if (req != null) {
@@ -211,16 +211,13 @@ class ChatViewModel(application: Application): AndroidViewModel(application) {
     fun requestService() {
         val requestRef = db.collection("requests").document(chat.value!!.requestId)
 
-        db.collection("requests").document(chat.value!!.requestId).addSnapshotListener() { v, e ->
-            val cli = _chat.value!!
+        val cli = _chat.value!!
+        val req = cli.copy(
+            status = ChatsListItem.STATUS_INTERESTED
+        )
 
-            val req = cli.copy(
-                status = ChatsListItem.STATUS_INTERESTED
-            )
-
-            requestRef.set(req).addOnSuccessListener {
-                _chat.value = fromRequestToChat(req)
-            }
+        requestRef.set(req).addOnSuccessListener{ v ->
+            sendFirstMessage(ChatMessage(messageText = Helper.requestMessage(cli), userId = cli.requester.id))
         }
     }
 }

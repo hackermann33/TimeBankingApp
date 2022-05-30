@@ -13,7 +13,6 @@ data class ChatsListItem(
     val lastMessageText: String = "",
     val lastMessageTime: Date = Date(),
     val status: Int = STATUS_UNINTERESTED,
-    var users: List<String> = listOf(),
     var unreadMsgs: Int = 1 //needed to check or condition (request is or as a requester or as an offerer)
 ) {
 
@@ -26,7 +25,7 @@ data class ChatsListItem(
 
 
     init {
-        users = listOf(requester.id, offerer.id)
+        val users = listOf(requester.id, offerer.id)
 
 }
 

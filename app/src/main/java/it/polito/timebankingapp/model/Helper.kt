@@ -149,6 +149,12 @@ class Helper {
             return sdf.format(d)
 
         }
+
+        fun requestMessage(cli: ChatsListItem): String {
+            return "Hi ${cli.offerer.nick}, I'm ${cli.requester.nick} and I'm interested" +
+                    "to your service (${cli.timeSlot.title}"
+
+        }
     }
 
     }
