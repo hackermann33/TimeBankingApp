@@ -154,10 +154,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-
-
-
-
     }
 
     private fun isInsideDrawer(@IdRes id: Int): Boolean {

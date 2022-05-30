@@ -141,9 +141,8 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
     /* Coming from a chatListFragment -> download just the messages */
     fun registerMessagesListener(chat: Chat) {
         _chat.value = chat
-
         messagesListener = db.collection("requests").document(chat.requestId).collection("messages")
-            .orderBy("timestamp")
+            .orderBy("lastMessage.timestamp")
             .addSnapshotListener { v, e ->
                 if (e == null) {
                     _chatMessages.value = v!!.mapNotNull { d -> d.toChatMessage() }
