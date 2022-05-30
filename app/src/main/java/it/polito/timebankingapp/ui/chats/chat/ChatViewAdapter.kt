@@ -1,11 +1,9 @@
 package it.polito.timebankingapp.ui.chats.chat
 
-import android.telecom.TelecomManager
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.ktx.auth
@@ -18,7 +16,8 @@ import java.util.*
 
 class ChatViewAdapter(
     private var messageList: MutableList<ChatMessage>,
-    private var sendMessage: (ChatMessage) -> Unit
+    private var sendMessage: (ChatMessage) -> Unit,
+    private val chatDisabled: Boolean
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val VIEW_TYPE_MESSAGE_SENT = 1
@@ -51,7 +50,7 @@ class ChatViewAdapter(
 
         var dateText: TextView = itemView.findViewById<View>(R.id.text_gchat_date) as TextView
 
-        fun bind(message: ChatMessage, showDate: Boolean) {
+        fun bind(message: ChatMessage, showDate: Boolean, chatDisabled: Boolean) {
             messageText.text = message.messageText
 
 //            dateText.text = message.timestamp /*if(message.timestamp. =split("-")[0]= "skip") "" else message.timestamp.split("-")[0]*/
@@ -61,6 +60,9 @@ class ChatViewAdapter(
             val sdf  = SimpleDateFormat(pattern, Locale.getDefault())
             val date = sdf.format(cal.time)
             val hour = String.format("%02d:%02d", cal[Calendar.HOUR], cal[Calendar.MINUTE] )
+
+            if(chatDisabled)
+                itemView.alpha = 0.7F
 
             if(showDate)
                 dateText.text = date
@@ -79,7 +81,7 @@ class ChatViewAdapter(
 //        var profileImage: ImageView = itemView.findViewById<View>(R.id.image_gchat_profile_other) as ImageView
         var dateText: TextView = itemView.findViewById<View>(R.id.text_gchat_date) as TextView
 
-        fun bind(message: ChatMessage, showDate : Boolean) {
+        fun bind(message: ChatMessage, showDate: Boolean, chatDisabled: Boolean) {
             messageText.text = message.messageText
 
             val cal = message.timestamp
@@ -87,6 +89,9 @@ class ChatViewAdapter(
             val sdf  = SimpleDateFormat(pattern)
             val date = sdf.format(cal.time)
             val hour = String.format("%02d:%02d", cal[Calendar.HOUR], cal[Calendar.MINUTE] )
+
+            if(chatDisabled)
+                itemView.alpha = 0.7F
 
             if(showDate)
                 dateText.text = date
@@ -125,9 +130,11 @@ class ChatViewAdapter(
 
         val message: ChatMessage = messageList[position] //text_gchat_date_me
 
+
+
         when (holder.itemViewType) {
-            VIEW_TYPE_MESSAGE_SENT -> (holder as SentMessageHolder).bind(message, putDateText)
-            VIEW_TYPE_MESSAGE_RECEIVED -> (holder as ReceivedMessageHolder).bind(message, putDateText)
+            VIEW_TYPE_MESSAGE_SENT -> (holder as SentMessageHolder).bind(message, putDateText, chatDisabled)
+            VIEW_TYPE_MESSAGE_RECEIVED -> (holder as ReceivedMessageHolder).bind(message, putDateText, chatDisabled)
         }
     }
 
