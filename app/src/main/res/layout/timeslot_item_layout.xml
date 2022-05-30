@@ -86,57 +86,33 @@
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:backgroundTint="?attr/colorPrimary"
+                android:visibility="visible"
                 app:ibv_badgePadding="2dp"
                 app:ibv_badgePosition="top_right"
                 app:ibv_badgeTextSize="12sp"
                 app:ibv_badgeTextStyle="bold"
                 app:ibv_badgeValue="1"
                 app:ibv_fixedBadgeRadius="11dp"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/guideline3"
                 app:layout_constraintTop_toBottomOf="@id/barrier"
-                app:layout_constraintVertical_bias="0.0"
                 app:srcCompat="@drawable/ic_outline_chat_24" />
 
-            <!--<FrameLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="6dp"
+
+            <ImageButton
+                android:id="@+id/time_slots_review_button"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:backgroundTint="?attr/colorPrimary"
+                android:contentDescription="Add review"
+                android:scaleType="fitCenter"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="@+id/guideline3"
-                app:layout_constraintTop_toBottomOf="@id/barrier"
-                app:layout_constraintVertical_bias="0.0">
-
-                <ImageView
-                    android:id="@+id/chat_button"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:layout_gravity="top|left"
-                    android:layout_marginTop="6dp"
-                    android:contentDescription="@string/chat_button_description"
-                    android:minWidth="48dp"
-                    android:minHeight="48dp"
-                    app:srcCompat="@drawable/ic_outline_chat_24" />
-
-                <TextView
-                    android:id="@+id/messageCounterTextView"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_gravity="right|top"
-                    android:background="@drawable/ic_baseline_circle_24"
-                    android:backgroundTint="#D50000"
-                    android:gravity="center"
-                    android:padding="5dp"
-                    android:text="4"
-                    android:textColor="@color/dark_white"
-                    android:textSize="12sp"
-                    android:textStyle="bold"
-                    android:visibility="visible" />
+                app:layout_constraintTop_toTopOf="@+id/imageView3"
+                app:layout_constraintVertical_bias="0.0"
+                app:srcCompat="@drawable/pencil_star_review_icon" />
 
 
-            </FrameLayout>-->
 
 
             <TextView
@@ -145,8 +121,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:text="@string/time_slots_item_start_label"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textColor="#8E8E8E"
+                 android:textColor="#8E8E8E"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/time_slots_item_location" />
@@ -156,8 +131,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/time_slots_item_start"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-                android:textColor="#8E8E8E"
+                 android:textColor="#8E8E8E"
                 app:layout_constraintBottom_toBottomOf="@+id/time_slots_item_start_label"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.06"
@@ -170,10 +144,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:text="@string/time_slots_item_duration_label"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textColor="#8E8E8E"
+                 android:textColor="#8E8E8E"
                 android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/time_slots_item_start_label" />
 
@@ -184,12 +156,44 @@
                 android:gravity="center"
                 android:textColor="#8E8E8E"
                 android:text="@string/time_slots_item_duration"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body2"
                 app:layout_constraintBottom_toBottomOf="@+id/time_slots_item_duration_label"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.06"
                 app:layout_constraintStart_toEndOf="@+id/time_slots_item_duration_label"
                 app:layout_constraintTop_toTopOf="@+id/time_slots_item_duration_label" />
+
+
+            <TextView
+                android:id="@+id/ts_type_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/time_slots_item_type_label"
+                android:textColor="#8E8E8E"
+                android:textStyle="bold"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/time_slots_item_duration_label" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/timeslot_item_ts_type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:visibility="gone"
+                app:chipMinHeight="24dp"
+                app:ensureMinTouchTargetSize="false"
+                app:layout_constraintBottom_toBottomOf="@+id/ts_type_label"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toEndOf="@+id/ts_type_label"
+                app:layout_constraintTop_toTopOf="@+id/ts_type_label"
+                tools:ignore="TouchTargetSizeCheck" />
+
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

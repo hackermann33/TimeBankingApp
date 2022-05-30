@@ -139,10 +139,10 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        if(type == "skill_specific")
-            inflater.inflate(R.menu.menu_showprofile, menu)
-        else //personal
+        if(type == "personal")
             inflater.inflate(R.menu.menu_editpencil, menu)
+        else //skill_specific, completed, interesting
+            inflater.inflate(R.menu.menu_showprofile, menu)
 
         super.onCreateOptionsMenu(menu, inflater)
     }
@@ -150,7 +150,7 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.option1 -> {
-                if(type == "skill_specific" || type == "interesting") {
+                if(type == "skill_specific" || type == "interesting" || type == "completed") {
                     Toast.makeText(
                         context, "Show user profile",
                         Toast.LENGTH_SHORT

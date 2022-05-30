@@ -10,8 +10,10 @@ import androidx.core.os.bundleOf
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.chip.Chip
 import it.polito.timebankingapp.R
 import it.polito.timebankingapp.model.timeslot.TimeSlot
+import it.polito.timebankingapp.model.user.User
 import ru.nikartm.support.ImageBadgeView
 
 
@@ -20,7 +22,8 @@ class TimeSlotAdapter(
     val selectTimeSlot: (t: TimeSlot) ->Unit,
     val requestTimeSlot: ((t: TimeSlot) -> Unit?)?,
     val showRequests: ((t: TimeSlot) -> Unit?)?,
-    val type: String
+    val type: String,
+    val userProfile: User?
 ) : RecyclerView.Adapter<TimeSlotAdapter.ItemViewHolder>() {
 
     //private var filter: Boolean = false
@@ -29,22 +32,31 @@ class TimeSlotAdapter(
     private var filterParameter = ""
 
 
-    class ItemViewHolder(val mainView: View, val type:String) : RecyclerView.ViewHolder(mainView) {
+    class ItemViewHolder(val mainView: View, val type:String, val userProfile: User?) : RecyclerView.ViewHolder(mainView) {
         private val title: TextView = mainView.findViewById(R.id.time_slots_item_title)
         private val location: TextView = mainView.findViewById(R.id.time_slots_item_location)
         private val start: TextView = mainView.findViewById(R.id.time_slots_item_start)
         private val duration: TextView = mainView.findViewById(R.id.time_slots_item_duration)
+        private val typeLabel: TextView = mainView.findViewById(R.id.ts_type_label)
+        private val typeChip: Chip = mainView.findViewById(R.id.timeslot_item_ts_type)
         private lateinit var editButton: ImageView
         private lateinit var chatButton: ImageBadgeView
+        private lateinit var addReviewButton: ImageView
 
 
-        fun bind(ts: TimeSlot, editAction: (v: View) -> Unit, detailAction: (v: View) -> Unit, requestAction: (v: View) -> Unit, showRequestsAction: (v: View) -> Unit) {
+        fun bind(ts: TimeSlot,
+                 editAction: (v: View) -> Unit,
+                 detailAction: (v: View) -> Unit,
+                 requestAction: (v: View) -> Unit,
+                 showRequestsAction: (v: View) -> Unit,
+                 showAddReviewFrag: (v: View) -> Unit){
             title.text = ts.title
             location.text = ts.location
             start.text = ts.date.plus(" ").plus(ts.time)
             duration.text = ts.duration.plus(" hour(s)")
             editButton = mainView.findViewById(R.id.time_slots_edit_button)
             chatButton = mainView.findViewById(R.id.imageView3)
+            addReviewButton = mainView.findViewById(R.id.time_slots_review_button)
 
             if(type == "personal") {
                 editButton.setOnClickListener(editAction)
@@ -53,6 +65,21 @@ class TimeSlotAdapter(
                 chatButton.setBadgePadding(2)
                 chatButton.badgeValue = ts.unreadChats
                 chatButton.setOnClickListener(showRequestsAction)
+            }
+            else if (type == "completed") {
+                editButton.visibility = View.GONE
+                chatButton.visibility = View.GONE
+                addReviewButton.visibility = View.VISIBLE
+                typeLabel.visibility = View.VISIBLE
+                typeChip.visibility = View.VISIBLE
+                if(ts.userId != userProfile?.id ?: ""){
+                    typeChip.text = "Requested"
+                    typeChip.setChipBackgroundColorResource(R.color.primary_dark)
+                }else {
+                    typeChip.text = "Offered"
+                    typeChip.setChipBackgroundColorResource(R.color.accent)
+                }
+                addReviewButton.setOnClickListener(showAddReviewFrag)
             }
             else {
                 editButton.visibility = View.GONE
@@ -77,7 +104,7 @@ class TimeSlotAdapter(
             .inflate(destination, parent, false) //attachToRoot: take all you measures
         //but do not attach it immediately to the ViewHolder tree of components (could be a ghost item)
 
-        return ItemViewHolder(vg, type)
+        return ItemViewHolder(vg, type, userProfile)
     }
 
     //populate data for each inflated ViewHolder
@@ -122,6 +149,8 @@ class TimeSlotAdapter(
         }, showRequestsAction = {
             showRequests!!(item)
             Navigation.findNavController(it).navigate(R.id.action_nav_personalTimeSlotList_to_nav_timeSlotChatsList)
+        }, showAddReviewFrag = {
+            Navigation.findNavController(it).navigate(R.id.action_nav_completedTimeSlotList_to_nav_addReview)
         })
 
 

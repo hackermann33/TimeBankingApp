@@ -49,6 +49,7 @@ data class Chat(
         const val STATUS_INTERESTED = 0
         const val STATUS_ACCEPTED = 1
         const val STATUS_DISCARDED = 2
+        const val STATUS_COMPLETED = 3
     }
 }
 

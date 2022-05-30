@@ -27,6 +27,11 @@
             android:title="@string/ads_you_re_interested_in"
             />
         <item
+            android:id="@+id/nav_completedTimeSlotList"
+            android:icon="@drawable/ic_baseline_completed_24"
+            android:title="@string/completed_time_slots"
+            />
+        <item
             android:id="@+id/nav_allChatsList"
             android:icon="@drawable/ic_baseline_chat_24"
             android:title="@string/chats"

@@ -112,6 +112,21 @@ class TimeSlotsViewModel(application: Application): AndroidViewModel(application
             }
         }
 
+    fun updateCompletedTimeSlots() {
+        val myUid = Firebase.auth.uid!!
+        db.collection("requests").whereEqualTo("requester.id", myUid)
+            .whereEqualTo("status", Chat.STATUS_COMPLETED).addSnapshotListener{ v, e ->
+                if(e == null){
+                    val req = v!!.mapNotNull {  d -> d.toObject<Chat>()  }
+                    _timeSlots.value = req.mapNotNull {  r -> r.timeSlot }
+                    _isEmpty.value = _timeSlots.value!!.isEmpty()
+                } else {
+                    _timeSlots.value = emptyList()
+                    _isEmpty.value = true
+                }
+            }
+    }
+
     /* Move to skillsListViewModel */
     fun retrieveSkillList(){
         l = db.collection("skills").addSnapshotListener {

@@ -61,7 +61,9 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_timeslots_list) {
         } else if (type == "personal")
             mainTitle = "Your advertisements"
         else if (type == "interesting")
-            mainTitle = "Your interesting Offers"
+            mainTitle = "Offers you're interested in"
+        else if (type == "completed")
+            mainTitle = "Completed offers"
 
         (activity as MainActivity?)?.setActionBarTitle(mainTitle)
 
@@ -71,7 +73,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_timeslots_list) {
 
         val addTimeSlotButton = view.findViewById<FloatingActionButton>(R.id.addTimeSlotButton)
 
-        if (type == "skill_specific" || type == "interesting") {
+        if (type == "skill_specific" || type == "completed" || type == "interesting" ) {
             addTimeSlotButton.visibility = View.GONE
         } else { //personal
             addTimeSlotButton.setOnClickListener {
@@ -94,7 +96,6 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_timeslots_list) {
                 }
             }
         }
-
 
 /*
         val adTmp = TimeSlotAdapter(
@@ -125,7 +126,8 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_timeslots_list) {
                     ::selectTimeSlot,
                     ::showTimeSlotRequest,
                     ::showRequests,
-                    type
+                    type,
+                    userVm.user.value
                 )
 
 //                adTmp.data = it.toMutableList()
