@@ -20,15 +20,10 @@ import com.google.firebase.ktx.Firebase
 import de.hdodenhof.circleimageview.CircleImageView
 import it.polito.timebankingapp.R
 import it.polito.timebankingapp.model.Helper
-import it.polito.timebankingapp.model.Helper.Companion.toUser
-import it.polito.timebankingapp.model.chat.ChatMessage
 import it.polito.timebankingapp.model.timeslot.TimeSlot
-import it.polito.timebankingapp.model.user.CompactUser
-import it.polito.timebankingapp.model.user.User
 import it.polito.timebankingapp.ui.chats.chat.ChatViewModel
 import it.polito.timebankingapp.ui.profile.ProfileViewModel
 import it.polito.timebankingapp.ui.timeslots.TimeSlotsViewModel
-import java.util.*
 
 
 class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
@@ -91,60 +86,59 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
         view.findViewById<TextView>(R.id.time_slot_description).text = ts?.description
         view.findViewById<TextView>(R.id.time_slot_restrictions).text = ts?.restrictions
 
-        if(type == "skill_specific"){
-            view.findViewById<ConstraintLayout>(R.id.layout_offerer).also { it.visibility = View.VISIBLE }
-            val btnRequestService = view.findViewById<Button>(R.id.button_request_service).also { it.visibility = View.VISIBLE }
-            val btnOpenChat = view.findViewById<Button>(R.id.openChatButton)
+        if (type == "skill_specific") {
+            view.findViewById<ConstraintLayout>(R.id.layout_offerer)
+                .also { it.visibility = View.VISIBLE }
+            val btnRequestService = view.findViewById<Button>(R.id.button_request_service)
+                .also { it.visibility = View.VISIBLE }
+            val btnAskInfo = view.findViewById<Button>(R.id.openChatButton)
             val civOffererPic = view.findViewById<CircleImageView>(R.id.offerer_pic)
             val pb = view.findViewById<ProgressBar>(R.id.progressBar3)
             val tvOffererName = view.findViewById<TextView>(R.id.offerer_name)
-            btnOpenChat.setOnClickListener{
+
+
+            Helper.loadImageIntoView(civOffererPic, pb, ts!!.offerer.profilePicUrl)
+            tvOffererName.text = ts.offerer.nick
+
+            btnAskInfo.setOnClickListener {
                 showTimeSlotRequest(timeSlot)
                 findNavController().navigate(R.id.nav_chat)
             }
 
 
             /* Rememeber to update number of chats for that timeSlot*/
-            btnRequestService.setOnClickListener{
-                if (ts != null) {
-//                    profileViewModel.updateCurrentUser()
-                    val chatId = Helper.makeRequestId(ts.id, Firebase.auth.uid!!)
-                    var offerer: User
-                    profileViewModel.getUserFromId(ts.userId).addOnSuccessListener { _offerer ->
-                        offerer = _offerer.toUser()!!
-                        globalModel.requestTimeSlot(ts, profileViewModel.user.value!!, _offerer.toUser()!!)
-                            .addOnSuccessListener {
-                                /* here I need to update chat */
-                                chatVm.updateChatInfo(ts, profileViewModel.timeslotUser.value!!.toCompactUser(), offerer.toCompactUser(), true)
+            btnRequestService.setOnClickListener {
+                val timeSlotToRequest = ts
+                val chatId = Helper.makeRequestId(ts.id, Firebase.auth.uid!!)
 
-                                Snackbar.make(view, "Request correctly sent!", Snackbar.LENGTH_SHORT).show()
+                globalModel.makeTimeSlotRequest(ts, profileViewModel.user.value!!)
+                    .addOnSuccessListener {
+                        /* here I need to update chat */
+                        chatVm.updateChatInfo(
+                            ts,
+                            profileViewModel.timeslotUser.value!!.toCompactUser(),
+                            true
+                        )
 
-                        }.addOnFailureListener{
-                            Snackbar.make(view, "Oops, something gone wrong!", Snackbar.LENGTH_SHORT).show()
-                        }
+                        Snackbar.make(view, "Request correctly sent!", Snackbar.LENGTH_SHORT).show()
+
+                    }.addOnFailureListener {
+                        Snackbar.make(view, "Oops, something gone wrong!", Snackbar.LENGTH_SHORT)
+                            .show()
                     }
-                }
             }
 
-//            Helper.loadImageIntoView(civOffererPic, pb, profileViewModel.timeslotUser.value!!.profilePicUrl)
-            profileViewModel.timeslotUser.observe(viewLifecycleOwner){
-                tvOffererName.text = it.nick
-                Helper.loadImageIntoView(civOffererPic, pb, it.profilePicUrl)
-            }
+            val chipGroup = view.findViewById<ChipGroup>(R.id.time_slot_skillsGroup)
 
+            chipGroup.removeAllViews()
+            val chip = layoutInflater.inflate(
+                R.layout.chip_layout_show,
+                chipGroup!!.parent.parent as ViewGroup,
+                false
+            ) as Chip
+            chip.text = ts?.relatedSkill
+            chipGroup.addView(chip)
         }
-
-        val chipGroup = view.findViewById<ChipGroup>(R.id.time_slot_skillsGroup)
-
-        chipGroup.removeAllViews()
-        val chip = layoutInflater.inflate(
-            R.layout.chip_layout_show,
-            chipGroup!!.parent.parent as ViewGroup,
-            false
-        ) as Chip
-        chip.text = ts?.relatedSkill
-        chipGroup.addView(chip)
-
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -184,12 +178,12 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
         }
     }
 
-    /* Show chat from the current user to the current timeSlot */
+    /* Show chat from the current request of the current timeSlot */
     fun showTimeSlotRequest(timeSlot: TimeSlot) {
         val chatId = Helper.makeRequestId(timeSlot.id, Firebase.auth.uid!!)
-        profileViewModel.getUserFromId(timeSlot.userId).addOnSuccessListener {
-            it.toUser()?.let { it1 -> chatVm.selectChatFromTimeSlot(timeSlot, profileViewModel.user.value!!.toCompactUser(), it1.toCompactUser() ) }
-        }
+            val offerer = timeSlot.offerer
+
+            chatVm.selectChatFromTimeSlot(timeSlot, profileViewModel.user.value!!.toCompactUser() )
     }
 
     private fun editTimeslot() {

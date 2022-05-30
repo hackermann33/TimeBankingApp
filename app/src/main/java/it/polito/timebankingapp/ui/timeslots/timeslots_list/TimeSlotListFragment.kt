@@ -1,6 +1,7 @@
 package it.polito.timebankingapp.ui.timeslots.timeslots_list
 
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -17,6 +18,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.firestore.DocumentSnapshot
 import it.polito.timebankingapp.MainActivity
 import it.polito.timebankingapp.R
+import it.polito.timebankingapp.model.Helper.Companion.toUser
 import it.polito.timebankingapp.model.timeslot.TimeSlot
 import it.polito.timebankingapp.model.user.User
 import it.polito.timebankingapp.ui.chats.chat.ChatViewModel
@@ -48,8 +50,6 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_timeslots_list) {
         super.onCreate(savedInstanceState)
 
         type = arguments?.getString("point_of_origin").toString()
-
-
 
     }
 
@@ -147,7 +147,8 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_timeslots_list) {
     }
 
     fun showTimeSlotRequest(timeSlot: TimeSlot) {
-        chatVm.selectChatFromTimeSlot(timeSlot, userVm.timeslotUser.value!!.toCompactUser(), userVm.user.value!!.toCompactUser())
+        chatVm.selectChatFromTimeSlot(timeSlot,userVm.user.value!!.toCompactUser())
+
         //chatVm.updateUserInfo(timeSlot.userId)
     }
 
@@ -236,9 +237,11 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_timeslots_list) {
         chatListVm.downloadTimeSlotChats(ts.id)
     }
 
+
     private fun selectTimeSlot(ts: TimeSlot) {
-        userVm.retrieveTimeSlotProfileData(ts.userId)
+        /*userVm.retrieveTimeSlotProfileData(ts.userId)*/
         vm.setSelectedTimeSlot(ts)
+
     }
 
     override fun onDetach() {
@@ -272,26 +275,6 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_timeslots_list) {
         }
     }
 
-
-    /* Impossibile da importare... */
-    fun DocumentSnapshot.toUser(): User? {
-
-        return try {
-            val pic = get("pic") as String
-            val fullName = get("fullName") as String
-            val nick = get("nick") as String
-            val email = get("email") as String
-            val location = get("location") as String
-            val desc = get("description") as String
-            val balance = get("balance") as Long
-            val skills = get("skills") as MutableList<String>
-
-            User(id, pic, fullName, nick, email, location, desc, balance.toInt(), skills)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            null
-        }
-    }
 
 
 }

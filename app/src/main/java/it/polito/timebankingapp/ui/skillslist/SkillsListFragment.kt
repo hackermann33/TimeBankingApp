@@ -52,6 +52,7 @@ class SkillsListFragment : Fragment(R.layout.fragment_skills_list) {
                         val text = (ch as Chip).text.toString()
                         //vm.setType("skill")
                         //vm.setType("skill", skill)
+
                         vm.setFilteringSkill(skill)
                         val b = bundleOf("point_of_origin" to "skill_specific")
                         findNavController().navigate(R.id.action_nav_skillsList_to_skillSpecificTimeSlotListFragment, b)

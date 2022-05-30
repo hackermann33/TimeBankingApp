@@ -2,6 +2,7 @@ package it.polito.timebankingapp.model.timeslot
 
 import android.util.Log
 import com.google.firebase.firestore.Exclude
+import it.polito.timebankingapp.model.user.CompactUser
 import java.io.Serializable
 import java.text.SimpleDateFormat
 import java.time.LocalDate
@@ -11,6 +12,7 @@ import java.util.*
 data class TimeSlot(
     var id: String = "",
     var userId: String = "",
+    var offerer: CompactUser = CompactUser() /* >=riaggiungi per costruttore di default*/,
     var title: String = "",
     var description: String = "",
     var date: String = "",

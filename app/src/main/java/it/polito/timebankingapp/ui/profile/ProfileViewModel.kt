@@ -16,6 +16,8 @@ import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.ktx.storageMetadata
+import it.polito.timebankingapp.model.Helper
+import it.polito.timebankingapp.model.Helper.Companion.toUser
 import it.polito.timebankingapp.model.user.User
 import java.io.ByteArrayOutputStream
 import java.util.*
@@ -125,25 +127,6 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
     }
 
 
-    fun DocumentSnapshot.toUser(): User? {
-
-        return try {
-            val pic = get("profilePicUrl") as String
-            val fullName = get("fullName") as String
-            val nick = get("nick") as String
-            val email = get("email") as String
-            val location = get("location") as String
-            val desc = get("description") as String
-            val balance = get("balance") as Long
-            val skills = get("skills") as MutableList<String>
-
-            User(id, pic, fullName, nick, email, location, desc, balance.toInt(), skills)
-        } catch (e: Exception) {
-            Log.d("toUser", e.toString())
-            null
-        }
-    }
-
     fun editUser(usr: User) {
 
         val srcRef = db.collection("users").document(usr.id)
@@ -213,6 +196,10 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
 
     fun updateCurrentUser() {
         TODO("Not yet implemented")
+    }
+
+    fun setTimeSlotUser(toUser: User) {
+        _timeslotUser.value = toUser
     }
 }
 

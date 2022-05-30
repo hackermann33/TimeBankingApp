@@ -81,7 +81,7 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
         setHasOptionsMenu(true)
 
         tsToEdit = if (!addMode) arguments?.getSerializable("timeslot") as TimeSlot
-        else TimeSlot()
+        else TimeSlot().also { it.offerer = usrVm.user.value!!.toCompactUser() }
 
         calendar = tsToEdit.getCalendar()
 
