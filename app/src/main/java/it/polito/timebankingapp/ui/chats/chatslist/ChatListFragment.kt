@@ -44,7 +44,7 @@ class ChatListFragment : Fragment(R.layout.fragment_chats_list_list) {
     }
 
     fun selectChat(chat : Chat){
-        chat.unreadMsgs = 0
+        //chat.unreadMsgs = 0
         chatViewModel.registerMessagesListener(chat)
         chatViewModel.selectChatFromChatList(chat)
     }

@@ -62,6 +62,8 @@ class MainActivity : AppCompatActivity() {
 
         val counterView = navView.menu.findItem(R.id.nav_personalTimeSlotList).actionView.findViewById<TextView>(R.id.counter)
 
+        timeSlotVm.updatePersonalTimeSlots()
+
         timeSlotVm.unreadChats.observe(this){
             if(it > 0){
                 counterView.text = it.toString()
