@@ -23,13 +23,34 @@ class ReviewsViewModel(application: Application): AndroidViewModel(application) 
 
     private var db: FirebaseFirestore = FirebaseFirestore.getInstance()
 
-    fun addReview(review: Review){
+    fun addReview(review: Review, reviewedUserId: String){
+        // versione vecchia senza check sulla esistenza
         val newReviewRef = db.collection("reviews_test")
-            .document(review.reviewer.getValue("id")).collection("userReviews").document()
+            .document(reviewedUserId).collection("userReviews").document()
 
         newReviewRef.set(review).addOnSuccessListener{
             Log.d("reviews_add","Successfully added")
         }.addOnFailureListener{ Log.d("reviews_add", "Error on adding")}
+
+/*      //versione con check da debuggare e ripensare
+        val newReviewRef = db.collection("reviews_test")
+            .document(reviewedUserId).collection("userReviews").document()
+
+        val checkReviewRef = db.collection("reviews_test")
+            .document(reviewedUserId).collection("userReviews").whereEqualTo("reviewer.id",Firebase.auth.uid.toString())
+
+        checkReviewRef.get().addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                val document = task.result
+                if (!document.isEmpty) {
+                    newReviewRef.set(review).addOnSuccessListener{
+                        Log.d("reviews_add","Successfully added")
+                    }.addOnFailureListener{ Log.d("reviews_add", "Error on adding")}
+                }
+            } else {
+                Log.d("reviews_add", "Failed with: ", task.exception)
+            }
+        }*/
     }
 
     fun retrieveAllReviews(userId: String) {

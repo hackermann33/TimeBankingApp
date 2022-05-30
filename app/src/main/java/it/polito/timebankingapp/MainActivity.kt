@@ -113,8 +113,8 @@ class MainActivity : AppCompatActivity() {
                 timeSlotVm.updateInterestingTimeSlots()
             }
             if(destination.id == R.id.nav_completedTimeSlotList){
-                //timeSlotVm.updateCompletedTimeSlots()
-                timeSlotVm.updateInterestingTimeSlots()
+                timeSlotVm.updateCompletedTimeSlots()
+                //timeSlotVm.updateInterestingTimeSlots()
             }
             if(destination.id == R.id.nav_allChatsList)
                 chatVm.updateAllChats()

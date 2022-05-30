@@ -43,7 +43,7 @@ class ShowPersonalProfileFragment : Fragment(R.layout.fragment_showprofile) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         type = arguments?.getString("point_of_origin").toString() //skill_specific or personal
-        if(type == "skill_specific" || type != "completed" || type != "interesting") {
+        if(type == "skill_specific" || type == "completed" || type == "interesting") {
             (activity as MainActivity?)?.setActionBarTitle("Offerer profile")
         }
         else
@@ -87,7 +87,7 @@ class ShowPersonalProfileFragment : Fragment(R.layout.fragment_showprofile) {
             }
         }
 
-        if (type == "skill_specific" || type != "completed" || type != "interesting") {
+        if (type == "skill_specific" || type == "completed" || type == "interesting") {
             vm.timeslotUser.observe(viewLifecycleOwner) {
                 timeSlotUser = it //oppure it
                 bundle = bundleOf("profile" to timeSlotUser, "type" to "timeslot") //per le recensioni

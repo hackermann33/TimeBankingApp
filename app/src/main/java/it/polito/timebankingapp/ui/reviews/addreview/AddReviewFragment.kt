@@ -26,6 +26,7 @@ class AddReviewFragment : Fragment(R.layout.fragment_add_review) {
 
     private lateinit var user: User
     private lateinit var newReview: Review
+    private lateinit var reviewedUserId: String
 
     private lateinit var submitBtn: Button
     private lateinit var ratingBar: RatingBar
@@ -36,11 +37,13 @@ class AddReviewFragment : Fragment(R.layout.fragment_add_review) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         v = view
+        reviewedUserId = arguments?.getString("reviewedUserId").toString()
+        if (reviewedUserId == "null") reviewedUserId = "ry0npG5mapRq0ccreqTEQjvdqQa2"
 
         pvm.user.observe(viewLifecycleOwner) {
             user = it
             val tempMap = mutableMapOf<String, String>()
-            tempMap["id"] = "ry0npG5mapRq0ccreqTEQjvdqQa2" //vanno temporaneamente tutte all'account di debug
+            tempMap["id"] = user.id
             tempMap["fullName"] = user.fullName
             tempMap["profilePicUrl"] = user.profilePicUrl
             newReview = Review(reviewer = tempMap, role= "requester")
@@ -59,7 +62,7 @@ class AddReviewFragment : Fragment(R.layout.fragment_add_review) {
                 newReview.reviewText = text
                 newReview.stars = rating.toInt()
                 newReview.timestamp = java.util.Date()
-                rvm.addReview(newReview)
+                rvm.addReview(newReview, reviewedUserId)
                 findNavController().navigateUp()
                 Toast.makeText(activity,"Review successfully added!", Toast.LENGTH_SHORT).show();
             }
