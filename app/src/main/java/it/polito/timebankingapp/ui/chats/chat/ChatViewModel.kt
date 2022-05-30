@@ -68,6 +68,7 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
 
     fun sendMessageAndUpdate(message: ChatMessage){
         val cid = chat.value!!
+
         val reqDocRef =  db.collection("requests").document(cid.requestId)
         val msgsDocRef =  db.collection("requests").document(cid.requestId).collection("messages").document()
         val timeSlotDocRef = db.collection("timeSlots").document(cid.timeSlotId)
@@ -141,7 +142,6 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
     /* Coming from a chatListFragment -> download just the messages */
     fun registerMessagesListener(chat: Chat) {
         _chat.value = chat
-
         messagesListener = db.collection("requests").document(chat.requestId).collection("messages")
             .orderBy("timestamp")
             .addSnapshotListener { v, e ->
@@ -161,11 +161,15 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
         val chatId = makeRequestId(timeSlot.id, Firebase.auth.uid!!)
         val chatRef = db.collection("requests").document(chatId)
 
+
+
         /* If the request already exists, download it, otherwise just download offerer profile and don't make the request. */
         chatRef.get().addOnSuccessListener { docSnapShot ->
             if (docSnapShot.exists()) {
                 /*Download user profile */
                 updateChatInfo(chatRef)
+
+
 
                 /* Download messages */
                 messagesListener = chatRef.collection("messages").orderBy("timestamp")
@@ -211,6 +215,22 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
                 if (req != null) {
                     _chat.value = (req)
 
+                    val c = _chat.value!!
+                    val resetUnreadMsgs = c.lastMessage.userId != Firebase.auth.uid
+                    if(resetUnreadMsgs)
+                        c.unreadMsgs = 0
+
+                    val reqDocRef =  db.collection("requests").document(chat.value!!.requestId)
+
+                    db.runBatch { batch ->
+                        batch.update(reqDocRef, "unreadMsgs", c.unreadMsgs)
+                    }.addOnSuccessListener {
+                        _chat.postValue(chat.value)
+                        Log.d("sendMessageAndUpdate","Everything updated")
+                    }.addOnFailureListener{
+                        Log.d("sendMessageAndUpdate","Oh, no")
+                    }
+
                 } else {
                     Log.d("selectChat", "this should not happen")
                     throw Exception("chat not found in the DB!!!")
@@ -243,10 +263,37 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
 
     fun acceptRequest() {
         _chat.value = chat.value?.copy(status=Chat.STATUS_ACCEPTED)
+        /* query the db */
     }
 
     fun discardRequest() {
         _chat.value = chat.value?.copy(status=Chat.STATUS_DISCARDED)
+        /* query the db */
+    }
+
+    fun selectChatFromChatList(chat: Chat) {
+        /* remember to register listener */
+        val resetUnreadMsgs = chat.lastMessage.userId != Firebase.auth.uid
+        if(resetUnreadMsgs)
+            chat.unreadMsgs = 0
+        val resetUnreadChats = (chat.offerer.id == Firebase.auth.uid) && (chat.lastMessage.userId != Firebase.auth.uid)
+        if(resetUnreadChats && chat.timeSlot.unreadChats > 0)
+            chat.timeSlot.unreadChats--
+
+
+        val reqDocRef =  db.collection("requests").document(chat.requestId)
+        val timeSlotDocRef = db.collection("timeSlots").document(chat.timeSlotId)
+
+        db.runBatch { batch ->
+            batch.update(reqDocRef, "unreadMsgs", chat.unreadMsgs)
+            batch.update(reqDocRef, "timeSlot.unreadChats", chat.timeSlot.unreadChats)
+            batch.update(timeSlotDocRef,"unreadChats", chat.timeSlot.unreadChats)
+        }.addOnSuccessListener {
+            _chat.postValue(chat)
+            Log.d("sendMessageAndUpdate","Everything updated")
+        }.addOnFailureListener{
+            Log.d("sendMessageAndUpdate","Oh, no")
+        }
     }
 
 }

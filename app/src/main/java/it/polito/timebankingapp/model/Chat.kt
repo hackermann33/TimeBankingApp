@@ -12,7 +12,7 @@ data class Chat(
     val timeSlot: TimeSlot = TimeSlot(), val requester: CompactUser = CompactUser(), val offerer: CompactUser = CompactUser(),
     var lastMessage: ChatMessage = ChatMessage(),
     var status: Int = STATUS_UNINTERESTED,
-    var unreadMsgs: Int = 1 //needed to check or condition (request is or as a requester or as an offerer)
+    var unreadMsgs: Int = 0 //needed to check or condition (request is or as a requester or as an offerer)
 ) {
 
 
@@ -50,8 +50,9 @@ data class Chat(
             timeSlot.unreadChats++
             unreadMsgs = 1
         }
+        else
+            unreadMsgs++
         lastMessage = message
-        unreadMsgs++
     }
 
     companion object {

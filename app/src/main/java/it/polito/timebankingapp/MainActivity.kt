@@ -68,7 +68,6 @@ class MainActivity : AppCompatActivity() {
                 counterView.visibility = View.VISIBLE
             }
             else {
-
                 counterView.visibility = View.GONE
             }
         }
@@ -156,10 +155,6 @@ class MainActivity : AppCompatActivity() {
                 Helper.loadImageIntoView(profilePic, pBUserPic, it.profilePicUrl)
             }
         }
-
-
-
-
 
     }
 

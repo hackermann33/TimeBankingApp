@@ -11,7 +11,6 @@
         <entry key="..\:/Users/fifi9/GitHub Repos/TimeBankingApp/app/src/main/res/drawable/ic_menu_gallery.xml" value="0.3675" />
         <entry key="..\:/Users/fifi9/GitHub Repos/TimeBankingApp/app/src/main/res/drawable/ic_menu_slideshow.xml" value="0.3675" />
         <entry key="..\:/Users/fifi9/GitHub Repos/TimeBankingApp/app/src/main/res/drawable/pencil.xml" value="0.3675" />
-        <entry key="..\:/Users/fifi9/GitHub Repos/TimeBankingApp/app/src/main/res/drawable/pencil_star_review_icon.xml" value="0.3675" />
         <entry key="..\:/Users/fifi9/GitHub Repos/TimeBankingApp/app/src/main/res/drawable/side_nav_bar.xml" value="0.3675" />
         <entry key="..\:/Users/fifi9/GitHub Repos/TimeBankingApp/app/src/main/res/layout-land/fragment_add_review.xml" value="0.1" />
         <entry key="..\:/Users/fifi9/GitHub Repos/TimeBankingApp/app/src/main/res/layout-land/fragment_editprofile.xml" value="0.25" />
@@ -46,11 +45,11 @@
         <entry key="..\:/Users/fifi9/GitHub Repos/TimeBankingApp/app/src/main/res/layout/personal_timeslots_item_layout.xml" value="0.1" />
         <entry key="..\:/Users/fifi9/GitHub Repos/TimeBankingApp/app/src/main/res/layout/reviews_list_item.xml" value="0.29717180244829045" />
         <entry key="..\:/Users/fifi9/GitHub Repos/TimeBankingApp/app/src/main/res/layout/reviews_list_item_emtpy.xml" value="0.3009833262077811" />
-        <entry key="..\:/Users/fifi9/GitHub Repos/TimeBankingApp/app/src/main/res/layout/skill_specific_timeslots_item_layout.xml" value="0.1" /> 
+        <entry key="..\:/Users/fifi9/GitHub Repos/TimeBankingApp/app/src/main/res/layout/skill_specific_timeslots_item_layout.xml" value="0.1" />
         <entry key="..\:/Users/fifi9/GitHub Repos/TimeBankingApp/app/src/main/res/layout/time_slot_month_calendar_day.xml" value="0.23354958294717332" />
         <entry key="..\:/Users/fifi9/GitHub Repos/TimeBankingApp/app/src/main/res/layout/time_slot_month_calendar_event_item.xml" value="0.33" />
         <entry key="..\:/Users/fifi9/GitHub Repos/TimeBankingApp/app/src/main/res/layout/time_slot_month_calendar_header.xml" value="0.29717180244829045" />
-        <entry key="..\:/Users/fifi9/GitHub Repos/TimeBankingApp/app/src/main/res/layout/timeslot_item_layout.xml" value="0.22798887859128822" /> 
+        <entry key="..\:/Users/fifi9/GitHub Repos/TimeBankingApp/app/src/main/res/layout/timeslot_item_layout.xml" value="0.22798887859128822" />
         <entry key="..\:/Users/fifi9/GitHub Repos/TimeBankingApp/app/src/main/res/menu/activity_main_drawer.xml" value="0.3009833262077811" />
         <entry key="..\:/Users/fifi9/GitHub Repos/TimeBankingApp/app/src/main/res/menu/menu_editpencil.xml" value="0.15305686190679776" />
         <entry key="..\:/Users/fifi9/GitHub Repos/TimeBankingApp/app/src/main/res/menu/menu_filter_and_sort.xml" value="0.15433946130825138" />
@@ -58,6 +57,7 @@
         <entry key="..\:/Users/loren/StudioProjects/TimeBankingApp2/app/src/main/res/layout/fragment_chat.xml" value="0.264" />
         <entry key="..\:/Users/loren/StudioProjects/TimeBankingApp2/app/src/main/res/layout/fragment_chat_receiver_item.xml" value="0.13069908814589665" />
         <entry key="..\:/Users/loren/StudioProjects/TimeBankingApp2/app/src/main/res/layout/fragment_chat_sender_item.xml" value="0.264" />
+        <entry key="..\:/Users/loren/StudioProjects/TimeBankingApp2/app/src/main/res/layout/fragment_chats_list_item.xml" value="0.536" />
         <entry key="..\:/Users/loren/StudioProjects/TimeBankingApp2/app/src/main/res/layout/timeslot_item_layout.xml" value="0.13069908814589665" />
         <entry key="app/src/main/res/drawable/animview.xml" value="0.152" />
         <entry key="app/src/main/res/drawable/ic_baseline_location_on_24.xml" value="0.1925" />
