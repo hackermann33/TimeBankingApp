@@ -112,6 +112,7 @@ class TimeSlotMonthCalendar : Fragment(R.layout.fragment_time_slot_month_calenda
             if (it.isNotEmpty()) {
                 //setVoidMessage(view, false)
                 val acceptedTimeSlots = it
+                events.clear()
 
                 for (i in it.indices) {
                     val values = acceptedTimeSlots[i].date.split("/")
