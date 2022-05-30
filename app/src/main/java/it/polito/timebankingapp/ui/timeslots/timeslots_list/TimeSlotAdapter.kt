@@ -151,7 +151,7 @@ class TimeSlotAdapter(
             Navigation.findNavController(it).navigate(R.id.action_nav_personalTimeSlotList_to_nav_timeSlotChatsList)
         }, showAddReviewFrag = {
             Navigation.findNavController(it).navigate(R.id.action_nav_completedTimeSlotList_to_nav_addReview,
-                bundleOf("reviewedUserId" to item.userId))
+                bundleOf("timeslot" to item))
         })
 
 

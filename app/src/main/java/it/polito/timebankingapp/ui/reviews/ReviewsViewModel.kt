@@ -19,6 +19,9 @@ class ReviewsViewModel(application: Application): AndroidViewModel(application) 
     private val _reviews = MutableLiveData<List<Review>>()
     val reviews: LiveData<List<Review>> = _reviews
 
+    private var _alreadyReviewed = MutableLiveData<Boolean>()
+    val alreadyReviewed: LiveData<Boolean> = _alreadyReviewed
+
     private lateinit var l: ListenerRegistration
 
     private var db: FirebaseFirestore = FirebaseFirestore.getInstance()
@@ -52,6 +55,36 @@ class ReviewsViewModel(application: Application): AndroidViewModel(application) 
             }
         }*/
     }
+
+    fun checkIfAlreadyReviewed(reviewedUserId: String){
+        val checkReviewRef = db.collection("reviews_test")
+            .document(reviewedUserId).collection("userReviews")
+            .whereEqualTo("reviewer.id",Firebase.auth.uid.toString())
+
+        checkReviewRef.get().addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                val document = task.result
+                _alreadyReviewed.value = !document.isEmpty
+            } else {
+                Log.d("reviews_check", "Failed with: ", task.exception)
+            }
+        }
+    }
+    /*
+    fun retrieveRequesterInfo(timeSlot: TimeSlot){
+        val checkReviewRef = db.collection("reviews_test")
+            .document(reviewedUserId).collection("userReviews")
+            .whereEqualTo("reviewer.id",Firebase.auth.uid.toString())
+
+        checkReviewRef.get().addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                val document = task.result
+                _alreadyReviewed.value = !document.isEmpty
+            } else {
+                Log.d("reviews_check", "Failed with: ", task.exception)
+            }
+        }
+    }*/
 
     fun retrieveAllReviews(userId: String) {
         //to-do

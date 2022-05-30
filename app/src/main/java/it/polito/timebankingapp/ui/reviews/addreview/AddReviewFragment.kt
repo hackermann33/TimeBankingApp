@@ -12,6 +12,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import it.polito.timebankingapp.R
 import it.polito.timebankingapp.model.review.Review
+import it.polito.timebankingapp.model.timeslot.TimeSlot
 import it.polito.timebankingapp.model.user.User
 import it.polito.timebankingapp.ui.profile.ProfileViewModel
 import it.polito.timebankingapp.ui.reviews.ReviewsViewModel
@@ -26,7 +27,7 @@ class AddReviewFragment : Fragment(R.layout.fragment_add_review) {
 
     private lateinit var user: User
     private lateinit var newReview: Review
-    private lateinit var reviewedUserId: String
+    private lateinit var reviewedTimeSlot: TimeSlot
 
     private lateinit var submitBtn: Button
     private lateinit var ratingBar: RatingBar
@@ -34,11 +35,19 @@ class AddReviewFragment : Fragment(R.layout.fragment_add_review) {
     private lateinit var warningLabel: TextView
 
 
+    override fun onCreate(savedInstanceState: Bundle?){
+        super.onCreate(savedInstanceState)
+
+        reviewedTimeSlot = arguments?.getSerializable("timeslot") as TimeSlot
+        //if (reviewedUserId == "null") reviewedUserId = "ry0npG5mapRq0ccreqTEQjvdqQa2"
+        rvm.checkIfAlreadyReviewed(reviewedTimeSlot.userId)
+        //rvm.retrieveRequesterInfo(reviewedTimeSlot)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         v = view
-        reviewedUserId = arguments?.getString("reviewedUserId").toString()
-        if (reviewedUserId == "null") reviewedUserId = "ry0npG5mapRq0ccreqTEQjvdqQa2"
+
 
         pvm.user.observe(viewLifecycleOwner) {
             user = it
@@ -54,23 +63,32 @@ class AddReviewFragment : Fragment(R.layout.fragment_add_review) {
         reviewTextView = v.findViewById(R.id.add_review_text)
         warningLabel = v.findViewById(R.id.ratingWarningLabel)
 
-        submitBtn.setOnClickListener {
-            val rating = ratingBar.rating
-            val text = reviewTextView.text.toString()
+        rvm.alreadyReviewed.observe(viewLifecycleOwner){
+            if(!it) { //if a review already exists
+                submitBtn.setOnClickListener {
+                    val rating = ratingBar.rating
+                    val text = reviewTextView.text.toString()
 
-            if(rating >= 1){
-                newReview.reviewText = text
-                newReview.stars = rating.toInt()
-                newReview.timestamp = java.util.Date()
-                rvm.addReview(newReview, reviewedUserId)
-                findNavController().navigateUp()
-                Toast.makeText(activity,"Review successfully added!", Toast.LENGTH_SHORT).show();
-            }
-            else {
-                warningLabel.visibility = View.VISIBLE //ERROR MESSAGE
+                    if (rating >= 1) {
+                        newReview.reviewText = text
+                        newReview.stars = rating.toInt()
+                        newReview.timestamp = java.util.Date()
+                        rvm.addReview(newReview, reviewedTimeSlot.userId)
+                        findNavController().navigateUp()
+                        Toast.makeText(activity, "Review successfully added!", Toast.LENGTH_SHORT)
+                            .show();
+                    } else {
+                        warningLabel.visibility = View.VISIBLE //ERROR MESSAGE
+                    }
+                }
+            } else{
+                submitBtn.setOnClickListener {
+                    warningLabel.visibility = View.VISIBLE //ERROR MESSAGE
+                    warningLabel.text = "You've already reviewed this user!"
+                    //Toast.makeText(activity,"You've already reviewed this user!", Toast.LENGTH_LONG).show();
+                }
             }
         }
-
     }
 
 }
