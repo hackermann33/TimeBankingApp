@@ -36,11 +36,11 @@
             android:icon="@drawable/ic_baseline_chat_24"
             android:title="@string/chats"
             />
-        <item
+        <!--<item
             android:id="@+id/nav_addReview"
             android:icon="@drawable/ic_baseline_rate_review_24"
             android:title="Add review (TEMP LINK)"
-            />
+            />-->
         <item
             android:id="@+id/nav_timeSlotMonthCalendar"
             android:icon="@drawable/ic_baseline_calendar_month_24"
