@@ -50,12 +50,20 @@ class AddReviewFragment : Fragment(R.layout.fragment_add_review) {
 
 
         pvm.user.observe(viewLifecycleOwner) {
-            user = it
-            val tempMap = mutableMapOf<String, String>()
-            tempMap["id"] = user.id
-            tempMap["fullName"] = user.fullName
-            tempMap["profilePicUrl"] = user.profilePicUrl
-            newReview = Review(reviewer = tempMap, role= "requester")
+            if(it.id  != reviewedTimeSlot.userId) { //non sei il creatore del time slot --> sei il requester che vuole recensionare l'offerer
+                user = it
+                val tempMap = mutableMapOf<String, String>()
+                tempMap["id"] = user.id
+                tempMap["fullName"] = "user.fullName"
+                tempMap["profilePicUrl"] = "user.profilePicUrl"
+                newReview = Review(reviewer = tempMap, role = "offerer")
+            } else {    //sei il creatore --> sei il requester che vuole recensire l'offerer
+                val tempMap = mutableMapOf<String, String>()
+                tempMap["id"] = reviewedTimeSlot.offerer.id
+                tempMap["fullName"] = "user.fullName"
+                tempMap["profilePicUrl"] = "user.profilePicUrl"
+                newReview = Review(reviewer = tempMap, role = "requester")
+            }
         }
 
         submitBtn = v.findViewById(R.id.add_review_button)

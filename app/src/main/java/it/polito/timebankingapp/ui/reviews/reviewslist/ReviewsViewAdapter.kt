@@ -36,12 +36,12 @@ class ReviewsViewAdapter(
         var pbOtherProfilePic: ProgressBar =itemView.findViewById(R.id.progressBar)
 
         fun bind(rw: Review, detailAction: (v: View) -> Unit) {
-            fullName.text = rw.reviewer.getValue("fullName")
+            fullName.text = "Anonymous reviewer"//rw.reviewer.getValue("fullName")
             ratingBar.rating = rw.stars.toFloat()
             timestamp.text = rw.timestamp.toString()
             reviewText.text = rw.reviewText
             //profilePic = qualcosa con glide?
-            Helper.loadImageIntoView(civImagePic, pbOtherProfilePic , rw.reviewer["profilePicUrl"]!!)
+            //Helper.loadImageIntoView(civImagePic, pbOtherProfilePic , rw.reviewer["profilePicUrl"]!!)
 
             //this.mainView.setOnClickListener(detailAction)
         }
