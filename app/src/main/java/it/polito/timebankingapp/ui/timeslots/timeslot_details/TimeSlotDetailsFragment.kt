@@ -114,6 +114,14 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
         view.findViewById<TextView>(R.id.time_slot_description).text = ts?.description
         view.findViewById<TextView>(R.id.time_slot_restrictions).text = ts?.restrictions
 
+
+        val civOffererPic = view.findViewById<CircleImageView>(R.id.offerer_pic)
+        val pb = view.findViewById<ProgressBar>(R.id.progressBar3)
+        val tvOffererName = view.findViewById<TextView>(R.id.offerer_name)
+
+
+        Helper.loadImageIntoView(civOffererPic, pb, ts!!.offerer.profilePicUrl)
+        tvOffererName.text = ts.offerer.nick
         if (type == "skill_specific") {
 
             //se esiste già una richiesta, disabilita btnRequestService
@@ -134,13 +142,7 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
 
 
             val btnAskInfo = view.findViewById<Button>(R.id.openChatButton)
-            val civOffererPic = view.findViewById<CircleImageView>(R.id.offerer_pic)
-            val pb = view.findViewById<ProgressBar>(R.id.progressBar3)
-            val tvOffererName = view.findViewById<TextView>(R.id.offerer_name)
 
-
-            Helper.loadImageIntoView(civOffererPic, pb, ts!!.offerer.profilePicUrl)
-            tvOffererName.text = ts.offerer.nick
 
             btnAskInfo.setOnClickListener {
                 showTimeSlotRequest(timeSlot)

@@ -39,7 +39,7 @@
                 android:layout_height="0dp"
                 android:layout_weight="0.7"
                 android:orientation="horizontal"
-                android:visibility="gone">
+                android:visibility="visible">
 
 
                 <RelativeLayout
