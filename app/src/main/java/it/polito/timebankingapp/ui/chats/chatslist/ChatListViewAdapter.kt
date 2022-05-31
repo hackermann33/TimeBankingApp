@@ -81,15 +81,15 @@ class ChatListViewAdapter(
                 Helper.loadImageIntoView(civImagePic, pbOtherProfilePic , otherUser.profilePicUrl)
 
                 /* I am the offerer */
-                chipOffreq.text = "Offer"
-                chipOffreq.setChipBackgroundColorResource(R.color.primary_dark)
+                chipOffreq.text = "My Offer"
+                chipOffreq.setChipBackgroundColorResource(R.color.accent)
                 chipOffreq.setTextColor(Color.WHITE)
 //                chipOffreq.setBackgroundColor(Color.GREEN)
             }
             else { /* The other is the requester */
                 Helper.loadImageIntoView(civImagePic, pbOtherProfilePic , otherUser.profilePicUrl)
                 chipOffreq.text = "Request"
-                chipOffreq.setChipBackgroundColorResource(R.color.accent)
+                chipOffreq.setChipBackgroundColorResource(R.color.primary)
 //                chipOffreq.setBackgroundColor(Color.YELLOW)
             }
 

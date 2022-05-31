@@ -46,11 +46,11 @@ class TimeSlotMonthCalendarEventsAdapter(/*val vm : TimeSlotsViewModel*/) :
             completeButton.setOnClickListener(completeTsAction)
 
             if(event.isOffered) {
-                tsType.text = "Offer"
+                tsType.text = "My Offer"
                 tsType.setChipBackgroundColorResource(R.color.accent)
             } else {
                 tsType.text = "Request"
-                tsType.setChipBackgroundColorResource(R.color.primary_dark)
+                tsType.setChipBackgroundColorResource(R.color.primary)
             }
         }
     }

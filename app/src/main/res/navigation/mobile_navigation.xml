@@ -12,7 +12,11 @@
         tools:layout="@layout/fragment_chat_list">
         <action
             android:id="@+id/action_nav_allChatsList_to_nav_chat"
-            app:destination="@id/nav_chat" >
+            app:destination="@id/nav_chat"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" >
             <argument
                 android:name="point_of_origin"
                 android:defaultValue="global" />
@@ -24,17 +28,29 @@
         tools:layout="@layout/fragment_timeslots_list">
         <action
             android:id="@+id/action_nav_personalTimeSlotList_to_nav_timeSlotChatsList"
-            app:destination="@id/nav_timeSlotChatsList" >
+            app:destination="@id/nav_timeSlotChatsList"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" >
             <argument
                 android:name="point_of_origin"
                 android:defaultValue="specific" />
         </action>
         <action
             android:id="@+id/action_nav_personalTimeSlotList_to_nav_timeSlotDetails"
-            app:destination="@id/nav_timeSlotDetails" />
+            app:destination="@id/nav_timeSlotDetails"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
         <action
             android:id="@+id/action_nav_personalTimeSlotList_to_nav_timeSlotEdit"
-            app:destination="@id/nav_timeSlotEdit" />
+            app:destination="@id/nav_timeSlotEdit"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
         <argument
             android:name="point_of_origin"
             app:argType="string"
@@ -46,10 +62,18 @@
         tools:layout="@layout/fragment_timeslots_list">
         <action
             android:id="@+id/action_nav_interestingTimeSlotList_to_nav_chat"
-            app:destination="@id/nav_chat" />
+            app:destination="@id/nav_chat"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
         <action
             android:id="@+id/action_nav_interestingTimeSlotList_to_nav_timeSlotDetails"
-            app:destination="@id/nav_timeSlotDetails" />
+            app:destination="@id/nav_timeSlotDetails"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
         <argument
             android:name="point_of_origin"
             app:argType="string"
@@ -59,7 +83,11 @@
         android:id="@+id/action_global_to_nav_login"
         app:destination="@id/nav_login"
         app:popUpTo="@id/nav_skillsList"
-        app:popUpToInclusive="true" />
+        app:popUpToInclusive="true"
+        app:enterAnim="@anim/nav_default_enter_anim"
+        app:exitAnim="@anim/nav_default_exit_anim"
+        app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+        app:popExitAnim="@anim/nav_default_pop_exit_anim" />
     <fragment
         android:id="@+id/nav_timeSlotDetails"
         android:name="it.polito.timebankingapp.ui.timeslots.timeslot_details.TimeSlotDetailsFragment"
@@ -74,10 +102,18 @@
             app:popExitAnim="@anim/nav_default_pop_exit_anim" />
         <action
             android:id="@+id/action_nav_timeSlotDetails_to_nav_showProfile"
-            app:destination="@id/nav_showProfile" />
+            app:destination="@id/nav_showProfile"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"/>
         <action
             android:id="@+id/action_nav_timeSlotDetails_to_nav_chat"
-            app:destination="@id/nav_chat" />
+            app:destination="@id/nav_chat"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"/>
     </fragment>
 
     <fragment
@@ -98,7 +134,11 @@
             app:popExitAnim="@anim/nav_default_pop_exit_anim"/>
         <action
             android:id="@+id/action_nav_showProfile_to_nav_reviewsList"
-            app:destination="@id/nav_reviewsList" />
+            app:destination="@id/nav_reviewsList"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
     </fragment>
     <fragment
         android:id="@+id/nav_editProfile"
@@ -114,7 +154,11 @@
             android:id="@+id/action_loginFragment_to_nav_skillsList"
             app:destination="@id/nav_skillsList"
             app:popUpTo="@id/nav_login"
-            app:popUpToInclusive="true" />
+            app:popUpToInclusive="true"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
     </fragment>
     <fragment
         android:id="@+id/nav_skillsList"
@@ -123,7 +167,11 @@
         tools:layout="@layout/fragment_skills_list">
         <action
             android:id="@+id/action_nav_skillsList_to_skillSpecificTimeSlotListFragment"
-            app:destination="@id/nav_skillSpecificTimeSlotList" />
+            app:destination="@id/nav_skillSpecificTimeSlotList"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
     </fragment>
     <fragment
         android:id="@+id/nav_skillSpecificTimeSlotList"
@@ -133,10 +181,18 @@
         <!--android:label="Available offers" set programmatically-->
         <action
             android:id="@+id/action_skillSpecificTimeSlotListFragment_to_nav_timeSlotDetails"
-            app:destination="@id/nav_timeSlotDetails" />
+            app:destination="@id/nav_timeSlotDetails"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
         <action
             android:id="@+id/action_nav_skillSpecificTimeSlotList_to_nav_chat"
-            app:destination="@id/nav_chat" />
+            app:destination="@id/nav_chat"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
     </fragment>
     <fragment
         android:id="@+id/nav_chat"
@@ -144,7 +200,11 @@
         android:label="Chat" >
         <action
             android:id="@+id/action_nav_chat_to_nav_showProfile"
-            app:destination="@id/nav_showProfile" />
+            app:destination="@id/nav_showProfile"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
     </fragment>
     <fragment
         android:id="@+id/nav_timeSlotChatsList"
@@ -180,7 +240,11 @@
         tools:layout="@layout/fragment_time_slot_month_calendar" >
         <action
             android:id="@+id/action_nav_timeSlotMonthCalendar_to_nav_markTimeSlotAsCompleted"
-            app:destination="@id/nav_markTimeSlotAsCompleted" />
+            app:destination="@id/nav_markTimeSlotAsCompleted"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
     </fragment>
     <fragment
         android:id="@+id/nav_completedTimeSlotList"
@@ -198,7 +262,11 @@
             android:defaultValue="completed" />
         <action
             android:id="@+id/action_nav_completedTimeSlotList_to_nav_addReview"
-            app:destination="@id/nav_addReview" />
+            app:destination="@id/nav_addReview"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
     </fragment>
     <fragment
         android:id="@+id/nav_markTimeSlotAsCompleted"
