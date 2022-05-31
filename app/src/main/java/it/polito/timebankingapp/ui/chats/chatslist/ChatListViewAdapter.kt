@@ -65,8 +65,8 @@ class ChatListViewAdapter(
             tvTimeSlotTitle.text = cli.timeSlot.title
             tvLastMessage.text = cli.lastMessage.messageText
             if(cli.lastMessage.userId != Firebase.auth.uid) {
-                if (cli.unreadMsgs > 0)
-                    nUnreadMsg.text = cli.unreadMsgs.toString()
+                if (cli.offererUnreadMsg > 0)
+                    nUnreadMsg.text = cli.offererUnreadMsg.toString()
                 else
                     unreadMsgCard.visibility = View.GONE
             }

@@ -58,8 +58,6 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
 
         btnRequestService = view.findViewById<Button>(R.id.button_request_service)
 
-
-
         val ts = globalModel.selectedTimeSlot.value
 
         btnRequestService.isEnabled = status == Chat.STATUS_UNINTERESTED
@@ -139,6 +137,7 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
                 showTimeSlotRequest(timeSlot)
                 findNavController().navigate(R.id.action_nav_timeSlotDetails_to_nav_chat)
             }
+
 
 
             /* Rememeber to update number of chats for that timeSlot*/
