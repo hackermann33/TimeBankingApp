@@ -92,5 +92,10 @@ class ChatListFragment : Fragment(R.layout.fragment_chat_list) {
 
     }
 
+    override fun onDetach() {
+        chatListViewModel.clearChatList()
+        super.onDetach()
+    }
+
 
 }

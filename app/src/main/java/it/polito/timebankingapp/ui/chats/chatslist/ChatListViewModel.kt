@@ -106,6 +106,11 @@ class ChatListViewModel(application: Application): AndroidViewModel(application)
         db.collection("requests").whereEqualTo("offerer.id", Firebase.auth.uid)
     }
 
+
+    fun clearChatList() {
+        _chatsList.value = listOf()
+    }
+
 }
 
 
