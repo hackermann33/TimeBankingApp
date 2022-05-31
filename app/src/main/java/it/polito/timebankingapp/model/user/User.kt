@@ -63,7 +63,7 @@ data class User(
         val cr2 = CompactReview(getReviewsScore(Review.AS_REQUESTER_TYPE), asRequesterReviews.size)
 
         return CompactUser(
-            id, profilePicUrl, nick, location, cr, cr2, balance)
+            id, profilePicUrl, nick, location, cr, cr2, balance = balance)
     }
 
 }

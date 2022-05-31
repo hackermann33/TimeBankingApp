@@ -437,19 +437,29 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
             val duration = snapshot.getString("timeSlot.duration")?.toInt()!!
             val newBalance = snapshot.getLong("requester.balance")!! - duration
             if(newBalance < 0){
+                Log.d(TAG, "balance is not okay: $newBalance")
                 transaction.update(reqDocRef, "status", Chat.STATUS_INTERESTED)
                 transaction.update(tsDocRef, "assignedTo", "")
+                newBalance
             }
             else{ //Balance is ok => transfer credit => update references
+                Log.d(TAG, "balance is okay: $newBalance")
                 transaction.update(reqDocRef, "requester.balance", newBalance) //TODO(Delete if u have time)
                 transaction.update(reqDocRef, "timeSlot.requester.balance", newBalance)
                 transaction.update(reqDocRef, "offerer.balance", FieldValue.increment(duration.toLong()))
 
                 transaction.update(offererDocRef, "balance", FieldValue.increment(duration.toLong()))
                 transaction.update(requesterDocRef, "balance", newBalance)
+                newBalance
 
             }
+        }.addOnSuccessListener {
+            Log.d(TAG, "ACCEPT SUCCEDED")
+
+        }.addOnFailureListener {
+            Log.d(TAG, "ACCEPT FAILED: $it")
         }
+
     }
 
     fun discardRequest(chatId: String) {
@@ -460,6 +470,10 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
 
     fun getChat(chatId: String): Task<DocumentSnapshot> {
         return db.collection("requests").document(chatId).get()
+    }
+
+    companion object  {
+        const val TAG = "ChatViewModel"
     }
 
 }
