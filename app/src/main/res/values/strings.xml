@@ -116,4 +116,5 @@
     <string name="are_you_really_sure_you_want_to_mark_it_as_completed">Are you really sure you want to mark it as completed?</string>
     <string name="confirm">Confirm</string>
     <string name="undo">Undo</string>
+    <string name="time_slot_title_label">Time slot Title:</string>
 </resources>

@@ -177,7 +177,11 @@
         android:id="@+id/nav_timeSlotMonthCalendar"
         android:name="it.polito.timebankingapp.ui.timeslots.timeslots_calendar.TimeSlotMonthCalendar"
         android:label="Calendar"
-        tools:layout="@layout/fragment_time_slot_month_calendar" />
+        tools:layout="@layout/fragment_time_slot_month_calendar" >
+        <action
+            android:id="@+id/action_nav_timeSlotMonthCalendar_to_nav_markTimeSlotAsCompleted"
+            app:destination="@id/nav_markTimeSlotAsCompleted" />
+    </fragment>
     <fragment
         android:id="@+id/nav_completedTimeSlotList"
         android:name="it.polito.timebankingapp.ui.timeslots.timeslots_list.TimeSlotListFragment"
@@ -196,5 +200,10 @@
             android:id="@+id/action_nav_completedTimeSlotList_to_nav_addReview"
             app:destination="@id/nav_addReview" />
     </fragment>
+    <fragment
+        android:id="@+id/nav_markTimeSlotAsCompleted"
+        android:name="it.polito.timebankingapp.ui.timeslots.timeslots_calendar.MarkTimeSlotAsCompletedFragment"
+        android:label="fragment_mark_time_slot_as_completed"
+        tools:layout="@layout/fragment_mark_time_slot_as_completed" />
 </navigation>
 

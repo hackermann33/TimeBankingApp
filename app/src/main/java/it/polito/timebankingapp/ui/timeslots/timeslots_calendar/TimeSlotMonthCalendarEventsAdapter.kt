@@ -9,6 +9,8 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.os.bundleOf
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.chip.Chip
 import it.polito.timebankingapp.R
@@ -67,22 +69,10 @@ class TimeSlotMonthCalendarEventsAdapter(/*val vm : TimeSlotsViewModel*/) :
 
     override fun onBindViewHolder(viewHolder: ItemViewHolder, position: Int) {
         viewHolder.bind(events[position], completeTsAction = {
-            val builder = AlertDialog.Builder(viewHolder.itemView.context)
-            builder.setTitle("Complete task")
-            builder.setMessage("Are you really sure you want to mark it as completed?")
-//builder.setPositiveButton("OK", DialogInterface.OnClickListener(function = x))
-
-            builder.setPositiveButton("Yes") { dialog, which ->
-                //vm.setTimeSlotAsCompleted(events[position].ts)
-                Toast.makeText(viewHolder.itemView.context,
-                    "Marked as completed!", Toast.LENGTH_SHORT).show()
-            }
-
-            builder.setNegativeButton("No") { dialog, which ->
-                //Toast.makeText(viewHolder.itemView.context,
-                //    android.R.string.yes, Toast.LENGTH_SHORT).show()
-            }
-            builder.show()
+            Navigation.findNavController(it).navigate(
+                R.id.action_nav_timeSlotMonthCalendar_to_nav_markTimeSlotAsCompleted,
+                bundleOf("timeslot" to events[position].ts)
+            )
         })
     }
 

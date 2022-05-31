@@ -9,7 +9,7 @@
 
     <com.google.android.material.card.MaterialCardView
         app:cardCornerRadius="10dp"
-        app:cardElevation="1dp"
+        app:cardElevation="10dp"
         app:cardUseCompatPadding="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -21,32 +21,31 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingTop="64dp"
-            android:paddingBottom="64dp">
+            android:paddingTop="0dp"
+            android:paddingBottom="32dp">
 
-            <TextView
-                android:id="@+id/completed_confirmation_message"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:paddingStart="32dp"
-                android:paddingEnd="32dp"
-                android:text="@string/are_you_really_sure_you_want_to_mark_it_as_completed"
-                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            <View
+                android:id="@+id/divider20"
+                android:layout_width="0dp"
+                android:layout_height="2dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:background="?android:attr/listDivider"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toBottomOf="@+id/completed_ts_title" />
 
             <TextView
                 android:id="@+id/completed_ts_title_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="24dp"
-                android:text="@string/time_slots_item_title"
+                android:layout_marginTop="32dp"
+                android:text="@string/time_slot_title_label"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/completed_confirmation_message" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/completed_ts_title"
@@ -56,23 +55,38 @@
                 android:layout_marginEnd="16dp"
                 android:text="@string/fragment_timeslot_title"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textStyle="italic"
                 app:layout_constraintBottom_toBottomOf="@+id/completed_ts_title_label"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/completed_ts_title_label"
                 app:layout_constraintTop_toTopOf="@+id/completed_ts_title_label" />
 
+            <TextView
+                android:id="@+id/completed_confirmation_message"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:gravity="center"
+                android:paddingStart="32dp"
+                android:paddingEnd="32dp"
+                android:text="@string/are_you_really_sure_you_want_to_mark_it_as_completed"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/divider20" />
+
             <Button
                 android:id="@+id/completed_undo_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
+                android:layout_marginTop="16dp"
                 android:text="@string/undo"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/completed_confirm_button"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintHorizontal_chainStyle="spread"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/completed_ts_title_label" />
+                app:layout_constraintTop_toBottomOf="@+id/completed_confirmation_message" />
 
             <Button
                 android:id="@+id/completed_confirm_button"

@@ -42,7 +42,7 @@ class TimeSlotMonthCalendar : Fragment(R.layout.fragment_time_slot_month_calenda
     private val userVm: ProfileViewModel by activityViewModels()
 
 
-    private val eventsAdapter = TimeSlotMonthCalendarEventsAdapter( )
+    private val eventsAdapter = TimeSlotMonthCalendarEventsAdapter()
 /*
     private val inputDialog by lazy {
         val editText = AppCompatEditText(requireContext())
