@@ -10,7 +10,6 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.findNavController
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.ktx.auth
@@ -22,7 +21,6 @@ import it.polito.timebankingapp.model.Chat
 import it.polito.timebankingapp.model.Chat.Companion.STATUS_DISCARDED
 import it.polito.timebankingapp.model.chat.ChatMessage
 import it.polito.timebankingapp.model.user.CompactUser
-import java.util.*
 
 
 class ChatFragment : Fragment(R.layout.fragment_chat) {
@@ -127,7 +125,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         val tvTimeSlotTitle = v.findViewById<TextView>(R.id.fragment_chat_tv_offer_title)
         val tvProfileName = v.findViewById<TextView>(R.id.chat_profile_name)
         val btnAcceptRequest = v.findViewById<Button>(R.id.fragment_chat_btn_accept)
-        val btnRequireService = v.findViewById<Button>(R.id.fragment_chat_btn_request_service)
+        val btnRequestService = v.findViewById<Button>(R.id.fragment_chat_btn_request_service)
         val btnDiscardRequest = v.findViewById<TextView>(R.id.fragment_chat_btn_discard)
         val pbProfilePic = v.findViewById<ProgressBar>(R.id.fragment_chat_pb_profile_pic)
 
@@ -135,8 +133,8 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         Helper.loadImageIntoView(civProfilePic, pbProfilePic, otherUser.profilePicUrl)
 
 
-        btnRequireService.setOnClickListener {
-            Helper.setConfirmationOnButton(requireContext(), btnRequireService)
+        btnRequestService.setOnClickListener {
+            Helper.setConfirmationOnButton(requireContext(), btnRequestService)
             /*btnRequireService.isEnabled = false *//*TODO(Reabilitate if error happens during requests) */
             chatVm.requestService(cli)
         }
@@ -156,7 +154,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
             Chat.CHAT_TYPE_TO_OFFERER -> {
                 btnDiscardRequest.visibility = View.GONE
                 btnAcceptRequest.visibility = View.GONE
-                btnRequireService.visibility = View.VISIBLE
+                btnRequestService.visibility = View.VISIBLE
                 Log.d(TAG, "TYPE TO OFFERER")
                 when (cli.status) {
                     Chat.STATUS_UNINTERESTED -> {
@@ -164,8 +162,8 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
                     }
                     Chat.STATUS_INTERESTED -> {
                         Log.d(TAG, "STATUS INTERESTED")
-                        btnRequireService.text = "Service requested"
-                        Helper.setConfirmationOnButton(requireContext(), btnRequireService)
+                        btnRequestService.text = "Service requested"
+                        Helper.setConfirmationOnButton(requireContext(), btnRequestService)
                     }
                     Chat.STATUS_ACCEPTED -> Log.d(TAG, "STATUS ACCEPTED")
                 }
@@ -174,7 +172,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
             Chat.CHAT_TYPE_TO_REQUESTER -> {
                 btnDiscardRequest.visibility = View.VISIBLE
                 btnAcceptRequest.visibility = View.VISIBLE
-                btnRequireService.visibility = View.GONE
+                btnRequestService.visibility = View.GONE
                 rbReviewScore.rating = otherUser.asRequesterReview.score.toFloat()
                 tvReviewsNumber.text = "${otherUser.asRequesterReview.number} reviews"
                 Log.d(TAG, "TYPE TO REQUESTER")
