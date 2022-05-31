@@ -391,10 +391,28 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun updateStatus(chatId: String, status: Int) {
-        db.collection("requests").document(chatId).update(mapOf("status" to status)).addOnSuccessListener {
-            _chat.value = chat.value?.copy(status=status)
+    fun updateStatus(chatId: String, newStatus: Int) {
+        val reqDocRef = db.collection("requests")
+        when(newStatus) {
+            Chat.STATUS_ACCEPTED -> {reqDocRef.get().addOnSuccessListener {
+                /* TODO(Controlla il credito) */
+                for( doc in it.documents){
+                    if(doc.get("requestId") != chatId )
+                        doc.reference.update(mapOf("status" to Chat.STATUS_DISCARDED))
+                    else {
+                        doc.reference.update(mapOf("status" to Chat.STATUS_ACCEPTED))
+                        /* !!!!tocheck ==> */_chat.value = chat.value?.copy(status=newStatus)
+                    }
+                }
+            }}
+            Chat.STATUS_DISCARDED -> {
+                reqDocRef.document(chatId).get().addOnSuccessListener { doc ->
+                    doc.reference.update(mapOf("status" to Chat.STATUS_DISCARDED))
+                    _chat.value = chat.value?.copy(status=newStatus)
+                }
+            }
         }
+
     }
 
     fun acceptRequest(chatId: String) {
