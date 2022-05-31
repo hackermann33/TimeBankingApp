@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.RecyclerView
 import de.hdodenhof.circleimageview.CircleImageView
 import it.polito.timebankingapp.R
 import it.polito.timebankingapp.model.review.Review
-import it.polito.timebankingapp.ui.chats.chat.ChatViewAdapter
 
 
 class ReviewsViewAdapter(
@@ -69,7 +68,7 @@ class ReviewsViewAdapter(
         } else { // (viewType == VIEW_TYPE_EMPTY_MESSAGE) {
             vg = LayoutInflater
                 .from(parent.context)
-                .inflate(R.layout.reviews_list_item_emtpy, parent, false)
+                .inflate(R.layout.reviews_list_item_empty, parent, false)
             EmptyItemViewHolder(vg)
         }
     }

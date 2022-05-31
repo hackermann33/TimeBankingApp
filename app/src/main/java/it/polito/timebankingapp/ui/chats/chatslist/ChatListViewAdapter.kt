@@ -16,15 +16,32 @@ import de.hdodenhof.circleimageview.CircleImageView
 import it.polito.timebankingapp.R
 import it.polito.timebankingapp.model.Chat
 import it.polito.timebankingapp.model.Helper
+import it.polito.timebankingapp.model.review.Review
+import it.polito.timebankingapp.ui.reviews.reviewslist.ReviewsViewAdapter
 
 class ChatListViewAdapter(
     private var data: List<Chat>,
     private var selectChat: (chat: Chat) -> Unit?,
     /*private var updateUser: (userId: String) -> Unit?,*/
     val type: String,
-) : RecyclerView.Adapter<ChatListViewAdapter.ItemViewHolder>() {
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
+    private val VIEW_TYPE_CHAT_LIST = 1
+    private val VIEW_TYPE_EMPTY_MESSAGE = 2
 
     private var displayData = data.toMutableList()
+    private var isEmpty: Boolean = displayData.isEmpty()
+    init {
+        if(isEmpty)
+            displayData.add(Chat()) //singolo elemento == messaggio di lista vuota
+    }
+
+    class EmptyItemViewHolder(private val mainView: View ) : RecyclerView.ViewHolder(mainView) {
+        fun bind() {
+            //empty
+        }
+    }
+
 
     class ItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private var tvTimeSlotTitle: TextView = itemView.findViewById(R.id.chat_list_item_time_slot_title)
@@ -79,42 +96,62 @@ class ChatListViewAdapter(
 
             this.itemView.setOnClickListener(openChatAction)
         }
+    }
 
-
+    override fun getItemViewType(position: Int): Int {
+        return if (!isEmpty) {
+            VIEW_TYPE_CHAT_LIST
+        } else {
+            VIEW_TYPE_EMPTY_MESSAGE
+        }
     }
 
     //inflate the item_layout-based structure inside each ViewHolder
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
-        val destination =  R.layout.fragment_chat_list_item
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        val vg: View
+        return if (viewType == VIEW_TYPE_CHAT_LIST) {
+            vg = LayoutInflater
+                .from(parent.context)
+                .inflate(R.layout.fragment_chat_list_item, parent, false)
+             ItemViewHolder(vg)
+        } else { // (viewType == VIEW_TYPE_EMPTY_MESSAGE) {
+            vg = LayoutInflater
+                .from(parent.context)
+                .inflate(R.layout.chat_list_item_empty, parent, false)
+             EmptyItemViewHolder(vg)
+        }
+
+        /*val destination =  R.layout.fragment_chat_list_item
 
         val vg = LayoutInflater
             .from(parent.context)
             .inflate(destination, parent, false) //attachToRoot: take all you measures
         //but do not attach it immediately to the ViewHolder tree of components (could be a ghost item)
 
-        return ItemViewHolder(vg)
+        return ItemViewHolder(vg)*/
     }
 
     //populate data for each inflated ViewHolder
-    override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
 
         val item = displayData[position]
-        holder.bind(item, openChatAction =
-        {
-            val destination = if(type == ChatListFragment.GLOBAL) R.id.action_nav_allChatsList_to_nav_chat
-            else
-                R.id.action_nav_timeSlotChatsList_to_nav_chat
-            selectChat(item)
-//            val b = bundleOf("profilePic" to item.userPic)
-//            b.putString("profileName", item.userName)
-//            b.putString("profileId", item.userId)
-            //updateUser(item.userId)
-            Navigation.findNavController(it).navigate(
-                destination,
-                //bundleOf("point_of_origin" to type, "userId" to item.userId)
-            )
+        when (holder.itemViewType) {
+            VIEW_TYPE_CHAT_LIST-> (holder as ItemViewHolder).bind(item, openChatAction = {
+                val destination = if(type == ChatListFragment.GLOBAL) R.id.action_nav_allChatsList_to_nav_chat
+                else
+                    R.id.action_nav_timeSlotChatsList_to_nav_chat
+                selectChat(item)
+    //            val b = bundleOf("profilePic" to item.userPic)
+    //            b.putString("profileName", item.userName)
+    //            b.putString("profileId", item.userId)
+                //updateUser(item.userId)
+                Navigation.findNavController(it).navigate(
+                    destination,
+                    //bundleOf("point_of_origin" to type, "userId" to item.userId)
+                )
+            });
+            VIEW_TYPE_EMPTY_MESSAGE -> (holder as EmptyItemViewHolder).bind()
         }
-        );
     }
 
 

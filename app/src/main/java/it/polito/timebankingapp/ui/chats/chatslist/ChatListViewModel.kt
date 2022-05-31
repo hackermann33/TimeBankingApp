@@ -27,6 +27,19 @@ class ChatListViewModel(application: Application): AndroidViewModel(application)
     private lateinit var l: ListenerRegistration
     private lateinit var l2: ListenerRegistration
 
+    /*
+    private val _hasChatsListBeenCleared = MutableLiveData<Boolean?>()
+    var hasChatsListBeenCleared: LiveData<Boolean?> = _hasChatsListBeenCleared
+
+
+    init {
+        _hasChatsListBeenCleared.value = false
+    }
+
+    fun setIsClearedFlag(value: Boolean) {
+        _hasChatsListBeenCleared.value = value
+    }
+*/
 //    fun retrieveChatMessages(timeslotId: String, requesterId: String ){
 //        l = db.collection("chats").document(timeslotId).collection(requesterId).orderBy("timestamp")
 //            .addSnapshotListener {
