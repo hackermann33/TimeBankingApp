@@ -40,8 +40,13 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 
         /*TODO(To remove glitch between transictions (require -> offerer) use a bundle to understand where do you come from)  */
         chatVm.chat.observe(viewLifecycleOwner) { cli ->
-            currentChat = cli
-            updateChatUi(view, cli)
+
+            if(chatVm.hasChatBeenCleared.value == true)
+                chatVm.setIsClearedFlag(false)
+            else {
+                currentChat = cli
+                updateChatUi(view, cli)
+            }
         }
 
         setRecyclerViewAdapter(view)
@@ -84,6 +89,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 
     override fun onDestroy() {
         chatVm.clearChat()
+        chatVm.setIsClearedFlag(true)
         super.onDestroy()
     }
 

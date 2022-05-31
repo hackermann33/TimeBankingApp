@@ -30,11 +30,22 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
     val chat: LiveData<Chat> = _chat
 
 
+    private val _hasChatBeenCleared = MutableLiveData<Boolean?>()
+    var hasChatBeenCleared: LiveData<Boolean?> = _hasChatBeenCleared
+
+
     private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
 
     private lateinit var messagesListener: ListenerRegistration
     private lateinit var otherUserListener: ListenerRegistration
 
+
+    init {
+        _hasChatBeenCleared.value = false
+    }
+    fun setIsClearedFlag(value: Boolean) {
+        _hasChatBeenCleared.value = value
+    }
 
     /* Function invoked when first message is sent ( and the request isn't been created)*/
     fun sendFirstMessage(message: ChatMessage) {
