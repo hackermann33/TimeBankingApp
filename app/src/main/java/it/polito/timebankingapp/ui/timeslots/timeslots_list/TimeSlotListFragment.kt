@@ -107,12 +107,34 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_timeslots_list) {
 
         //var skill = arguments?.getString("skill")
 
-        vm.isEmpty.observe(viewLifecycleOwner) {
-            if(it == true) { //is empty
-                setVoidMessage(view, true)
+        vm.isLoading.observe(viewLifecycleOwner) { isLoading ->
+            if(!isLoading) {
+                if(vm.timeSlots.value!!.isEmpty())
+                    setVoidMessage(view, true)
+                else {
+                    setVoidMessage(view, false)
+                    val adTmp = TimeSlotAdapter(
+                        vm.timeSlots.value!!.toMutableList(),
+                        ::selectTimeSlot,
+                        ::showTimeSlotRequest,
+                        ::showRequests,
+                        type,
+                        userVm.user.value
+                    )
+
+//                adTmp.data = it.toMutableList()
+                    rv.adapter = adTmp
+
+                    if (type == "skill_specific") {
+                        setFilteringOptions(view, adTmp)
+                        adTmp.setFilter(filterKeywords, filterParameter)
+                        adTmp.setOrder(filterParameter, orderingDirection)
+                    }
+                }
             }
         }
 
+        /*
         vm.timeSlots.observe(viewLifecycleOwner) {
             if (it.isNotEmpty()) {
                 setVoidMessage(view, false)
@@ -134,12 +156,12 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_timeslots_list) {
                     adTmp.setFilter(filterKeywords, filterParameter)
                     adTmp.setOrder(filterParameter, orderingDirection)
                 }
-            } /*else {
+            } *//*else {
                 if(vm.justUpdated)
                     setVoidMessage(view, true)
-            }*/
+            }*//*
         }
-
+*/
     }
 
     fun showTimeSlotRequest(timeSlot: TimeSlot) {
