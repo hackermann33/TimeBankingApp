@@ -44,12 +44,15 @@
                 android:layout_marginTop="32dp"
                 android:text="@string/time_slot_title_label"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                app:layout_constraintEnd_toStartOf="@+id/completed_ts_title"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintHorizontal_chainStyle="packed"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/completed_ts_title"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
@@ -58,6 +61,7 @@
                 android:textStyle="italic"
                 app:layout_constraintBottom_toBottomOf="@+id/completed_ts_title_label"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/completed_ts_title_label"
                 app:layout_constraintTop_toTopOf="@+id/completed_ts_title_label" />
 

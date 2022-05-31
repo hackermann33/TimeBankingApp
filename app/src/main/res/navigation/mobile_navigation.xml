@@ -203,7 +203,7 @@
     <fragment
         android:id="@+id/nav_markTimeSlotAsCompleted"
         android:name="it.polito.timebankingapp.ui.timeslots.timeslots_calendar.MarkTimeSlotAsCompletedFragment"
-        android:label="fragment_mark_time_slot_as_completed"
+        android:label="Time slot confirmation"
         tools:layout="@layout/fragment_mark_time_slot_as_completed" />
 </navigation>
 
