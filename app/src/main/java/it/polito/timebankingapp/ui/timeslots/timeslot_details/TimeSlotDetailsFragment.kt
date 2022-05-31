@@ -118,6 +118,8 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
             view.findViewById<ConstraintLayout>(R.id.layout_offerer)
                 .also { it.visibility = View.VISIBLE }
 
+            btnRequestService.visibility = View.VISIBLE
+
             /* Retrieve status of the current chat*/
             chatVm.getChat(Helper.makeRequestId(ts!!.id, Firebase.auth.uid!!)).addOnSuccessListener {
                 status = it.toObject<Chat>()?.status ?: Chat.STATUS_UNINTERESTED
