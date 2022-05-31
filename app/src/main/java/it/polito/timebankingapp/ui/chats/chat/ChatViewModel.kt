@@ -39,7 +39,6 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
     private lateinit var otherUserListener: ListenerRegistration
 
 
-
     /* Function invoked when first message is sent ( and the request isn't been created)*/
     /*fun sendFirstMessage(message: ChatMessage) {
         val req = _chat.value!!.copy(status = Chat.STATUS_INTERESTED)
@@ -70,10 +69,11 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
     }
 
 
-    fun sendMessageAndUpdate(chat: Chat, message: ChatMessage){
+    fun sendMessageAndUpdate(chat: Chat, message: ChatMessage) {
 
-        val reqDocRef =  db.collection("requests").document(chat.requestId)
-        val msgsDocRef =  db.collection("requests").document(chat.requestId).collection("messages").document()
+        val reqDocRef = db.collection("requests").document(chat.requestId)
+        val msgsDocRef =
+            db.collection("requests").document(chat.requestId).collection("messages").document()
         val timeSlotDocRef = db.collection("timeSlots").document(chat.timeSlotId)
 
         /*val incrementUnreadChats =
@@ -88,12 +88,11 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
         var incrementUnreadChats = false
         var whoUpdates = ""
 
-        if(chat.status == Chat.STATUS_UNINTERESTED) { /* I am the requester, NEW REQUEST*/
+        if (chat.status == Chat.STATUS_UNINTERESTED) { /* I am the requester, NEW REQUEST*/
             whoUpdates = "offerer"
             incrementUnreadChats = true
-        }
-        else{ /* Already existing chat */
-            if(chat.lastMessage.userId != Firebase.auth.uid) { /* is a new message that has to increment the counter */
+        } else { /* Already existing chat */
+            if (chat.lastMessage.userId != Firebase.auth.uid) { /* is a new message that has to increment the counter */
                 incrementUnreadChats = true
                 if (chat.offerer.id == Firebase.auth.uid)  /* I am the offerer, update requesterUnreadChats*/
                     whoUpdates = "requester"
@@ -103,7 +102,7 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
             }
         }
 
-        if(chat.status == Chat.STATUS_UNINTERESTED) //first message
+        if (chat.status == Chat.STATUS_UNINTERESTED) //first message
             registerMessagesListener(chat)
 
         chat.sendMessage(message)
@@ -111,7 +110,7 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
         db.runBatch { batch ->
             batch.set(reqDocRef, chat)
             batch.set(msgsDocRef, message)
-            if(incrementUnreadChats) {
+            if (incrementUnreadChats) {
                 batch.update(timeSlotDocRef, "${whoUpdates}UnreadChats", FieldValue.increment(1))
 //                already Managed by reqDocRef.set
 //                batch.update(reqDocRef, "timeSlot.${whoUpdates}UnreadChats", FieldValue.increment(1))
@@ -121,9 +120,9 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
         }.addOnSuccessListener {
             _chat.postValue(chat)
 
-            Log.d("sendMessageAndUpdate","Everything updated")
-        }.addOnFailureListener{
-            Log.d("sendMessageAndUpdate","Oh, no")
+            Log.d("sendMessageAndUpdate", "Everything updated")
+        }.addOnFailureListener {
+            Log.d("sendMessageAndUpdate", "Oh, no")
         }
     }
 
@@ -197,7 +196,10 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
         val chatId = makeRequestId(timeSlot.id, Firebase.auth.uid!!)
         val chatRef = db.collection("requests").document(chatId)
 
-        Log.d("selectChatFromTimeSlot", "timeSlot: $timeSlot requester: $requester, offerer: ${timeSlot.offerer}")
+        Log.d(
+            "selectChatFromTimeSlot",
+            "timeSlot: $timeSlot requester: $requester, offerer: ${timeSlot.offerer}"
+        )
 
         /* If the request already exists, download it, otherwise just download offerer profile and don't make the request. */
         chatRef.get().addOnSuccessListener { docSnapShot ->
@@ -229,63 +231,84 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
         val resetUnreadMsgs = chat.lastMessage.userId != Firebase.auth.uid
         var resetUnreadChats = false
         var whoUpdates = ""
-        if(resetUnreadMsgs) { /* I am visualizing a chat */
+        if (resetUnreadMsgs) { /* I am visualizing a chat */
             if (chat.timeSlot.offerer.id == Firebase.auth.uid) { /* I am the offerer */
                 whoUpdates = "offerer"
                 chat.offererUnreadMsg = 0 /* Set counters for offerer */
-                if(chat.timeSlot.offererUnreadChats > 0){
+                if (chat.timeSlot.offererUnreadChats > 0) {
                     chat.timeSlot.offererUnreadChats--
                     resetUnreadChats = true
                 }
-            }
-            else { /* I am the requester */
+            } else { /* I am the requester */
                 whoUpdates = "requester"
                 chat.requesterUnreadMsg = 0 /* Set counters for requester */
-                if(chat.timeSlot.requesterUnreadChats > 0){
+                if (chat.timeSlot.requesterUnreadChats > 0) {
                     resetUnreadChats = true
                     chat.timeSlot.requesterUnreadChats--
                 }
             }
         }
 
-        val reqDocRef =  db.collection("requests").document(chat.requestId)
+        val reqDocRef = db.collection("requests").document(chat.requestId)
         val timeSlotDocRef = db.collection("timeSlots").document(chat.timeSlotId)
 
         db.runBatch { batch ->
-            if(resetUnreadMsgs)
-                when(whoUpdates){
+            if (resetUnreadMsgs)
+                when (whoUpdates) {
                     "offerer" ->
                         batch.update(reqDocRef, "${whoUpdates}UnreadMsg", chat.offererUnreadMsg)
                     "requester" ->
                         batch.update(reqDocRef, "${whoUpdates}UnreadMsg", chat.requesterUnreadMsg)
                 }
-            if(resetUnreadChats)
-                when(whoUpdates){
+            if (resetUnreadChats)
+                when (whoUpdates) {
                     "offerer" -> {
-                        batch.update(reqDocRef, "timeSlot.${whoUpdates}UnreadChats", chat.timeSlot.offererUnreadChats)
-                        batch.update(timeSlotDocRef, "${whoUpdates}UnreadChats", chat.timeSlot.offererUnreadChats)
+                        batch.update(
+                            reqDocRef,
+                            "timeSlot.${whoUpdates}UnreadChats",
+                            chat.timeSlot.offererUnreadChats
+                        )
+                        batch.update(
+                            timeSlotDocRef,
+                            "${whoUpdates}UnreadChats",
+                            chat.timeSlot.offererUnreadChats
+                        )
                     }
                     "requester" -> {
-                        batch.update(reqDocRef, "timeSlot.${whoUpdates}UnreadChats", chat.timeSlot.requesterUnreadChats)
-                        batch.update(timeSlotDocRef, "${whoUpdates}UnreadChats", chat.timeSlot.requesterUnreadChats)
+                        batch.update(
+                            reqDocRef,
+                            "timeSlot.${whoUpdates}UnreadChats",
+                            chat.timeSlot.requesterUnreadChats
+                        )
+                        batch.update(
+                            timeSlotDocRef,
+                            "${whoUpdates}UnreadChats",
+                            chat.timeSlot.requesterUnreadChats
+                        )
                     }
                 }
         }.addOnSuccessListener {
 
-            Log.d("sendMessageAndUpdate","Everything updated")
-        }.addOnFailureListener{
-            Log.d("sendMessageAndUpdate","Oh, no")
+            Log.d("sendMessageAndUpdate", "Everything updated")
+        }.addOnFailureListener {
+            Log.d("sendMessageAndUpdate", "Oh, no")
         }
     }
 
     /* Update chatInfo (chat not yet created on db) from users table given a timeSlot*/
-    fun updateChatInfo(timeSlot: TimeSlot, currentUser: CompactUser, requestService: Boolean = false) {
+    fun updateChatInfo(
+        timeSlot: TimeSlot,
+        currentUser: CompactUser,
+        requestService: Boolean = false
+    ) {
         var user: User
 
-        val chat = Chat(timeSlot = timeSlot,
+        val chat = Chat(
+            timeSlot = timeSlot,
             offerer = timeSlot.offerer,
             requester = currentUser,
-            status = Chat.STATUS_UNINTERESTED)
+            status = Chat.STATUS_UNINTERESTED
+        )
 
         _isLoading.postValue(false)
         _chat.postValue(chat)
@@ -293,7 +316,7 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
 
 //        Log.d("ChatViewModel", "chat: ${_chat.value!!}")
 
-        if(requestService)
+        if (requestService)
             requestService(chat)
 
         /*otherUserListener = db.collection("users").document(timeSlot.userId)
@@ -331,29 +354,30 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
                         */
 
                     /* Check if have to clear unreadMsg and Chat */
-                    if(req.lastMessage.userId != Firebase.auth.uid){ //have to clear unreadMsg and decrement unreadChats
-                        if(req.requester.id == Firebase.auth.uid){ //I am requester
+                    if (req.lastMessage.userId != Firebase.auth.uid) { //have to clear unreadMsg and decrement unreadChats
+                        if (req.requester.id == Firebase.auth.uid) { //I am requester
                             req.offererUnreadMsg = 0
                             req.timeSlot.requesterUnreadChats--
                         }
-                        if(req.offerer.id == Firebase.auth.uid){
+                        if (req.offerer.id == Firebase.auth.uid) {
                             req.offererUnreadMsg = 0
                             req.timeSlot.offererUnreadChats--
                         }
                     }
 
 
-                    val reqDocRef =  db.collection("requests").document(chat.value!!.requestId)
+                    val reqDocRef = db.collection("requests").document(chat.value!!.requestId)
 
                     /* LAST PROBLEM IS HERE */
-                    db.runBatch { batch -> batch.set(reqDocRef, req)
+                    db.runBatch { batch ->
+                        batch.set(reqDocRef, req)
 //                        batch.update(reqDocRef, "unreadMsgs", req.offererUnreadMsg)
                     }.addOnSuccessListener {
                         _chat.postValue(req!!)
 //                        _chat.postValue(chat.value)
-                        Log.d("sendMessageAndUpdate","Everything updated")
-                    }.addOnFailureListener{
-                        Log.d("sendMessageAndUpdate","Oh, no")
+                        Log.d("sendMessageAndUpdate", "Everything updated")
+                    }.addOnFailureListener {
+                        Log.d("sendMessageAndUpdate", "Oh, no")
                     }
 
                 } else {
@@ -374,7 +398,7 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     /* Function to call to get Interested */
-    fun requestService(chat : Chat) {
+    fun requestService(chat: Chat) {
 //        Log.d("chatViewModel", _chat.value!!.toString())
         val requestRef = db.collection("requests").document(chat.requestId)
         val cli = chat
@@ -382,84 +406,107 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
             status = Chat.STATUS_INTERESTED
         )
 
-        requestRef.set(req).addOnSuccessListener{ v ->
+        requestRef.set(req).addOnSuccessListener { v ->
             _chat.postValue(chat)
             registerMessagesListener(chat)
 
-            val msg = ChatMessage(messageText = Helper.requestMessage(cli), userId = cli.requester.id, timestamp = Date())
+            val msg = ChatMessage(
+                messageText = Helper.requestMessage(cli),
+                userId = cli.requester.id,
+                timestamp = Date()
+            )
             sendMessageAndUpdate(cli, msg)
         }
     }
 
     fun updateStatus(chatId: String, newStatus: Int) {
+        val reqTsDocRef =
+            db.collection("requests").whereEqualTo("timeSlotsId", Helper.extractTimeSlotId(chatId))
         val reqDocRef = db.collection("requests")
-        val timeSlotsDocRef = db.collection("timeSlots")
 
-        when(newStatus) {
-            Chat.STATUS_ACCEPTED -> {reqDocRef.get().addOnSuccessListener {
-                /* TODO(Controlla il credito) */
-                for( doc in it.documents){
-                    if(doc.get("requestId") != chatId )
-                        doc.reference.update(mapOf("status" to Chat.STATUS_DISCARDED))
-                    else {
-                        timeSlotsDocRef.document(Helper.extractTimeSlotId(chatId)).update("assignedTo", doc.get("requester.id"))
-                        doc.reference.update(mapOf("status" to Chat.STATUS_ACCEPTED))
-                        /* !!!!tocheck ==> */_chat.value = chat.value?.copy(status=newStatus)
-                    }
-                }
-            }}
+        when (newStatus) {
+            Chat.STATUS_ACCEPTED -> {
+
+            }
             Chat.STATUS_DISCARDED -> {
                 reqDocRef.document(chatId).get().addOnSuccessListener { doc ->
                     doc.reference.update(mapOf("status" to Chat.STATUS_DISCARDED))
-                    _chat.value = chat.value?.copy(status=newStatus)
+                    _chat.value = chat.value?.copy(status = newStatus)
                 }
             }
         }
-
     }
+
 
     fun acceptRequest(chat: Chat) {
         /* query the db */
         val chatId = chat.requestId
 
 
-        updateStatus(chatId, Chat.STATUS_ACCEPTED)
-
+        val reqTsDocs =
+            db.collection("requests").whereEqualTo("timeSlotsId", Helper.extractTimeSlotId(chatId))
         val reqDocRef = db.collection("requests").document(chatId)
         val tsDocRef = db.collection("timeSlots").document(chat.timeSlot.id)
         val offererDocRef = db.collection("users").document(chat.offerer.id)
         val requesterDocRef = db.collection("users").document(chat.requester.id)
 
+        val timeSlotsDocRef = db.collection("timeSlots")
 
-        db.runTransaction {
-            transaction ->
+
+        db.runTransaction { transaction ->
+            reqDocRef.update("status", Chat.STATUS_ACCEPTED)
+            transaction.update(tsDocRef, "assignedTo", chat.requester.id)
             val snapshot = transaction.get(reqDocRef)
             val duration = snapshot.getString("timeSlot.duration")?.toInt()!!
             val newBalance = snapshot.getLong("requester.balance")!! - duration
-            if(newBalance < 0){
-                Log.d(TAG, "balance is not okay: $newBalance")
-                transaction.update(reqDocRef, "status", Chat.STATUS_INTERESTED)
-                _chat.value = chat.copy(status = Chat.STATUS_INTERESTED)
+            if (newBalance < 0) {
+                /*transaction.update(reqDocRef, "status", Chat.STATUS_INTERESTED)
+                */
+                reqDocRef.update("status", Chat.STATUS_INTERESTED)
+                _chat.postValue(chat.copy(status = Chat.STATUS_INTERESTED))
                 transaction.update(tsDocRef, "assignedTo", "")
                 newBalance
-            }
-            else{ //Balance is ok => transfer credit => update references
+            } else { //Balance is ok => transfer credit => update references
                 Log.d(TAG, "balance is okay: $newBalance")
-                transaction.update(reqDocRef, "requester.balance", newBalance) //TODO(Delete if u have time)
+                transaction.update(
+                    reqDocRef,
+                    "requester.balance",
+                    newBalance
+                ) //TODO(Delete if u have time)
                 transaction.update(reqDocRef, "timeSlot.requester.balance", newBalance)
-                transaction.update(reqDocRef, "offerer.balance", FieldValue.increment(duration.toLong()))
-
-                transaction.update(offererDocRef, "balance", FieldValue.increment(duration.toLong()))
+                transaction.update(
+                    reqDocRef,
+                    "offerer.balance",
+                    FieldValue.increment(duration.toLong())
+                )
+                transaction.update(
+                    offererDocRef,
+                    "balance",
+                    FieldValue.increment(duration.toLong())
+                )
                 transaction.update(requesterDocRef, "balance", newBalance)
+
+
+                reqTsDocs.get().addOnSuccessListener {
+                    /* TODO(Controlla il credito) */
+                    for (doc in it.documents) {
+                        if (doc.get("requestId") != chatId)
+                            doc.reference.update(mapOf("status" to Chat.STATUS_DISCARDED))
+                        else {
+                            doc.reference.update(mapOf("status" to Chat.STATUS_ACCEPTED))
+                                .addOnSuccessListener {
+                                    /* !!!!tocheck ==> */_chat.value =
+                                    chat.copy(status = Chat.STATUS_ACCEPTED)
+                                }
+                        }
+                    }
+                    timeSlotsDocRef.document(Helper.extractTimeSlotId(chatId))
+                        .update("assignedTo", chat.requester.id)
+                }
+
                 newBalance
             }
-        }.addOnSuccessListener {
-            Log.d(TAG, "ACCEPT SUCCEDED")
-
-        }.addOnFailureListener {
-            Log.d(TAG, "ACCEPT FAILED: $it")
         }
-
     }
 
     fun discardRequest(chatId: String) {
@@ -472,7 +519,7 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
         return db.collection("requests").document(chatId).get()
     }
 
-    companion object  {
+    companion object {
         const val TAG = "ChatViewModel"
     }
 
