@@ -66,9 +66,6 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
 
 
     fun sendMessageAndUpdate(chat: Chat, message: ChatMessage){
-        //if(!::messagesListener.isInitialized)
-            registerMessagesListener(chat)
-
 
         val reqDocRef =  db.collection("requests").document(chat.requestId)
         val msgsDocRef =  db.collection("requests").document(chat.requestId).collection("messages").document()
@@ -84,6 +81,8 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
             else
                 false
 
+        if(chat.status == Chat.STATUS_UNINTERESTED) //first message
+            registerMessagesListener(chat)
 
         chat.sendMessage(message)
 
@@ -95,6 +94,8 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
                 batch.update(reqDocRef, "timeSlot.unreadChats", FieldValue.increment(1))
             }
         }.addOnSuccessListener {
+            _chat.postValue(chat)
+
             Log.d("sendMessageAndUpdate","Everything updated")
         }.addOnFailureListener{
             Log.d("sendMessageAndUpdate","Oh, no")
@@ -305,7 +306,7 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
 
         requestRef.set(req).addOnSuccessListener{ v ->
             _chat.postValue(chat)
-
+            registerMessagesListener(chat)
 
             val msg = ChatMessage(messageText = Helper.requestMessage(cli), userId = cli.requester.id, timestamp = Date())
             sendMessageAndUpdate(cli, msg)
