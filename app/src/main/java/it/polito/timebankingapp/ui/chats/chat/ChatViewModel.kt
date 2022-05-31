@@ -66,7 +66,7 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
 
 
     fun sendMessageAndUpdate(chat: Chat, message: ChatMessage){
-        if(!::messagesListener.isInitialized)
+        //if(!::messagesListener.isInitialized)
             registerMessagesListener(chat)
 
 
@@ -305,6 +305,7 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
 
         requestRef.set(req).addOnSuccessListener{ v ->
             _chat.postValue(chat)
+
 
             val msg = ChatMessage(messageText = Helper.requestMessage(cli), userId = cli.requester.id, timestamp = Date())
             sendMessageAndUpdate(cli, msg)

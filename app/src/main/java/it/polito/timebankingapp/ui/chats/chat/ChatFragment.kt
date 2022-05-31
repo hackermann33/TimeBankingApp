@@ -181,7 +181,6 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         }
 
 
-
         civProfilePic.setOnClickListener {
             v.findNavController().navigate(
                 R.id.action_nav_chat_to_nav_showProfile,
