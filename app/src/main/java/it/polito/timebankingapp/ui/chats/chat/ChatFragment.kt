@@ -63,10 +63,13 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
             cardChatDiscarded.visibility = View.VISIBLE
         }
         textMessage = view.findViewById(R.id.edit_gchat_message)
-        val sendButton = view.findViewById<Button>(R.id.button_gchat_send)
 
+        val btnRequireService = view.findViewById<Button>(R.id.fragment_chat_btn_require_service)
+
+        val sendButton = view.findViewById<Button>(R.id.button_gchat_send)
         sendButton.setOnClickListener {
             if (textMessage.text.isNotEmpty()) {
+                btnRequireService.isEnabled = false
                 sendMessage(
                     ChatMessage(
                         Firebase.auth.currentUser!!.uid,
