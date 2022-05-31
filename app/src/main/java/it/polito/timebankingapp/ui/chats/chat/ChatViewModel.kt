@@ -29,9 +29,8 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
     private val _chat = MutableLiveData<Chat>()
     val chat: LiveData<Chat> = _chat
 
-
-    private val _hasChatBeenCleared = MutableLiveData<Boolean?>()
-    var hasChatBeenCleared: LiveData<Boolean?> = _hasChatBeenCleared
+    private val _isLoading = MutableLiveData<Boolean>()
+    val isLoading: LiveData<Boolean> = _isLoading
 
 
     private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
@@ -40,12 +39,6 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
     private lateinit var otherUserListener: ListenerRegistration
 
 
-    init {
-        _hasChatBeenCleared.value = false
-    }
-    fun setIsClearedFlag(value: Boolean) {
-        _hasChatBeenCleared.value = value
-    }
 
     /* Function invoked when first message is sent ( and the request isn't been created)*/
     /*fun sendFirstMessage(message: ChatMessage) {
@@ -200,6 +193,7 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
 
     /* Coming from TimeSlotDetail or TimeSlotList, check if requests from current user to timeSlot exists, otherwise download just the userProfile */
     fun selectChatFromTimeSlot(timeSlot: TimeSlot, requester: CompactUser) {
+        _isLoading.postValue(true)
         val chatId = makeRequestId(timeSlot.id, Firebase.auth.uid!!)
         val chatRef = db.collection("requests").document(chatId)
 
@@ -228,6 +222,10 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
 
     fun selectChatFromChatList(chat: Chat) {
         /* remember to register listener */
+        _isLoading.postValue(true)
+        _chat.postValue(chat)
+        _isLoading.postValue(false)
+
         val resetUnreadMsgs = chat.lastMessage.userId != Firebase.auth.uid
         var resetUnreadChats = false
         var whoUpdates = ""
@@ -254,7 +252,6 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
         val timeSlotDocRef = db.collection("timeSlots").document(chat.timeSlotId)
 
         db.runBatch { batch ->
-
             if(resetUnreadMsgs)
                 when(whoUpdates){
                     "offerer" ->
@@ -274,7 +271,7 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
                     }
                 }
         }.addOnSuccessListener {
-            _chat.postValue(chat)
+
             Log.d("sendMessageAndUpdate","Everything updated")
         }.addOnFailureListener{
             Log.d("sendMessageAndUpdate","Oh, no")
@@ -290,6 +287,7 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
             requester = currentUser,
             status = Chat.STATUS_UNINTERESTED)
 
+        _isLoading.postValue(false)
         _chat.postValue(chat)
 
 
@@ -323,6 +321,8 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
                 val req = v!!.toObject<Chat>()
                 if (req != null) {
                     _chat.value = (req)
+                    _isLoading.postValue(false)
+
 
                     val c = _chat.value!!
                     val resetUnreadMsgs = c.lastMessage.userId != Firebase.auth.uid
