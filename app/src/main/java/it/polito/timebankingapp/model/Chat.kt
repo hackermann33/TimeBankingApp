@@ -6,13 +6,12 @@ import com.google.firebase.ktx.Firebase
 import it.polito.timebankingapp.model.chat.ChatMessage
 import it.polito.timebankingapp.model.timeslot.TimeSlot
 import it.polito.timebankingapp.model.user.CompactUser
-import java.util.*
 
 data class Chat(
     val timeSlot: TimeSlot = TimeSlot(), val requester: CompactUser = CompactUser(), val offerer: CompactUser = CompactUser(),
     var lastMessage: ChatMessage = ChatMessage(),
     var status: Int = STATUS_UNINTERESTED,
-    var unreadMsgs: Int = 0 //needed to check or condition (request is or as a requester or as an offerer)
+    var offererUnreadMsg: Int = 0, var requesterUnreadMsg: Int = 0 //needed to check or condition (request is or as a requester or as an offerer)
 ) {
 
 
@@ -26,15 +25,15 @@ data class Chat(
 
 
     fun incUnreadMsg(): Chat {
-        return this.copy(unreadMsgs = unreadMsgs+1)
+        return this.copy(offererUnreadMsg = offererUnreadMsg+1)
     }
 
     fun sendFirstMessage(cm: ChatMessage) {
         this.status = STATUS_INTERESTED
         lastMessage = cm
 
-        timeSlot.unreadChats++
-        unreadMsgs = 1
+        timeSlot.offererUnreadChats++
+        offererUnreadMsg = 1
     }
 
 
@@ -45,13 +44,30 @@ data class Chat(
     }
 
     fun sendMessage(message: ChatMessage) {
-        if(status == STATUS_UNINTERESTED){ //FIRST MESSAGE
+        if(status == STATUS_UNINTERESTED){ //FIRST MESSAGE, I am surely the Requester
             this.status = STATUS_INTERESTED
-            timeSlot.unreadChats++
-            unreadMsgs = 1
+            timeSlot.offererUnreadChats++
+            offererUnreadMsg = 1
         }
-        else
-            unreadMsgs++
+        else{ /* Existing Chat, I can be requester or offerer */
+            if(this.lastMessage.userId != Firebase.auth.uid){ /* Have to update unreadChats */
+                if(this.timeSlot.offerer.id == Firebase.auth.uid) { /* I am offerer, and I am answering */
+                    this.timeSlot.requesterUnreadChats++
+                    this.requesterUnreadMsg++
+                }
+                else{ /* I am requester, and I'm answering */
+                    this.timeSlot.offererUnreadChats++
+                    this.offererUnreadMsg++
+                }
+            }
+            else{ /* don't have to update unreadChats, just unreadMsg */
+                if(this.timeSlot.offerer.id == Firebase.auth.uid) /* I'm offerer */
+                    this.requesterUnreadMsg++
+                else
+                    this.offererUnreadMsg++
+            }
+
+        }
         lastMessage = message
     }
 

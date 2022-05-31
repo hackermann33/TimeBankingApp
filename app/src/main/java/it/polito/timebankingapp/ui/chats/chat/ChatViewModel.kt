@@ -48,7 +48,7 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     /* Function invoked when first message is sent ( and the request isn't been created)*/
-    fun sendFirstMessage(message: ChatMessage) {
+    /*fun sendFirstMessage(message: ChatMessage) {
         val req = _chat.value!!.copy(status = Chat.STATUS_INTERESTED)
         val requestRef = db.collection("requests").document(chat.value!!.requestId)
         requestRef.set(req).addOnSuccessListener {
@@ -57,7 +57,7 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
             requestRef.collection("messages").document().set(
                 message
             ).addOnSuccessListener {
-                /*update unreadChats*/
+                *//*update unreadChats*//*
                 db.collection("timeSlots").document(chat.value!!.timeSlotId).update("unreadChats", FieldValue.increment(1))
 
                 _chatMessages.postValue(listOf(message))
@@ -66,7 +66,7 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
         }.addOnFailureListener {
             Log.d("sendMessages", "$it")
         }
-    }
+    }*/
 
 
     override fun onCleared() {
@@ -83,7 +83,7 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
         val msgsDocRef =  db.collection("requests").document(chat.requestId).collection("messages").document()
         val timeSlotDocRef = db.collection("timeSlots").document(chat.timeSlotId)
 
-        val incrementUnreadChats =
+        /*val incrementUnreadChats =
             if(chat.requester.id == Firebase.auth.uid) {
                 if (chat.status == Chat.STATUS_UNINTERESTED) //I am requester, new request
                     true
@@ -91,7 +91,24 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
                     chat.lastMessage.userId != Firebase.auth.uid
             }
             else
-                false
+                false*/
+        var incrementUnreadChats = false
+        var whoUpdates = ""
+
+        if(chat.status == Chat.STATUS_UNINTERESTED) { /* I am the requester, NEW REQUEST*/
+            whoUpdates = "offerer"
+            incrementUnreadChats = true
+        }
+        else{ /* Already existing chat */
+            if(chat.lastMessage.userId != Firebase.auth.uid) { /* is a new message that has to increment the counter */
+                incrementUnreadChats = true
+                if (chat.offerer.id == Firebase.auth.uid)  /* I am the offerer, update requesterUnreadChats*/
+                    whoUpdates = "requester"
+                else
+                    whoUpdates = "offerer"
+
+            }
+        }
 
         if(chat.status == Chat.STATUS_UNINTERESTED) //first message
             registerMessagesListener(chat)
@@ -102,9 +119,12 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
             batch.set(reqDocRef, chat)
             batch.set(msgsDocRef, message)
             if(incrementUnreadChats) {
-                batch.update(timeSlotDocRef, "unreadChats", FieldValue.increment(1))
-                batch.update(reqDocRef, "timeSlot.unreadChats", FieldValue.increment(1))
+                batch.update(timeSlotDocRef, "${whoUpdates}UnreadChats", FieldValue.increment(1))
+//                already Managed by reqDocRef.set
+//                batch.update(reqDocRef, "timeSlot.${whoUpdates}UnreadChats", FieldValue.increment(1))
             }
+//            already Managed by reqDocRef.set
+//            batch.update(reqDocRef, "${whoUpdates}UnreadMsg", FieldValue.increment(1))
         }.addOnSuccessListener {
             _chat.postValue(chat)
 
@@ -115,13 +135,13 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
     }
 
 
-    fun sendMessage(message: ChatMessage) {
+    /*fun sendMessage(message: ChatMessage) {
         val requestRef = db.collection("requests").document(chat.value!!.requestId)
-        requestRef.get().addOnSuccessListener { /* Chat correctly taken -> sendTheMessage */
-            /*_chat.value =
+        requestRef.get().addOnSuccessListener { *//* Chat correctly taken -> sendTheMessage *//*
+            *//*_chat.value =
                 chat.value!!.copy(unreadMsgs = it.getLong("unreadMsgs")?.toInt() ?: 0)
                 Log.d("sendMessage", "{$_chat.value}")
-*/
+*//*
             requestRef.collection("messages").document().set(
                 mapOf(
                     "messageText" to message.messageText,
@@ -134,7 +154,7 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
                     mapOf(
                         "lastMessageText" to message.messageText,
                         "lastMessageTime" to message.timestamp.time,
-                        "unreadMsgs" to chat.value!!.unreadMsgs + 1,
+                        "unreadMsgs" to chat.value!!.offererUnreadMsg + 1,
                     )
                 ).addOnSuccessListener { //Field correctly updated -> update View Model
                     //_chat.value = chat.value!!.incUnreadMsg()
@@ -144,7 +164,7 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
                 }
             }.addOnFailureListener { Log.d("sendMessage", "failure") }
         }
-    }
+    }*/
 
     private fun QueryDocumentSnapshot.toChatMessage(): ChatMessage? {
         return try {
@@ -209,20 +229,50 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
     fun selectChatFromChatList(chat: Chat) {
         /* remember to register listener */
         val resetUnreadMsgs = chat.lastMessage.userId != Firebase.auth.uid
-        if(resetUnreadMsgs)
-            chat.unreadMsgs = 0
-        val resetUnreadChats = (chat.offerer.id == Firebase.auth.uid) && (chat.lastMessage.userId != Firebase.auth.uid)
-        if(resetUnreadChats && chat.timeSlot.unreadChats > 0)
-            chat.timeSlot.unreadChats--
-
+        var resetUnreadChats = false
+        var whoUpdates = ""
+        if(resetUnreadMsgs) { /* I am visualizing a chat */
+            if (chat.timeSlot.offerer.id == Firebase.auth.uid) { /* I am the offerer */
+                whoUpdates = "offerer"
+                chat.offererUnreadMsg = 0 /* Set counters for offerer */
+                if(chat.timeSlot.offererUnreadChats > 0){
+                    chat.timeSlot.offererUnreadChats--
+                    resetUnreadChats = true
+                }
+            }
+            else { /* I am the requester */
+                whoUpdates = "requester"
+                chat.requesterUnreadMsg = 0 /* Set counters for requester */
+                if(chat.timeSlot.requesterUnreadChats > 0){
+                    resetUnreadChats = true
+                    chat.timeSlot.requesterUnreadChats--
+                }
+            }
+        }
 
         val reqDocRef =  db.collection("requests").document(chat.requestId)
         val timeSlotDocRef = db.collection("timeSlots").document(chat.timeSlotId)
 
         db.runBatch { batch ->
-            batch.update(reqDocRef, "unreadMsgs", chat.unreadMsgs)
-            batch.update(reqDocRef, "timeSlot.unreadChats", chat.timeSlot.unreadChats)
-            batch.update(timeSlotDocRef,"unreadChats", chat.timeSlot.unreadChats)
+
+            if(resetUnreadMsgs)
+                when(whoUpdates){
+                    "offerer" ->
+                        batch.update(reqDocRef, "${whoUpdates}UnreadMsg", chat.offererUnreadMsg)
+                    "requester" ->
+                        batch.update(reqDocRef, "${whoUpdates}UnreadMsg", chat.requesterUnreadMsg)
+                }
+            if(resetUnreadChats)
+                when(whoUpdates){
+                    "offerer" -> {
+                        batch.update(reqDocRef, "timeSlot.${whoUpdates}UnreadChats", chat.timeSlot.offererUnreadChats)
+                        batch.update(timeSlotDocRef, "${whoUpdates}UnreadChats", chat.timeSlot.offererUnreadChats)
+                    }
+                    "requester" -> {
+                        batch.update(reqDocRef, "timeSlot.${whoUpdates}UnreadChats", chat.timeSlot.requesterUnreadChats)
+                        batch.update(timeSlotDocRef, "${whoUpdates}UnreadChats", chat.timeSlot.requesterUnreadChats)
+                    }
+                }
         }.addOnSuccessListener {
             _chat.postValue(chat)
             Log.d("sendMessageAndUpdate","Everything updated")
@@ -277,12 +327,12 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
                     val c = _chat.value!!
                     val resetUnreadMsgs = c.lastMessage.userId != Firebase.auth.uid
                     if(resetUnreadMsgs)
-                        c.unreadMsgs = 0
+                        c.offererUnreadMsg = 0
 
                     val reqDocRef =  db.collection("requests").document(chat.value!!.requestId)
 
                     db.runBatch { batch ->
-                        batch.update(reqDocRef, "unreadMsgs", c.unreadMsgs)
+                        batch.update(reqDocRef, "unreadMsgs", c.offererUnreadMsg)
                     }.addOnSuccessListener {
                         _chat.postValue(chat.value)
                         Log.d("sendMessageAndUpdate","Everything updated")

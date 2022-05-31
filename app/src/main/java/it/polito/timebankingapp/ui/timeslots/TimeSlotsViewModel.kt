@@ -8,16 +8,13 @@ import androidx.lifecycle.MutableLiveData
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.DocumentReference
-import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
 import it.polito.timebankingapp.model.Chat
 import it.polito.timebankingapp.model.Helper
-import it.polito.timebankingapp.model.chat.ChatMessage
 import it.polito.timebankingapp.model.timeslot.TimeSlot
-import it.polito.timebankingapp.model.user.CompactUser
 import it.polito.timebankingapp.model.user.User
 
 
@@ -89,7 +86,7 @@ class TimeSlotsViewModel(application: Application): AndroidViewModel(application
             if(e == null){
                 _timeSlots.value = v!!.mapNotNull { d -> d.toObject<TimeSlot>() }
                 var cnt = 0
-                _timeSlots.value!!.forEach{ ts -> if(ts.unreadChats > 0) cnt++}
+                _timeSlots.value!!.forEach{ ts -> if(ts.offererUnreadChats > 0) cnt++}
                 _unreadChats.postValue(cnt)
                 _isEmpty.value = _timeSlots.value!!.isEmpty()
             } else {
@@ -234,7 +231,7 @@ class TimeSlotsViewModel(application: Application): AndroidViewModel(application
     fun makeTimeSlotRequest(ts: TimeSlot, currentUser: User) : Task<Void> {
         val chatId = Helper.makeRequestId(ts.id, currentUser.id)
         val  req = Chat(timeSlot = ts, requester = currentUser.toCompactUser(),
-            offerer = ts.offerer, status = Chat.STATUS_INTERESTED, unreadMsgs = 0)
+            offerer = ts.offerer, status = Chat.STATUS_INTERESTED, offererUnreadMsg = 0)
 
             /*
             UPDATE UNREAD CHATS

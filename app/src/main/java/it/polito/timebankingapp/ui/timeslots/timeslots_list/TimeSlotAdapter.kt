@@ -1,6 +1,5 @@
 package it.polito.timebankingapp.ui.timeslots.timeslots_list
 
-import android.media.Image
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -63,7 +62,7 @@ class TimeSlotAdapter(
 
                 /* Set badge options */
                 chatButton.setBadgePadding(2)
-                chatButton.badgeValue = ts.unreadChats
+                chatButton.badgeValue = ts.offererUnreadChats
                 chatButton.setOnClickListener(showRequestsAction)
             }
             else if (type == "completed") {
