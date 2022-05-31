@@ -295,7 +295,6 @@
                     android:id="@+id/button_request_service"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:backgroundTint="@color/primary_dark"
                     android:text="Require service"
                     android:visibility="gone" />
 

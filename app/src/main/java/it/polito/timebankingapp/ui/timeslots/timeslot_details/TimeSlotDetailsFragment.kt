@@ -149,6 +149,9 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
                         Snackbar.make(view, "Oops, something gone wrong!", Snackbar.LENGTH_SHORT)
                             .show()
                     }*/
+                val btn = it as Button
+                btn.isEnabled = false
+                btn.text = "service requested"
                 chatVm.requestService(Chat(timeSlot = ts, requester = profileViewModel.user.value!!.toCompactUser(), offerer = ts.offerer))
             }
 
