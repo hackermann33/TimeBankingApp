@@ -439,6 +439,7 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
             if(newBalance < 0){
                 Log.d(TAG, "balance is not okay: $newBalance")
                 transaction.update(reqDocRef, "status", Chat.STATUS_INTERESTED)
+                _chat.value = chat.copy(status = Chat.STATUS_INTERESTED)
                 transaction.update(tsDocRef, "assignedTo", "")
                 newBalance
             }
@@ -451,7 +452,6 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
                 transaction.update(offererDocRef, "balance", FieldValue.increment(duration.toLong()))
                 transaction.update(requesterDocRef, "balance", newBalance)
                 newBalance
-
             }
         }.addOnSuccessListener {
             Log.d(TAG, "ACCEPT SUCCEDED")

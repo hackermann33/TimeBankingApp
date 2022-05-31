@@ -69,6 +69,8 @@ class TimeSlotsViewModel(application: Application): AndroidViewModel(application
 
     fun updateSkillSpecificTimeSlots(skill: String) {
         _isLoading.postValue(true)
+        clearTimeSlots()
+
         Log.d("selectedSkill", "updateSkillSpecificTimeSlos: selectedSkill: ${skill}")
 
         l = db.collection("timeSlots").whereNotEqualTo("userId", Firebase.auth.uid).whereEqualTo("relatedSkill",skill).
@@ -89,6 +91,7 @@ class TimeSlotsViewModel(application: Application): AndroidViewModel(application
 
     fun updatePersonalTimeSlots() {
         _isLoading.postValue(true)
+        clearTimeSlots()
         l = db.collection("timeSlots").whereEqualTo("userId", Firebase.auth.uid).addSnapshotListener{v,e ->
             if(e == null){
                 _timeSlots.value = v!!.mapNotNull { d -> d.toObject<TimeSlot>() }
@@ -109,6 +112,8 @@ class TimeSlotsViewModel(application: Application): AndroidViewModel(application
 
     fun updateInterestingTimeSlots() {
         _isLoading.postValue(true)
+        clearTimeSlots()
+
         val myUid = Firebase.auth.uid!!
         db.collection("requests").whereEqualTo("requester.id", myUid)
             .whereEqualTo("status", Chat.STATUS_INTERESTED).addSnapshotListener{ v, e ->
@@ -128,6 +133,8 @@ class TimeSlotsViewModel(application: Application): AndroidViewModel(application
 
     fun updateCompletedTimeSlots() {
         _isLoading.postValue(true)
+        clearTimeSlots()
+
         val myUid = Firebase.auth.uid!!
         db.collection("requests").whereArrayContains("users", myUid)
             .whereEqualTo("status", Chat.STATUS_COMPLETED).addSnapshotListener{ v, e ->
@@ -148,6 +155,8 @@ class TimeSlotsViewModel(application: Application): AndroidViewModel(application
 
     fun updateCalendarTimeSlots() {
         _isLoading.postValue(true)
+        clearTimeSlots()
+
         val myUid = Firebase.auth.uid!!
         //db.collection("requests").whereEqualTo("requester.id", myUid)
         db.collection("requests").whereArrayContains("users", myUid)
