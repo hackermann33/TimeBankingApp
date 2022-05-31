@@ -20,7 +20,7 @@ data class Event(val id: String, val ts: TimeSlot, val date: LocalDate, val isOf
 //isOffered == true  --> offered
 //          == false --> requested
 
-class TimeSlotMonthCalendarEventsAdapter(val vm : TimeSlotsViewModel) :
+class TimeSlotMonthCalendarEventsAdapter(/*val vm : TimeSlotsViewModel*/) :
     RecyclerView.Adapter<TimeSlotMonthCalendarEventsAdapter.ItemViewHolder>() {
 
     val events = mutableListOf<Event>()
