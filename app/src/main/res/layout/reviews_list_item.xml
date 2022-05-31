@@ -25,7 +25,36 @@
             android:paddingBottom="12dp"
             tools:ignore="RtlSymmetry">
 
-            <de.hdodenhof.circleimageview.CircleImageView
+            <RelativeLayout
+                android:id="@+id/review_list_item_rl_profile_pic"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/review_list_item_profile_pic"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginStart="0dp"
+                    android:layout_marginTop="0dp"
+                    android:layout_marginEnd="0dp"
+                    android:layout_marginBottom="0dp"
+                    android:src="@drawable/default_avatar"
+                    app:civ_border_color="@color/text_standard" />
+
+                <ProgressBar
+                    android:id="@+id/progressBar"
+                    style="?android:attr/progressBarStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true" />
+
+            </RelativeLayout>
+
+            <!--<de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/review_list_item_profile_pic"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
@@ -35,7 +64,7 @@
 
                 app:layout_constraintHorizontal_weight="1"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent" />-->
 
             <TextView
                 android:id="@+id/review_list_item_full_name"
@@ -45,9 +74,9 @@
                 android:layout_marginStart="8dp"
                 android:fontFamily="@font/roboto_medium"
                 android:text="@string/reviews_list_item_full_name"
-                app:layout_constraintBottom_toBottomOf="@+id/review_list_item_profile_pic"
+                app:layout_constraintBottom_toBottomOf="@+id/review_list_item_rl_profile_pic"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/review_list_item_profile_pic"
+                app:layout_constraintStart_toEndOf="@+id/review_list_item_rl_profile_pic"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <RatingBar
@@ -62,7 +91,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/review_list_item_profile_pic" />
+                app:layout_constraintTop_toBottomOf="@+id/review_list_item_rl_profile_pic" />
 
             <TextView
                 android:id="@+id/reviews_item_label1"
