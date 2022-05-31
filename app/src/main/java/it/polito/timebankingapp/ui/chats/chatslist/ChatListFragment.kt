@@ -49,7 +49,8 @@ class ChatListFragment : Fragment(R.layout.fragment_chat_list) {
                 //chatListViewModel.setIsClearedFlag(false)
             //else
                 if(!isLoading) {
-                    val chatList = chatListViewModel.chatsList.value!!
+
+                    val chatList = if(chatListType == Type.GLOBAL) chatListViewModel.allChatList.value!! else chatListViewModel.timeSlotChatList.value!!
                     if (chatList.isEmpty())
                         showNoChatsMessage(view, /*true*/ false)
                     else {
@@ -103,7 +104,7 @@ class ChatListFragment : Fragment(R.layout.fragment_chat_list) {
     }
 
     override fun onDetach() {
-        chatListViewModel.clearChatList()
+        //chatListViewModel.clearChatList()
         //chatListViewModel.setIsClearedFlag(true)
         super.onDetach()
     }

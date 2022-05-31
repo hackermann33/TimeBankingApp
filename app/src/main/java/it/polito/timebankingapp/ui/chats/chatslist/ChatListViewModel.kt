@@ -16,16 +16,20 @@ import it.polito.timebankingapp.model.Chat
 class ChatListViewModel(application: Application): AndroidViewModel(application) {
 
 
-    private val _chatsList = MutableLiveData<List<Chat>>()
-    val chatsList : LiveData<List<Chat>> = _chatsList
+    private val _allChatList = MutableLiveData<List<Chat>>()
+    val allChatList : LiveData<List<Chat>> = _allChatList
+
+    private val _timeSlotChatList = MutableLiveData<List<Chat>>()
+    val timeSlotChatList : LiveData<List<Chat>> = _timeSlotChatList
+
 
     private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
 
     private val _unreadChats = MutableLiveData<Int>()
     val unreadChats : LiveData<Int> = _unreadChats
 
-    private lateinit var l: ListenerRegistration
-    private lateinit var l2: ListenerRegistration
+    private lateinit var allChatsListener: ListenerRegistration
+    private lateinit var timeSlotChatsListener: ListenerRegistration
 
     private val _isLoading = MutableLiveData<Boolean>(true)
     val isLoading : LiveData<Boolean> = _isLoading
@@ -78,23 +82,23 @@ class ChatListViewModel(application: Application): AndroidViewModel(application)
     override fun onCleared() {
         super.onCleared()
 
-        l.remove()
-        if(this::l2.isInitialized)
-            l2.remove()
+        allChatsListener.remove()
+        if(this::timeSlotChatsListener.isInitialized)
+            timeSlotChatsListener.remove()
     }
 
     fun updateAllChats() {
             _isLoading.postValue(true)
            Log.d("User", Firebase.auth.uid.toString())
             val currentId = Firebase.auth.uid.toString()
-            l = db.collection("requests").whereArrayContains("users","${Firebase.auth.uid}")
+            allChatsListener = db.collection("requests").whereArrayContains("users","${Firebase.auth.uid}")
                 .orderBy("lastMessage.timestamp", Query.Direction.DESCENDING).addSnapshotListener{ v, e ->
                     if(e == null){
-                        Log.d("chatList", "chatList: ${_chatsList.value}")
-                        _chatsList.value = v!!.mapNotNull {  d -> d.toObject<Chat>() }
+                        _allChatList.value = v!!.mapNotNull {  d -> d.toObject<Chat>() }
+                        Log.d("chatList", "chatListALL: ${_allChatList.value!!.mapNotNull { it.timeSlot.title }}")
                         _isLoading.postValue(false)
                         var cnt = 0
-                        chatsList.value?.forEach { chat ->
+                        _allChatList.value?.forEach { chat ->
                             if(chat.offerer.id == Firebase.auth.uid && chat.timeSlot.offererUnreadChats > 0) /* I am the offerer of this chat*/
                                 cnt++
                             if(chat.requester.id == Firebase.auth.uid && chat.timeSlot.requesterUnreadChats > 0) /* I am the requester of this chat */
@@ -103,7 +107,7 @@ class ChatListViewModel(application: Application): AndroidViewModel(application)
                         _unreadChats.postValue(cnt)
                         Log.d("chatsListValue", "success")
                     } else{
-                        _chatsList.value = emptyList()
+                        _allChatList.value = emptyList()
                         _isLoading.postValue(false)
                         Log.d("chatsListValue", "failed")
                     }
@@ -116,28 +120,30 @@ class ChatListViewModel(application: Application): AndroidViewModel(application)
         _isLoading.postValue(true)
 //        Log.d("showRequests", "Arrived at ViewModel $tsId")
         Log.d("User", Firebase.auth.uid.toString())
-        l = db.collection("requests").whereEqualTo("offerer.id",Firebase.auth.uid.toString()).whereEqualTo("timeSlot.id", tsId)
+        timeSlotChatsListener = db.collection("requests").whereEqualTo("offerer.id",Firebase.auth.uid.toString()).whereEqualTo("timeSlot.id", tsId)
             .addSnapshotListener{v,e ->
             if(e == null){
-                Log.d("chatList", "chatList: ${_chatsList.value}")
                 val requests = v!!.mapNotNull {  d -> d.toObject<Chat>()  }
-                _chatsList.value = requests.mapNotNull {  r ->
-                    fromRequestToChat(r)
-                }
+                _timeSlotChatList.value = requests
                 _isLoading.postValue(false)
+                Log.d("chatList", "chatListTS: ${_timeSlotChatList.value!!.mapNotNull { it.timeSlot.title }}")
                 Log.d("chatsListValue", "success")
             } else{
-                _chatsList.value = emptyList()
+                _timeSlotChatList.value = emptyList()
                 Log.d("chatsListValue", "failed")
                 _isLoading.postValue(false)
             }
         }
     }
 
+    fun clearTimeSlotChatList() {
+        _timeSlotChatList.value = listOf()
+    }
 
 
     fun clearChatList() {
-        _chatsList.value = listOf()
+        _allChatList.value = listOf()
+        _timeSlotChatList.value = listOf()
     }
 
 

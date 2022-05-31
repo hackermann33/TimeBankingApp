@@ -230,6 +230,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_timeslots_list) {
 
 
     private fun showRequests(ts: TimeSlot) {
+
         chatListVm.downloadTimeSlotChats(ts.id)
     }
 
