@@ -70,7 +70,11 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
         if (type == "skill_specific")
             btnRequestService.visibility = View.VISIBLE
 
-
+        val btnAskInfo = view.findViewById<Button>(R.id.openChatButton)
+        if(ts!!.userId == Firebase.auth.uid){
+            btnAskInfo.isEnabled = false
+            btnAskInfo.visibility = View.INVISIBLE
+        }
         /*chatVm.chat.observe(viewLifecycleOwner) {
             btnRequestService.isEnabled = it.status == Chat.STATUS_UNINTERESTED
         }*/
@@ -142,6 +146,7 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
 
 
             val btnAskInfo = view.findViewById<Button>(R.id.openChatButton)
+
 
 
             btnAskInfo.setOnClickListener {

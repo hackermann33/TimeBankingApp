@@ -63,13 +63,24 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 
         val sendMsgBar : RelativeLayout = view.findViewById(R.id.layout_gchat_chatbox)
         val cardChatDiscarded : CardView = view.findViewById(R.id.card_chat_discarded)
+        val tvChatDiscarded : TextView = view.findViewById(R.id.tv_chat_discarded)
+        val btnRequireService = view.findViewById<Button>(R.id.fragment_chat_btn_request_service)
+        val btnAcceptRequest = view.findViewById<Button>(R.id.fragment_chat_btn_accept)
+        val btnDiscardRequest = view.findViewById<TextView>(R.id.fragment_chat_btn_discard)
+
         if(chatVm.chat.value?.status == STATUS_DISCARDED) {
+            if(chatVm.chat.value?.offerer!!.id == Firebase.auth.uid) /* Discarded and I'm Offerer */
+                tvChatDiscarded.text = getString(R.string.you_assigned_service_to_another)
+            if(chatVm.chat.value?.requester!!.id == Firebase.auth.uid) /* Discarded and I'm Offerer */
+                tvChatDiscarded.text = getString(R.string.this_service_has_been_assigned_to_another_user)
             sendMsgBar.visibility = View.GONE
             cardChatDiscarded.visibility = View.VISIBLE
+            btnRequireService.isEnabled = false
+            btnAcceptRequest.isEnabled = false
+            btnDiscardRequest.isEnabled = false
         }
         textMessage = view.findViewById(R.id.edit_gchat_message)
 
-        val btnRequireService = view.findViewById<Button>(R.id.fragment_chat_btn_request_service)
 
         val sendButton = view.findViewById<Button>(R.id.button_gchat_send)
         sendButton.setOnClickListener {
@@ -141,11 +152,19 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 
         btnAcceptRequest.setOnClickListener {
             chatVm.acceptRequest(cli.requestId)
+            btnAcceptRequest.isEnabled = false
+            btnDiscardRequest.alpha = 0.8F
+            btnDiscardRequest.isEnabled = false
         }
 
         btnDiscardRequest.setOnClickListener {
             chatVm.discardRequest(cli.requestId)
+            btnAcceptRequest.isEnabled = false
+            btnDiscardRequest.alpha = 0.8F
+            btnDiscardRequest.isEnabled = false
         }
+
+
 
         /* TODO(When image is clicked, navigation is not to the correct profile !!!) */
         when (cli.getType()) {

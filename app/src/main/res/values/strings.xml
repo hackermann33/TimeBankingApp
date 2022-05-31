@@ -118,4 +118,5 @@
     <string name="undo">Undo</string>
     <string name="time_slot_title_label">Time slot Title:</string>
     <string name="request_service">Request service</string>
+    <string name="you_assigned_service_to_another">You have already assigned this Service to another user!</string>
 </resources>
