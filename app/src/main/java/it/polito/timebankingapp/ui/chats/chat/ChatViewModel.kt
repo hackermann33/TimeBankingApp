@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.google.android.gms.tasks.Task
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.*
@@ -323,6 +324,8 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
         /* query the db */
     }
 
-
+    fun getChat(chatId: String): Task<DocumentSnapshot> {
+        return db.collection("requests").document(chatId).get()
+    }
 
 }

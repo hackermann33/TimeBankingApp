@@ -16,6 +16,7 @@ import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
 import de.hdodenhof.circleimageview.CircleImageView
 import it.polito.timebankingapp.R
@@ -39,12 +40,15 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
 
     private lateinit var btnRequestService: Button
 
+    private var status: Int = Chat.STATUS_UNINTERESTED
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         userId = arguments?.getString("userId").toString()
         type = arguments?.getString("point_of_origin").toString() //skill_specific or personal
+
+
 //        profileViewModel.retrieveTimeSlotProfileData(userId)
         setHasOptionsMenu(true)
     }
@@ -57,12 +61,15 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
 
 
         val ts = globalModel.selectedTimeSlot.value
-        var status = chatVm.chat.value?.status ?: Chat.STATUS_UNINTERESTED
 
-        chatVm.chat.observe(viewLifecycleOwner) {
-            status = it.status
-            btnRequestService.isEnabled = status == Chat.STATUS_UNINTERESTED
-        }
+        btnRequestService.isEnabled = status == Chat.STATUS_UNINTERESTED
+
+
+
+
+        /*chatVm.chat.observe(viewLifecycleOwner) {
+            btnRequestService.isEnabled = it.status == Chat.STATUS_UNINTERESTED
+        }*/
 
 
         globalModel.selectedTimeSlot.observe(viewLifecycleOwner) {
@@ -70,7 +77,8 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
             /*if (ts != null) {
                 if(ts.date.isNotEmpty()) ts.date.replace("_", "/")
             }*/
-            showTimeSlot(view, it, status)
+            showTimeSlot(view, it)
+
         }
 
         //showTimeSlot(view, arguments?.getSerializable("timeslot") as TimeSlot?) //temp
@@ -93,7 +101,7 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
     }
 
 
-    private fun showTimeSlot(view: View, ts: TimeSlot?, status: Int) {
+    private fun showTimeSlot(view: View, ts: TimeSlot?) {
         view.findViewById<TextView>(R.id.time_slot_title).text = (ts?.title)
         view.findViewById<TextView>(R.id.time_slot_date).text = ts?.date
         view.findViewById<TextView>(R.id.time_slot_time).text = ts?.time
@@ -110,9 +118,12 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
             view.findViewById<ConstraintLayout>(R.id.layout_offerer)
                 .also { it.visibility = View.VISIBLE }
 
-            if(status != Chat.STATUS_UNINTERESTED){
-                btnRequestService.isEnabled = false
+            /* Retrieve status of the current chat*/
+            chatVm.getChat(Helper.makeRequestId(ts!!.id, Firebase.auth.uid!!)).addOnSuccessListener {
+                status = it.toObject<Chat>()?.status ?: Chat.STATUS_UNINTERESTED
+                btnRequestService.isEnabled = status == Chat.STATUS_UNINTERESTED
             }
+
 
             val btnAskInfo = view.findViewById<Button>(R.id.openChatButton)
             val civOffererPic = view.findViewById<CircleImageView>(R.id.offerer_pic)
@@ -125,7 +136,7 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
 
             btnAskInfo.setOnClickListener {
                 showTimeSlotRequest(timeSlot)
-                findNavController().navigate(R.id.nav_chat)
+                findNavController().navigate(R.id.action_nav_timeSlotDetails_to_nav_chat)
             }
 
 
