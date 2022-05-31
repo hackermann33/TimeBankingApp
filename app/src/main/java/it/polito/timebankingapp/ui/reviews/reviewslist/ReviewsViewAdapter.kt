@@ -3,11 +3,13 @@ package it.polito.timebankingapp.ui.reviews.reviewslist
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ProgressBar
 import android.widget.RatingBar
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import de.hdodenhof.circleimageview.CircleImageView
 import it.polito.timebankingapp.R
+import it.polito.timebankingapp.model.Helper
 import it.polito.timebankingapp.model.review.Review
 
 
@@ -30,7 +32,8 @@ class ReviewsViewAdapter(
         private val ratingBar: RatingBar = mainView.findViewById(R.id.reviews_item_rating_bar)
         private val timestamp: TextView = mainView.findViewById(R.id.reviews_item_rating_timestamp)
         private val reviewText: TextView = mainView.findViewById(R.id.reviews_item_review_text)
-        private var profilePic: CircleImageView = mainView.findViewById(R.id.review_list_item_profile_pic)
+        private var civImagePic: CircleImageView = mainView.findViewById(R.id.review_list_item_profile_pic)
+        var pbOtherProfilePic: ProgressBar =itemView.findViewById(R.id.progressBar)
 
         fun bind(rw: Review, detailAction: (v: View) -> Unit) {
             fullName.text = rw.reviewer.getValue("fullName")
@@ -38,6 +41,8 @@ class ReviewsViewAdapter(
             timestamp.text = rw.timestamp.toString()
             reviewText.text = rw.reviewText
             //profilePic = qualcosa con glide?
+            Helper.loadImageIntoView(civImagePic, pbOtherProfilePic , rw.reviewer["profilePicUrl"]!!)
+
             //this.mainView.setOnClickListener(detailAction)
         }
     }
