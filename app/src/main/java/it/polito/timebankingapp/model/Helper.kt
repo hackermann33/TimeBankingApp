@@ -193,6 +193,11 @@ class Helper {
             btn.setCompoundDrawablesWithIntrinsicBounds(null,null,drawCheckedIcon, null)
         }
 
+        fun extractTimeSlotId(requestId: String): String {
+            return requestId.split("_").first()
+
+        }
+
     }
 
     }

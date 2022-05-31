@@ -68,7 +68,8 @@ class TimeSlotsViewModel(application: Application): AndroidViewModel(application
     fun updateSkillSpecificTimeSlots(skill: String) {
         Log.d("selectedSkill", "updateSkillSpecificTimeSlos: selectedSkill: ${skill}")
 
-        l = db.collection("timeSlots").whereNotEqualTo("userId", Firebase.auth.uid).whereEqualTo("relatedSkill",skill).addSnapshotListener{v,e ->
+        l = db.collection("timeSlots").whereNotEqualTo("userId", Firebase.auth.uid).whereEqualTo("relatedSkill",skill).
+        whereEqualTo("assignedTo", "").addSnapshotListener{v,e ->
             if(e == null){
                 _timeSlots.value = v!!.mapNotNull { d -> d.toObject<TimeSlot>() }
                 _isEmpty.value = _timeSlots.value!!.isEmpty()

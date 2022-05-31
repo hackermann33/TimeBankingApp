@@ -393,6 +393,8 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
 
     fun updateStatus(chatId: String, newStatus: Int) {
         val reqDocRef = db.collection("requests")
+        val timeSlotsDocRef = db.collection("timeSlots")
+
         when(newStatus) {
             Chat.STATUS_ACCEPTED -> {reqDocRef.get().addOnSuccessListener {
                 /* TODO(Controlla il credito) */
@@ -400,6 +402,7 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
                     if(doc.get("requestId") != chatId )
                         doc.reference.update(mapOf("status" to Chat.STATUS_DISCARDED))
                     else {
+                        timeSlotsDocRef.document(Helper.extractTimeSlotId(chatId)).update("assignedTo", doc.get("requester.id"))
                         doc.reference.update(mapOf("status" to Chat.STATUS_ACCEPTED))
                         /* !!!!tocheck ==> */_chat.value = chat.value?.copy(status=newStatus)
                     }

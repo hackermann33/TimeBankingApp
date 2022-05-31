@@ -22,7 +22,8 @@ data class TimeSlot(
     var restrictions: String = "",
     var relatedSkill: String = "",
     var offererUnreadChats: Int = 0,
-    var requesterUnreadChats: Int = 0
+    var requesterUnreadChats: Int = 0,
+    var assignedTo: String = ""
 ) : Serializable {
 
     override fun toString(): String = "{ title:$title, description: $description, date: $date, time: $time, duration: $duration, location: $location"
