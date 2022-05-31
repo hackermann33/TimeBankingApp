@@ -18,6 +18,7 @@ import de.hdodenhof.circleimageview.CircleImageView
 import it.polito.timebankingapp.R
 import it.polito.timebankingapp.model.Helper
 import it.polito.timebankingapp.model.Chat
+import it.polito.timebankingapp.model.Chat.Companion.STATUS_ACCEPTED
 import it.polito.timebankingapp.model.Chat.Companion.STATUS_DISCARDED
 import it.polito.timebankingapp.model.chat.ChatMessage
 import it.polito.timebankingapp.model.user.CompactUser
@@ -55,7 +56,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
             adTmp = ChatViewAdapter(
                 it.toMutableList(),
                 ::sendMessage,
-                chatVm.chat.value?.status == STATUS_DISCARDED
+                chatVm.chat.value?.status == STATUS_DISCARDED || chatVm.chat.value?.status == STATUS_ACCEPTED
             )
             rv.adapter = adTmp
             rv.scrollToPosition(adTmp.itemCount - 1)
@@ -71,8 +72,19 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         if(chatVm.chat.value?.status == STATUS_DISCARDED) {
             if(chatVm.chat.value?.offerer!!.id == Firebase.auth.uid) /* Discarded and I'm Offerer */
                 tvChatDiscarded.text = getString(R.string.you_assigned_service_to_another)
-            if(chatVm.chat.value?.requester!!.id == Firebase.auth.uid) /* Discarded and I'm Offerer */
+            if(chatVm.chat.value?.requester!!.id == Firebase.auth.uid) /* Discarded and I'm Requester */
                 tvChatDiscarded.text = getString(R.string.this_service_has_been_assigned_to_another_user)
+            sendMsgBar.visibility = View.GONE
+            cardChatDiscarded.visibility = View.VISIBLE
+            btnRequireService.isEnabled = false
+            btnAcceptRequest.isEnabled = false
+            btnDiscardRequest.isEnabled = false
+        }
+        if(chatVm.chat.value?.status == STATUS_ACCEPTED){
+            if(chatVm.chat.value?.offerer!!.id == Firebase.auth.uid) /* Accepted and I'm Offerer */
+                tvChatDiscarded.text = getString(R.string.assigned_to_him)
+            if(chatVm.chat.value?.requester!!.id == Firebase.auth.uid) /* Accepted and I'm Requester */
+                tvChatDiscarded.text = getString(R.string.assigned_to_you)
             sendMsgBar.visibility = View.GONE
             cardChatDiscarded.visibility = View.VISIBLE
             btnRequireService.isEnabled = false
@@ -108,7 +120,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         rv = v.findViewById(R.id.recycler_gchat)
         rv.layoutManager = LinearLayoutManager(context)
 
-        adTmp = ChatViewAdapter(mutableListOf(), ::sendMessage, chatVm.chat.value?.status == STATUS_DISCARDED)
+        adTmp = ChatViewAdapter(mutableListOf(), ::sendMessage, chatVm.chat.value?.status == STATUS_DISCARDED || chatVm.chat.value?.status == STATUS_ACCEPTED)
         rv.adapter = adTmp
         rv.scrollToPosition(adTmp.itemCount - 1)
 
