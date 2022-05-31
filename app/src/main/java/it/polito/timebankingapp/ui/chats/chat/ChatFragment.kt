@@ -71,7 +71,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         }
         textMessage = view.findViewById(R.id.edit_gchat_message)
 
-        val btnRequireService = view.findViewById<Button>(R.id.fragment_chat_btn_require_service)
+        val btnRequireService = view.findViewById<Button>(R.id.fragment_chat_btn_request_service)
 
         val sendButton = view.findViewById<Button>(R.id.button_gchat_send)
         sendButton.setOnClickListener {
@@ -127,7 +127,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         val tvTimeSlotTitle = v.findViewById<TextView>(R.id.fragment_chat_tv_offer_title)
         val tvProfileName = v.findViewById<TextView>(R.id.chat_profile_name)
         val btnAcceptRequest = v.findViewById<Button>(R.id.fragment_chat_btn_accept)
-        val btnRequireService = v.findViewById<Button>(R.id.fragment_chat_btn_require_service)
+        val btnRequireService = v.findViewById<Button>(R.id.fragment_chat_btn_request_service)
         val btnDiscardRequest = v.findViewById<TextView>(R.id.fragment_chat_btn_discard)
         val pbProfilePic = v.findViewById<ProgressBar>(R.id.fragment_chat_pb_profile_pic)
 
@@ -136,16 +136,17 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 
 
         btnRequireService.setOnClickListener {
-            btnRequireService.isEnabled = false /*TODO(Reabilitate if error happens during requests) */
+            Helper.setConfirmationOnButton(requireContext(), btnRequireService)
+            /*btnRequireService.isEnabled = false *//*TODO(Reabilitate if error happens during requests) */
             chatVm.requestService(cli)
         }
 
         btnAcceptRequest.setOnClickListener {
-            chatVm.acceptRequest()
+            chatVm.acceptRequest(cli.requestId)
         }
 
         btnDiscardRequest.setOnClickListener {
-            chatVm.discardRequest()
+            chatVm.discardRequest(cli.requestId)
         }
 
         /* TODO(When image is clicked, navigation is not to the correct profile !!!) */
@@ -163,8 +164,8 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
                     }
                     Chat.STATUS_INTERESTED -> {
                         Log.d(TAG, "STATUS INTERESTED")
-                        btnRequireService.isEnabled = false
                         btnRequireService.text = "Service requested"
+                        Helper.setConfirmationOnButton(requireContext(), btnRequireService)
                     }
                     Chat.STATUS_ACCEPTED -> Log.d(TAG, "STATUS ACCEPTED")
                 }
