@@ -39,13 +39,15 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         /*TODO(To remove glitch between transictions (require -> offerer) use a bundle to understand where do you come from)  */
-        chatVm.chat.observe(viewLifecycleOwner) { cli ->
-
-            if(chatVm.hasChatBeenCleared.value == true)
-                chatVm.setIsClearedFlag(false)
-            else {
+        /*chatVm.chat.observe(viewLifecycleOwner) { cli ->
                 currentChat = cli
                 updateChatUi(view, cli)
+        }
+        */
+        chatVm.chat.observe(viewLifecycleOwner) { chat ->
+            if(!chatVm.isLoading.value!!){
+                currentChat = chat
+                updateChatUi(view, currentChat)
             }
         }
 
@@ -88,8 +90,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
     }
 
     override fun onDestroy() {
-        chatVm.clearChat()
-        chatVm.setIsClearedFlag(true)
+        //chatVm.clearChat()
         super.onDestroy()
     }
 
@@ -170,9 +171,9 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 
             }
             Chat.CHAT_TYPE_TO_REQUESTER -> {
-                btnRequireService.visibility = View.GONE
                 btnDiscardRequest.visibility = View.VISIBLE
                 btnAcceptRequest.visibility = View.VISIBLE
+                btnRequireService.visibility = View.GONE
                 rbReviewScore.rating = otherUser.asRequesterReview.score.toFloat()
                 tvReviewsNumber.text = "${otherUser.asRequesterReview.number} reviews"
                 Log.d(TAG, "TYPE TO REQUESTER")

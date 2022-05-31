@@ -43,7 +43,6 @@
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="24dp"
         android:fontFamily="@font/roboto_medium"
-        android:text="Offer Title "
         android:textAllCaps="true"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         app:autoSizeTextType="none"
@@ -57,12 +56,11 @@
 
     <TextView
         android:id="@+id/chat_profile_name"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="4dp"
         android:lines="1"
-        android:text="Nome Surname"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         app:autoSizeTextType="none"
         app:layout_constraintEnd_toEndOf="parent"
@@ -126,7 +124,7 @@
             android:layout_weight="1"
             android:backgroundTint="#B71C1C"
             android:text="@string/discard"
-            android:visibility="invisible" />
+            android:visibility="gone" />
 
         <Button
             android:id="@+id/fragment_chat_btn_accept"
