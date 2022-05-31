@@ -23,7 +23,8 @@ data class TimeSlot(
     var relatedSkill: String = "",
     var offererUnreadChats: Int = 0,
     var requesterUnreadChats: Int = 0,
-    var assignedTo: String = ""
+    var assignedTo: String = "",
+    var timeSlotStatus: Int = 0
 ) : Serializable {
 
     override fun toString(): String = "{ title:$title, description: $description, date: $date, time: $time, duration: $duration, location: $location"
@@ -64,6 +65,12 @@ data class TimeSlot(
 
         Log.d("getCalendar", cal.timeInMillis.toString())
         return cal
+    }
+
+    companion object {
+        const val TIME_SLOT_STATUS_AVAILABLE = 0
+        const val TIME_SLOT_STATUS_ASSIGNED = 1
+        const val TIME_SLOT_STATUS_COMPLETED = 2
     }
 }
 

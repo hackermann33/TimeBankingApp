@@ -18,7 +18,7 @@ import it.polito.timebankingapp.model.timeslot.TimeSlot
 import it.polito.timebankingapp.model.user.User
 
 
-class TimeSlotsViewModel(application: Application): AndroidViewModel(application) {
+class TimeSlotsViewModel(application: Application) : AndroidViewModel(application) {
 
     private val _timeSlots = MutableLiveData<List<TimeSlot>>()
     val timeSlots: LiveData<List<TimeSlot>> = _timeSlots
@@ -26,29 +26,29 @@ class TimeSlotsViewModel(application: Application): AndroidViewModel(application
     private val _skillList = MutableLiveData<List<String>>()
     val skillList: LiveData<List<String>> = _skillList
 
-    private val _selectedTimeSlot =  MutableLiveData<TimeSlot>()
+    private val _selectedTimeSlot = MutableLiveData<TimeSlot>()
     val selectedTimeSlot: LiveData<TimeSlot> = _selectedTimeSlot
 
     private val _unreadChats = MutableLiveData<Int>()
-    val unreadChats : LiveData<Int> = _unreadChats
+    val unreadChats: LiveData<Int> = _unreadChats
 
 
     lateinit var type: String
-    private set
+        private set
 
-    private lateinit var l:ListenerRegistration
+    private lateinit var l: ListenerRegistration
 
     private val _selectedSkill = MutableLiveData<String?>()
     var selectedSkill: LiveData<String?> = _selectedSkill
 
-    private lateinit var l2:ListenerRegistration
-    private lateinit var l3:ListenerRegistration
+    private lateinit var l2: ListenerRegistration
+    private lateinit var l3: ListenerRegistration
 
     private var db: FirebaseFirestore = FirebaseFirestore.getInstance()
 
     //var justUpdated = false
     private val _isLoading = MutableLiveData<Boolean>(true)
-    val isLoading : LiveData<Boolean> = _isLoading
+    val isLoading: LiveData<Boolean> = _isLoading
 
     private val _isEmpty = MutableLiveData<Boolean?>()
     var isEmpty: LiveData<Boolean?> = _isEmpty
@@ -73,40 +73,43 @@ class TimeSlotsViewModel(application: Application): AndroidViewModel(application
 
         Log.d("selectedSkill", "updateSkillSpecificTimeSlos: selectedSkill: ${skill}")
 
-        l = db.collection("timeSlots").whereNotEqualTo("userId", Firebase.auth.uid).whereEqualTo("relatedSkill",skill).
-        whereEqualTo("assignedTo", "").addSnapshotListener{v,e ->
-            if(e == null){
-                _timeSlots.value = v!!.mapNotNull { d -> d.toObject<TimeSlot>() }
-                _isLoading.postValue(false)
-                _isEmpty.value = _timeSlots.value!!.isEmpty()
-            } else {
-                _timeSlots.value = emptyList()
-                _isLoading.postValue(false)
-                _isEmpty.value = true
+        l = db.collection("timeSlots").whereNotEqualTo("userId", Firebase.auth.uid)
+            .whereEqualTo("relatedSkill", skill)
+            .whereEqualTo("status", TimeSlot.TIME_SLOT_STATUS_AVAILABLE)
+            .addSnapshotListener { v, e ->
+                if (e == null) {
+                    _timeSlots.value = v!!.mapNotNull { d -> d.toObject<TimeSlot>() }
+                    _isLoading.postValue(false)
+                    _isEmpty.value = _timeSlots.value!!.isEmpty()
+                } else {
+                    _timeSlots.value = emptyList()
+                    _isLoading.postValue(false)
+                    _isEmpty.value = true
+                }
+                //justUpdated = true
             }
-            //justUpdated = true
-        }
     }
 
 
     fun updatePersonalTimeSlots() {
         _isLoading.postValue(true)
         clearTimeSlots()
-        l = db.collection("timeSlots").whereEqualTo("userId", Firebase.auth.uid).addSnapshotListener{v,e ->
-            if(e == null){
-                _timeSlots.value = v!!.mapNotNull { d -> d.toObject<TimeSlot>() }
-                _isLoading.postValue(false)
-                var cnt = 0
-                _timeSlots.value!!.forEach{ ts -> if(ts.offererUnreadChats > 0) cnt++}
-                _unreadChats.postValue(cnt)
-                _isEmpty.value = _timeSlots.value!!.isEmpty()
-            } else {
-                _timeSlots.value = emptyList()
-                _isLoading.postValue(false)
-                _isEmpty.value = true
+        l = db.collection("timeSlots").whereEqualTo("userId", Firebase.auth.uid)
+            .addSnapshotListener { v, e ->
+                if (e == null) {
+                    _timeSlots.value = v!!.mapNotNull { d -> d.toObject<TimeSlot>() }
+                    _isLoading.postValue(false)
+                    var cnt = 0
+                    _timeSlots.value!!.forEach { ts -> if (ts.offererUnreadChats > 0) cnt++ }
+                    _unreadChats.postValue(cnt)
+                    _isEmpty.value = _timeSlots.value!!.isEmpty()
+                } else {
+                    _timeSlots.value = emptyList()
+                    _isLoading.postValue(false)
+                    _isEmpty.value = true
+                }
+                //justUpdated = true
             }
-            //justUpdated = true
-        }
     }
 
 
@@ -116,10 +119,10 @@ class TimeSlotsViewModel(application: Application): AndroidViewModel(application
 
         val myUid = Firebase.auth.uid!!
         db.collection("requests").whereEqualTo("requester.id", myUid)
-            .whereEqualTo("status", Chat.STATUS_INTERESTED).addSnapshotListener{ v, e ->
-                if(e == null){
-                    val req = v!!.mapNotNull {  d -> d.toObject<Chat>()  }
-                    _timeSlots.value = req.mapNotNull {  r -> r.timeSlot }
+            .whereEqualTo("status", Chat.STATUS_INTERESTED).addSnapshotListener { v, e ->
+                if (e == null) {
+                    val req = v!!.mapNotNull { d -> d.toObject<Chat>() }
+                    _timeSlots.value = req.mapNotNull { r -> r.timeSlot }
                     _isLoading.postValue(false)
                     _isEmpty.value = _timeSlots.value!!.isEmpty()
                 } else {
@@ -128,7 +131,7 @@ class TimeSlotsViewModel(application: Application): AndroidViewModel(application
                     _isEmpty.value = true
                 }
             }
-        }
+    }
     // db.collection("requests").whereArrayContains("users", myuid).whereEqualTo("status", Chat.STATUS_COMPLETED)
 
     fun updateCompletedTimeSlots() {
@@ -137,12 +140,12 @@ class TimeSlotsViewModel(application: Application): AndroidViewModel(application
 
         val myUid = Firebase.auth.uid!!
         db.collection("requests").whereArrayContains("users", myUid)
-            .whereEqualTo("status", Chat.STATUS_COMPLETED).addSnapshotListener{ v, e ->
-        //db.collection("requests").whereEqualTo("requester.id", myUid)
-        //    .whereEqualTo("status", Chat.STATUS_COMPLETED).addSnapshotListener{ v, e ->
-                if(e == null){
-                    val req = v!!.mapNotNull {  d -> d.toObject<Chat>()  }
-                    _timeSlots.value = req.mapNotNull {  r -> r.timeSlot }
+            .whereEqualTo("status", Chat.STATUS_COMPLETED).addSnapshotListener { v, e ->
+                //db.collection("requests").whereEqualTo("requester.id", myUid)
+                //    .whereEqualTo("status", Chat.STATUS_COMPLETED).addSnapshotListener{ v, e ->
+                if (e == null) {
+                    val req = v!!.mapNotNull { d -> d.toObject<Chat>() }
+                    _timeSlots.value = req.mapNotNull { r -> r.timeSlot }
                     _isLoading.postValue(false)
                     _isEmpty.value = _timeSlots.value!!.isEmpty()
                 } else {
@@ -161,10 +164,10 @@ class TimeSlotsViewModel(application: Application): AndroidViewModel(application
         //db.collection("requests").whereEqualTo("requester.id", myUid)
         db.collection("requests").whereArrayContains("users", myUid)
             //.whereIn("status", listOf(Chat.STATUS_ACCEPTED)).addSnapshotListener{ v, e ->
-            .whereEqualTo("status", Chat.STATUS_ACCEPTED).addSnapshotListener{ v, e ->
-                if(e == null){
-                    val req = v!!.mapNotNull {  d -> d.toObject<Chat>()  }
-                    _timeSlots.value = req.mapNotNull {  r -> r.timeSlot }
+            .whereEqualTo("status", Chat.STATUS_ACCEPTED).addSnapshotListener { v, e ->
+                if (e == null) {
+                    val req = v!!.mapNotNull { d -> d.toObject<Chat>() }
+                    _timeSlots.value = req.mapNotNull { r -> r.timeSlot }
                     _isLoading.postValue(false)
                     _isEmpty.value = _timeSlots.value!!.isEmpty()
                 } else {
@@ -176,12 +179,11 @@ class TimeSlotsViewModel(application: Application): AndroidViewModel(application
     }
 
     /* Move to skillsListViewModel */
-    fun retrieveSkillList(){
-        l = db.collection("skills").addSnapshotListener {
-            v,e ->
-            if(e == null){
-                _skillList.value = v!!.mapNotNull { d -> d.id}
-            }else _skillList.value = emptyList()
+    fun retrieveSkillList() {
+        l = db.collection("skills").addSnapshotListener { v, e ->
+            if (e == null) {
+                _skillList.value = v!!.mapNotNull { d -> d.id }
+            } else _skillList.value = emptyList()
         }
         /*.addOnSuccessListener { result ->
             for (document in result) {
@@ -208,8 +210,8 @@ class TimeSlotsViewModel(application: Application): AndroidViewModel(application
         ts.id = newTimeSlotRef.id //imposta id generato da firebase
         ts.userId = Firebase.auth.currentUser?.uid ?: ""
 
-        newTimeSlotRef.set(ts).addOnSuccessListener{
-            Log.d("timeSlots_add","Successfully added")
+        newTimeSlotRef.set(ts).addOnSuccessListener {
+            Log.d("timeSlots_add", "Successfully added")
             val skillRef: DocumentReference = db.collection("skills").document(ts.relatedSkill)
             skillRef.get().addOnCompleteListener { task ->
                 if (task.isSuccessful) {
@@ -221,7 +223,7 @@ class TimeSlotsViewModel(application: Application): AndroidViewModel(application
                     Log.d("timeSlots_add", "Failed with: ", task.exception)
                 }
             }
-        }.addOnFailureListener{Log.d("timeSlots_add", "Error on adding")}
+        }.addOnFailureListener { Log.d("timeSlots_add", "Error on adding") }
 
         /*db.collection("timeSlots").document().set(ts).addOnSuccessListener {
             Log.d("timeSlots_add","Successfully added")
@@ -230,7 +232,7 @@ class TimeSlotsViewModel(application: Application): AndroidViewModel(application
     }
 
 
-    fun editTimeSlot(ts: TimeSlot){
+    fun editTimeSlot(ts: TimeSlot) {
         db.collection("timeSlots").document(ts.id).set(ts)
     }
 
@@ -239,7 +241,7 @@ class TimeSlotsViewModel(application: Application): AndroidViewModel(application
         super.onCleared()
     }
 
-    fun setSelectedTimeSlot(ts: TimeSlot){
+    fun setSelectedTimeSlot(ts: TimeSlot) {
 
         _selectedTimeSlot.value = ts
     }
@@ -247,7 +249,7 @@ class TimeSlotsViewModel(application: Application): AndroidViewModel(application
     fun setFilteringSkill(skill: String) {
 
         Log.d("selectedSkill", "setFilteringSkill: $skill")
-        if(skill != _selectedSkill.value){
+        if (skill != _selectedSkill.value) {
             clearTimeSlots()
         }
         _selectedSkill.postValue(skill)
@@ -255,12 +257,14 @@ class TimeSlotsViewModel(application: Application): AndroidViewModel(application
     }
 
     /* This is used to create a request to the offerer through chat */
-    fun makeTimeSlotRequest(ts: TimeSlot, currentUser: User) : Task<Void> {
+    fun makeTimeSlotRequest(ts: TimeSlot, currentUser: User): Task<Void> {
         val chatId = Helper.makeRequestId(ts.id, currentUser.id)
-        val  req = Chat(timeSlot = ts, requester = currentUser.toCompactUser(),
-            offerer = ts.offerer, status = Chat.STATUS_INTERESTED, offererUnreadMsg = 0)
+        val req = Chat(
+            timeSlot = ts, requester = currentUser.toCompactUser(),
+            offerer = ts.offerer, status = Chat.STATUS_INTERESTED, offererUnreadMsg = 0
+        )
 
-            /*
+        /*
             UPDATE UNREAD CHATS
             .addOnSuccessListener { doc ->
                 if(!doc.exists())  //if doc is created now
@@ -289,25 +293,19 @@ class TimeSlotsViewModel(application: Application): AndroidViewModel(application
     "age": 13,
     "favorites.color": "Red"
   });*/
-
-
         val myUid = Firebase.auth.uid!!
         //db.collection("requests").whereEqualTo("requester.id", myUid)
-        db.collection("requests").whereArrayContains("users", myUid)
-            //.whereIn("status", listOf(Chat.STATUS_ACCEPTED)).addSnapshotListener{ v, e ->
-            .whereEqualTo("status", Chat.STATUS_ACCEPTED).addSnapshotListener{ v, e ->
-                if(e == null){
-                    val req = v!!.mapNotNull {  d -> d.toObject<Chat>()  }
-                    _timeSlots.value = req.mapNotNull {  r -> r.timeSlot }
-                    _isEmpty.value = _timeSlots.value!!.isEmpty()
-                } else {
-                    _timeSlots.value = emptyList()
-                    _isEmpty.value = true
-                }
+        db.collection("timeSlots").document(ts.id)
+            .update("status", TimeSlot.TIME_SLOT_STATUS_COMPLETED).addOnSuccessListener {
+                //elimino tutte le richieste
+                db.collection("requests").whereEqualTo("timeSlot.id", ts.id).get()
+                    .addOnSuccessListener {
+                        for (doc in it.documents) {
+                            doc.reference.delete()
+                        }
+                    }
             }
     }
-
-
 }
 /*
 private fun DocumentSnapshot.toChat(): Chat? {

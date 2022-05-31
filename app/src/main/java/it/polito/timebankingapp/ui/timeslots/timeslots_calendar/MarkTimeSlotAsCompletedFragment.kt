@@ -13,11 +13,14 @@ import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import it.polito.timebankingapp.R
 import it.polito.timebankingapp.model.timeslot.TimeSlot
+import it.polito.timebankingapp.ui.chats.chat.ChatViewModel
 import it.polito.timebankingapp.ui.timeslots.TimeSlotsViewModel
 
 class MarkTimeSlotAsCompletedFragment : Fragment(R.layout.fragment_mark_time_slot_as_completed) {
 
     private val vm: TimeSlotsViewModel by activityViewModels()
+    private val chatVm: ChatViewModel by activityViewModels()
+
 
     lateinit var v: View;
     lateinit var undoButton: Button
@@ -48,6 +51,9 @@ class MarkTimeSlotAsCompletedFragment : Fragment(R.layout.fragment_mark_time_slo
 
         confirmButton.setOnClickListener {
             //IN QUESTA RIGA DI CODICE CI VA IL METODO DELLA VM CON LA QUERY!!!
+            vm.setTimeSlotAsCompleted(timeslot)
+
+
             Toast.makeText(requireContext(),
                 "Marked as completed!", Toast.LENGTH_SHORT).show()
             findNavController().navigateUp()

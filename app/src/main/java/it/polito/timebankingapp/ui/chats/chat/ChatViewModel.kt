@@ -424,16 +424,9 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
             db.collection("requests").whereEqualTo("timeSlotsId", Helper.extractTimeSlotId(chatId))
         val reqDocRef = db.collection("requests")
 
-        when (newStatus) {
-            Chat.STATUS_ACCEPTED -> {
-
-            }
-            Chat.STATUS_DISCARDED -> {
-                reqDocRef.document(chatId).get().addOnSuccessListener { doc ->
-                    doc.reference.update(mapOf("status" to Chat.STATUS_DISCARDED))
-                    _chat.value = chat.value?.copy(status = newStatus)
-                }
-            }
+        reqDocRef.document(chatId).get().addOnSuccessListener { doc ->
+            doc.reference.update(mapOf("status" to newStatus))
+            _chat.value = chat.value?.copy(status = newStatus)
         }
     }
 
@@ -441,7 +434,6 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
     fun acceptRequest(chat: Chat) {
         /* query the db */
         val chatId = chat.requestId
-
 
         val reqTsDocs =
             db.collection("requests").whereEqualTo("timeSlotsId", Helper.extractTimeSlotId(chatId))
@@ -455,7 +447,10 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
 
         db.runTransaction { transaction ->
             reqDocRef.update("status", Chat.STATUS_ACCEPTED)
+            reqDocRef.update("timeSlot.status", Chat.STATUS_ACCEPTED)
             transaction.update(tsDocRef, "assignedTo", chat.requester.id)
+            transaction.update(tsDocRef, "status", TimeSlot.TIME_SLOT_STATUS_ASSIGNED)
+
             val snapshot = transaction.get(reqDocRef)
             val duration = snapshot.getString("timeSlot.duration")?.toInt()!!
             val newBalance = snapshot.getLong("requester.balance")!! - duration
@@ -465,6 +460,9 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
                 reqDocRef.update("status", Chat.STATUS_INTERESTED)
                 _chat.postValue(chat.copy(status = Chat.STATUS_INTERESTED))
                 transaction.update(tsDocRef, "assignedTo", "")
+                transaction.update(tsDocRef, "status", TimeSlot.TIME_SLOT_STATUS_AVAILABLE)
+                reqDocRef.update("timeSlot.status", Chat.STATUS_ACCEPTED)
+
                 newBalance
             } else { //Balance is ok => transfer credit => update references
                 Log.d(TAG, "balance is okay: $newBalance")
@@ -506,7 +504,7 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
 
                 newBalance
             }
-        }
+        }.addOnSuccessListener { Log.d(TAG, "SUCCESS") }.addOnFailureListener{Log.d(TAG, "FAILURE : {$it}") }
     }
 
     fun discardRequest(chatId: String) {
