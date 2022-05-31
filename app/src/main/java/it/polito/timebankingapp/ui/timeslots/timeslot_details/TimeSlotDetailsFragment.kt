@@ -65,6 +65,8 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
         btnRequestService.isEnabled = status == Chat.STATUS_UNINTERESTED
 
 
+        if (type == "skill_specific")
+            btnRequestService.visibility = View.VISIBLE
 
 
         /*chatVm.chat.observe(viewLifecycleOwner) {
@@ -114,11 +116,8 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
 
             //se esiste già una richiesta, disabilita btnRequestService
 
-            btnRequestService.visibility = View.VISIBLE
             view.findViewById<ConstraintLayout>(R.id.layout_offerer)
                 .also { it.visibility = View.VISIBLE }
-
-            btnRequestService.visibility = View.VISIBLE
 
             /* Retrieve status of the current chat*/
             chatVm.getChat(Helper.makeRequestId(ts!!.id, Firebase.auth.uid!!)).addOnSuccessListener {
