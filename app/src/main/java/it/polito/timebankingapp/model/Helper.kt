@@ -1,11 +1,15 @@
 package it.polito.timebankingapp.model
 
+import android.content.Context
 import android.graphics.drawable.Drawable
 import android.text.format.DateUtils
 import android.util.Log
 import android.view.View
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.ProgressBar
+import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -16,6 +20,7 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
+import it.polito.timebankingapp.R
 import it.polito.timebankingapp.model.user.CompactReview
 import it.polito.timebankingapp.model.user.CompactUser
 import it.polito.timebankingapp.model.user.User
@@ -181,6 +186,13 @@ class Helper {
                 user.balance
                 )
         }
+
+        fun setConfirmationOnButton(context: Context, btn: Button) {
+            btn.isEnabled = false
+            val drawCheckedIcon = ContextCompat.getDrawable(context, R.drawable.ic_baseline_check_24)
+            btn.setCompoundDrawablesWithIntrinsicBounds(null,null,drawCheckedIcon, null)
+        }
+
     }
 
     }

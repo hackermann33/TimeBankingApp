@@ -85,8 +85,15 @@ class ChatListViewModel(application: Application): AndroidViewModel(application)
                     if(e == null){
                         Log.d("chatList", "chatList: ${_chatsList.value}")
                         _chatsList.value = v!!.mapNotNull {  d -> d.toObject<Chat>() }
-
-                            Log.d("chatsListValue", "success")
+                        var cnt = 0
+                        chatsList.value?.forEach { chat ->
+                            if(chat.offerer.id == Firebase.auth.uid && chat.timeSlot.offererUnreadChats > 0) /* I am the offerer of this chat*/
+                                cnt++
+                            if(chat.requester.id == Firebase.auth.uid && chat.timeSlot.requesterUnreadChats > 0) /* I am the requester of this chat */
+                                cnt++
+                        }
+                        _unreadChats.postValue(cnt)
+                        Log.d("chatsListValue", "success")
                     } else{
                         _chatsList.value = emptyList()
                         Log.d("chatsListValue", "failed")
@@ -115,14 +122,13 @@ class ChatListViewModel(application: Application): AndroidViewModel(application)
         }
     }
 
-    fun updateUnreadChats(){
-        db.collection("requests").whereEqualTo("offerer.id", Firebase.auth.uid)
-    }
 
 
     fun clearChatList() {
         _chatsList.value = listOf()
     }
+
+
 
 }
 

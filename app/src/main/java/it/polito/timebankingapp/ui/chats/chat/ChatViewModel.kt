@@ -323,18 +323,34 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
                     _chat.value = (req)
                     _isLoading.postValue(false)
 
-
+                    /*
                     val c = _chat.value!!
                     val resetUnreadMsgs = c.lastMessage.userId != Firebase.auth.uid
                     if(resetUnreadMsgs)
                         c.offererUnreadMsg = 0
+                        */
+
+                    /* Check if have to clear unreadMsg and Chat */
+                    if(req.lastMessage.userId != Firebase.auth.uid){ //have to clear unreadMsg and decrement unreadChats
+                        if(req.requester.id == Firebase.auth.uid){ //I am requester
+                            req.offererUnreadMsg = 0
+                            req.timeSlot.requesterUnreadChats--
+                        }
+                        if(req.offerer.id == Firebase.auth.uid){
+                            req.offererUnreadMsg = 0
+                            req.timeSlot.offererUnreadChats--
+                        }
+                    }
+
 
                     val reqDocRef =  db.collection("requests").document(chat.value!!.requestId)
 
-                    db.runBatch { batch ->
-                        batch.update(reqDocRef, "unreadMsgs", c.offererUnreadMsg)
+                    /* LAST PROBLEM IS HERE */
+                    db.runBatch { batch -> batch.set(reqDocRef, req)
+//                        batch.update(reqDocRef, "unreadMsgs", req.offererUnreadMsg)
                     }.addOnSuccessListener {
-                        _chat.postValue(chat.value)
+                        _chat.postValue(req!!)
+//                        _chat.postValue(chat.value)
                         Log.d("sendMessageAndUpdate","Everything updated")
                     }.addOnFailureListener{
                         Log.d("sendMessageAndUpdate","Oh, no")
@@ -375,13 +391,20 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun acceptRequest() {
-        _chat.value = chat.value?.copy(status=Chat.STATUS_ACCEPTED)
-        /* query the db */
+    fun updateStatus(chatId: String, status: Int) {
+        db.collection("requests").document(chatId).update(mapOf("status" to status)).addOnSuccessListener {
+            _chat.value = chat.value?.copy(status=status)
+        }
     }
 
-    fun discardRequest() {
-        _chat.value = chat.value?.copy(status=Chat.STATUS_DISCARDED)
+    fun acceptRequest(chatId: String) {
+        /* query the db */
+        updateStatus(chatId, Chat.STATUS_ACCEPTED)
+    }
+
+    fun discardRequest(chatId: String) {
+        updateStatus(chatId, Chat.STATUS_DISCARDED)
+
         /* query the db */
     }
 

@@ -1,7 +1,5 @@
 package it.polito.timebankingapp
 
-import android.content.res.ColorStateList
-import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
@@ -24,7 +22,6 @@ import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 //import com.jakewharton.threetenabp.AndroidThreeTen
-import de.hdodenhof.circleimageview.CircleImageView
 import it.polito.timebankingapp.databinding.ActivityMainBinding
 import it.polito.timebankingapp.model.Helper
 import it.polito.timebankingapp.ui.chats.chatslist.ChatListViewModel
@@ -47,7 +44,7 @@ class MainActivity : AppCompatActivity() {
 
     val vm by viewModels<ProfileViewModel>()
     val timeSlotVm by viewModels<TimeSlotsViewModel>()
-    val chatVm by viewModels<ChatListViewModel>()
+    val chatListVm by viewModels<ChatListViewModel>()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -65,9 +62,10 @@ class MainActivity : AppCompatActivity() {
         val counterView = navView.menu.findItem(R.id.nav_personalTimeSlotList).actionView.findViewById<TextView>(R.id.counter)
         val chatsView = navView.menu.findItem(R.id.nav_allChatsList).actionView.findViewById<TextView>(R.id.counter)
 
-        timeSlotVm.updatePersonalTimeSlots()
+//        timeSlotVm.updatePersonalTimeSlots()
+        chatListVm.updateAllChats()
 
-        timeSlotVm.unreadChats.observe(this){
+        chatListVm.unreadChats.observe(this){
             if(it > 0){
                 chatsView.text = it.toString()
                 chatsView.visibility = View.VISIBLE
@@ -76,7 +74,7 @@ class MainActivity : AppCompatActivity() {
             }
             else {
                 counterView.visibility = View.GONE
-                counterView.visibility = View.GONE
+                chatsView.visibility = View.GONE
             }
         }
 
@@ -127,7 +125,7 @@ class MainActivity : AppCompatActivity() {
                 timeSlotVm.updateCalendarTimeSlots()
             }
             if(destination.id == R.id.nav_allChatsList)
-                chatVm.updateAllChats()
+                chatListVm.updateAllChats()
         }
 
 

@@ -304,7 +304,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:backgroundTint="@color/primary_dark"
-                    android:text="Require service"
+                    android:text="@string/request_service"
                     android:visibility="gone" />
             </LinearLayout>
 
