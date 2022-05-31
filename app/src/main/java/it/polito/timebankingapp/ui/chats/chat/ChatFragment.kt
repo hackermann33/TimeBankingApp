@@ -65,14 +65,16 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         val sendMsgBar : RelativeLayout = view.findViewById(R.id.layout_gchat_chatbox)
         val cardChatDiscarded : CardView = view.findViewById(R.id.card_chat_discarded)
         val tvChatDiscarded : TextView = view.findViewById(R.id.tv_chat_discarded)
-        val btnRequireService = view.findViewById<Button>(R.id.fragment_chat_btn_request_service)
         val btnAcceptRequest = view.findViewById<Button>(R.id.fragment_chat_btn_accept)
         val btnDiscardRequest = view.findViewById<TextView>(R.id.fragment_chat_btn_discard)
+        val btnRequireService = view.findViewById<Button>(R.id.fragment_chat_btn_request_service)
 
-        if(chatVm.chat.value?.status == STATUS_DISCARDED) {
-            if(chatVm.chat.value?.offerer!!.id == Firebase.auth.uid) /* Discarded and I'm Offerer */
+
+
+        /*if(chatVm.chat.value?.status == STATUS_DISCARDED) {
+            if(chatVm.chat.value?.offerer!!.id == Firebase.auth.uid) *//* Discarded and I'm Offerer *//*
                 tvChatDiscarded.text = getString(R.string.you_assigned_service_to_another)
-            if(chatVm.chat.value?.requester!!.id == Firebase.auth.uid) /* Discarded and I'm Requester */
+            if(chatVm.chat.value?.requester!!.id == Firebase.auth.uid) *//* Discarded and I'm Requester *//*
                 tvChatDiscarded.text = getString(R.string.this_service_has_been_assigned_to_another_user)
             sendMsgBar.visibility = View.GONE
             cardChatDiscarded.visibility = View.VISIBLE
@@ -81,16 +83,16 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
             btnDiscardRequest.isEnabled = false
         }
         if(chatVm.chat.value?.status == STATUS_ACCEPTED){
-            if(chatVm.chat.value?.offerer!!.id == Firebase.auth.uid) /* Accepted and I'm Offerer */
+            if(chatVm.chat.value?.offerer!!.id == Firebase.auth.uid) *//* Accepted and I'm Offerer *//*
                 tvChatDiscarded.text = getString(R.string.assigned_to_him)
-            if(chatVm.chat.value?.requester!!.id == Firebase.auth.uid) /* Accepted and I'm Requester */
+            if(chatVm.chat.value?.requester!!.id == Firebase.auth.uid) *//* Accepted and I'm Requester *//*
                 tvChatDiscarded.text = getString(R.string.assigned_to_you)
             sendMsgBar.visibility = View.GONE
             cardChatDiscarded.visibility = View.VISIBLE
             btnRequireService.isEnabled = false
             btnAcceptRequest.isEnabled = false
             btnDiscardRequest.isEnabled = false
-        }
+        }*/
         textMessage = view.findViewById(R.id.edit_gchat_message)
 
 
@@ -151,6 +153,9 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         val btnRequestService = v.findViewById<Button>(R.id.fragment_chat_btn_request_service)
         val btnDiscardRequest = v.findViewById<TextView>(R.id.fragment_chat_btn_discard)
         val pbProfilePic = v.findViewById<ProgressBar>(R.id.fragment_chat_pb_profile_pic)
+        val sendMsgBar : RelativeLayout = v.findViewById(R.id.layout_gchat_chatbox)
+        val cardChatDiscarded : CardView = v.findViewById(R.id.card_chat_discarded)
+        val tvChatDiscarded : TextView = v.findViewById(R.id.tv_chat_discarded)
 
         val otherUser: CompactUser = Helper.getOtherUser(cli)
         Helper.loadImageIntoView(civProfilePic, pbProfilePic, otherUser.profilePicUrl)
@@ -173,6 +178,30 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
             chatVm.discardRequest(cli.requestId)
             btnAcceptRequest.isEnabled = false
             btnDiscardRequest.alpha = 0.8F
+            btnDiscardRequest.isEnabled = false
+        }
+
+
+        if(chatVm.chat.value?.status == STATUS_DISCARDED) {
+            if(chatVm.chat.value?.offerer!!.id == Firebase.auth.uid) /* Discarded and I'm Offerer */
+                tvChatDiscarded.text = getString(R.string.you_assigned_service_to_another)
+            if(chatVm.chat.value?.requester!!.id == Firebase.auth.uid) /* Discarded and I'm Requester */
+                tvChatDiscarded.text = getString(R.string.this_service_has_been_assigned_to_another_user)
+            sendMsgBar.visibility = View.GONE
+            cardChatDiscarded.visibility = View.VISIBLE
+            btnRequestService.isEnabled = false
+            btnAcceptRequest.isEnabled = false
+            btnDiscardRequest.isEnabled = false
+        }
+        if(chatVm.chat.value?.status == STATUS_ACCEPTED){
+            if(chatVm.chat.value?.offerer!!.id == Firebase.auth.uid) /* Accepted and I'm Offerer */
+                tvChatDiscarded.text = getString(R.string.assigned_to_him)
+            if(chatVm.chat.value?.requester!!.id == Firebase.auth.uid) /* Accepted and I'm Requester */
+                tvChatDiscarded.text = getString(R.string.assigned_to_you)
+            sendMsgBar.visibility = View.GONE
+            cardChatDiscarded.visibility = View.VISIBLE
+            btnRequestService.isEnabled = false
+            btnAcceptRequest.isEnabled = false
             btnDiscardRequest.isEnabled = false
         }
 
