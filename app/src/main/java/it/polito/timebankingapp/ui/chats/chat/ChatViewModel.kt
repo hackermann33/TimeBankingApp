@@ -193,6 +193,31 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
+    fun selectChatFromChatList(chat: Chat) {
+        /* remember to register listener */
+        val resetUnreadMsgs = chat.lastMessage.userId != Firebase.auth.uid
+        if(resetUnreadMsgs)
+            chat.unreadMsgs = 0
+        val resetUnreadChats = (chat.offerer.id == Firebase.auth.uid) && (chat.lastMessage.userId != Firebase.auth.uid)
+        if(resetUnreadChats && chat.timeSlot.unreadChats > 0)
+            chat.timeSlot.unreadChats--
+
+
+        val reqDocRef =  db.collection("requests").document(chat.requestId)
+        val timeSlotDocRef = db.collection("timeSlots").document(chat.timeSlotId)
+
+        db.runBatch { batch ->
+            batch.update(reqDocRef, "unreadMsgs", chat.unreadMsgs)
+            batch.update(reqDocRef, "timeSlot.unreadChats", chat.timeSlot.unreadChats)
+            batch.update(timeSlotDocRef,"unreadChats", chat.timeSlot.unreadChats)
+        }.addOnSuccessListener {
+            _chat.postValue(chat)
+            Log.d("sendMessageAndUpdate","Everything updated")
+        }.addOnFailureListener{
+            Log.d("sendMessageAndUpdate","Oh, no")
+        }
+    }
+
     /* Update chatInfo (chat not yet created on db) from users table given a timeSlot*/
     fun updateChatInfo(timeSlot: TimeSlot, currentUser: CompactUser, requestService: Boolean = false) {
         var user: User
@@ -296,29 +321,6 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
         /* query the db */
     }
 
-    fun selectChatFromChatList(chat: Chat) {
-        /* remember to register listener */
-        val resetUnreadMsgs = chat.lastMessage.userId != Firebase.auth.uid
-        if(resetUnreadMsgs)
-            chat.unreadMsgs = 0
-        val resetUnreadChats = (chat.offerer.id == Firebase.auth.uid) && (chat.lastMessage.userId != Firebase.auth.uid)
-        if(resetUnreadChats && chat.timeSlot.unreadChats > 0)
-            chat.timeSlot.unreadChats--
 
-
-        val reqDocRef =  db.collection("requests").document(chat.requestId)
-        val timeSlotDocRef = db.collection("timeSlots").document(chat.timeSlotId)
-
-        db.runBatch { batch ->
-            batch.update(reqDocRef, "unreadMsgs", chat.unreadMsgs)
-            batch.update(reqDocRef, "timeSlot.unreadChats", chat.timeSlot.unreadChats)
-            batch.update(timeSlotDocRef,"unreadChats", chat.timeSlot.unreadChats)
-        }.addOnSuccessListener {
-            _chat.postValue(chat)
-            Log.d("sendMessageAndUpdate","Everything updated")
-        }.addOnFailureListener{
-            Log.d("sendMessageAndUpdate","Oh, no")
-        }
-    }
 
 }

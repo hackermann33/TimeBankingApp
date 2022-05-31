@@ -19,10 +19,10 @@ class ChatListViewModel(application: Application): AndroidViewModel(application)
     private val _chatsList = MutableLiveData<List<Chat>>()
     val chatsList : LiveData<List<Chat>> = _chatsList
 
-
     private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
 
-
+    private val _unreadChats = MutableLiveData<Int>()
+    val unreadChats : LiveData<Int> = _unreadChats
 
     private lateinit var l: ListenerRegistration
     private lateinit var l2: ListenerRegistration
@@ -100,6 +100,10 @@ class ChatListViewModel(application: Application): AndroidViewModel(application)
                 Log.d("chatsListValue", "failed")
             }
         }
+    }
+
+    fun updateUnreadChats(){
+        db.collection("requests").whereEqualTo("offerer.id", Firebase.auth.uid)
     }
 
 }

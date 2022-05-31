@@ -63,15 +63,19 @@ class MainActivity : AppCompatActivity() {
         val navView: NavigationView = binding.navView
 
         val counterView = navView.menu.findItem(R.id.nav_personalTimeSlotList).actionView.findViewById<TextView>(R.id.counter)
+        val chatsView = navView.menu.findItem(R.id.nav_allChatsList).actionView.findViewById<TextView>(R.id.counter)
 
         timeSlotVm.updatePersonalTimeSlots()
 
         timeSlotVm.unreadChats.observe(this){
             if(it > 0){
-                counterView.text = it.toString()
+                chatsView.text = it.toString()
+                chatsView.visibility = View.VISIBLE
+                counterView.text = ""
                 counterView.visibility = View.VISIBLE
             }
             else {
+                counterView.visibility = View.GONE
                 counterView.visibility = View.GONE
             }
         }
@@ -105,7 +109,7 @@ class MainActivity : AppCompatActivity() {
                 binding.appBarMain.toolbar.visibility = View.VISIBLE
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
                 //toggle.isDrawerIndicatorEnabled = true;
-                /* Se vado a nav_showProfile ma ho giànav_timeSlotDetails nello stack... sono TimeSlotProfile*/
+                /* Se vado a nav_showProfile ma ho già nav_timeSlotDetails nello stack... sono TimeSlotProfile*/
             }
 
             /* Here I'm downloading the right infos when I navigate from drawer*/
