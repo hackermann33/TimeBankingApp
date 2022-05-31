@@ -154,10 +154,11 @@ class MainActivity : AppCompatActivity() {
         vm.user.observe(this) {
             val fullName = navView.getHeaderView(0).findViewById<TextView>(R.id.fullName)
             var emailET = navView.getHeaderView(0).findViewById<TextView>(R.id.emailTextView)
+            val tvBalance = navView.getHeaderView(0).findViewById<TextView>(R.id.balance)
             if (it != null) {
                 fullName.text = it.fullName
                 emailET.text = it.email
-
+                tvBalance.text = it.balance.toString()
                 Helper.loadImageIntoView(profilePic, pBUserPic, it.profilePicUrl)
             }
         }
