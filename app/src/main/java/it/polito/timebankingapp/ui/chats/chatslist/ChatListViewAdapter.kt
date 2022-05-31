@@ -85,7 +85,7 @@ class ChatListViewAdapter(
 
     //inflate the item_layout-based structure inside each ViewHolder
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
-        val destination =  R.layout.fragment_chats_list_item
+        val destination =  R.layout.fragment_chat_list_item
 
         val vg = LayoutInflater
             .from(parent.context)

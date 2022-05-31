@@ -10,6 +10,7 @@
     android:layout_marginRight="16dp"
     tools:context=".ui.timeslots.timeslots_list.TimeSlotListFragment">
 
+
     <LinearLayout
         android:id="@+id/filter_and_sort_layout"
         android:layout_width="match_parent"
@@ -71,7 +72,7 @@
     </LinearLayout>
 
     <ImageView
-        android:id="@+id/time_slot_icon"
+        android:id="@+id/fragment_time_slot_list_iv_empty"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="100dp"
@@ -101,7 +102,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/time_slot_icon" />
+        app:layout_constraintTop_toBottomOf="@+id/fragment_time_slot_list_iv_empty" />
 
     <TextView
         android:id="@+id/empty_list_second_message"

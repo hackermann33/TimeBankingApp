@@ -3,6 +3,8 @@ package it.polito.timebankingapp.ui.chats.chatslist
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -12,44 +14,79 @@ import it.polito.timebankingapp.model.Chat
 import it.polito.timebankingapp.ui.chats.chat.ChatViewModel
 import it.polito.timebankingapp.ui.profile.ProfileViewModel
 
-class ChatListFragment : Fragment(R.layout.fragment_chats_list_list) {
+class ChatListFragment : Fragment(R.layout.fragment_chat_list) {
 
-    private lateinit var rv : RecyclerView
+    private lateinit var rv: RecyclerView
     private lateinit var adTmp: ChatListViewAdapter
-    private val chatListViewModel : ChatListViewModel by activityViewModels()
-    private val chatViewModel : ChatViewModel by activityViewModels()
+    private val chatListViewModel: ChatListViewModel by activityViewModels()
+    private val chatViewModel: ChatViewModel by activityViewModels()
 
-    private val profileVm : ProfileViewModel by activityViewModels()
+    private val profileVm: ProfileViewModel by activityViewModels()
+
+    private lateinit var ivEmptyChats: ImageView
+    private lateinit var tvEmptyChats: TextView
+    private lateinit var tvEmptyChats2: TextView
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        var chatListType: String ? = arguments?.getString("point_of_origin").toString()
+        var chatListType: String? = arguments?.getString("point_of_origin").toString()
 
-        if(chatListType != Type.SPECIFIC) chatListType = Type.GLOBAL
+        if (chatListType != Type.SPECIFIC) chatListType = Type.GLOBAL
 
-        Log.d("ChatsListFragment", "type: $chatListType" )
+        Log.d("ChatsListFragment", "type: $chatListType")
 
         rv = view.findViewById(R.id.recycler_chat_list)
         rv.layoutManager = LinearLayoutManager(context)
 
         adTmp = ChatListViewAdapter(listOf(), ::selectChat, chatListType)
         rv.adapter = adTmp
+
+
+
         /*DONE (Distinguish graphically if the chat is a to_offerer or to_requester chat)  */
-        chatListViewModel.chatsList.observe(viewLifecycleOwner){
-            adTmp = ChatListViewAdapter(it, ::selectChat/*, ::updateTimeSlotProfile*/, chatListType)
-            rv.adapter = adTmp
+        chatListViewModel.chatsList.observe(viewLifecycleOwner) {
+
+            if (it.isEmpty())
+                showNoChatsMessage(view, true)
+            else {
+                showNoChatsMessage(view, false)
+                adTmp =
+                    ChatListViewAdapter(it, ::selectChat/*, ::updateTimeSlotProfile*/, chatListType)
+                rv.adapter = adTmp
+            }
         }
 
 //        adTmp = ChatsListViewAdapter(tempChatsList)
 //        rv.adapter = adTmp
     }
 
-    fun selectChat(chat : Chat){
+    private fun showNoChatsMessage(view: View, show: Boolean) {
+        ivEmptyChats = view.findViewById<ImageView>(R.id.fragment_chat_list_iv_empty_chats)
+        tvEmptyChats = view.findViewById<TextView>(R.id.fragment_chat_list_tv_empty_chats)
+        tvEmptyChats2 = view.findViewById<TextView>(R.id.fragment_chat_list_tv_empty_chats_2)
+
+        when (show) {
+            true -> {
+                ivEmptyChats.visibility = View.VISIBLE
+                tvEmptyChats.visibility = View.VISIBLE
+                tvEmptyChats2.visibility = View.VISIBLE
+            }
+            else -> {
+                ivEmptyChats.visibility = View.GONE
+                tvEmptyChats.visibility = View.GONE
+                tvEmptyChats2.visibility = View.GONE
+
+            }
+        }
+
+    }
+
+    fun selectChat(chat: Chat) {
         //chat.unreadMsgs = 0
         chatViewModel.registerMessagesListener(chat)
         chatViewModel.selectChatFromChatList(chat)
     }
 
-    companion object Type{
+    companion object Type {
         val GLOBAL = "global"
         val SPECIFIC = "specific"
 

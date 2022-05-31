@@ -1,7 +1,6 @@
 package it.polito.timebankingapp.ui.timeslots.timeslots_list
 
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -15,12 +14,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.firestore.DocumentSnapshot
 import it.polito.timebankingapp.MainActivity
 import it.polito.timebankingapp.R
-import it.polito.timebankingapp.model.Helper.Companion.toUser
 import it.polito.timebankingapp.model.timeslot.TimeSlot
-import it.polito.timebankingapp.model.user.User
 import it.polito.timebankingapp.ui.chats.chat.ChatViewModel
 import it.polito.timebankingapp.ui.chats.chatslist.ChatListViewModel
 import it.polito.timebankingapp.ui.profile.ProfileViewModel
@@ -220,7 +216,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_timeslots_list) {
     }
 
     private fun setVoidMessage(v: View, b: Boolean) {
-        val voidMessageImage = v.findViewById<ImageView>(R.id.time_slot_icon)
+        val voidMessageImage = v.findViewById<ImageView>(R.id.fragment_time_slot_list_iv_empty)
         val voidMessageText = v.findViewById<TextView>(R.id.emptyListMessage)
         val voidMessageSubText = v.findViewById<TextView>(R.id.empty_list_second_message)
 

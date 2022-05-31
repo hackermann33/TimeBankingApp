@@ -58,6 +58,7 @@
         <entry key="app/src/main/res/layout/fragment_chat.xml" value="0.5" />
         <entry key="app/src/main/res/layout/fragment_chat_item.xml" value="0.5" />
         <entry key="app/src/main/res/layout/fragment_chat_list.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/fragment_chat_list_item.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_chat_receiver_item.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_chat_sender_item.xml" value="0.21195652173913043" />
         <entry key="app/src/main/res/layout/fragment_chats_list_item.xml" value="0.5" />

@@ -52,6 +52,9 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        btnRequestService = view.findViewById<Button>(R.id.button_request_service)
+
+
 
         val ts = globalModel.selectedTimeSlot.value
         var status = chatVm.chat.value?.status ?: Chat.STATUS_UNINTERESTED
@@ -103,11 +106,9 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
 
             //se esiste già una richiesta, disabilita btnRequestService
 
-
+            btnRequestService.visibility = View.VISIBLE
             view.findViewById<ConstraintLayout>(R.id.layout_offerer)
                 .also { it.visibility = View.VISIBLE }
-            btnRequestService = view.findViewById<Button>(R.id.button_request_service)
-                .also {  it.visibility = View.VISIBLE }
 
             if(status != Chat.STATUS_UNINTERESTED){
                 btnRequestService.isEnabled = false

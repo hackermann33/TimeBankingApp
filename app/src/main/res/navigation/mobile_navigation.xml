@@ -9,7 +9,7 @@
         android:id="@+id/nav_allChatsList"
         android:name="it.polito.timebankingapp.ui.chats.chatslist.ChatListFragment"
         android:label="Available chats"
-        tools:layout="@layout/fragment_chats_list_list">
+        tools:layout="@layout/fragment_chat_list">
         <action
             android:id="@+id/action_nav_allChatsList_to_nav_chat"
             app:destination="@id/nav_chat" >
@@ -150,7 +150,7 @@
         android:id="@+id/nav_timeSlotChatsList"
         android:name="it.polito.timebankingapp.ui.chats.chatslist.ChatListFragment"
         android:label="Available chats"
-        tools:layout="@layout/fragment_chats_list_list" >
+        tools:layout="@layout/fragment_chat_list" >
         <action
             android:id="@+id/action_nav_timeSlotChatsList_to_nav_chat"
             app:destination="@id/nav_chat"

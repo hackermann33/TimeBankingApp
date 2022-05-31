@@ -13,7 +13,6 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import it.polito.timebankingapp.R
-import it.polito.timebankingapp.ui.profile.ProfileViewModel
 import it.polito.timebankingapp.ui.timeslots.TimeSlotsViewModel
 
 class SkillsListFragment : Fragment(R.layout.fragment_skills_list) {
@@ -32,9 +31,6 @@ class SkillsListFragment : Fragment(R.layout.fragment_skills_list) {
 
         val chipGroup: ChipGroup = v.findViewById(R.id.skillsGroup)
 
-        val voidMessageImage = view.findViewById<ImageView>(R.id.time_slot_icon)
-        val voidMessageText = view.findViewById<TextView>(R.id.emptyListMessage)
-        val voidMessageSubText = view.findViewById<TextView>(R.id.empty_list_second_message)
         val progressBar = view.findViewById<ProgressBar>(R.id.skill_list_progressBar)
 
 
