@@ -27,6 +27,12 @@ class ChatListViewModel(application: Application): AndroidViewModel(application)
     private lateinit var l: ListenerRegistration
     private lateinit var l2: ListenerRegistration
 
+    private val _isLoading = MutableLiveData<Boolean>(true)
+    val isLoading : LiveData<Boolean> = _isLoading
+
+
+
+
     /*
     private val _hasChatsListBeenCleared = MutableLiveData<Boolean?>()
     var hasChatsListBeenCleared: LiveData<Boolean?> = _hasChatsListBeenCleared
@@ -78,6 +84,7 @@ class ChatListViewModel(application: Application): AndroidViewModel(application)
     }
 
     fun updateAllChats() {
+            _isLoading.postValue(true)
            Log.d("User", Firebase.auth.uid.toString())
             val currentId = Firebase.auth.uid.toString()
             l = db.collection("requests").whereArrayContains("users","${Firebase.auth.uid}")
@@ -85,6 +92,7 @@ class ChatListViewModel(application: Application): AndroidViewModel(application)
                     if(e == null){
                         Log.d("chatList", "chatList: ${_chatsList.value}")
                         _chatsList.value = v!!.mapNotNull {  d -> d.toObject<Chat>() }
+                        _isLoading.postValue(false)
                         var cnt = 0
                         chatsList.value?.forEach { chat ->
                             if(chat.offerer.id == Firebase.auth.uid && chat.timeSlot.offererUnreadChats > 0) /* I am the offerer of this chat*/
@@ -96,6 +104,7 @@ class ChatListViewModel(application: Application): AndroidViewModel(application)
                         Log.d("chatsListValue", "success")
                     } else{
                         _chatsList.value = emptyList()
+                        _isLoading.postValue(false)
                         Log.d("chatsListValue", "failed")
                     }
                 }
@@ -104,6 +113,7 @@ class ChatListViewModel(application: Application): AndroidViewModel(application)
 
     /* Download all the chat related to a specific offer that current user has published */
     fun downloadTimeSlotChats(tsId: String) {
+        _isLoading.postValue(true)
 //        Log.d("showRequests", "Arrived at ViewModel $tsId")
         Log.d("User", Firebase.auth.uid.toString())
         l = db.collection("requests").whereEqualTo("offerer.id",Firebase.auth.uid.toString()).whereEqualTo("timeSlot.id", tsId)
@@ -114,10 +124,12 @@ class ChatListViewModel(application: Application): AndroidViewModel(application)
                 _chatsList.value = requests.mapNotNull {  r ->
                     fromRequestToChat(r)
                 }
+                _isLoading.postValue(false)
                 Log.d("chatsListValue", "success")
             } else{
                 _chatsList.value = emptyList()
                 Log.d("chatsListValue", "failed")
+                _isLoading.postValue(false)
             }
         }
     }

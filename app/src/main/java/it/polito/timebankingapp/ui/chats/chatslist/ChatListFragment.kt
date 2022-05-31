@@ -23,6 +23,7 @@ class ChatListFragment : Fragment(R.layout.fragment_chat_list) {
 
     private val profileVm: ProfileViewModel by activityViewModels()
 
+
     private lateinit var ivEmptyChats: ImageView
     private lateinit var tvEmptyChats: TextView
     private lateinit var tvEmptyChats2: TextView
@@ -43,17 +44,24 @@ class ChatListFragment : Fragment(R.layout.fragment_chat_list) {
 
 
         /*DONE (Distinguish graphically if the chat is a to_offerer or to_requester chat)  */
-        chatListViewModel.chatsList.observe(viewLifecycleOwner) {
+        chatListViewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
             //if(chatListViewModel.hasChatsListBeenCleared.value == true)
                 //chatListViewModel.setIsClearedFlag(false)
             //else
-                if (it.isEmpty())
-                    showNoChatsMessage(view, /*true*/ false)
-                else {
-                    showNoChatsMessage(view, false)
-                    adTmp =
-                        ChatListViewAdapter(it, ::selectChat/*, ::updateTimeSlotProfile*/, chatListType)
-                    rv.adapter = adTmp
+                if(!isLoading) {
+                    val chatList = chatListViewModel.chatsList.value!!
+                    if (chatList.isEmpty())
+                        showNoChatsMessage(view, /*true*/ false)
+                    else {
+                        showNoChatsMessage(view, false)
+                        adTmp =
+                            ChatListViewAdapter(
+                                chatList,
+                                ::selectChat/*, ::updateTimeSlotProfile*/,
+                                chatListType
+                            )
+                        rv.adapter = adTmp
+                    }
                 }
         }
 
