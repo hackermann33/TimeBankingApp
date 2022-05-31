@@ -168,7 +168,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         }
 
         btnAcceptRequest.setOnClickListener {
-            chatVm.acceptRequest(cli.requestId)
+            chatVm.acceptRequest(cli)
             btnAcceptRequest.isEnabled = false
             btnDiscardRequest.alpha = 0.8F
             btnDiscardRequest.isEnabled = false

@@ -418,9 +418,38 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
 
     }
 
-    fun acceptRequest(chatId: String) {
+    fun acceptRequest(chat: Chat) {
         /* query the db */
+        val chatId = chat.requestId
+
+
         updateStatus(chatId, Chat.STATUS_ACCEPTED)
+
+        val reqDocRef = db.collection("requests").document(chatId)
+        val tsDocRef = db.collection("timeSlots").document(chat.timeSlot.id)
+        val offererDocRef = db.collection("users").document(chat.offerer.id)
+        val requesterDocRef = db.collection("users").document(chat.requester.id)
+
+
+        db.runTransaction {
+            transaction ->
+            val snapshot = transaction.get(reqDocRef)
+            val duration = snapshot.getString("timeSlot.duration")?.toInt()!!
+            val newBalance = snapshot.getLong("requester.balance")!! - duration
+            if(newBalance < 0){
+                transaction.update(reqDocRef, "status", Chat.STATUS_INTERESTED)
+                transaction.update(tsDocRef, "assignedTo", "")
+            }
+            else{ //Balance is ok => transfer credit => update references
+                transaction.update(reqDocRef, "requester.balance", newBalance) //TODO(Delete if u have time)
+                transaction.update(reqDocRef, "timeSlot.requester.balance", newBalance)
+                transaction.update(reqDocRef, "offerer.balance", FieldValue.increment(duration.toLong()))
+
+                transaction.update(offererDocRef, "balance", FieldValue.increment(duration.toLong()))
+                transaction.update(requesterDocRef, "balance", newBalance)
+
+            }
+        }
     }
 
     fun discardRequest(chatId: String) {
