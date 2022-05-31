@@ -23,6 +23,7 @@ import it.polito.timebankingapp.R
 import it.polito.timebankingapp.model.Chat
 import it.polito.timebankingapp.model.Helper
 import it.polito.timebankingapp.model.timeslot.TimeSlot
+import it.polito.timebankingapp.ui.chats.chat.ChatFragment
 import it.polito.timebankingapp.ui.chats.chat.ChatViewModel
 import it.polito.timebankingapp.ui.profile.ProfileViewModel
 import it.polito.timebankingapp.ui.timeslots.TimeSlotsViewModel
@@ -60,8 +61,11 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
 
         val ts = globalModel.selectedTimeSlot.value
 
-        btnRequestService.isEnabled = status == Chat.STATUS_UNINTERESTED
 
+        /*if( status != Chat.STATUS_UNINTERESTED) {
+            btnRequestService.text = "SERVICE REQUESTED"
+            Helper.setConfirmationOnButton(requireContext(), btnRequestService)
+        }*/
 
         if (type == "skill_specific")
             btnRequestService.visibility = View.VISIBLE
@@ -120,7 +124,12 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
             /* Retrieve status of the current chat*/
             chatVm.getChat(Helper.makeRequestId(ts!!.id, Firebase.auth.uid!!)).addOnSuccessListener {
                 status = it.toObject<Chat>()?.status ?: Chat.STATUS_UNINTERESTED
-                btnRequestService.isEnabled = status == Chat.STATUS_UNINTERESTED
+
+                if(status != Chat.STATUS_UNINTERESTED) {
+                    btnRequestService.text = "Service requested"
+                    Helper.setConfirmationOnButton(requireContext(), btnRequestService)
+
+                }/*btnRequestService.isEnabled = status == Chat.STATUS_UNINTERESTED    */
             }
 
 
@@ -161,8 +170,9 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
                             .show()
                     }*/
                 val btn = it as Button
-                btn.isEnabled = false
                 btn.text = "service requested"
+                Helper.setConfirmationOnButton(requireContext(), btn)
+
                 chatVm.requestService(Chat(timeSlot = ts, requester = profileViewModel.user.value!!.toCompactUser(), offerer = ts.offerer))
             }
 

@@ -391,13 +391,20 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun acceptRequest() {
-        _chat.value = chat.value?.copy(status=Chat.STATUS_ACCEPTED)
-        /* query the db */
+    fun updateStatus(chatId: String, status: Int) {
+        db.collection("requests").document(chatId).update(mapOf("status" to status)).addOnSuccessListener {
+            _chat.value = chat.value?.copy(status=status)
+        }
     }
 
-    fun discardRequest() {
-        _chat.value = chat.value?.copy(status=Chat.STATUS_DISCARDED)
+    fun acceptRequest(chatId: String) {
+        /* query the db */
+        updateStatus(chatId, Chat.STATUS_ACCEPTED)
+    }
+
+    fun discardRequest(chatId: String) {
+        updateStatus(chatId, Chat.STATUS_DISCARDED)
+
         /* query the db */
     }
 

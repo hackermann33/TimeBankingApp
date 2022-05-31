@@ -22,7 +22,6 @@ import it.polito.timebankingapp.model.Chat
 import it.polito.timebankingapp.model.Chat.Companion.STATUS_DISCARDED
 import it.polito.timebankingapp.model.chat.ChatMessage
 import it.polito.timebankingapp.model.user.CompactUser
-import it.polito.timebankingapp.ui.chats.chatslist.ChatListViewModel
 import java.util.*
 
 
@@ -35,7 +34,6 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
     private lateinit var layoutManager: LinearLayoutManager
 
     private val chatVm: ChatViewModel by activityViewModels()
-    private val chatListVm : ChatListViewModel by activityViewModels()
     //private val profileVM : ProfileViewModel by activityViewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

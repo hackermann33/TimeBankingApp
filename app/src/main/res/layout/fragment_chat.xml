@@ -137,11 +137,11 @@
             android:visibility="gone" />
 
         <Button
-            android:id="@+id/fragment_chat_btn_require_service"
+            android:id="@+id/fragment_chat_btn_request_service"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Require service"
+            android:text="@string/request_service"
             android:visibility="gone" />
     </LinearLayout>
 
