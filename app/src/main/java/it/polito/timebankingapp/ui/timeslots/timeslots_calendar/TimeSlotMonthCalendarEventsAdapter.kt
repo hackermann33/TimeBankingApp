@@ -13,10 +13,12 @@ import androidx.core.os.bundleOf
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.chip.Chip
+import com.google.android.material.snackbar.Snackbar
 import it.polito.timebankingapp.R
 import it.polito.timebankingapp.model.timeslot.TimeSlot
 import it.polito.timebankingapp.ui.timeslots.TimeSlotsViewModel
 import java.time.LocalDate
+import java.time.LocalDateTime
 
 data class Event(val id: String, val ts: TimeSlot, val date: LocalDate, val isOffered: Boolean)
 //isOffered == true  --> offered
@@ -69,10 +71,26 @@ class TimeSlotMonthCalendarEventsAdapter(/*val vm : TimeSlotsViewModel*/) :
 
     override fun onBindViewHolder(viewHolder: ItemViewHolder, position: Int) {
         viewHolder.bind(events[position], completeTsAction = {
-            Navigation.findNavController(it).navigate(
-                R.id.action_nav_timeSlotMonthCalendar_to_nav_markTimeSlotAsCompleted,
-                bundleOf("timeslot" to events[position].ts)
-            )
+            val dateValues = events[position].ts.date.split("/")
+            val timeValues = events[position].ts.time.split(":")
+            val duration = events[position].ts.duration.toInt()
+
+            val expectedTsTimeStamp = LocalDateTime.of(dateValues[2].toInt(),dateValues[1].toInt(),
+                dateValues[0].toInt(),timeValues[0].toInt()+duration,timeValues[0].toInt())
+
+            if(expectedTsTimeStamp.isBefore(LocalDateTime.now()))
+                Navigation.findNavController(it).navigate(
+                    R.id.action_nav_timeSlotMonthCalendar_to_nav_markTimeSlotAsCompleted,
+                    bundleOf("timeslot" to events[position].ts)
+                )
+            else {
+                val snackBar = Snackbar.make(
+                    viewHolder.itemView,
+                    "You can mark it as completed only after ".plus(expectedTsTimeStamp.toString().replace("T", " ")),
+                    Snackbar.LENGTH_LONG
+                )
+                snackBar.setAction("DISMISS") { snackBar.dismiss() }.show()
+            }
         })
     }
 
