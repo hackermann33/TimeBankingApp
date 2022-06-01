@@ -25,7 +25,7 @@ class AddReviewFragment : Fragment(R.layout.fragment_add_review) {
 
     private lateinit var v : View
 
-    private lateinit var user: User
+    //private lateinit var user: User
     private lateinit var newReview: Review
     private lateinit var reviewedTimeSlot: TimeSlot
 
@@ -40,7 +40,7 @@ class AddReviewFragment : Fragment(R.layout.fragment_add_review) {
 
         reviewedTimeSlot = arguments?.getSerializable("timeslot") as TimeSlot
         //if (reviewedUserId == "null") reviewedUserId = "ry0npG5mapRq0ccreqTEQjvdqQa2"
-        rvm.checkIfAlreadyReviewed(reviewedTimeSlot.userId)
+        //rvm.checkIfAlreadyReviewed(reviewedTimeSlot.userId /*, role*/) //fix necessario per consentire al più 2 reviews!
         //rvm.retrieveRequesterInfo(reviewedTimeSlot)
     }
 
@@ -51,18 +51,19 @@ class AddReviewFragment : Fragment(R.layout.fragment_add_review) {
 
         pvm.user.observe(viewLifecycleOwner) {
             if(it.id  != reviewedTimeSlot.userId) { //non sei il creatore del time slot --> sei il requester che vuole recensionare l'offerer
-                user = it
+                rvm.checkIfAlreadyReviewed(reviewedTimeSlot.userId, "Offerer")
                 val tempMap = mutableMapOf<String, String>()
-                tempMap["id"] = user.id
-                tempMap["fullName"] = "user.fullName"
-                tempMap["profilePicUrl"] = "user.profilePicUrl"
-                newReview = Review(reviewer = tempMap, role = "offerer")
-            } else {    //sei il creatore --> sei il requester che vuole recensire l'offerer
+                tempMap["id"] = it.id
+                tempMap["fullName"] = it.nick
+                tempMap["profilePicUrl"] = it.profilePicUrl
+                newReview = Review(reviewer = tempMap, role = "Offerer")
+            } else {    //sei il creatore --> sei l'offerer che vuole recensire il requester
+                rvm.checkIfAlreadyReviewed(reviewedTimeSlot.userId, "Requester")
                 val tempMap = mutableMapOf<String, String>()
                 tempMap["id"] = reviewedTimeSlot.offerer.id
-                tempMap["fullName"] = "user.fullName"
-                tempMap["profilePicUrl"] = "user.profilePicUrl"
-                newReview = Review(reviewer = tempMap, role = "requester")
+                tempMap["fullName"] = reviewedTimeSlot.offerer.nick
+                tempMap["profilePicUrl"] =  reviewedTimeSlot.offerer.profilePicUrl
+                newReview = Review(reviewer = tempMap, role = "Requester")
             }
         }
 
