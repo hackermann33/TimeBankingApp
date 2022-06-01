@@ -2,6 +2,7 @@ package it.polito.timebankingapp.ui.chats.chat
 
 import android.app.Application
 import android.util.Log
+import android.view.SurfaceControl
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -450,26 +451,34 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
 
 
         db.runTransaction { transaction ->
-            reqDocRef.update("status", Chat.STATUS_ACCEPTED)
-            reqDocRef.update("timeSlot.status", Chat.STATUS_ACCEPTED)
-            transaction.update(tsDocRef, "assignedTo", chat.requester)
-            transaction.update(tsDocRef, "status", TimeSlot.TIME_SLOT_STATUS_ASSIGNED)
-
             val snapshot = transaction.get(reqDocRef)
             val duration = snapshot.getString("timeSlot.duration")?.toInt()!!
             val newBalance = snapshot.getLong("requester.balance")!! - duration
-            if (newBalance < 0) {
+
+
+            if (newBalance < 0) { //Not enough balance => Backtrack
                 /*transaction.update(reqDocRef, "status", Chat.STATUS_INTERESTED)
                 */
-                reqDocRef.update("status", Chat.STATUS_INTERESTED)
+                transaction.update(reqDocRef, "status", Chat.STATUS_INTERESTED)
                 _chat.postValue(chat.copy(status = Chat.STATUS_INTERESTED))
                 transaction.update(tsDocRef, "assignedTo", CompactUser())
                 transaction.update(tsDocRef, "status", TimeSlot.TIME_SLOT_STATUS_AVAILABLE)
                 reqDocRef.update("timeSlot.status", Chat.STATUS_ACCEPTED)
 
-                newBalance
+                false
+                //newBalance
             } else { //Balance is ok => transfer credit => update references
                 Log.d(TAG, "balance is okay: $newBalance")
+
+                transaction.update(reqDocRef,"status", Chat.STATUS_ACCEPTED)
+                transaction.update(reqDocRef,"timeSlot.status", TimeSlot.TIME_SLOT_STATUS_ASSIGNED)
+                transaction.update(reqDocRef, "timeSlot.assignedTo", chat.requester)
+
+
+                transaction.update(tsDocRef, "status", TimeSlot.TIME_SLOT_STATUS_ASSIGNED)
+                transaction.update(tsDocRef, "assignedTo", chat.requester)
+
+
                 transaction.update(
                     reqDocRef,
                     "requester.balance",
@@ -488,27 +497,30 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
                 )
                 transaction.update(requesterDocRef, "balance", newBalance)
 
-
-                reqTsDocs.get().addOnSuccessListener {
+                                    /* !!!!tocheck ==> */
+                }
+                true //newBalance
+            }.addOnSuccessListener {  result ->
+            Log.d(TAG, "SUCCESS $result")
+            if(result) {/*Balance is okay => update all info*/
+                reqTsDocs.get().addOnSuccessListener { //aggiorno copie di timeSlots all'interno di chats/requests
                     /* TODO(Controlla il credito) */
                     for (doc in it.documents) {
                         if (doc.get("requestId") != chatId)
-                            doc.reference.update(mapOf("status" to Chat.STATUS_DISCARDED))
-                        else {
-                            doc.reference.update(mapOf("status" to Chat.STATUS_ACCEPTED))
-                                .addOnSuccessListener {
-                                    /* !!!!tocheck ==> */_chat.value =
-                                    chat.copy(status = Chat.STATUS_ACCEPTED)
-                                }
-                        }
-                    }
-                    timeSlotsDocRef.document(Helper.extractTimeSlotId(chatId))
-                        .update("assignedTo", chat.requester)
-                }
+                            doc.reference.update(
+                                mapOf(
+                                    "status" to Chat.STATUS_DISCARDED,
+                                    "assignedTo" to chat.requester
+                                )
+                            )
 
-                newBalance
+                        _chat.value =
+                            chat.copy(status = Chat.STATUS_ACCEPTED)
+                    }
+                }
             }
-        }.addOnSuccessListener { Log.d(TAG, "SUCCESS") }.addOnFailureListener{Log.d(TAG, "FAILURE : {$it}") }
+
+        }.addOnFailureListener{Log.d(TAG, "FAILURE : {$it}") }
     }
 
     fun discardRequest(chatId: String) {
