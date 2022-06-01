@@ -122,7 +122,7 @@ class MainActivity : AppCompatActivity() {
                 //timeSlotVm.updateInterestingTimeSlots()
             }
             if(destination.id == R.id.nav_timeSlotMonthCalendar){
-                timeSlotVm.updateCalendarTimeSlots()
+                timeSlotVm.updateAssignedTimeSlots()
             }
             if(destination.id == R.id.nav_allChatsList)
                 chatListVm.updateAllChats()

@@ -56,15 +56,15 @@ class ReviewsViewModel(application: Application): AndroidViewModel(application) 
         }*/
     }
 
-    fun checkIfAlreadyReviewed(reviewedUserId: String){
+    fun checkIfAlreadyReviewed(reviewedUserId: String, role: String, reviewedTimeSlotId: String){
         val checkReviewRef = db.collection("reviews_test")
-            .document(reviewedUserId).collection("userReviews")
-            .whereEqualTo("reviewer.id",Firebase.auth.uid.toString())
+            .document(reviewedUserId/*.plus("_").plus(role)*/).collection("userReviews")
+            .whereEqualTo("reviewer.id",Firebase.auth.uid.toString()).whereEqualTo("reviewedTimeSlotId", reviewedTimeSlotId)
 
         checkReviewRef.get().addOnCompleteListener { task ->
             if (task.isSuccessful) {
                 val document = task.result
-                _alreadyReviewed.value = !document.isEmpty
+                _alreadyReviewed.value = !document.isEmpty //esiste già la recensione
             } else {
                 Log.d("reviews_check", "Failed with: ", task.exception)
             }

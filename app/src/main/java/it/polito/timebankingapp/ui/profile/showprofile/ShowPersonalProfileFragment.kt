@@ -218,18 +218,21 @@ class ShowPersonalProfileFragment : Fragment(R.layout.fragment_showprofile) {
         return when (item.itemId) {
             R.id.option1 -> {
                 val progressBar = v.findViewById<ProgressBar>(R.id.profile_pic_progress_bar)
-                editProfile() //evoked when the pencil button is pressed
+
                 if(progressBar.visibility == View.GONE) {
-                    Toast.makeText(
+			        editProfile() //evoked when the pencil button is pressed
+                    /*Toast.makeText(
                         context, "Edit profile",
                         Toast.LENGTH_SHORT
-                    ).show()
+                    ).show()*/ 
                 }
                 else {
-                    Toast.makeText(
+                    /*Toast.makeText(
                         context, "Wait until all has has been retrieved.",
                         Toast.LENGTH_SHORT
-                    ).show()
+                    ).show()*/
+                    val snackBar = Snackbar.make(v, "Wait until all has has been retrieved.", Snackbar.LENGTH_SHORT)
+                    snackBar.setAction("DISMISS") { snackBar.dismiss() }.show()
                 }
                 true
             }

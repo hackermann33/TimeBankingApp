@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.snackbar.Snackbar
 import it.polito.timebankingapp.R
 import it.polito.timebankingapp.model.timeslot.TimeSlot
 import it.polito.timebankingapp.ui.chats.chat.ChatViewModel
@@ -44,8 +45,10 @@ class MarkTimeSlotAsCompletedFragment : Fragment(R.layout.fragment_mark_time_slo
         tsTitleText.text = timeslot.title
 
         undoButton.setOnClickListener {
-            Toast.makeText(requireContext(),
-                "Aborting...", Toast.LENGTH_SHORT).show()
+            /*Toast.makeText(requireContext(),
+                "Aborting...", Toast.LENGTH_SHORT).show()*/
+            val snackBar = Snackbar.make(v, "Aborting...", Snackbar.LENGTH_SHORT)
+            snackBar.setAction("DISMISS") { snackBar.dismiss() }.show()
             findNavController().navigateUp()
         }
 
@@ -54,8 +57,11 @@ class MarkTimeSlotAsCompletedFragment : Fragment(R.layout.fragment_mark_time_slo
             vm.setTimeSlotAsCompleted(timeslot)
 
 
-            Toast.makeText(requireContext(),
+            /*Toast.makeText(requireContext(),
                 "Marked as completed!", Toast.LENGTH_SHORT).show()
+*/
+            val snackBar = Snackbar.make(v, "Marked as completed!", Snackbar.LENGTH_SHORT)
+            snackBar.setAction("DISMISS") { snackBar.dismiss() }.show()
             findNavController().navigateUp()
         }
     }

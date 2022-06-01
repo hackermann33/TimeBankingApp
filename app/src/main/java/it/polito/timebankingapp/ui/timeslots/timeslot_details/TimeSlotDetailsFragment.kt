@@ -211,10 +211,10 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
         return when (item.itemId) {
             R.id.option1 -> {
                 if(type == "skill_specific" || type == "interesting" || type == "completed") {
-                    Toast.makeText(
+                    /*Toast.makeText(
                         context, "Show user profile",
                         Toast.LENGTH_SHORT
-                    ).show()
+                    ).show()*/
 
                     profileViewModel.retrieveTimeSlotProfileData(userId)
                     findNavController().navigate(
@@ -223,10 +223,10 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
                     )
                 }
                 else if (type == "personal") { //personal
-                    Toast.makeText(
+                    /*Toast.makeText(
                         context, "Edit time slot",
                         Toast.LENGTH_SHORT
-                    ).show()
+                    ).show()*/
                     editTimeslot() //evoked when the pencil button is pressed
                 }
                 true

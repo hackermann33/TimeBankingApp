@@ -5,11 +5,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.chip.Chip
+import com.google.android.material.snackbar.Snackbar
 import it.polito.timebankingapp.R
 import it.polito.timebankingapp.model.timeslot.TimeSlot
 import it.polito.timebankingapp.model.user.User
@@ -22,7 +24,8 @@ class TimeSlotAdapter(
     val requestTimeSlot: ((t: TimeSlot) -> Unit?)?,
     val showRequests: ((t: TimeSlot) -> Unit?)?,
     val type: String,
-    val userProfile: User?
+    val userProfile: User?,
+    val view : View
 ) : RecyclerView.Adapter<TimeSlotAdapter.ItemViewHolder>() {
 
     //private var filter: Boolean = false
@@ -117,10 +120,16 @@ class TimeSlotAdapter(
             if (pos != -1) {
                 //click on edit button
                 if(type == "personal") {
-                    Navigation.findNavController(it).navigate(
-                        R.id.action_nav_personalTimeSlotList_to_nav_timeSlotEdit,
-                        bundleOf("timeslot" to item, "position" to position) //temp
-                    )
+                    if( item.status == 0)
+                        Navigation.findNavController(it).navigate(
+                            R.id.action_nav_personalTimeSlotList_to_nav_timeSlotEdit,
+                            bundleOf("timeslot" to item, "position" to position) //temp
+                        )
+                    else {
+                        //Toast.makeText(holder.mainView.context, "You can't edit an already assigned or completed time slot!", Toast.LENGTH_LONG).show()
+                        val snackBar = Snackbar.make(view, "You can't edit an already assigned or completed time slot!", Snackbar.LENGTH_LONG)
+                        snackBar.setAction("DISMISS") { snackBar.dismiss() }.show()
+                    }
                 }
             }
         }, detailAction = {

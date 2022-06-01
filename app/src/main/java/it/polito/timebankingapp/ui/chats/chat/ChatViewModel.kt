@@ -450,7 +450,6 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
         val timeSlotsDocRef = db.collection("timeSlots")
 
 
-
         db.runTransaction { transaction ->
             val snapshot = transaction.get(reqDocRef)
             val duration = snapshot.getString("timeSlot.duration")?.toInt()!!
@@ -461,6 +460,7 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
                 /*transaction.update(reqDocRef, "status", Chat.STATUS_INTERESTED)
                 */
                 transaction.update(reqDocRef, "status", Chat.STATUS_INTERESTED)
+
                 transaction.update(tsDocRef, "assignedTo", CompactUser())
                 transaction.update(tsDocRef, "status", TimeSlot.TIME_SLOT_STATUS_AVAILABLE)
                 reqDocRef.update("timeSlot.status", Chat.STATUS_ACCEPTED)
@@ -514,6 +514,7 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
                                     "assignedTo" to chat.requester
                                 )
                             )
+
 
                     }
                     _chat.postValue(chat.copy(status = Chat.STATUS_ACCEPTED))

@@ -32,18 +32,18 @@ class ReviewsViewAdapter(
         private val ratingBar: RatingBar = mainView.findViewById(R.id.reviews_item_rating_bar)
         private val timestamp: TextView = mainView.findViewById(R.id.reviews_item_rating_timestamp)
         private val reviewText: TextView = mainView.findViewById(R.id.reviews_item_review_text)
+        private val role: TextView = mainView.findViewById(R.id.reviews_item_rating_role)
         private var civImagePic: CircleImageView = mainView.findViewById(R.id.review_list_item_profile_pic)
         var pbOtherProfilePic: ProgressBar =itemView.findViewById(R.id.progressBar)
 
-        fun bind(rw: Review, detailAction: (v: View) -> Unit) {
-            fullName.text = "Anonymous reviewer"//rw.reviewer.getValue("fullName")
+        fun bind(rw: Review/*, detailAction: (v: View) -> Unit*/) {
+            fullName.text = /*"Anonymous reviewer"*/rw.reviewer.getValue("fullName")
             ratingBar.rating = rw.stars.toFloat()
             timestamp.text = rw.timestamp.toString()
             reviewText.text = rw.reviewText
-            //profilePic = qualcosa con glide?
-            //Helper.loadImageIntoView(civImagePic, pbOtherProfilePic , rw.reviewer["profilePicUrl"]!!)
+            role.text = rw.role
 
-            //this.mainView.setOnClickListener(detailAction)
+            Helper.loadImageIntoView(civImagePic, pbOtherProfilePic , rw.reviewer["profilePicUrl"]!!)
         }
     }
 
@@ -82,7 +82,7 @@ class ReviewsViewAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val item = displayData[position]
         when (holder.itemViewType) {
-            VIEW_TYPE_REVIEWS -> (holder as ItemViewHolder).bind(item,detailAction = {} )
+            VIEW_TYPE_REVIEWS -> (holder as ItemViewHolder).bind(item /*,detailAction = {} */)
             VIEW_TYPE_EMPTY_MESSAGE -> (holder as EmptyItemViewHolder).bind()
         }
     }
