@@ -32,6 +32,7 @@ class ReviewsViewAdapter(
         private val ratingBar: RatingBar = mainView.findViewById(R.id.reviews_item_rating_bar)
         private val timestamp: TextView = mainView.findViewById(R.id.reviews_item_rating_timestamp)
         private val reviewText: TextView = mainView.findViewById(R.id.reviews_item_review_text)
+        private val reviewedTimeSlotTile: TextView = mainView.findViewById(R.id.reviews_item_rating_timeslot)
         private val role: TextView = mainView.findViewById(R.id.reviews_item_rating_role)
         private var civImagePic: CircleImageView = mainView.findViewById(R.id.review_list_item_profile_pic)
         var pbOtherProfilePic: ProgressBar =itemView.findViewById(R.id.progressBar)
@@ -41,6 +42,7 @@ class ReviewsViewAdapter(
             ratingBar.rating = rw.stars.toFloat()
             timestamp.text = rw.timestamp.toString()
             reviewText.text = rw.reviewText
+            reviewedTimeSlotTile.text = rw.referredTimeslotTitle
             role.text = if (rw.type == Review.AS_OFFERER_TYPE) "offerer" else "requester"
 
             Helper.loadImageIntoView(civImagePic, pbOtherProfilePic , rw.reviewer.profilePicUrl)

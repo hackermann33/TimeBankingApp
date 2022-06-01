@@ -104,30 +104,55 @@
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toEndOf="@+id/reviews_item_rating_bar"
                 app:layout_constraintTop_toTopOf="@+id/reviews_item_rating_bar" />
-
             <TextView
-                android:id="@+id/reviews_item_label1"
+                android:id="@+id/reviews_item_label2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Reviewed on:"
+                android:text="Time Slot:"
+
                 android:textColor="#757575"
                 android:layout_marginTop="8dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/reviews_item_rating_bar" />
 
             <TextView
+                android:id="@+id/reviews_item_rating_timeslot"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                android:layout_weight="1"
+                android:text="@string/time_slots_item_title"
+                android:textColor="#757575"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/reviews_item_label2"
+                app:layout_constraintTop_toBottomOf="@+id/reviews_item_rating_bar" />
+
+            <TextView
+                android:id="@+id/reviews_item_label1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Reviewed on:"
+                android:textColor="#757575"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/reviews_item_label2" />
+
+            <TextView
                 android:id="@+id/reviews_item_rating_timestamp"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
                 android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
                 android:layout_marginEnd="16dp"
                 android:layout_weight="1"
                 android:text="@string/reviews_item_timestamp"
+
                 android:textColor="#757575"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/reviews_item_label1"
-                app:layout_constraintTop_toBottomOf="@+id/reviews_item_rating_bar" />
+                app:layout_constraintTop_toBottomOf="@+id/reviews_item_rating_timeslot" />
 
             <TextView
                 android:id="@+id/reviews_item_review_text"
