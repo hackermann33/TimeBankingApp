@@ -498,8 +498,8 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
                 transaction.update(requesterDocRef, "balance", newBalance)
 
                                     /* !!!!tocheck ==> */
-                }
                 true //newBalance
+            }
             }.addOnSuccessListener {  result ->
             Log.d(TAG, "SUCCESS $result")
             if(result) {/*Balance is okay => update all info*/
@@ -518,6 +518,9 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
                             chat.copy(status = Chat.STATUS_ACCEPTED)
                     }
                 }
+            }
+            else{
+                _chat.value = chat.copy(status = Chat.STATUS_UNINTERESTED)
             }
 
         }.addOnFailureListener{Log.d(TAG, "FAILURE : {$it}") }
