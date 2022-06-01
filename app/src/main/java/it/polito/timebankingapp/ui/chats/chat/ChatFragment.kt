@@ -32,6 +32,19 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
     private lateinit var textMessage: EditText
     private lateinit var layoutManager: LinearLayoutManager
 
+
+
+    private lateinit var btnAcceptRequest:Button
+    private lateinit var btnRequestService: Button
+    private lateinit var btnDiscardRequest: Button
+
+    private lateinit var rlSendMsgBar : RelativeLayout
+    private lateinit var cvMessageChatStatus : CardView
+    private lateinit var tvChatStatus :TextView
+
+
+
+
     private val chatVm: ChatViewModel by activityViewModels()
     //private val profileVM : ProfileViewModel by activityViewModels()
 
@@ -149,62 +162,42 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         val tvReviewsNumber = v.findViewById<TextView>(R.id.fragment_chat_tv_reviews_count)
         val tvTimeSlotTitle = v.findViewById<TextView>(R.id.fragment_chat_tv_offer_title)
         val tvProfileName = v.findViewById<TextView>(R.id.chat_profile_name)
-        val btnAcceptRequest = v.findViewById<Button>(R.id.fragment_chat_btn_accept)
-        val btnRequestService = v.findViewById<Button>(R.id.fragment_chat_btn_request_service)
-        val btnDiscardRequest = v.findViewById<TextView>(R.id.fragment_chat_btn_discard)
+        btnAcceptRequest = v.findViewById<Button>(R.id.fragment_chat_btn_accept)
+        btnRequestService = v.findViewById<Button>(R.id.fragment_chat_btn_request_service)
+        btnDiscardRequest = v.findViewById<Button>(R.id.fragment_chat_btn_discard)
+
+
+        rlSendMsgBar = v.findViewById(R.id.layout_gchat_chatbox)
+        cvMessageChatStatus = v.findViewById(R.id.card_chat_discarded)
+        tvChatStatus= v.findViewById(R.id.tv_chat_discarded)
+
+
+
         val pbProfilePic = v.findViewById<ProgressBar>(R.id.fragment_chat_pb_profile_pic)
-        val sendMsgBar : RelativeLayout = v.findViewById(R.id.layout_gchat_chatbox)
-        val cardChatDiscarded : CardView = v.findViewById(R.id.card_chat_discarded)
-        val tvChatDiscarded : TextView = v.findViewById(R.id.tv_chat_discarded)
 
         val otherUser: CompactUser = Helper.getOtherUser(cli)
         Helper.loadImageIntoView(civProfilePic, pbProfilePic, otherUser.profilePicUrl)
 
 
         btnRequestService.setOnClickListener {
-            Helper.setConfirmationOnButton(requireContext(), btnRequestService)
+            //Helper.setConfirmationOnButton(requireContext(), btnRequestService) <= add if you can't do it without it
             /*btnRequireService.isEnabled = false *//*TODO(Reabilitate if error happens during requests) */
             chatVm.requestService(cli)
         }
 
         btnAcceptRequest.setOnClickListener {
             chatVm.acceptRequest(cli)
-            btnAcceptRequest.isEnabled = false
+            /*btnAcceptRequest.isEnabled = false
             btnDiscardRequest.alpha = 0.8F
-            btnDiscardRequest.isEnabled = false
+            btnDiscardRequest.isEnabled = false*/
         }
 
         btnDiscardRequest.setOnClickListener {
             chatVm.discardRequest(cli.requestId)
-            btnAcceptRequest.isEnabled = false
+            /*btnAcceptRequest.isEnabled = false
             btnDiscardRequest.alpha = 0.8F
-            btnDiscardRequest.isEnabled = false
+            btnDiscardRequest.isEnabled = false*/
         }
-
-
-        if(chatVm.chat.value?.status == STATUS_DISCARDED) {
-            if(chatVm.chat.value?.offerer!!.id == Firebase.auth.uid) /* Discarded and I'm Offerer */
-                tvChatDiscarded.text = getString(R.string.you_assigned_service_to_another)
-            if(chatVm.chat.value?.requester!!.id == Firebase.auth.uid) /* Discarded and I'm Requester */
-                tvChatDiscarded.text = getString(R.string.this_service_has_been_assigned_to_another_user)
-            sendMsgBar.visibility = View.GONE
-            cardChatDiscarded.visibility = View.VISIBLE
-            btnRequestService.isEnabled = false
-            btnAcceptRequest.isEnabled = false
-            btnDiscardRequest.isEnabled = false
-        }
-        if(chatVm.chat.value?.status == STATUS_ACCEPTED){
-            if(chatVm.chat.value?.offerer!!.id == Firebase.auth.uid) /* Accepted and I'm Offerer */
-                tvChatDiscarded.text = getString(R.string.assigned_to_him)
-            if(chatVm.chat.value?.requester!!.id == Firebase.auth.uid) /* Accepted and I'm Requester */
-                tvChatDiscarded.text = getString(R.string.assigned_to_you)
-            sendMsgBar.visibility = View.GONE
-            cardChatDiscarded.visibility = View.VISIBLE
-            btnRequestService.isEnabled = false
-            btnAcceptRequest.isEnabled = false
-            btnDiscardRequest.isEnabled = false
-        }
-
 
 
         /* TODO(When image is clicked, navigation is not to the correct profile !!!) */
@@ -218,6 +211,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
                 Log.d(TAG, "TYPE TO OFFERER")
                 when (cli.status) {
                     Chat.STATUS_UNINTERESTED -> {
+                        btnRequestService.isEnabled = true
                         Log.d(TAG, "STATUS UNIINTERESTED")
                     }
                     Chat.STATUS_INTERESTED -> {
@@ -225,7 +219,9 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
                         btnRequestService.text = "Service requested"
                         Helper.setConfirmationOnButton(requireContext(), btnRequestService)
                     }
-                    Chat.STATUS_ACCEPTED -> Log.d(TAG, "STATUS ACCEPTED")
+                    Chat.STATUS_ACCEPTED -> { Log.d(TAG, "STATUS ACCEPTED"); chatToAccepted(v, cli)  }
+                    Chat.STATUS_DISCARDED -> { Log.d(TAG, "STATUS DISCARDED"); chatToDiscarded(v) }
+
                 }
 
             }
@@ -237,11 +233,16 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
                 tvReviewsNumber.text = "${otherUser.asRequesterReview.number} reviews"
                 Log.d(TAG, "TYPE TO REQUESTER")
                 when (cli.status) {
-                    Chat.STATUS_UNINTERESTED -> Log.d(TAG, "STATUS UNIINTERESTED")
+                    Chat.STATUS_UNINTERESTED -> Log.d(TAG, "STATUS UNINTERESTED")
                     Chat.STATUS_INTERESTED -> Log.d(TAG, "STATUS INTERESTED")
-                    Chat.STATUS_ACCEPTED -> Log.d(TAG, "STATUS ACCEPTED")
+                    Chat.STATUS_ACCEPTED -> {Log.d(TAG, "STATUS ACCEPTED");
+                        chatToAccepted(v, cli)
+                    }
+                    Chat.STATUS_DISCARDED -> {
+                        Log.d(TAG, "STATUS DISCARDED")
+                        chatToDiscarded(v)
+                    }
                 }
-
             }
 
         }
@@ -263,6 +264,29 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
                 bundleOf("point_of_origin" to "skill_specific")
             )
         }
+    }
+
+    private fun chatToDiscarded(v: View) {
+        tvChatStatus.text = getString(R.string.this_service_has_been_assigned_to_another_user)
+        rlSendMsgBar.visibility = View.GONE
+        cvMessageChatStatus.visibility = View.VISIBLE
+        btnRequestService.isEnabled = false
+        btnAcceptRequest.isEnabled = false
+        btnDiscardRequest.isEnabled = false
+    }
+
+    private fun chatToAccepted(v: View,  c: Chat) {
+
+        val str = if(c.timeSlot.assignedTo.id == Firebase.auth.uid) getString(R.string.assigned_to_you) else getString(R.string.assigned_to_him)
+        tvChatStatus.text = str
+        rlSendMsgBar.visibility = View.GONE
+        cvMessageChatStatus.visibility = View.VISIBLE
+
+
+        btnRequestService.isEnabled = false
+        btnAcceptRequest.isEnabled = false
+        btnDiscardRequest.isEnabled = false
+
     }
 
 
