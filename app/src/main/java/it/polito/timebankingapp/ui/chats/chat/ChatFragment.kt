@@ -71,6 +71,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
                 ::sendMessage,
                 chatVm.chat.value?.status == STATUS_DISCARDED || chatVm.chat.value?.status == STATUS_ACCEPTED
             )
+
             rv.adapter = adTmp
             rv.scrollToPosition(adTmp.itemCount - 1)
         }

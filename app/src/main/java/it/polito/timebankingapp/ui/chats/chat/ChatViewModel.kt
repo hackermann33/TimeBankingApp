@@ -522,6 +522,7 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
                 }
             }
             else{
+
                 _chat.postValue(chat.copy(status = Chat.STATUS_UNINTERESTED))
                 _isLoading.postValue(false)
             }
