@@ -129,7 +129,7 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
 
     fun editUser(usr: User) {
 
-        val srcRef = db.collection("users").document(usr.id)
+        val srcRef = db.collection("users").document(usr.id).set(usr)
         /*
         Manage multiple updates !!!
         val otherRef = db.collection("requests").whereArrayContains("users", usr.id).
@@ -144,6 +144,7 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
 
 
     fun editUserImage(imageBitmap: Bitmap?) {
+        var tmpUser = user.value!!
 
         if(imageBitmap == null) return
 
@@ -161,18 +162,24 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
             imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
 
         val data = baos.toByteArray()
-
-        if(user.value!!.profilePicUrl.isEmpty())
-            _user.value = user.value!!.copy(profilePicUrl = "images/".plus(UUID.randomUUID().toString()))
+        if(tmpUser.profilePicUrl.isEmpty())
+            tmpUser = user.value!!.copy(profilePicUrl = "images/".plus(UUID.randomUUID().toString()))
 
         // Upload the file and metadata
-        FirebaseStorage.getInstance().reference.child("${user.value?.profilePicUrl}").putBytes(data, metadata)
+        FirebaseStorage.getInstance().reference.child(tmpUser.profilePicUrl).putBytes(data, metadata)
             .addOnSuccessListener {
-                _user.value = user.value!!.copy()
+                _user.value = tmpUser
+                updateUserToDb(tmpUser)
+
                 Log.d("editUserImage", "success: $it")
             }.addOnFailureListener {
             Log.d("editUserImage", "failure: $it")
         }
+
+    }
+
+    private fun updateUserToDb(user: User) {
+        db.collection("users").document(user.id).set(user).addOnSuccessListener {  }.addOnFailureListener{}
 
     }
 
