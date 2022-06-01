@@ -132,13 +132,6 @@
             app:exitAnim="@anim/nav_default_exit_anim"
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
             app:popExitAnim="@anim/nav_default_pop_exit_anim"/>
-        <action
-            android:id="@+id/action_nav_showProfile_to_nav_reviewsList"
-            app:destination="@id/nav_reviewsList"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim"
-            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
     </fragment>
     <fragment
         android:id="@+id/nav_editProfile"
@@ -224,13 +217,8 @@
         </action>
     </fragment>
     <fragment
-        android:id="@+id/nav_reviewsList"
-        android:name="it.polito.timebankingapp.ui.reviews.reviewslist.ReviewsListFragment"
-        android:label="Reviews List"
-        tools:layout="@layout/fragment_reviews_list" />
-    <fragment
         android:id="@+id/nav_addReview"
-        android:name="it.polito.timebankingapp.ui.reviews.addreview.AddReviewFragment"
+        android:name="it.polito.timebankingapp.ui.reviews.AddReviewFragment"
         android:label="Add new review"
         tools:layout="@layout/fragment_add_review" />
     <fragment

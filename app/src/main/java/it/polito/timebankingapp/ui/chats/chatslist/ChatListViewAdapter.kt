@@ -16,8 +16,6 @@ import de.hdodenhof.circleimageview.CircleImageView
 import it.polito.timebankingapp.R
 import it.polito.timebankingapp.model.Chat
 import it.polito.timebankingapp.model.Helper
-import it.polito.timebankingapp.model.review.Review
-import it.polito.timebankingapp.ui.reviews.reviewslist.ReviewsViewAdapter
 
 class ChatListViewAdapter(
     private var data: List<Chat>,

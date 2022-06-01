@@ -67,8 +67,7 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
             Helper.setConfirmationOnButton(requireContext(), btnRequestService)
         }*/
 
-        if (type == "skill_specific")
-            btnRequestService.visibility = View.VISIBLE
+
 
         val btnAskInfo = view.findViewById<Button>(R.id.openChatButton)
         if(ts!!.userId == Firebase.auth.uid){
@@ -131,6 +130,8 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
         if (type == "skill_specific") {
 
             //se esiste già una richiesta, disabilita btnRequestService
+            if (type == "skill_specific" && ts.status == TimeSlot.TIME_SLOT_STATUS_AVAILABLE)
+                btnRequestService.visibility = View.VISIBLE
 
             view.findViewById<ConstraintLayout>(R.id.layout_offerer)
                 .also { it.visibility = View.VISIBLE }
