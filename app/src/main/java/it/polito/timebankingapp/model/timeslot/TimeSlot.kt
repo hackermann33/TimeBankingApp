@@ -23,7 +23,7 @@ data class TimeSlot(
     var relatedSkill: String = "",
     /*var offererUnreadChats: Int = 0,
     var requesterUnreadChats: Int = 0,*/
-    var assignedTo: String = "",
+    var assignedTo: CompactUser = CompactUser(),
     var timeSlotStatus: Int = 0
 ) : Serializable {
 

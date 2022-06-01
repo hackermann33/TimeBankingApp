@@ -452,7 +452,7 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
         db.runTransaction { transaction ->
             reqDocRef.update("status", Chat.STATUS_ACCEPTED)
             reqDocRef.update("timeSlot.status", Chat.STATUS_ACCEPTED)
-            transaction.update(tsDocRef, "assignedTo", chat.requester.id)
+            transaction.update(tsDocRef, "assignedTo", chat.requester)
             transaction.update(tsDocRef, "status", TimeSlot.TIME_SLOT_STATUS_ASSIGNED)
 
             val snapshot = transaction.get(reqDocRef)
@@ -463,7 +463,7 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
                 */
                 reqDocRef.update("status", Chat.STATUS_INTERESTED)
                 _chat.postValue(chat.copy(status = Chat.STATUS_INTERESTED))
-                transaction.update(tsDocRef, "assignedTo", "")
+                transaction.update(tsDocRef, "assignedTo", CompactUser())
                 transaction.update(tsDocRef, "status", TimeSlot.TIME_SLOT_STATUS_AVAILABLE)
                 reqDocRef.update("timeSlot.status", Chat.STATUS_ACCEPTED)
 
@@ -503,7 +503,7 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
                         }
                     }
                     timeSlotsDocRef.document(Helper.extractTimeSlotId(chatId))
-                        .update("assignedTo", chat.requester.id)
+                        .update("assignedTo", chat.requester)
                 }
 
                 newBalance
