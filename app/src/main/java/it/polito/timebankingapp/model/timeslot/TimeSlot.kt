@@ -21,8 +21,8 @@ data class TimeSlot(
     var location: String = "",
     var restrictions: String = "",
     var relatedSkill: String = "",
-    var offererUnreadChats: Int = 0,
-    var requesterUnreadChats: Int = 0,
+    /*var offererUnreadChats: Int = 0,
+    var requesterUnreadChats: Int = 0,*/
     var assignedTo: String = "",
     var timeSlotStatus: Int = 0
 ) : Serializable {

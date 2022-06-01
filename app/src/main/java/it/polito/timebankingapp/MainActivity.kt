@@ -65,7 +65,7 @@ class MainActivity : AppCompatActivity() {
 //        timeSlotVm.updatePersonalTimeSlots()
         chatListVm.updateAllChats()
 
-        chatListVm.unreadChats.observe(this){
+        /*chatListVm.unreadChats.observe(this){
             if(it > 0){
                 chatsView.text = it.toString()
                 chatsView.visibility = View.VISIBLE
@@ -76,7 +76,7 @@ class MainActivity : AppCompatActivity() {
                 counterView.visibility = View.GONE
                 chatsView.visibility = View.GONE
             }
-        }
+        }*/
 
 
 

@@ -62,7 +62,7 @@ class TimeSlotAdapter(
 
                 /* Set badge options */
                 chatButton.setBadgePadding(2)
-                chatButton.badgeValue = ts.offererUnreadChats
+                chatButton.badgeValue = 0//ts.offererUnreadChats
                 chatButton.setOnClickListener(showRequestsAction)
             }
             else if (type == "completed") {

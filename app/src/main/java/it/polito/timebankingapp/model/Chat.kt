@@ -32,7 +32,9 @@ data class Chat(
         this.status = STATUS_INTERESTED
         lastMessage = cm
 
+/*
         timeSlot.offererUnreadChats++
+*/
         offererUnreadMsg = 1
     }
 
@@ -46,17 +48,23 @@ data class Chat(
     fun sendMessage(message: ChatMessage) {
         if(status == STATUS_UNINTERESTED){ //FIRST MESSAGE, I am surely the Requester
             this.status = STATUS_INTERESTED
+/*
             timeSlot.offererUnreadChats++
+*/
             offererUnreadMsg = 1
         }
         else{ /* Existing Chat, I can be requester or offerer */
             if(this.lastMessage.userId != Firebase.auth.uid){ /* Have to update unreadChats */
                 if(this.timeSlot.offerer.id == Firebase.auth.uid) { /* I am offerer, and I am answering */
+/*
                     this.timeSlot.requesterUnreadChats++
+*/
                     this.requesterUnreadMsg++
                 }
                 else{ /* I am requester, and I'm answering */
+/*
                     this.timeSlot.offererUnreadChats++
+*/
                     this.offererUnreadMsg++
                 }
             }

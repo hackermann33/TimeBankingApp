@@ -29,9 +29,9 @@ class TimeSlotsViewModel(application: Application) : AndroidViewModel(applicatio
     private val _selectedTimeSlot = MutableLiveData<TimeSlot>()
     val selectedTimeSlot: LiveData<TimeSlot> = _selectedTimeSlot
 
-    private val _unreadChats = MutableLiveData<Int>()
+    /*private val _unreadChats = MutableLiveData<Int>()
     val unreadChats: LiveData<Int> = _unreadChats
-
+*/
 
     lateinit var type: String
         private set
@@ -100,8 +100,8 @@ class TimeSlotsViewModel(application: Application) : AndroidViewModel(applicatio
                     _timeSlots.value = v!!.mapNotNull { d -> d.toObject<TimeSlot>() }
                     _isLoading.postValue(false)
                     var cnt = 0
-                    _timeSlots.value!!.forEach { ts -> if (ts.offererUnreadChats > 0) cnt++ }
-                    _unreadChats.postValue(cnt)
+                    /*_timeSlots.value!!.forEach { ts -> if (ts.offererUnreadChats > 0) cnt++ }*/
+                    /*_unreadChats.postValue(cnt)*/
                     _isEmpty.value = _timeSlots.value!!.isEmpty()
                 } else {
                     _timeSlots.value = emptyList()

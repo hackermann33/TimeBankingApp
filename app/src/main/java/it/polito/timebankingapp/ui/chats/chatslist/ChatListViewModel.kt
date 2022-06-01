@@ -25,8 +25,8 @@ class ChatListViewModel(application: Application): AndroidViewModel(application)
 
     private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
 
-    private val _unreadChats = MutableLiveData<Int>()
-    val unreadChats : LiveData<Int> = _unreadChats
+    /*private val _unreadChats = MutableLiveData<Int>()
+    val unreadChats : LiveData<Int> = _unreadChats*/
 
     private lateinit var allChatsListener: ListenerRegistration
     private lateinit var timeSlotChatsListener: ListenerRegistration
@@ -98,13 +98,13 @@ class ChatListViewModel(application: Application): AndroidViewModel(application)
                         Log.d("chatList", "chatListALL: ${_allChatList.value!!.mapNotNull { it.timeSlot.title }}")
                         _isLoading.postValue(false)
                         var cnt = 0
-                        _allChatList.value?.forEach { chat ->
-                            if(chat.offerer.id == Firebase.auth.uid && chat.timeSlot.offererUnreadChats > 0) /* I am the offerer of this chat*/
+                        /*_allChatList.value?.forEach { chat ->
+                            if(chat.offerer.id == Firebase.auth.uid && chat.timeSlot.offererUnreadChats > 0) *//* I am the offerer of this chat*//*
                                 cnt++
-                            if(chat.requester.id == Firebase.auth.uid && chat.timeSlot.requesterUnreadChats > 0) /* I am the requester of this chat */
+                            if(chat.requester.id == Firebase.auth.uid && chat.timeSlot.requesterUnreadChats > 0) *//* I am the requester of this chat *//*
                                 cnt++
                         }
-                        _unreadChats.postValue(cnt)
+                        _unreadChats.postValue(cnt)*/
                         Log.d("chatsListValue", "success")
                     } else{
                         _allChatList.value = emptyList()

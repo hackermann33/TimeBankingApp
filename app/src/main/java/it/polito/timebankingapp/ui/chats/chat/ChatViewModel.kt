@@ -85,22 +85,22 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
             }
             else
                 false*/
-        var incrementUnreadChats = false
+        /*var incrementUnreadChats = false
         var whoUpdates = ""
 
-        if (chat.status == Chat.STATUS_UNINTERESTED) { /* I am the requester, NEW REQUEST*/
+        if (chat.status == Chat.STATUS_UNINTERESTED) { *//* I am the requester, NEW REQUEST*//*
             whoUpdates = "offerer"
             incrementUnreadChats = true
-        } else { /* Already existing chat */
-            if (chat.lastMessage.userId != Firebase.auth.uid) { /* is a new message that has to increment the counter */
+        } else { *//* Already existing chat *//*
+            if (chat.lastMessage.userId != Firebase.auth.uid) { *//* is a new message that has to increment the counter *//*
                 incrementUnreadChats = true
-                if (chat.offerer.id == Firebase.auth.uid)  /* I am the offerer, update requesterUnreadChats*/
+                if (chat.offerer.id == Firebase.auth.uid)  *//* I am the offerer, update requesterUnreadChats*//*
                     whoUpdates = "requester"
                 else
                     whoUpdates = "offerer"
 
             }
-        }
+        }*/
 
         if (chat.status == Chat.STATUS_UNINTERESTED) //first message
             registerMessagesListener(chat)
@@ -110,14 +110,14 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
         db.runBatch { batch ->
             batch.set(reqDocRef, chat)
             batch.set(msgsDocRef, message)
-            if (incrementUnreadChats) {
-                batch.update(timeSlotDocRef, "${whoUpdates}UnreadChats", FieldValue.increment(1))
+            /*if (incrementUnreadChats) {
+                batch.update(timeSlotDocRef, "${whoUpdates}UnreadChats", FieldValue.increment(1))*/
 //                already Managed by reqDocRef.set
 //                batch.update(reqDocRef, "timeSlot.${whoUpdates}UnreadChats", FieldValue.increment(1))
             }
 //            already Managed by reqDocRef.set
 //            batch.update(reqDocRef, "${whoUpdates}UnreadMsg", FieldValue.increment(1))
-        }.addOnSuccessListener {
+        .addOnSuccessListener {
             _chat.postValue(chat)
 
             Log.d("sendMessageAndUpdate", "Everything updated")
@@ -227,21 +227,25 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
         _isLoading.postValue(true)
         _chat.postValue(chat)
         _isLoading.postValue(false)
+    }
 
-        val resetUnreadMsgs = chat.lastMessage.userId != Firebase.auth.uid
-        var resetUnreadChats = false
-        var whoUpdates = ""
-        if (resetUnreadMsgs) { /* I am visualizing a chat */
-            if (chat.timeSlot.offerer.id == Firebase.auth.uid) { /* I am the offerer */
+
+        /*val resetUnreadMsgs = chat.lastMessage.userId != Firebase.auth.uid
+        //var resetUnreadChats = false
+
+
+
+        if (resetUnreadMsgs) { *//* I am visualizing a chat *//*
+            if (chat.timeSlot.offerer.id == Firebase.auth.uid) { *//* I am the offerer *//*
                 whoUpdates = "offerer"
-                chat.offererUnreadMsg = 0 /* Set counters for offerer */
+                chat.offererUnreadMsg = 0 *//* Set counters for offerer *//*
                 if (chat.timeSlot.offererUnreadChats > 0) {
                     chat.timeSlot.offererUnreadChats--
                     resetUnreadChats = true
                 }
-            } else { /* I am the requester */
+            } else { *//* I am the requester *//*
                 whoUpdates = "requester"
-                chat.requesterUnreadMsg = 0 /* Set counters for requester */
+                chat.requesterUnreadMsg = 0 *//* Set counters for requester *//*
                 if (chat.timeSlot.requesterUnreadChats > 0) {
                     resetUnreadChats = true
                     chat.timeSlot.requesterUnreadChats--
@@ -293,7 +297,7 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
         }.addOnFailureListener {
             Log.d("sendMessageAndUpdate", "Oh, no")
         }
-    }
+    }*/
 
     /* Update chatInfo (chat not yet created on db) from users table given a timeSlot*/
     fun updateChatInfo(
@@ -354,16 +358,16 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
                         */
 
                     /* Check if have to clear unreadMsg and Chat */
-                    if (req.lastMessage.userId != Firebase.auth.uid) { //have to clear unreadMsg and decrement unreadChats
+                    /*if (req.lastMessage.userId != Firebase.auth.uid) { //have to clear unreadMsg and decrement unreadChats
                         if (req.requester.id == Firebase.auth.uid) { //I am requester
-                            req.offererUnreadMsg = 0
-                            req.timeSlot.requesterUnreadChats--
+                            *//*req.offererUnreadMsg = 0
+                            req.timeSlot.requesterUnreadChats--*//*
                         }
                         if (req.offerer.id == Firebase.auth.uid) {
-                            req.offererUnreadMsg = 0
-                            req.timeSlot.offererUnreadChats--
+                            *//*req.offererUnreadMsg = 0
+                            req.timeSlot.offererUnreadChats--*//*
                         }
-                    }
+                    }*/
 
 
                     val reqDocRef = db.collection("requests").document(chat.value!!.requestId)
