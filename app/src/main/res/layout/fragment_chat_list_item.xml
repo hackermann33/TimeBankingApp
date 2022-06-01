@@ -120,6 +120,7 @@
                 android:backgroundTint="@color/primary"
                 android:minWidth="24dp"
                 android:minHeight="24dp"
+                android:visibility="invisible"
                 app:cardCornerRadius="16dp"
                 app:layout_constraintBottom_toBottomOf="@+id/chat_list_item_last_message"
                 app:layout_constraintEnd_toEndOf="parent"
