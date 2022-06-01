@@ -21,8 +21,9 @@ import ru.nikartm.support.ImageBadgeView
 class TimeSlotAdapter(
     var data: MutableList<TimeSlot>,
     val selectTimeSlot: (t: TimeSlot) ->Unit,
-    val requestTimeSlot: ((t: TimeSlot) -> Unit?)?,
-    val showRequests: ((t: TimeSlot) -> Unit?)?,
+    val requestTimeSlot: (t: TimeSlot) -> Unit,
+    val showRequests: (t: TimeSlot) -> Unit,
+    val setReview: (t: TimeSlot) -> Unit,
     val type: String,
     val userProfile: User?,
     val view : View
@@ -158,6 +159,7 @@ class TimeSlotAdapter(
             showRequests!!(item)
             Navigation.findNavController(it).navigate(R.id.action_nav_personalTimeSlotList_to_nav_timeSlotChatsList)
         }, showAddReviewFrag = {
+            setReview(item)
             Navigation.findNavController(it).navigate(R.id.action_nav_completedTimeSlotList_to_nav_addReview,
                 bundleOf("timeslot" to item))
         })

@@ -10,9 +10,11 @@ data class Review(
     var referredTimeslotId: String = "",
     var reviewText: String ="",
     var stars: Int = 0,
-    var role: String = "",
-    var reviewer: Map<String, String> = mapOf("" to "id", "" to "fullName", "" to "profilePicUrl"),
-    var timestamp: Date = Date(0),
+    var type: Int = 0,
+    var reviewer: CompactUser = CompactUser(),
+    var userToReview: CompactUser = CompactUser(),
+    var timestamp: Date = Date(),
+    var published: Boolean = false,
 ) : Serializable {
 
     override fun toString(): String = "reviewText:$reviewText, numStars: $stars, timestamp: $timestamp"

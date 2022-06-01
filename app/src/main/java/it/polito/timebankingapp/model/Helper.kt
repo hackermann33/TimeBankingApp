@@ -164,7 +164,7 @@ class Helper {
                     " to your service (${tsTitle})"
         }
 
-        fun compactUserFromUser(user: User) : CompactUser {
+        /*fun compactUserFromUser(user: User) : CompactUser {
             var asOffAvg : Double = 0.0
             for(r in user.asOffererReviews)
                 asOffAvg += r.stars
@@ -185,7 +185,7 @@ class Helper {
                 user.asOffererReviews.size + user.asRequesterReviews.size,
                 user.balance
                 )
-        }
+        }*/
 
         fun setConfirmationOnButton(context: Context, btn: Button) {
             btn.isEnabled = false
