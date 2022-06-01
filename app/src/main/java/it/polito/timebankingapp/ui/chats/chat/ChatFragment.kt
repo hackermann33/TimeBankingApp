@@ -56,9 +56,9 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
                 updateChatUi(view, cli)
         }
         */
-        chatVm.chat.observe(viewLifecycleOwner) { chat ->
-            if(!chatVm.isLoading.value!!){
-                currentChat = chat
+        chatVm.isLoading.observe(viewLifecycleOwner){
+            if(!it){
+                currentChat = chatVm.chat.value!!
                 updateChatUi(view, currentChat)
             }
         }

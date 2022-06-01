@@ -439,7 +439,7 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
     fun acceptRequest(chat: Chat) {
         /* query the db */
         val chatId = chat.requestId
-
+        _isLoading.postValue(true)
         val reqTsDocs =
             db.collection("requests").whereEqualTo("timeSlotsId", Helper.extractTimeSlotId(chatId))
         val reqDocRef = db.collection("requests").document(chatId)
@@ -448,6 +448,7 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
         val requesterDocRef = db.collection("users").document(chat.requester.id)
 
         val timeSlotsDocRef = db.collection("timeSlots")
+
 
 
         db.runTransaction { transaction ->
@@ -460,11 +461,11 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
                 /*transaction.update(reqDocRef, "status", Chat.STATUS_INTERESTED)
                 */
                 transaction.update(reqDocRef, "status", Chat.STATUS_INTERESTED)
-                _chat.postValue(chat.copy(status = Chat.STATUS_INTERESTED))
                 transaction.update(tsDocRef, "assignedTo", CompactUser())
                 transaction.update(tsDocRef, "status", TimeSlot.TIME_SLOT_STATUS_AVAILABLE)
                 reqDocRef.update("timeSlot.status", Chat.STATUS_ACCEPTED)
-
+                _chat.postValue(chat.copy(status = Chat.STATUS_INTERESTED))
+                _isLoading.postValue(false)
                 false
                 //newBalance
             } else { //Balance is ok => transfer credit => update references
@@ -514,20 +515,23 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
                                 )
                             )
 
-                        _chat.value =
-                            chat.copy(status = Chat.STATUS_ACCEPTED)
                     }
+                    _chat.postValue(chat.copy(status = Chat.STATUS_ACCEPTED))
+                    _isLoading.postValue(false)
                 }
             }
             else{
-                _chat.value = chat.copy(status = Chat.STATUS_UNINTERESTED)
+                _chat.postValue(chat.copy(status = Chat.STATUS_UNINTERESTED))
+                _isLoading.postValue(false)
             }
 
         }.addOnFailureListener{Log.d(TAG, "FAILURE : {$it}") }
     }
 
     fun discardRequest(chatId: String) {
+        _isLoading.postValue(true)
         updateStatus(chatId, Chat.STATUS_DISCARDED)
+        _isLoading.postValue(false)
 
         /* query the db */
     }
