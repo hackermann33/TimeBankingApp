@@ -68,7 +68,7 @@
                 app:layout_constraintTop_toTopOf="parent" />-->
 
             <TextView
-                android:id="@+id/review_list_item_full_name"
+                android:id="@+id/review_list_item_nick_name"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"

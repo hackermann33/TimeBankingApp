@@ -20,25 +20,23 @@ import it.polito.timebankingapp.model.Helper
 import it.polito.timebankingapp.model.review.Review
 import it.polito.timebankingapp.model.user.User
 import it.polito.timebankingapp.ui.profile.ProfileViewModel
-import it.polito.timebankingapp.ui.reviews.ReviewsViewModel
 import it.polito.timebankingapp.ui.reviews.reviewslist.ReviewsViewAdapter
 
 
-class ShowPersonalProfileFragment : Fragment(R.layout.fragment_showprofile) {
+class ShowProfileFragment : Fragment(R.layout.fragment_showprofile) {
 
     private lateinit var user: User
     private lateinit var timeSlotUser: User
-    private lateinit var reviews: List<Review>
 
     private lateinit var v : View
     private lateinit var type : String
 
+/*
     private lateinit var rv : RecyclerView
     private lateinit var adTmp: ReviewsViewAdapter
+*/
 
     private val vm : ProfileViewModel by activityViewModels()
-
-    private val rvm by activityViewModels<ReviewsViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,59 +56,10 @@ class ShowPersonalProfileFragment : Fragment(R.layout.fragment_showprofile) {
         //val progressBar = view.findViewById<ProgressBar>(R.id.profile_pic_progress_bar)
         var bundle = Bundle()
 
-        rvm.reviews.observe(viewLifecycleOwner) {
-            //print(it)
-            reviews = it
-
-            //definizione rw per le recensioni
-            rv = view.findViewById(R.id.short_reviews_list)
-            rv.layoutManager = LinearLayoutManager(context)
-            adTmp = ReviewsViewAdapter(reviews.take(2).toMutableList())
-            rv.adapter = adTmp
-
-            val showReviewsBtn : Button = v.findViewById(R.id.show_all_reviews)
-
-            showReviewsBtn.setOnClickListener {
-                findNavController().navigate(R.id.action_nav_showProfile_to_nav_reviewsList, bundle)
-            }
-
-            val ratingBarOfferer = v.findViewById<RatingBar>(R.id.profile_reviews_rating_score_offerer)
-            val ratingBarRequester = v.findViewById<RatingBar>(R.id.profile_reviews_rating_score_requester)
-            //if requester --> rating bar requester, else rating bar offerer
-            /*if(reviews.isNotEmpty()) {
-                var den = 0
-                var num = 0
-                for (i in reviews.indices) {
-                    den++
-                    num += reviews[i].stars
-                }
-                ratingBar.rating = num.toFloat() / den
-            }*/
-
-            if(reviews.isNotEmpty()) {
-                var denOff = 0
-                var numOff = 0
-                var denReq = 0
-                var numReq = 0
-                for (i in reviews.indices) {
-                    if(reviews[i].role =="offerer") {
-                        denOff++
-                        numOff += reviews[i].stars
-                    }else{
-                        denReq++
-                        numReq += reviews[i].stars
-                    }
-                }
-                ratingBarOfferer.rating = numOff.toFloat() / denOff
-                ratingBarRequester.rating =numReq.toFloat() / denReq
-            }
-        }
-
         if (type == "skill_specific" || type == "completed" || type == "interesting") {
             vm.timeslotUser.observe(viewLifecycleOwner) {
                 timeSlotUser = it //oppure it
                 bundle = bundleOf("profile" to timeSlotUser, "type" to "timeslot") //per le recensioni
-                rvm.retrieveAllReviews(it.id /*" ry0npG5mapRq0ccreqTEQjvdqQa2"*/)
                 showProfile(view, timeSlotUser)
             }
 
@@ -123,7 +72,6 @@ class ShowPersonalProfileFragment : Fragment(R.layout.fragment_showprofile) {
             vm.user.observe(viewLifecycleOwner) {
                 user = it //oppure it
                 bundle = bundleOf("profile" to user, "type" to "personal") //per le recensioni
-                rvm.retrieveAllReviews(it.id /*" ry0npG5mapRq0ccreqTEQjvdqQa2"*/)
                 showProfile(view, user)
             }
 
@@ -146,30 +94,38 @@ class ShowPersonalProfileFragment : Fragment(R.layout.fragment_showprofile) {
         val pb = view.findViewById<ProgressBar>(R.id.profile_pic_progress_bar)
         val profilePicCircleView = view.findViewById<ImageView>(R.id.fragment_show_profile_iv_profile_pic)
 
+        val tvName = view.findViewById<TextView>(R.id.fullName)
+        val tvNick = view.findViewById<TextView>(R.id.nickname)
+        val tvEmail = view.findViewById<TextView>(R.id.email)
+        val tvLocation = view.findViewById<TextView>(R.id.location)
+        val tvBalance = view.findViewById<TextView>(R.id.balance)
+        val tvDescription = view.findViewById<TextView>(R.id.description)
+
+        /* Review part */
+        val btnShowReviews : Button = v.findViewById(R.id.show_all_reviews)
+        val rvLastReviews: RecyclerView = view.findViewById(R.id.short_reviews_list)
+        val rbAsOffererRating = v.findViewById<RatingBar>(R.id.profile_reviews_rating_score_offerer)
+        val rbAsRequesterRating = v.findViewById<RatingBar>(R.id.profile_reviews_rating_score_requester)
+
+
 
         if(!usr.hasImage()){
             pb.visibility = View.GONE
         }
-        val dim :Pair<Int,Int> = setProfilePicSize(sv, flProfilePic)
+
         Helper.loadImageIntoView(profilePicCircleView, pb, usr.profilePicUrl)
 
-        val nameView = view.findViewById<TextView>(R.id.fullName)
-        nameView.text = usr.fullName
+        tvName.text = usr.fullName
 
-        val nickView = view.findViewById<TextView>(R.id.nickname)
-        nickView.text = usr.nick
+        tvNick.text = usr.nick
 
-        val emailView = view.findViewById<TextView>(R.id.email)
-        emailView.text = usr.email//usr.email
+        tvEmail.text = usr.email//usr.email
 
-        val locationView = view.findViewById<TextView>(R.id.location)
-        locationView.text = usr.location
+        tvLocation.text = usr.location
 
-        val balanceView = view.findViewById<TextView>(R.id.balance)
-        balanceView.text = usr.balance.toString()
+        tvBalance.text = usr.balance.toString()
 
-        val descriptionView = view.findViewById<TextView>(R.id.description)
-        descriptionView.text = usr.description
+        tvDescription.text = usr.description
 
         val chipGroup = view.findViewById<ChipGroup>(R.id.skillsGroup)
 
@@ -183,6 +139,14 @@ class ShowPersonalProfileFragment : Fragment(R.layout.fragment_showprofile) {
             chip.text = skill
             chipGroup.addView(chip)
         }
+
+        /* Review part */
+        val rvaReview = ReviewsViewAdapter(usr.reviews.toMutableList())
+        rvLastReviews.layoutManager = LinearLayoutManager(context)
+        rvLastReviews.adapter = rvaReview
+        rbAsOffererRating.rating = usr.getReviewsScore(Review.AS_OFFERER_TYPE).toFloat()
+        rbAsRequesterRating.rating = usr.getReviewsScore(Review.AS_REQUESTER_TYPE).toFloat()
+
     }
 
 

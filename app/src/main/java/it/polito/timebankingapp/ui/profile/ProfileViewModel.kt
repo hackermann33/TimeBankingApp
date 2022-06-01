@@ -13,11 +13,11 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
+import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.ktx.storageMetadata
 import it.polito.timebankingapp.model.Helper
-import it.polito.timebankingapp.model.Helper.Companion.toUser
 import it.polito.timebankingapp.model.user.User
 import java.io.ByteArrayOutputStream
 import java.util.*
@@ -71,7 +71,7 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
                         }
                         /* Documento già esistente */
                         else {
-                            usr = v.toUser()!! //If you get an exception here, check that pic field is profilePicUrl
+                            usr = v.toObject<User>()!! //If you get an exception here, check that pic field is profilePicUrl
                             _user.value = usr
                         }
                     }
@@ -186,7 +186,7 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
             .addSnapshotListener { v, e ->
                 if (e == null) {
                     if (v != null) {
-                        timeslotUsr = v.toUser()!!
+                        timeslotUsr = v.toObject<User>()!!
                         _timeslotUser.value = timeslotUsr
                     }
 

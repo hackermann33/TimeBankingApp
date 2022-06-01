@@ -1,13 +1,13 @@
 package it.polito.timebankingapp.model.review
 
+import it.polito.timebankingapp.model.user.CompactUser
 import java.io.Serializable
 import java.util.Date
 
 
 
-
 data class Review(
-    var referredTimeslotId: String = "",
+    var referredTimeslotTitle: String = "",
     var reviewText: String ="",
     var stars: Int = 0,
     var type: Int = 0,
@@ -18,6 +18,7 @@ data class Review(
 ) : Serializable {
 
     override fun toString(): String = "reviewText:$reviewText, numStars: $stars, timestamp: $timestamp"
+
 
     companion object {
         const val AS_OFFERER_TYPE = 0

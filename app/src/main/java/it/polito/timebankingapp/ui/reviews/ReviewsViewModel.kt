@@ -7,6 +7,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.DocumentReference
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.ktx.toObject
@@ -24,16 +25,24 @@ class ReviewsViewModel(application: Application): AndroidViewModel(application) 
 
     private lateinit var l: ListenerRegistration
 
+
+    private val _review = MutableLiveData<Review>()
+    val review: LiveData<Review> = _review
+
     private var db: FirebaseFirestore = FirebaseFirestore.getInstance()
 
-    fun addReview(review: Review, reviewedUserId: String){
-        // versione vecchia senza check sulla esistenza
+    fun addReview(review: Review){
+
+        db.collection("users").document(review.userToReview.id).update(mapOf("reviews" to FieldValue.arrayUnion(review.copy(published =true)))).addOnSuccessListener {
+            Log.d("reviews_add","Successfully added")
+        }.addOnFailureListener  { Log.d("reviews_add", "Error on adding") }
+        /*// versione vecchia senza check sulla esistenza
         val newReviewRef = db.collection("reviews_test")
             .document(reviewedUserId).collection("userReviews").document()
 
         newReviewRef.set(review).addOnSuccessListener{
             Log.d("reviews_add","Successfully added")
-        }.addOnFailureListener{ Log.d("reviews_add", "Error on adding")}
+        }.addOnFailureListener{ Log.d("reviews_add", "Error on adding")}*/
 
 /*      //versione con check da debuggare e ripensare
         val newReviewRef = db.collection("reviews_test")
@@ -100,5 +109,10 @@ class ReviewsViewModel(application: Application): AndroidViewModel(application) 
                 _reviews.value = emptyList()
             }
         }
+    }
+
+    /* Set the review to review inside vm*/
+    fun setReview(rev: Review) {
+        _review.postValue(rev)
     }
 }

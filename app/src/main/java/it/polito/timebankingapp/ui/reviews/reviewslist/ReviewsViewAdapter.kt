@@ -28,7 +28,7 @@ class ReviewsViewAdapter(
     }
 
     class ItemViewHolder(private val mainView: View ) : RecyclerView.ViewHolder(mainView) {
-        private val fullName: TextView = mainView.findViewById(R.id.review_list_item_full_name)
+        private val tvNickName: TextView = mainView.findViewById(R.id.review_list_item_nick_name)
         private val ratingBar: RatingBar = mainView.findViewById(R.id.reviews_item_rating_bar)
         private val timestamp: TextView = mainView.findViewById(R.id.reviews_item_rating_timestamp)
         private val reviewText: TextView = mainView.findViewById(R.id.reviews_item_review_text)
@@ -37,13 +37,13 @@ class ReviewsViewAdapter(
         var pbOtherProfilePic: ProgressBar =itemView.findViewById(R.id.progressBar)
 
         fun bind(rw: Review/*, detailAction: (v: View) -> Unit*/) {
-            fullName.text = /*"Anonymous reviewer"*/rw.reviewer.getValue("fullName")
+            tvNickName.text = /*"Anonymous reviewer"*/rw.reviewer.nick
             ratingBar.rating = rw.stars.toFloat()
             timestamp.text = rw.timestamp.toString()
             reviewText.text = rw.reviewText
-            role.text = rw.role
+            role.text = if (rw.type == Review.AS_OFFERER_TYPE) "offerer" else "requester"
 
-            Helper.loadImageIntoView(civImagePic, pbOtherProfilePic , rw.reviewer["profilePicUrl"]!!)
+            Helper.loadImageIntoView(civImagePic, pbOtherProfilePic , rw.reviewer.profilePicUrl)
         }
     }
 

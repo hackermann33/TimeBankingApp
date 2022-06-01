@@ -16,10 +16,13 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import it.polito.timebankingapp.MainActivity
 import it.polito.timebankingapp.R
+import it.polito.timebankingapp.model.Helper
+import it.polito.timebankingapp.model.review.Review
 import it.polito.timebankingapp.model.timeslot.TimeSlot
 import it.polito.timebankingapp.ui.chats.chat.ChatViewModel
 import it.polito.timebankingapp.ui.chats.chatslist.ChatListViewModel
 import it.polito.timebankingapp.ui.profile.ProfileViewModel
+import it.polito.timebankingapp.ui.reviews.ReviewsViewModel
 import it.polito.timebankingapp.ui.timeslots.TimeSlotsViewModel
 
 
@@ -37,6 +40,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_timeslots_list) {
     private val userVm: ProfileViewModel by activityViewModels()
     private val chatVm: ChatViewModel by activityViewModels()
     private val chatListVm: ChatListViewModel by activityViewModels()
+    private val revVm: ReviewsViewModel by activityViewModels()
 
     private lateinit var type: String
 
@@ -118,6 +122,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_timeslots_list) {
                         ::selectTimeSlot,
                         ::showTimeSlotRequest,
                         ::showRequests,
+                        ::setReview,
                         type,
                         userVm.user.value,
                         view
@@ -163,6 +168,21 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_timeslots_list) {
             }*//*
         }
 */
+    }
+
+
+    /* Prepare the review to review or take the already present one*/
+    private fun setReview(timeSlot: TimeSlot) {
+        val reviewType = Helper.getReviewType(timeSlot)
+        val reviewer = Helper.getReviewer(timeSlot)
+        val userToReview = Helper.getUserToReview(timeSlot)
+
+        /* TODO(Check that the review is not already present inside that user => you need a query to users table, in that case just show the review) */
+
+        val rev = Review(referredTimeslotTitle = timeSlot.title, type = reviewType, reviewer = Helper.getReviewer(timeSlot), userToReview = Helper.getUserToReview(timeSlot))
+
+        revVm.setReview(rev)
+
     }
 
     fun showTimeSlotRequest(timeSlot: TimeSlot) {

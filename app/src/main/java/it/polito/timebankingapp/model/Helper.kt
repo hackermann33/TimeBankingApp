@@ -8,7 +8,6 @@ import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.ProgressBar
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
@@ -18,12 +17,15 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import it.polito.timebankingapp.R
-import it.polito.timebankingapp.model.user.CompactReview
+import it.polito.timebankingapp.model.review.Review
+import it.polito.timebankingapp.model.timeslot.TimeSlot
 import it.polito.timebankingapp.model.user.CompactUser
 import it.polito.timebankingapp.model.user.User
+import java.lang.IllegalStateException
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -97,32 +99,35 @@ class Helper {
         }
 
         const val KEY_PROFILE_PIC_URL = "profilePicUrl"
-        const val KEY_PROFILE_PIC_FULL_NAME = "fullName"
-        const val KEY_PROFILE_PIC_NICK = "nick"
-        const val KEY_PROFILE_PIC_EMAIL = "email"
-        const val KEY_PROFILE_PIC_LOCATION = "location"
-        const val KEY_PROFILE_PIC_DESCRIPTION = "description"
-        const val KEY_PROFILE_PIC_BALANCE = "balance"
-        const val KEY_PROFILE_PIC_SKILLS = "skills"
+        const val KEY_FULL_NAME = "fullName"
+        const val KEY_NICK = "nick"
+        const val KEY_EMAIL = "email"
+        const val KEY_LOCATION = "location"
+        const val KEY_DESCRIPTION = "description"
+        const val KEY_BALANCE = "balance"
+        const val KEY_SKILLS = "skills"
+        const val KEY_REVIEWS = "reviews"
 
 
-        fun DocumentSnapshot.toUser(): User? {
+        /*fun DocumentSnapshot.toUser(): User? {
             return try {
                 val pic = get(KEY_PROFILE_PIC_URL) as String
-                val fullName = get(KEY_PROFILE_PIC_FULL_NAME) as String
-                val nick = get(KEY_PROFILE_PIC_NICK) as String
-                val email = get(KEY_PROFILE_PIC_EMAIL) as String
-                val location = get(KEY_PROFILE_PIC_LOCATION) as String
-                val desc = get(KEY_PROFILE_PIC_DESCRIPTION) as String
-                val balance = get(KEY_PROFILE_PIC_BALANCE) as Long
-                val skills = get(KEY_PROFILE_PIC_SKILLS) as MutableList<String>
+                val fullName = get(KEY_FULL_NAME) as String
+                val nick = get(KEY_NICK) as String
+                val email = get(KEY_EMAIL) as String
+                val location = get(KEY_LOCATION) as String
+                val desc = get(KEY_DESCRIPTION) as String
+                val balance = get(KEY_BALANCE) as Long
+                val skills = get(KEY_SKILLS) as MutableList<String>
+                val reviews = get(KEY_REVIEWS) as MutableList<Any>
 
-                User(id, pic, fullName, nick, email, location, desc, balance.toInt(), skills)
+                User(id, pic, fullName, nick, email, location, desc, balance.toInt(), skills, reviews.map { it as Review }.toMutableList())
             } catch (e: Exception) {
                 e.printStackTrace()
+                Log.d(TAG, "except : {$e}")
                 null
             }
-        }
+        }*/
 
         fun makeRequestId(timeSlotId: String, requesterId: String): String{
             return timeSlotId + "_" + requesterId
@@ -193,10 +198,44 @@ class Helper {
             btn.setCompoundDrawablesWithIntrinsicBounds(null,null,drawCheckedIcon, null)
         }
 
+        fun getReviewType(timeSlot: TimeSlot): Int {
+            if(timeSlot.offerer.id == Firebase.auth.uid)
+                return Review.AS_OFFERER_TYPE
+            else if(timeSlot.assignedTo.id == Firebase.auth.uid)
+                return Review.AS_REQUESTER_TYPE
+            else{
+                throw IllegalStateException("Something is wrong..")
+            }
+        }
+
+        fun getReviewer(timeSlot: TimeSlot): CompactUser {
+            if(timeSlot.offerer.id == Firebase.auth.uid)
+                return timeSlot.offerer
+            else if(timeSlot.assignedTo.id == Firebase.auth.uid)
+                return timeSlot.assignedTo
+            else{
+                throw IllegalStateException("Something is wrong..")
+            }
+        }
+
+
+
+
         fun extractTimeSlotId(requestId: String): String {
             return requestId.split("_").first()
 
         }
+
+        fun getUserToReview(timeSlot: TimeSlot): CompactUser {
+            if(timeSlot.offerer.id == Firebase.auth.uid)
+                return timeSlot.assignedTo
+            else if(timeSlot.assignedTo.id == Firebase.auth.uid)
+                return timeSlot.offerer
+            else{
+                throw IllegalStateException("Something is wrong..")
+            }
+        }
+
 
     }
 
