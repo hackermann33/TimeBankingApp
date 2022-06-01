@@ -220,9 +220,31 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
                         btnRequestService.text = "Service requested"
                         Helper.setConfirmationOnButton(requireContext(), btnRequestService)
                     }
-                    Chat.STATUS_ACCEPTED -> { Log.d(TAG, "STATUS ACCEPTED"); chatToAccepted(v, cli)  }
-                    Chat.STATUS_DISCARDED -> { Log.d(TAG, "STATUS DISCARDED"); chatToDiscarded(v) }
+                    else -> {
+                        Helper.setConfirmationOnButton(
+                            requireContext(),
+                            btnRequestService
+                        )
+                        /*Chat.STATUS_ACCEPTED -> {
+                            Log.d(
+                                TAG,
+                                "STATUS ACCEPTED"
+                            );Helper.setConfirmationOnButton(
+                            requireContext(),
+                            btnRequestService
+                        ); chatToAccepted(v, cli)
+                        }
+                        Chat.STATUS_DISCARDED -> {
+                            Log.d(
+                                TAG,
+                                "STATUS DISCARDED"
+                            ); Helper.setConfirmationOnButton(
+                            requireContext(),
+                            btnRequestService
+                        ); chatToDiscarded(v)
+                        }*/
 
+                    }
                 }
 
             }

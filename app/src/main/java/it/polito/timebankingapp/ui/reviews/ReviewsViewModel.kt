@@ -14,6 +14,7 @@ import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
 import it.polito.timebankingapp.model.review.Review
 import it.polito.timebankingapp.model.timeslot.TimeSlot
+import it.polito.timebankingapp.model.user.User
 
 class ReviewsViewModel(application: Application): AndroidViewModel(application) {
 
@@ -36,80 +37,14 @@ class ReviewsViewModel(application: Application): AndroidViewModel(application) 
         db.collection("users").document(review.userToReview.id).update(mapOf("reviews" to FieldValue.arrayUnion(review.copy(published =true)))).addOnSuccessListener {
             Log.d("reviews_add","Successfully added")
         }.addOnFailureListener  { Log.d("reviews_add", "Error on adding") }
-        /*// versione vecchia senza check sulla esistenza
-        val newReviewRef = db.collection("reviews_test")
-            .document(reviewedUserId).collection("userReviews").document()
-
-        newReviewRef.set(review).addOnSuccessListener{
-            Log.d("reviews_add","Successfully added")
-        }.addOnFailureListener{ Log.d("reviews_add", "Error on adding")}*/
-
-/*      //versione con check da debuggare e ripensare
-        val newReviewRef = db.collection("reviews_test")
-            .document(reviewedUserId).collection("userReviews").document()
-
-        val checkReviewRef = db.collection("reviews_test")
-            .document(reviewedUserId).collection("userReviews").whereEqualTo("reviewer.id",Firebase.auth.uid.toString())
-
-        checkReviewRef.get().addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                val document = task.result
-                if (!document.isEmpty) {
-                    newReviewRef.set(review).addOnSuccessListener{
-                        Log.d("reviews_add","Successfully added")
-                    }.addOnFailureListener{ Log.d("reviews_add", "Error on adding")}
-                }
-            } else {
-                Log.d("reviews_add", "Failed with: ", task.exception)
-            }
-        }*/
     }
 
-    fun checkIfAlreadyReviewed(reviewedUserId: String, role: String, reviewedTimeSlotId: String){
-        val checkReviewRef = db.collection("reviews_test")
-            .document(reviewedUserId/*.plus("_").plus(role)*/).collection("userReviews")
-            .whereEqualTo("reviewer.id",Firebase.auth.uid.toString()).whereEqualTo("reviewedTimeSlotId", reviewedTimeSlotId)
+    fun checkIfAlreadyReviewed(timeSlot: TimeSlot, reviewer: User, userToReview: User): Review?{
+        Log.d("checkIfAlready..", "userToReview:$userToReview\n reviewer:$reviewer")
 
-        checkReviewRef.get().addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                val document = task.result
-                _alreadyReviewed.value = !document.isEmpty //esiste già la recensione
-            } else {
-                Log.d("reviews_check", "Failed with: ", task.exception)
-            }
-        }
+        return userToReview.reviews.find{r -> r.referredTimeSlotId == timeSlot.id && r.reviewer.id == reviewer.id}
     }
-    /*
-    fun retrieveRequesterInfo(timeSlot: TimeSlot){
-        val checkReviewRef = db.collection("reviews_test")
-            .document(reviewedUserId).collection("userReviews")
-            .whereEqualTo("reviewer.id",Firebase.auth.uid.toString())
 
-        checkReviewRef.get().addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                val document = task.result
-                _alreadyReviewed.value = !document.isEmpty
-            } else {
-                Log.d("reviews_check", "Failed with: ", task.exception)
-            }
-        }
-    }*/
-
-    fun retrieveAllReviews(userId: String) {
-        //to-do
-        l = db.collection("reviews_test").document(userId)
-            .collection("userReviews").addSnapshotListener {
-                v,e ->
-            if(e == null){
-                val temp = v!!.mapNotNull {
-                        d -> d.toObject<Review>()
-                }
-                _reviews.value = temp
-            }else {
-                _reviews.value = emptyList()
-            }
-        }
-    }
 
     /* Set the review to review inside vm*/
     fun setReview(rev: Review) {

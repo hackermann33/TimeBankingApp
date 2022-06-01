@@ -7,6 +7,7 @@ import java.util.Date
 
 
 data class Review(
+    val referredTimeSlotId: String = "",
     var referredTimeslotTitle: String = "",
     var reviewText: String ="",
     var stars: Int = 0,

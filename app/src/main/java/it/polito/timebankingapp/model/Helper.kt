@@ -210,9 +210,9 @@ class Helper {
 
         fun getReviewer(timeSlot: TimeSlot): CompactUser {
             if(timeSlot.offerer.id == Firebase.auth.uid)
-                return timeSlot.offerer
-            else if(timeSlot.assignedTo.id == Firebase.auth.uid)
                 return timeSlot.assignedTo
+            else if(timeSlot.assignedTo.id == Firebase.auth.uid)
+                return timeSlot.offerer
             else{
                 throw IllegalStateException("Something is wrong..")
             }

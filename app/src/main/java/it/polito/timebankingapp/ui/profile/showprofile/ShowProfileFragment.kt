@@ -20,7 +20,7 @@ import it.polito.timebankingapp.model.Helper
 import it.polito.timebankingapp.model.review.Review
 import it.polito.timebankingapp.model.user.User
 import it.polito.timebankingapp.ui.profile.ProfileViewModel
-import it.polito.timebankingapp.ui.reviews.reviewslist.ReviewsViewAdapter
+import it.polito.timebankingapp.ui.reviews.ReviewsViewAdapter
 
 
 class ShowProfileFragment : Fragment(R.layout.fragment_showprofile) {
