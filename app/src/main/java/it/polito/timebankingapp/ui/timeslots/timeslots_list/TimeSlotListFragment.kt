@@ -119,7 +119,8 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_timeslots_list) {
                         ::showTimeSlotRequest,
                         ::showRequests,
                         type,
-                        userVm.user.value
+                        userVm.user.value,
+                        view
                     )
 
 //                adTmp.data = it.toMutableList()
