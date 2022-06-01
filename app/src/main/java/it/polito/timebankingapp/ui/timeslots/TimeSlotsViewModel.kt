@@ -156,7 +156,7 @@ class TimeSlotsViewModel(application: Application) : AndroidViewModel(applicatio
             }
     }
 
-    fun updateCalendarTimeSlots() {
+    fun updateAssignedTimeSlots() {
         _isLoading.postValue(true)
         clearTimeSlots()
 

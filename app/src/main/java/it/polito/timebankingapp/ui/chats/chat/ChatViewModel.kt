@@ -520,7 +520,7 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
                 }
             }
             else{
-                _chat.value = chat.copy(status = Chat.STATUS_UNINTERESTED)
+                _chat.value = chat.copy(status = Chat.STATUS_DISCARDED)
             }
 
         }.addOnFailureListener{Log.d(TAG, "FAILURE : {$it}") }

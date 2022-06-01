@@ -276,7 +276,6 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
     }
 
     private fun chatToAccepted(v: View,  c: Chat) {
-
         val str = if(c.timeSlot.assignedTo.id == Firebase.auth.uid) getString(R.string.assigned_to_you) else getString(R.string.assigned_to_him)
         tvChatStatus.text = str
         rlSendMsgBar.visibility = View.GONE
