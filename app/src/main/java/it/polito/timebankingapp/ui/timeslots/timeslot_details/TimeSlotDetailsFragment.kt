@@ -74,6 +74,8 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
         if(ts!!.userId == Firebase.auth.uid){
             btnAskInfo.isEnabled = false
             btnAskInfo.visibility = View.INVISIBLE
+            btnRequestService.isEnabled = false
+            btnRequestService.visibility = View.GONE
         }
         /*chatVm.chat.observe(viewLifecycleOwner) {
             btnRequestService.isEnabled = it.status == Chat.STATUS_UNINTERESTED
