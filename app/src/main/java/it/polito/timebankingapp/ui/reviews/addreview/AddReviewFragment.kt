@@ -28,7 +28,7 @@ class AddReviewFragment : Fragment(R.layout.fragment_add_review) {
     //private lateinit var user: User
     private lateinit var newReview: Review
     private lateinit var reviewedTimeSlot: TimeSlot
-
+    private lateinit var reviewedUserId: String
     private lateinit var submitBtn: Button
     private lateinit var ratingBar: RatingBar
     private lateinit var reviewTextView: TextView
@@ -51,19 +51,25 @@ class AddReviewFragment : Fragment(R.layout.fragment_add_review) {
 
         pvm.user.observe(viewLifecycleOwner) {
             if(it.id  != reviewedTimeSlot.userId) { //non sei il creatore del time slot --> sei il requester che vuole recensionare l'offerer
-                rvm.checkIfAlreadyReviewed(reviewedTimeSlot.userId, "Offerer")
+
+                rvm.checkIfAlreadyReviewed(reviewedTimeSlot.userId, "Requester", reviewedTimeSlot.id)
+
+                val tempMap = mutableMapOf<String, String>()
+                tempMap["id"] = reviewedTimeSlot.assignedTo.id
+                tempMap["fullName"] = reviewedTimeSlot.assignedTo.nick
+                tempMap["profilePicUrl"] = reviewedTimeSlot.assignedTo.profilePicUrl
+                reviewedUserId = it.id
+                newReview = Review(reviewer = tempMap, role = "Requester", referredTimeslotId = reviewedTimeSlot.id)
+
+            } else { //sei il creatore --> sei l'offerer che vuole recensire il requester
+                rvm.checkIfAlreadyReviewed(reviewedTimeSlot.userId, "Offerer", reviewedTimeSlot.id)
+
                 val tempMap = mutableMapOf<String, String>()
                 tempMap["id"] = it.id
                 tempMap["fullName"] = it.nick
-                tempMap["profilePicUrl"] = it.profilePicUrl
-                newReview = Review(reviewer = tempMap, role = "Offerer")
-            } else {    //sei il creatore --> sei l'offerer che vuole recensire il requester
-                rvm.checkIfAlreadyReviewed(reviewedTimeSlot.userId, "Requester")
-                val tempMap = mutableMapOf<String, String>()
-                tempMap["id"] = reviewedTimeSlot.offerer.id
-                tempMap["fullName"] = reviewedTimeSlot.offerer.nick
-                tempMap["profilePicUrl"] =  reviewedTimeSlot.offerer.profilePicUrl
-                newReview = Review(reviewer = tempMap, role = "Requester")
+                tempMap["profilePicUrl"] =  it.profilePicUrl
+                reviewedUserId = reviewedTimeSlot.assignedTo.id
+                newReview = Review(reviewer = tempMap, role = "Offerer", referredTimeslotId = reviewedTimeSlot.id)
             }
         }
 
@@ -73,7 +79,7 @@ class AddReviewFragment : Fragment(R.layout.fragment_add_review) {
         warningLabel = v.findViewById(R.id.ratingWarningLabel)
 
         rvm.alreadyReviewed.observe(viewLifecycleOwner){
-            if(!it) { //if a review already exists
+            if(!it) { //if a review does not exists
                 submitBtn.setOnClickListener {
                     val rating = ratingBar.rating
                     val text = reviewTextView.text.toString()
@@ -82,7 +88,7 @@ class AddReviewFragment : Fragment(R.layout.fragment_add_review) {
                         newReview.reviewText = text
                         newReview.stars = rating.toInt()
                         newReview.timestamp = java.util.Date()
-                        rvm.addReview(newReview, reviewedTimeSlot.userId)
+                        rvm.addReview(newReview, reviewedUserId)
                         findNavController().navigateUp()
                         Toast.makeText(activity, "Review successfully added!", Toast.LENGTH_SHORT)
                             .show();
