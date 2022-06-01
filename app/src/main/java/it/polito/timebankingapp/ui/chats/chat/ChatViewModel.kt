@@ -315,8 +315,8 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
             status = Chat.STATUS_UNINTERESTED
         )
 
-        _isLoading.postValue(false)
         _chat.postValue(chat)
+        _isLoading.postValue(false)
 
 
 //        Log.d("ChatViewModel", "chat: ${_chat.value!!}")

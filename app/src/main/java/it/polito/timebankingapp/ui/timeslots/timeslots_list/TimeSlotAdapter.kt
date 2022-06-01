@@ -148,7 +148,7 @@ class TimeSlotAdapter(
             )
         }, requestAction = {
             //downloadUser(item.userId)
-            requestTimeSlot!!(item)
+            requestTimeSlot(item)
 //            val b = bundleOf("profilePic" to item.)
 //            b.putString("profileName", item.userName)
 //            b.putString("profileId", item.userId)
@@ -156,7 +156,7 @@ class TimeSlotAdapter(
                 R.id.action_nav_interestingTimeSlotList_to_nav_chat
             Navigation.findNavController(it).navigate(destination)
         }, showRequestsAction = {
-            showRequests!!(item)
+            showRequests(item)
             Navigation.findNavController(it).navigate(R.id.action_nav_personalTimeSlotList_to_nav_timeSlotChatsList)
         }, showAddReviewFrag = {
             setReview(item)
