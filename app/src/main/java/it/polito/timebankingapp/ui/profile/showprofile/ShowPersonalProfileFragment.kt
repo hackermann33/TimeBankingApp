@@ -74,9 +74,10 @@ class ShowPersonalProfileFragment : Fragment(R.layout.fragment_showprofile) {
                 findNavController().navigate(R.id.action_nav_showProfile_to_nav_reviewsList, bundle)
             }
 
-            val ratingBar = v.findViewById<RatingBar>(R.id.profile_reviews_rating_score)
-
-            if(reviews.isNotEmpty()) {
+            val ratingBarOfferer = v.findViewById<RatingBar>(R.id.profile_reviews_rating_score_offerer)
+            val ratingBarRequester = v.findViewById<RatingBar>(R.id.profile_reviews_rating_score_requester)
+            //if requester --> rating bar requester, else rating bar offerer
+            /*if(reviews.isNotEmpty()) {
                 var den = 0
                 var num = 0
                 for (i in reviews.indices) {
@@ -84,6 +85,24 @@ class ShowPersonalProfileFragment : Fragment(R.layout.fragment_showprofile) {
                     num += reviews[i].stars
                 }
                 ratingBar.rating = num.toFloat() / den
+            }*/
+
+            if(reviews.isNotEmpty()) {
+                var denOff = 0
+                var numOff = 0
+                var denReq = 0
+                var numReq = 0
+                for (i in reviews.indices) {
+                    if(reviews[i].role =="offerer") {
+                        denOff++
+                        numOff += reviews[i].stars
+                    }else{
+                        denReq++
+                        numReq += reviews[i].stars
+                    }
+                }
+                ratingBarOfferer.rating = numOff.toFloat() / denOff
+                ratingBarRequester.rating =numReq.toFloat() / denReq
             }
         }
 
