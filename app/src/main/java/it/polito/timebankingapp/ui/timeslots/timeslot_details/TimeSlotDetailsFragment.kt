@@ -1,11 +1,11 @@
 package it.polito.timebankingapp.ui.timeslots.timeslot_details
 
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.TextView
-import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
@@ -13,7 +13,6 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResultListener
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.chip.Chip
-import com.google.android.material.chip.ChipGroup
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.toObject
@@ -23,7 +22,6 @@ import it.polito.timebankingapp.R
 import it.polito.timebankingapp.model.Chat
 import it.polito.timebankingapp.model.Helper
 import it.polito.timebankingapp.model.timeslot.TimeSlot
-import it.polito.timebankingapp.ui.chats.chat.ChatFragment
 import it.polito.timebankingapp.ui.chats.chat.ChatViewModel
 import it.polito.timebankingapp.ui.profile.ProfileViewModel
 import it.polito.timebankingapp.ui.timeslots.TimeSlotsViewModel
@@ -35,19 +33,18 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
     private val profileViewModel: ProfileViewModel by activityViewModels()
     private val chatVm: ChatViewModel by activityViewModels()
 
-    private lateinit var timeSlot: TimeSlot
-    private lateinit var type: String
+
+    //private lateinit var type: String
+    private var isPersonal: Boolean = false
     private lateinit var userId: String
 
-    private lateinit var btnRequestService: Button
-
-    private var status: Int = Chat.STATUS_UNINTERESTED
+    private lateinit var timeSlot: TimeSlot
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         userId = arguments?.getString("userId").toString()
-        type = arguments?.getString("point_of_origin").toString() //skill_specific or personal
+        //type = arguments?.getString("point_of_origin").toString() //personal or not-personal
 
 
 //        profileViewModel.retrieveTimeSlotProfileData(userId)
@@ -57,7 +54,6 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        btnRequestService = view.findViewById<Button>(R.id.button_request_service)
 
         val ts = globalModel.selectedTimeSlot.value
 
@@ -69,24 +65,26 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
 
 
 
-        val btnAskInfo = view.findViewById<Button>(R.id.openChatButton)
-        if(ts!!.userId == Firebase.auth.uid){
-            btnAskInfo.isEnabled = false
-            btnAskInfo.visibility = View.INVISIBLE
-            btnRequestService.isEnabled = false
-            btnRequestService.visibility = View.GONE
-        }
+
         /*chatVm.chat.observe(viewLifecycleOwner) {
             btnRequestService.isEnabled = it.status == Chat.STATUS_UNINTERESTED
         }*/
 
 
         globalModel.selectedTimeSlot.observe(viewLifecycleOwner) {
-            timeSlot = ts ?: TimeSlot()
+            timeSlot = it
             /*if (ts != null) {
                 if(ts.date.isNotEmpty()) ts.date.replace("_", "/")
             }*/
-            showTimeSlot(view, it)
+            isPersonal = timeSlot.userId == Firebase.auth.uid
+
+            /* If it's not personal, retrieve request infos too */
+            if(!isPersonal)
+                chatVm.getChat(Helper.makeRequestId(timeSlot.id, Firebase.auth.uid!!)).addOnSuccessListener { req ->
+                    showTimeSlot(view, timeSlot, req.toObject<Chat>()!!.status)
+                }
+            else
+                showTimeSlot(view, timeSlot, null)
 
         }
 
@@ -110,50 +108,54 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
     }
 
 
-    private fun showTimeSlot(view: View, ts: TimeSlot?) {
-        view.findViewById<TextView>(R.id.time_slot_title).text = (ts?.title)
-        view.findViewById<TextView>(R.id.time_slot_date).text = ts?.date
-        view.findViewById<TextView>(R.id.time_slot_time).text = ts?.time
-        view.findViewById<TextView>(R.id.time_slot_duration).text = ts?.duration.toString()
-        view.findViewById<TextView>(R.id.time_slot_location).text = ts?.location
-        view.findViewById<TextView>(R.id.time_slot_description).text = ts?.description
-        view.findViewById<TextView>(R.id.time_slot_restrictions).text = ts?.restrictions
+    private fun showTimeSlot(view: View, ts: TimeSlot, requestStatus: Int?) {
+        view.findViewById<TextView>(R.id.time_slot_title).text = (ts.title)
+        view.findViewById<TextView>(R.id.time_slot_date).text = ts.date
+        view.findViewById<TextView>(R.id.time_slot_time).text = ts.time
+        view.findViewById<TextView>(R.id.time_slot_duration).text = ts.duration
+        view.findViewById<TextView>(R.id.time_slot_location).text = ts.location
+        view.findViewById<TextView>(R.id.time_slot_description).text = ts.description
+        view.findViewById<TextView>(R.id.time_slot_restrictions).text = ts.restrictions
+        val chipSkill = view.findViewById<Chip>(R.id.fragment_time_slot_details_ch_skill)
+        chipSkill.layout
+        chipSkill.text = ts.relatedSkill
 
 
+        val clOffererProfile = view.findViewById<ConstraintLayout>(R.id.layout_offerer)
         val civOffererPic = view.findViewById<CircleImageView>(R.id.offerer_pic)
         val pb = view.findViewById<ProgressBar>(R.id.progressBar3)
         val tvOffererName = view.findViewById<TextView>(R.id.offerer_name)
 
+        val btnAskInfo = view.findViewById<Button>(R.id.openChatButton)
+        val btnRequestService = view.findViewById<Button>(R.id.button_request_service)
 
-        Helper.loadImageIntoView(civOffererPic, pb, ts!!.offerer.profilePicUrl)
+
+        Helper.loadImageIntoView(civOffererPic, pb, ts.offerer.profilePicUrl)
         tvOffererName.text = ts.offerer.nick
-        if (type == "skill_specific") {
 
+
+
+        if(isPersonal) {
+            clOffererProfile.visibility = View.GONE
+            btnAskInfo.visibility = View.GONE
+            btnRequestService.visibility = View.GONE
+        }
+        else{
             //se esiste già una richiesta, disabilita btnRequestService
-            if (type == "skill_specific" && ts.status == TimeSlot.TIME_SLOT_STATUS_AVAILABLE)
-                btnRequestService.visibility = View.VISIBLE
-
-            view.findViewById<ConstraintLayout>(R.id.layout_offerer)
-                .also { it.visibility = View.VISIBLE }
-
-            /* Retrieve status of the current chat*/
-            chatVm.getChat(Helper.makeRequestId(ts!!.id, Firebase.auth.uid!!)).addOnSuccessListener {
-                status = it.toObject<Chat>()?.status ?: Chat.STATUS_UNINTERESTED
-
-                if(status != Chat.STATUS_UNINTERESTED) {
-                    btnRequestService.text = "Service requested"
+            /* Retrieve status of the current chat/request */
+                if(requestStatus != Chat.STATUS_UNINTERESTED) {
                     Helper.setConfirmationOnButton(requireContext(), btnRequestService)
-
+                    btnAskInfo.text = "Open chat"
+                    when(requestStatus){
+                       Chat.STATUS_INTERESTED -> btnRequestService.text = "Service requested"
+                       Chat.STATUS_ACCEPTED -> btnRequestService.text = "Service accepted"
+                       Chat.STATUS_COMPLETED -> btnRequestService.text = "Service completed"
+                    }
                 }/*btnRequestService.isEnabled = status == Chat.STATUS_UNINTERESTED    */
-            }
-
-
-            val btnAskInfo = view.findViewById<Button>(R.id.openChatButton)
-
 
 
             btnAskInfo.setOnClickListener {
-                showTimeSlotRequest(timeSlot)
+                showTimeSlotRequest(ts)
                 findNavController().navigate(R.id.action_nav_timeSlotDetails_to_nav_chat)
             }
 
@@ -180,27 +182,17 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
                             .show()
                     }*/
                 val btn = it as Button
-                btn.text = "service requested"
+                btn.text = "Service requested"
                 Helper.setConfirmationOnButton(requireContext(), btn)
 
                 chatVm.requestService(Chat(timeSlot = ts, requester = profileViewModel.user.value!!.toCompactUser(), offerer = ts.offerer))
+                findNavController().navigate(R.id.action_nav_timeSlotDetails_to_nav_chat)
             }
-
         }
-        val chipGroup = view.findViewById<ChipGroup>(R.id.time_slot_skillsGroup)
-
-        chipGroup.removeAllViews()
-        val chip = layoutInflater.inflate(
-            R.layout.chip_layout_show,
-            chipGroup!!.parent.parent as ViewGroup,
-            false
-        ) as Chip
-        chip.text = ts?.relatedSkill
-        chipGroup.addView(chip)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        if(type == "personal")
+        if(isPersonal)
             inflater.inflate(R.menu.menu_editpencil, menu)
         else //skill_specific, completed, interesting
             inflater.inflate(R.menu.menu_showprofile, menu)
@@ -211,7 +203,14 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.option1 -> {
-                if(type == "skill_specific" || type == "interesting" || type == "completed") {
+                if(isPersonal) {//personal
+                    /*Toast.makeText(
+                        context, "Edit time slot",
+                        Toast.LENGTH_SHORT
+                    ).show()*/
+                    editTimeslot() //evoked when the pencil button is pressed
+                }
+                else{
                     /*Toast.makeText(
                         context, "Show user profile",
                         Toast.LENGTH_SHORT
@@ -220,15 +219,9 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
                     profileViewModel.retrieveTimeSlotProfileData(userId)
                     findNavController().navigate(
                         R.id.action_nav_timeSlotDetails_to_nav_showProfile,
-                        bundleOf("point_of_origin" to type, "userId" to userId)
+                        bundleOf("point_of_origin" to "skill_specific", "userId" to userId) /* TODO (Edit this bundle in order to avoid casini ) */
                     )
-                }
-                else if (type == "personal") { //personal
-                    /*Toast.makeText(
-                        context, "Edit time slot",
-                        Toast.LENGTH_SHORT
-                    ).show()*/
-                    editTimeslot() //evoked when the pencil button is pressed
+
                 }
                 true
             }
@@ -238,6 +231,7 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
 
     /* Show chat from the current request of the current timeSlot */
     fun showTimeSlotRequest(timeSlot: TimeSlot) {
+        Log.d("showTimeSlotRequest", "ts: $timeSlot")
         val chatId = Helper.makeRequestId(timeSlot.id, Firebase.auth.uid!!)
             val offerer = timeSlot.offerer
 

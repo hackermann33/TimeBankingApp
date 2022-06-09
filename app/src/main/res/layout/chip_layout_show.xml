@@ -4,7 +4,8 @@
     style="@style/Widget.MaterialComponents.Chip.Filter"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:textColor="@color/white"
     android:checkable="false"
+    android:textColor="@color/white"
     app:chipBackgroundColor="@color/blue"
-    app:ensureMinTouchTargetSize="false" />
+    app:chipMinTouchTargetSize="32dp"
+    app:ensureMinTouchTargetSize="true" />

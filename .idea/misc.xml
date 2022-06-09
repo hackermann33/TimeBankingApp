@@ -81,6 +81,7 @@
         <entry key="app/src/main/res/layout/activity_main_drawer_lay_personal_timeslots.xml" value="0.3578125" />
         <entry key="app/src/main/res/layout/app_bar_main.xml" value="0.3546875" />
         <entry key="app/src/main/res/layout/chip_layout_edit.xml" value="0.3578125" />
+        <entry key="app/src/main/res/layout/chip_layout_show.xml" value="0.18" />
         <entry key="app/src/main/res/layout/content_main.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_chat.xml" value="0.5" />
         <entry key="app/src/main/res/layout/fragment_chat_item.xml" value="0.5" />
@@ -95,7 +96,7 @@
         <entry key="app/src/main/res/layout/fragment_reviews_list.xml" value="0.3578125" />
         <entry key="app/src/main/res/layout/fragment_showprofile.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_skills_list.xml" value="0.25" />
-        <entry key="app/src/main/res/layout/fragment_time_slot_details.xml" value="0.5" />
+        <entry key="app/src/main/res/layout/fragment_time_slot_details.xml" value="0.33" />
         <entry key="app/src/main/res/layout/fragment_timeslots_list.xml" value="0.3546875" />
         <entry key="app/src/main/res/layout/nav_counter.xml" value="0.5" />
         <entry key="app/src/main/res/layout/nav_header_main.xml" value="0.25" />

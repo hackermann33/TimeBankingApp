@@ -20,8 +20,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:weightSum="3">
+            android:orientation="vertical">
 
             <ImageView
                 android:layout_width="match_parent"
@@ -38,8 +37,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="0.7"
-                android:orientation="horizontal"
-                android:visibility="visible">
+                android:orientation="horizontal">
 
 
                 <RelativeLayout
@@ -134,7 +132,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:orientation="vertical"
                 android:padding="16dp">
 
@@ -281,28 +279,26 @@
                     android:layout_height="wrap_content"
                     android:text="@string/fragment_timeslot_related_skill" />
 
-                <com.google.android.material.chip.ChipGroup
-                    android:id="@+id/time_slot_skillsGroup"
-                    android:layout_width="match_parent"
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/fragment_time_slot_details_ch_skill"
+                    android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginTop="10dp"
                     android:layout_marginBottom="20dp"
-                    app:chipSpacingVertical="4dp">
+                    android:backgroundTint="@color/blue"
+                    android:textColor="@color/dark_white"
+                    android:textStyle="bold">
 
-                </com.google.android.material.chip.ChipGroup>
+                </com.google.android.material.chip.Chip>
+
+                <Button
+                    android:id="@+id/button_request_service"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/request_service" />
 
 
             </LinearLayout>
-
-            <Button
-                android:id="@+id/button_request_service"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginBottom="8dp"
-                android:text="@string/request_service"
-                android:visibility="visible" />
 
         </LinearLayout>
     </ScrollView>

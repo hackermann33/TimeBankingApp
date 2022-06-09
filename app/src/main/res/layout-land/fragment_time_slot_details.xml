@@ -290,7 +290,7 @@
                     android:text="@string/fragment_timeslot_related_skill" />
 
                 <com.google.android.material.chip.ChipGroup
-                    android:id="@+id/time_slot_skillsGroup"
+                    android:id="@+id/fragment_time_slot_details_ch_skill"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginTop="10dp"
