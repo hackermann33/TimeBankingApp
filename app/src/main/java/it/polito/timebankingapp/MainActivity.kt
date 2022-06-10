@@ -158,7 +158,7 @@ class MainActivity : AppCompatActivity() {
             if (it != null) {
                 fullName.text = it.fullName
                 emailET.text = it.email
-                tvBalance.text = it.balance.toString()
+                tvBalance.text = it.balance.toString().plus(" hour(s)")
                 Helper.loadImageIntoView(profilePic, pBUserPic, it.profilePicUrl)
             }
         }

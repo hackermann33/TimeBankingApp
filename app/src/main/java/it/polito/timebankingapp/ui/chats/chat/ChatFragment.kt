@@ -270,23 +270,23 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 
         }
 
-
+/*
         civProfilePic.setOnClickListener {
             v.findNavController().navigate(
                 R.id.action_nav_chat_to_nav_showProfile,
                 bundleOf("point_of_origin" to "skill_specific")
             )
         }
-
+*/
         tvTimeSlotTitle.text = cli.timeSlot.title
         tvProfileName.text = otherUser.nick
-
+/*
         tvProfileName.setOnClickListener {
             v.findNavController().navigate(
                 R.id.action_nav_chat_to_nav_showProfile,
                 bundleOf("point_of_origin" to "skill_specific")
             )
-        }
+        }*/
     }
 
     private fun chatToDiscarded(v: View) {
