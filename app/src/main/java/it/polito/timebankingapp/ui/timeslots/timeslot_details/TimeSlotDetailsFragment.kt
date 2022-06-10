@@ -134,7 +134,7 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
         Helper.loadImageIntoView(civOffererPic, pb, ts.offerer.profilePicUrl)
         tvOffererName.text = ts.offerer.nick
         rbOffererReviews.rating = ts.offerer.asOffererReview.score.toFloat()
-        tvReviewsNumber.text = "${ts.offerer.asOffererReview.number} reviews"
+        tvReviewsNumber.text = "${ts.offerer.asOffererReview.number} reviews (as offerer)"
 
 
         clOffererProfile.setOnClickListener {

@@ -209,6 +209,8 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
                 btnDiscardRequest.visibility = View.GONE
                 btnAcceptRequest.visibility = View.GONE
                 btnRequestService.visibility = View.VISIBLE
+                rbReviewScore.rating = otherUser.asOffererReview.score.toFloat()
+                tvReviewsNumber.text = "${otherUser.asOffererReview.number} reviews (as offerer)"
                 Log.d(TAG, "TYPE TO OFFERER")
                 when (cli.status) {
                     Chat.STATUS_UNINTERESTED -> {
@@ -253,7 +255,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
                 btnAcceptRequest.visibility = View.VISIBLE
                 btnRequestService.visibility = View.GONE
                 rbReviewScore.rating = otherUser.asRequesterReview.score.toFloat()
-                tvReviewsNumber.text = "${otherUser.asRequesterReview.number} reviews"
+                tvReviewsNumber.text = "${otherUser.asRequesterReview.number} reviews (as requester)"
                 Log.d(TAG, "TYPE TO REQUESTER")
                 when (cli.status) {
                     Chat.STATUS_UNINTERESTED -> Log.d(TAG, "STATUS UNINTERESTED")
