@@ -110,7 +110,7 @@
     <string name="time_slot_title">time_slot_title</string>
     <string name="requester_or_offerer">Requester or Offerer</string>
     <string name="completed_time_slots">Completed time slots</string>
-    <string name="this_service_has_been_assigned_to_another_user">:( \nThis Service has been assigned to another user!</string>
+    <string name="this_service_has_been_assigned_to_another_user">This Service has been assigned to another user!</string>
     <string name="complete_task">Complete task</string>
     <string name="no_chats_available">No chats available!</string>
     <string name="are_you_really_sure_you_want_to_mark_it_as_completed">Are you really sure you want to mark it as completed?</string>
@@ -119,6 +119,6 @@
     <string name="time_slot_title_label">Time slot Title:</string>
     <string name="request_service">Request service</string>
     <string name="you_assigned_service_to_another">You have already assigned this Service to another user!</string>
-    <string name="assigned_to_him">:) \n You have already assigned this Service to this User</string>
-    <string name="assigned_to_you">:) \nThis Service has already been assigned to you!</string>
+    <string name="assigned_to_him">You have already assigned this Service to this User</string>
+    <string name="assigned_to_you">This Service has already been assigned to you!</string>
 </resources>

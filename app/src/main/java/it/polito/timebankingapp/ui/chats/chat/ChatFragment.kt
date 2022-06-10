@@ -4,22 +4,23 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.View.OnLayoutChangeListener
+import android.view.inputmethod.EditorInfo
 import android.widget.*
+import android.widget.TextView.OnEditorActionListener
 import androidx.cardview.widget.CardView
-import androidx.core.os.bundleOf
+import androidx.core.view.setPadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import de.hdodenhof.circleimageview.CircleImageView
 import it.polito.timebankingapp.R
-import it.polito.timebankingapp.model.Helper
 import it.polito.timebankingapp.model.Chat
 import it.polito.timebankingapp.model.Chat.Companion.STATUS_ACCEPTED
 import it.polito.timebankingapp.model.Chat.Companion.STATUS_DISCARDED
+import it.polito.timebankingapp.model.Helper
 import it.polito.timebankingapp.model.chat.ChatMessage
 import it.polito.timebankingapp.model.user.CompactUser
 
@@ -109,20 +110,32 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         }*/
         textMessage = view.findViewById(R.id.edit_gchat_message)
 
+        textMessage.setOnEditorActionListener(OnEditorActionListener { v, actionId, event ->
+            var handled = false
+            if (actionId == EditorInfo.IME_ACTION_SEND) {
+                sendMessage(btnRequireService)
+                handled = true
+            }
+            handled
+        })
 
         val sendButton = view.findViewById<Button>(R.id.button_gchat_send)
         sendButton.setOnClickListener {
-            if (textMessage.text.isNotEmpty()) {
-                btnRequireService.isEnabled = false
-                sendMessage(
-                    ChatMessage(
-                        Firebase.auth.currentUser!!.uid,
-                        textMessage.text.toString()/*,
+            sendMessage(btnRequireService)
+        }
+    }
+
+    private fun sendMessage(btnRequireService: Button){
+        if (textMessage.text.isNotEmpty()) {
+            btnRequireService.isEnabled = false
+            sendMessage(
+                ChatMessage(
+                    Firebase.auth.currentUser!!.uid,
+                    textMessage.text.toString()/*,
                         Calendar.getInstance(),*/
-                    )
                 )
-                textMessage.text.clear()
-            }
+            )
+            textMessage.text.clear()
         }
     }
 
@@ -265,7 +278,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
                     }
                     Chat.STATUS_DISCARDED -> {
                         Log.d(TAG, "STATUS DISCARDED")
-                        chatToDiscarded(v)
+                        chatToDiscarded(v, cli)
                     }
                 }
             }
@@ -291,8 +304,10 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         }*/
     }
 
-    private fun chatToDiscarded(v: View) {
-        tvChatStatus.text = getString(R.string.this_service_has_been_assigned_to_another_user)
+    private fun chatToDiscarded(v: View, c: Chat) {
+        val str = if(c.timeSlot.userId == Firebase.auth.uid) "You've already discarded this user!" else getString(R.string.this_service_has_been_assigned_to_another_user)
+        tvChatStatus.text = str
+        tvChatStatus.setPadding(10)
         rlSendMsgBar.visibility = View.GONE
         cvMessageChatStatus.visibility = View.VISIBLE
         btnRequestService.isEnabled = false
@@ -301,8 +316,10 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
     }
 
     private fun chatToAccepted(v: View,  c: Chat) {
+
         val str = if(c.timeSlot.assignedTo.id == Firebase.auth.uid) getString(R.string.assigned_to_you) else getString(R.string.assigned_to_him)
         tvChatStatus.text = str
+        tvChatStatus.setPadding(10)
         rlSendMsgBar.visibility = View.GONE
         cvMessageChatStatus.visibility = View.VISIBLE
 

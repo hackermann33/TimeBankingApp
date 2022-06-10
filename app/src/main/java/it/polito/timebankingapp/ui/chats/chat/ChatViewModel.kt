@@ -166,10 +166,10 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
             val timestamp = get("timestamp") as Timestamp
 
 
-            val cal = Calendar.getInstance()
-            cal.time = timestamp.toDate()
+            //val cal = Calendar.getInstance()
+            //cal.time = timestamp.toDate()
 
-            ChatMessage(userId, messageText/*, cal*/)
+            ChatMessage(userId, messageText, timestamp.toDate()/*, cal*/)
         } catch (e: Exception) {
             e.printStackTrace()
             null
