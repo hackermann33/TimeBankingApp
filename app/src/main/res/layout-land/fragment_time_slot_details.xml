@@ -82,7 +82,7 @@
                     android:text="nickname"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                     android:textStyle="bold"
-                    app:layout_constraintBottom_toTopOf="@+id/ratingBar2"
+                    app:layout_constraintBottom_toTopOf="@+id/fragment_time_slot_details_rb_offerer_review"
                     app:layout_constraintEnd_toStartOf="@+id/openChatButton"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintHorizontal_chainStyle="spread"
@@ -92,7 +92,7 @@
                     app:layout_constraintVertical_chainStyle="packed" />
 
                 <RatingBar
-                    android:id="@+id/ratingBar2"
+                    android:id="@+id/fragment_time_slot_details_rb_offerer_review"
                     style="@style/Widget.AppCompat.RatingBar.Small"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

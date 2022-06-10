@@ -15,7 +15,7 @@
         <item name="actionBarStyle">@style/Widget.MaterialComponents.ActionBar.Primary</item>
         <item name="android:textColor">@color/dark_white</item>
 
-        <item name="android:colorBackground">@color/background_dark</item>
+        <item name="android:colorBackground">@color/background</item>
         <item name="colorOnBackground">#212121</item>
 
         <item name="colorError">#F44336</item>

@@ -242,8 +242,9 @@ class TimeSlotsViewModel(application: Application) : AndroidViewModel(applicatio
     }
 
     fun setSelectedTimeSlot(ts: TimeSlot) {
-
+        _isLoading.postValue(true)
         _selectedTimeSlot.value = ts
+        _isLoading.postValue(false)
     }
 
     fun setFilteringSkill(skill: String) {

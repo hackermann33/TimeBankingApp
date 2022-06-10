@@ -17,9 +17,10 @@
     <color name="secondary_text">#757575</color>
     <color name="icons">#FFFFFF</color>
     <color name="divider">#BDBDBD</color>
+    <color name="clicked">#E1E4ED</color>
 
     <color name="background">#FAFAFA</color>
-    <color name="background_dark">#2c2c2c</color>
+
 
     <!--
     Color attributes consist mainly of primary, secondary, error, surface and background colors, along with their respective secondary variants and “on” colors. Some of these have been reused from the AppCompat themes (eg. colorPrimary, colorError and android:colorBackground):

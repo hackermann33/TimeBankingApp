@@ -2,7 +2,6 @@ package it.polito.timebankingapp.ui.chats.chat
 
 import android.app.Application
 import android.util.Log
-import android.view.SurfaceControl
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -405,22 +404,23 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
     /* Function to call to get Interested */
     fun requestService(chat: Chat) {
 //        Log.d("chatViewModel", _chat.value!!.toString())
+        _isLoading.postValue(true)
         val requestRef = db.collection("requests").document(chat.requestId)
-        val cli = chat
-        val req = cli.copy(
+        val interestedChat = chat.copy(
             status = Chat.STATUS_INTERESTED
         )
 
-        requestRef.set(req).addOnSuccessListener { v ->
-            _chat.postValue(chat)
-            registerMessagesListener(chat)
+        requestRef.set(interestedChat).addOnSuccessListener { v ->
+            _chat.postValue(interestedChat)
+            _isLoading.postValue(false)
+            registerMessagesListener(interestedChat)
 
             val msg = ChatMessage(
-                messageText = Helper.requestMessage(cli),
-                userId = cli.requester.id,
+                messageText = Helper.requestMessage(interestedChat),
+                userId = interestedChat.requester.id,
                 timestamp = Date()
             )
-            sendMessageAndUpdate(cli, msg)
+            sendMessageAndUpdate(interestedChat, msg)
         }
     }
 

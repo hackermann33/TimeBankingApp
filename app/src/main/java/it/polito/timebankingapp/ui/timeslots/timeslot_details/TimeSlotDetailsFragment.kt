@@ -5,12 +5,14 @@ import android.util.Log
 import android.view.*
 import android.widget.Button
 import android.widget.ProgressBar
+import android.widget.RatingBar
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResultListener
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.chip.Chip
 import com.google.android.material.snackbar.Snackbar
@@ -55,9 +57,6 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
         super.onViewCreated(view, savedInstanceState)
 
 
-        val ts = globalModel.selectedTimeSlot.value
-
-
         /*if( status != Chat.STATUS_UNINTERESTED) {
             btnRequestService.text = "SERVICE REQUESTED"
             Helper.setConfirmationOnButton(requireContext(), btnRequestService)
@@ -81,7 +80,7 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
             /* If it's not personal, retrieve request infos too */
             if(!isPersonal)
                 chatVm.getChat(Helper.makeRequestId(timeSlot.id, Firebase.auth.uid!!)).addOnSuccessListener { req ->
-                    showTimeSlot(view, timeSlot, req.toObject<Chat>()!!.status)
+                    showTimeSlot(view, timeSlot, req.toObject<Chat>()?.status ?: Chat().status)
                 }
             else
                 showTimeSlot(view, timeSlot, null)
@@ -125,6 +124,8 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
         val civOffererPic = view.findViewById<CircleImageView>(R.id.offerer_pic)
         val pb = view.findViewById<ProgressBar>(R.id.progressBar3)
         val tvOffererName = view.findViewById<TextView>(R.id.offerer_name)
+        val rbOffererReviews = view.findViewById<RatingBar>(R.id.fragment_time_slot_details_rb_offerer_review)
+        val tvReviewsNumber = view.findViewById<TextView>(R.id.fragment_time_slot_details_tv_reviews_number)
 
         val btnAskInfo = view.findViewById<Button>(R.id.openChatButton)
         val btnRequestService = view.findViewById<Button>(R.id.button_request_service)
@@ -132,7 +133,17 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
 
         Helper.loadImageIntoView(civOffererPic, pb, ts.offerer.profilePicUrl)
         tvOffererName.text = ts.offerer.nick
+        rbOffererReviews.rating = ts.offerer.asOffererReview.score.toFloat()
+        tvReviewsNumber.text = "${ts.offerer.asOffererReview.number} reviews"
 
+
+        clOffererProfile.setOnClickListener {
+            profileViewModel.retrieveTimeSlotProfileData(ts.userId)
+            findNavController().navigate(
+                R.id.action_nav_timeSlotDetails_to_nav_showProfile,
+                bundleOf("point_of_origin" to "skill_specific", "userId" to userId), /* TODO (Edit this bundle in order to avoid casini ) */
+            )
+        }
 
 
         if(isPersonal) {
@@ -143,15 +154,21 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
         else{
             //se esiste già una richiesta, disabilita btnRequestService
             /* Retrieve status of the current chat/request */
-                if(requestStatus != Chat.STATUS_UNINTERESTED) {
-                    Helper.setConfirmationOnButton(requireContext(), btnRequestService)
-                    btnAskInfo.text = "Open chat"
-                    when(requestStatus){
-                       Chat.STATUS_INTERESTED -> btnRequestService.text = "Service requested"
-                       Chat.STATUS_ACCEPTED -> btnRequestService.text = "Service accepted"
-                       Chat.STATUS_COMPLETED -> btnRequestService.text = "Service completed"
-                    }
-                }/*btnRequestService.isEnabled = status == Chat.STATUS_UNINTERESTED    */
+            btnAskInfo.visibility = View.VISIBLE
+            btnRequestService.visibility = View.VISIBLE
+
+            if(requestStatus != Chat.STATUS_UNINTERESTED) {
+                Helper.setConfirmationOnButton(requireContext(), btnRequestService)
+                clOffererProfile.visibility = View.VISIBLE
+                btnAskInfo.text = "Open chat"
+                when(requestStatus){
+                    Chat.STATUS_INTERESTED -> btnRequestService.text = "Service requested"
+                    Chat.STATUS_ACCEPTED -> btnRequestService.text = "Service accepted"
+                    Chat.STATUS_COMPLETED -> btnRequestService.text = "Service completed"
+                }
+            }else { //STATUS_UNINTERESTED
+                clOffererProfile.visibility = View.VISIBLE
+            }
 
 
             btnAskInfo.setOnClickListener {
@@ -181,10 +198,11 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
                         Snackbar.make(view, "Oops, something gone wrong!", Snackbar.LENGTH_SHORT)
                             .show()
                     }*/
-                val btn = it as Button
+                /*val btn = it as Button
                 btn.text = "Service requested"
                 Helper.setConfirmationOnButton(requireContext(), btn)
 
+                */
                 chatVm.requestService(Chat(timeSlot = ts, requester = profileViewModel.user.value!!.toCompactUser(), offerer = ts.offerer))
                 findNavController().navigate(R.id.action_nav_timeSlotDetails_to_nav_chat)
             }
