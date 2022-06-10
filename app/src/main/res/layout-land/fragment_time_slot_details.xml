@@ -24,19 +24,14 @@
             android:orientation="vertical"
             android:weightSum="3">
 
+
             <ImageView
-                android:id="@+id/imageView2"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="2"
                 android:adjustViewBounds="true"
                 android:contentDescription="@string/timeslot_splash"
                 android:scaleType="centerCrop"
-                app:layout_constraintBottom_toTopOf="@+id/scrollView2"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_weight="1"
                 app:srcCompat="@drawable/timeslot_splash_land"
                 tools:src="@tools:sample/backgrounds/scenic" />
 
@@ -44,13 +39,19 @@
                 android:id="@+id/layout_offerer"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="0.8"
-                android:orientation="horizontal">
+                android:layout_weight="1"
+                android:background="@drawable/change_color"
+                android:clickable="true"
+                android:focusable="true"
+                android:orientation="horizontal"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:visibility="visible">
 
                 <RelativeLayout
                     android:id="@+id/relativeLayout"
-                    android:layout_width="60dp"
-                    android:layout_height="220dp"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
                     android:layout_marginStart="8dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintDimensionRatio="1:1"
@@ -76,75 +77,65 @@
                     android:id="@+id/offerer_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="8dp"
+                    android:layout_marginStart="8dp"
                     android:fontFamily="sans-serif-medium"
-                    android:text="nickname"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                     android:textStyle="bold"
                     app:layout_constraintBottom_toTopOf="@+id/fragment_time_slot_details_rb_offerer_review"
-                    app:layout_constraintEnd_toStartOf="@+id/openChatButton"
-                    app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintHorizontal_chainStyle="spread"
                     app:layout_constraintStart_toEndOf="@+id/relativeLayout"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.0"
-                    app:layout_constraintVertical_chainStyle="packed" />
+                    app:layout_constraintVertical_chainStyle="packed"
+                    tools:text="nickname" />
 
                 <RatingBar
                     android:id="@+id/fragment_time_slot_details_rb_offerer_review"
                     style="@style/Widget.AppCompat.RatingBar.Small"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
                     android:contentDescription="@string/rating_bar"
                     android:numStars="5"
-                    android:rating="3"
                     android:theme="@style/RatingBar"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/openChatButton"
-                    app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toEndOf="@+id/relativeLayout"
                     app:layout_constraintTop_toBottomOf="@+id/offerer_name" />
 
 
-                <Button
-                    android:id="@+id/openChatButton"
-                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                <TextView
+                    android:id="@+id/fragment_time_slot_details_tv_reviews_number"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="16dp"
-                    android:layout_marginBottom="8dp"
-                    android:backgroundTint="@color/background"
-                    android:backgroundTintMode="add"
-                    android:elevation="2dp"
-                    android:text="ask for info"
+                    android:layout_marginStart="4dp"
                     android:textColor="@color/accent"
+                    app:layout_constraintBottom_toBottomOf="@+id/fragment_time_slot_details_rb_offerer_review"
+                    app:layout_constraintStart_toEndOf="@+id/fragment_time_slot_details_rb_offerer_review"
+                    app:layout_constraintTop_toTopOf="@+id/fragment_time_slot_details_rb_offerer_review"
+                    tools:text="0 reviews" />
+
+                <ImageView
+                    android:id="@+id/imageView4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:src="@drawable/ic_baseline_keyboard_arrow_right_24"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:strokeColor="@color/accent" />
-
-                <View
-                    android:id="@+id/divider1"
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:background="?android:attr/listDivider"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent" />
-
+                    app:layout_constraintTop_toTopOf="parent" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
+            <View
+                android:id="@+id/divider1"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="?android:attr/listDivider" />
+
             <LinearLayout
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="16dp"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical">
-
+                android:orientation="vertical"
+                android:padding="16dp">
 
                 <TextView
                     android:id="@+id/time_slot_title"
@@ -152,8 +143,62 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/roboto_medium"
-                    android:text="@string/fragment_timeslot_title"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                    tools:text="@string/fragment_timeslot_title" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/credits_label"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Price: " />
+
+                    <TextView
+                        android:id="@+id/time_slot_duration"
+
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:paddingStart="2dp"
+                        android:paddingEnd="2dp"
+                        android:textStyle="bold"
+                        tools:text="0" />
+
+                    <TextView
+                        android:id="@+id/textView8"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="2dp"
+                        android:gravity="center"
+                        android:text="&#x1F551;" />
+
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/openChatButton"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:backgroundTint="@color/background"
+                    android:backgroundTintMode="add"
+                    android:elevation="2dp"
+                    android:text="ask for info"
+                    android:textColor="@color/accent"
+                    android:visibility="invisible"
+                    app:strokeColor="@color/accent" />
+
+                <Button
+                    android:id="@+id/button_request_service"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/request_service"
+                    android:visibility="invisible" />
 
                 <View
                     android:id="@+id/divider"
@@ -197,26 +242,6 @@
 
                 <View
                     android:id="@+id/divider3"
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="8dp"
-                    android:background="?android:attr/listDivider" />
-
-                <TextView
-                    style="@style/ItemLabel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/fragment_timeslot_duration" />
-
-                <TextView
-                    android:id="@+id/time_slot_duration"
-                    style="@style/Item"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/fragment_timeslot_duration" />
-
-                <View
-                    android:id="@+id/divider4"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_marginTop="8dp"
@@ -289,22 +314,19 @@
                     android:layout_height="wrap_content"
                     android:text="@string/fragment_timeslot_related_skill" />
 
-                <com.google.android.material.chip.ChipGroup
+                <com.google.android.material.chip.Chip
                     android:id="@+id/fragment_time_slot_details_ch_skill"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginTop="10dp"
                     android:layout_marginBottom="20dp"
-                    app:chipSpacingVertical="4dp">
+                    android:backgroundTint="@color/blue"
+                    android:textColor="@color/dark_white"
+                    android:textStyle="bold">
 
-                </com.google.android.material.chip.ChipGroup>
-                <Button
-                    android:id="@+id/button_request_service"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:backgroundTint="@color/primary_dark"
-                    android:text="@string/request_service"
-                    android:visibility="gone" />
+                </com.google.android.material.chip.Chip>
+
+
             </LinearLayout>
 
         </LinearLayout>

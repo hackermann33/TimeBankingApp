@@ -130,13 +130,23 @@ class ShowProfileFragment : Fragment(R.layout.fragment_showprofile) {
         val chipGroup = view.findViewById<ChipGroup>(R.id.skillsGroup)
 
         chipGroup.removeAllViews()
-        usr.skills.forEach { skill ->
+            if(usr.skills.size > 0)
+            usr.skills.forEach { skill ->
+                val chip = layoutInflater.inflate(
+                    R.layout.chip_layout_show,
+                    chipGroup!!.parent.parent as ViewGroup,
+                    false
+                ) as Chip
+                chip.text = skill
+                chipGroup.addView(chip)
+            }
+        else {
             val chip = layoutInflater.inflate(
                 R.layout.chip_layout_show,
                 chipGroup!!.parent.parent as ViewGroup,
                 false
             ) as Chip
-            chip.text = skill
+            chip.text = "No skills selected!"
             chipGroup.addView(chip)
         }
 
