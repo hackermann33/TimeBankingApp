@@ -29,6 +29,7 @@
         android:layout_height="wrap_content"
         android:text="@string/chat_fullname"
         android:textSize="16sp"
+        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/card_gchat_message_other"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.1"
@@ -53,6 +54,7 @@
         <LinearLayout
             android:id="@+id/layout_gchat_container_other"
             android:layout_width="wrap_content"
+            android:layout_marginBottom="4dp"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
@@ -74,6 +76,7 @@
 
 
     <TextView
+        android:layout_marginBottom="4dp"
         android:id="@+id/text_gchat_timestamp_other"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
