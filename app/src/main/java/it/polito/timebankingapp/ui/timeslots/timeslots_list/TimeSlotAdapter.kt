@@ -134,10 +134,7 @@ class TimeSlotAdapter(
                 }
             }
         }, detailAction = {
-
-
             selectTimeSlot(item)
-
         }, requestAction = {
             //downloadUser(item.userId)
             requestTimeSlot(item)

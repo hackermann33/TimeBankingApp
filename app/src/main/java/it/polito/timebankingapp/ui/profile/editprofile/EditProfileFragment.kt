@@ -12,6 +12,7 @@ import android.media.ExifInterface
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.util.Patterns
 import android.view.MenuItem
 import android.view.View
@@ -33,22 +34,12 @@ import it.polito.timebankingapp.R
 import it.polito.timebankingapp.model.Helper
 import it.polito.timebankingapp.model.user.User
 import it.polito.timebankingapp.ui.profile.ProfileViewModel
+import it.polito.timebankingapp.ui.timeslots.TimeSlotsViewModel
 
 
 /* Global lists of skills,
    Every-time a user add a new skill in his profile, if not present in this list, it will be added!  */
-private var SKILLS = arrayOf(
-    "Gardening",
-    "Tutoring",
-    "Baby sitting",
-    "Driver",
-    "C developer",
-    "Grocery shopping",
-    "Cleaning and organization",
-    "Cooking",
-    "Data analytics",
-    "Microsoft Excel",
-)
+
 
 const val REQUEST_PIC = 1
 
@@ -57,17 +48,20 @@ class EditProfileFragment : Fragment(R.layout.fragment_editprofile) {
     private lateinit var ivProfilePic: ImageView
     private lateinit var pbProfilePic: ProgressBar
 
-
     private var usr: User = User()
+    private lateinit var allSkills : List<String>
     private lateinit var skillsGroup: ChipGroup
+
 
     private lateinit var v : View
 
     private val vm by activityViewModels<ProfileViewModel>()
+    private val timeSlotsVm by activityViewModels<TimeSlotsViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
+        allSkills = timeSlotsVm.skillList.value ?: listOf<String>()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -121,8 +115,9 @@ class EditProfileFragment : Fragment(R.layout.fragment_editprofile) {
 
             if (skillStr.isNotEmpty()) {
                 /*Adding to the global list of skill hints*/
-                if (!SKILLS.contains(skillStr))
-                    SKILLS = SKILLS.plus(skillStr)
+                if (!allSkills.contains(skillStr))
+                    timeSlotsVm.addNewSkill(skillStr).addOnSuccessListener { Log.d("EditProfile", "skill add success") }
+                        .addOnFailureListener { Log.d("EditProfile", "skill add failure: $it") }
                 if (!usr.skills.contains(skillStr)) {
                     usr.skills.add(skillStr)
                     addSkillChip(skillStr)
@@ -199,7 +194,7 @@ class EditProfileFragment : Fragment(R.layout.fragment_editprofile) {
         val adapter: ArrayAdapter<String> = ArrayAdapter<String>(
             this.requireContext(),
             android.R.layout.simple_dropdown_item_1line,
-            SKILLS.filter { sk -> !usr.skills.contains(sk) }
+            allSkills.filter { sk -> !usr.skills.contains(sk) }
         )
         val newSkillView = v.findViewById<View>(R.id.editNewSkill) as AutoCompleteTextView
         newSkillView.setAdapter(adapter)

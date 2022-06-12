@@ -46,35 +46,16 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         userId = arguments?.getString("userId").toString()
-        //type = arguments?.getString("point_of_origin").toString() //personal or not-personal
 
-
-//        profileViewModel.retrieveTimeSlotProfileData(userId)
         setHasOptionsMenu(true)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
-        /*if( status != Chat.STATUS_UNINTERESTED) {
-            btnRequestService.text = "SERVICE REQUESTED"
-            Helper.setConfirmationOnButton(requireContext(), btnRequestService)
-        }*/
-
-
-
-
-        /*chatVm.chat.observe(viewLifecycleOwner) {
-            btnRequestService.isEnabled = it.status == Chat.STATUS_UNINTERESTED
-        }*/
-
-
         globalModel.selectedTimeSlot.observe(viewLifecycleOwner) {
             timeSlot = it
-            /*if (ts != null) {
-                if(ts.date.isNotEmpty()) ts.date.replace("_", "/")
-            }*/
+
             isPersonal = timeSlot.userId == Firebase.auth.uid
 
             /* If it's not personal, retrieve request infos too */

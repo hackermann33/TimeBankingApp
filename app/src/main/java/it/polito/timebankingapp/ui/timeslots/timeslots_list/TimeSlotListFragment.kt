@@ -9,8 +9,10 @@ import android.view.View
 import android.widget.*
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResultListener
+import androidx.navigation.NavDestination
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -102,20 +104,6 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_timeslots_list) {
             }
         }
 
-/*
-        val adTmp = TimeSlotAdapter(
-            vm.timeSlots.value?.toMutableList() ?: mutableListOf(),
-            ::selectTimeSlot,
-            ::requestTimeSlot,
-            ::showRequests,
-            type
-        )
-        rv.adapter = adTmp
-*/
-
-
-        //var skill = arguments?.getString("skill")
-
         vm.isLoading.observe(viewLifecycleOwner) { isLoading ->
             if(!isLoading) {
                 if(vm.timeSlots.value!!.isEmpty())
@@ -133,7 +121,6 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_timeslots_list) {
                         view
                     )
 
-//                adTmp.data = it.toMutableList()
                     rv.adapter = adTmp
 
                     if (type == "skill_specific") {
@@ -144,35 +131,6 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_timeslots_list) {
                 }
             }
         }
-
-        /*
-        vm.timeSlots.observe(viewLifecycleOwner) {
-            if (it.isNotEmpty()) {
-                setVoidMessage(view, false)
-
-                val adTmp = TimeSlotAdapter(
-                    it.toMutableList(),
-                    ::selectTimeSlot,
-                    ::showTimeSlotRequest,
-                    ::showRequests,
-                    type,
-                    userVm.user.value
-                )
-
-//                adTmp.data = it.toMutableList()
-                rv.adapter = adTmp
-
-                if (type == "skill_specific") {
-                    setFilteringOptions(view, adTmp)
-                    adTmp.setFilter(filterKeywords, filterParameter)
-                    adTmp.setOrder(filterParameter, orderingDirection)
-                }
-            } *//*else {
-                if(vm.justUpdated)
-                    setVoidMessage(view, true)
-            }*//*
-        }
-*/
     }
 
 
@@ -307,7 +265,8 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_timeslots_list) {
             else -> {R.id.nav_timeSlotDetails}
         }
         /* Added this check in order to avoid crash due to fast multiple-click on emulator*/
-        if(findNavController().currentDestination?.id==R.id.nav_skillSpecificTimeSlotList){
+
+        if(findNavController().currentDestination?.isInTimeSlotListFragment() ?: false){
             Navigation.findNavController(requireView()).navigate(
                 destination,
                 bundleOf("point_of_origin" to type, "userId" to ts.userId)
@@ -349,6 +308,10 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_timeslots_list) {
         }
     }
 
+}
 
+private fun NavDestination.isInTimeSlotListFragment(): Boolean {
+    return this.id == R.id.nav_personalTimeSlotList || id == R.id.nav_skillSpecificTimeSlotList
+            || id == R.id.nav_interestingTimeSlotList || id == R.id.nav_completedTimeSlotList
 
 }

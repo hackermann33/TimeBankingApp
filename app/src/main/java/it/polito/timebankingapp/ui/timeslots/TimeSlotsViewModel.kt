@@ -8,6 +8,7 @@ import androidx.lifecycle.MutableLiveData
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.DocumentReference
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.ktx.toObject
@@ -307,6 +308,10 @@ class TimeSlotsViewModel(application: Application) : AndroidViewModel(applicatio
                         }
                     }
             }
+    }
+
+    fun addNewSkill(skillStr: String): Task<Void> {
+        return db.collection("skills").document(skillStr).set(mapOf<String,Any>())
     }
 }
 /*
