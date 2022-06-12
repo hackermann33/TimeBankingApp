@@ -7,9 +7,11 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.widget.*
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResultListener
+import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -205,7 +207,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_timeslots_list) {
     }
 
     fun showTimeSlotRequest(timeSlot: TimeSlot) {
-        chatVm.clearChat()
+        //chatVm.clearChat()
         chatVm.selectChatFromTimeSlot(timeSlot,userVm.user.value!!.toCompactUser())
         //chatVm.updateUserInfo(timeSlot.userId)
     }
@@ -298,6 +300,20 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_timeslots_list) {
 
     private fun selectTimeSlot(ts: TimeSlot) {
         /*userVm.retrieveTimeSlotProfileData(ts.userId)*/
+        val destination = when(type) {
+            "skill_specific" -> R.id.action_skillSpecificTimeSlotListFragment_to_nav_timeSlotDetails
+            "personal" -> R.id.action_nav_personalTimeSlotList_to_nav_timeSlotDetails
+            "interesting" -> R.id.action_nav_interestingTimeSlotList_to_nav_timeSlotDetails
+            else -> {R.id.nav_timeSlotDetails}
+        }
+        /* Added this check in order to avoid crash due to fast multiple-click on emulator*/
+        if(findNavController().currentDestination?.id==R.id.nav_skillSpecificTimeSlotList){
+            Navigation.findNavController(requireView()).navigate(
+                destination,
+                bundleOf("point_of_origin" to type, "userId" to ts.userId)
+            )
+        }
+
         vm.setSelectedTimeSlot(ts)
 
     }

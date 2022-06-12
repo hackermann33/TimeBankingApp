@@ -93,7 +93,6 @@ class ChatListFragment : Fragment(R.layout.fragment_chat_list) {
 
     fun selectChat(chat: Chat) {
         //chat.unreadMsgs = 0
-        chatViewModel.registerMessagesListener(chat)
         chatViewModel.selectChatFromChatList(chat)
     }
 

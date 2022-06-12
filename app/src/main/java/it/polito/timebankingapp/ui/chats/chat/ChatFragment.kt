@@ -1,15 +1,15 @@
 package it.polito.timebankingapp.ui.chats.chat
 
 import android.os.Bundle
+import android.text.InputType
 import android.util.Log
 import android.view.View
 import android.view.View.OnLayoutChangeListener
 import android.widget.*
 import androidx.cardview.widget.CardView
-import androidx.core.os.bundleOf
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.ktx.auth
@@ -19,9 +19,11 @@ import it.polito.timebankingapp.R
 import it.polito.timebankingapp.model.Helper
 import it.polito.timebankingapp.model.Chat
 import it.polito.timebankingapp.model.Chat.Companion.STATUS_ACCEPTED
+import it.polito.timebankingapp.model.Chat.Companion.STATUS_COMPLETED
 import it.polito.timebankingapp.model.Chat.Companion.STATUS_DISCARDED
 import it.polito.timebankingapp.model.chat.ChatMessage
 import it.polito.timebankingapp.model.user.CompactUser
+import java.util.*
 
 
 class ChatFragment : Fragment(R.layout.fragment_chat) {
@@ -39,7 +41,8 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 
     private lateinit var rlSendMsgBar: RelativeLayout
     private lateinit var cvMessageChatStatus: CardView
-    private lateinit var tvChatStatus: TextView
+    private lateinit var tvChatStatusTitle: TextView
+    private lateinit var tvChatStatusInfo: TextView
 
 
     private val chatVm: ChatViewModel by activityViewModels()
@@ -53,11 +56,14 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
                 updateChatUi(view, cli)
         }
         */
-        chatVm.isLoading.observe(viewLifecycleOwner) {
-            if (!it) {
-                currentChat = chatVm.chat.value!!
-                updateChatUi(view, currentChat)
-            }
+        chatVm.chat.observe(viewLifecycleOwner) {
+            //if (!it) {
+                if(!it.isEmpty()) {
+                    Log.d(TAG, "UI rendering... $it ${Calendar.getInstance().timeInMillis}")
+                    currentChat = it// chatVm.chat.value!!
+                    updateChatUi(view, currentChat)
+                }
+                //}
         }
 
         setRecyclerViewAdapter(view)
@@ -66,66 +72,31 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
             adTmp = ChatViewAdapter(
                 it.toMutableList(),
                 ::sendMessage,
-                chatVm.chat.value?.status == STATUS_DISCARDED || chatVm.chat.value?.status == STATUS_ACCEPTED
+                chatVm.chat.value?.status == STATUS_COMPLETED
             )
 
             rv.adapter = adTmp
             rv.scrollToPosition(adTmp.itemCount - 1)
         }
 
-        val sendMsgBar: RelativeLayout = view.findViewById(R.id.layout_gchat_chatbox)
-        val cardChatDiscarded: CardView = view.findViewById(R.id.card_chat_discarded)
-        val tvChatDiscarded: TextView = view.findViewById(R.id.tv_chat_discarded)
-        val btnAcceptRequest = view.findViewById<Button>(R.id.fragment_chat_btn_accept)
-        val btnDiscardRequest = view.findViewById<TextView>(R.id.fragment_chat_btn_discard)
-        val btnRequireService = view.findViewById<Button>(R.id.fragment_chat_btn_request_service)
+        rlSendMsgBar = view.findViewById(R.id.layout_gchat_chatbox)
+        cvMessageChatStatus = view.findViewById(R.id.fragment_chat_cv_status)
+
+        Log.d(TAG, "\n\nstatus visibile: ${cvMessageChatStatus.isVisible}")
+
+        tvChatStatusTitle = view.findViewById(R.id.fragment_chat_tv_status_main)
+        tvChatStatusInfo = view.findViewById(R.id.fragment_chat_tv_status_second)
+
+        btnAcceptRequest = view.findViewById(R.id.fragment_chat_btn_accept)
+        btnDiscardRequest = view.findViewById(R.id.fragment_chat_btn_discard)
+        btnRequestService = view.findViewById(R.id.fragment_chat_btn_request_service)
 
 
-        /*if(chatVm.chat.value?.status == STATUS_DISCARDED) {
-            if(chatVm.chat.value?.offerer!!.id == Firebase.auth.uid) *//* Discarded and I'm Offerer *//*
-                tvChatDiscarded.text = getString(R.string.you_assigned_service_to_another)
-            if(chatVm.chat.value?.requester!!.id == Firebase.auth.uid) *//* Discarded and I'm Requester *//*
-                tvChatDiscarded.text = getString(R.string.this_service_has_been_assigned_to_another_user)
-            sendMsgBar.visibility = View.GONE
-            cardChatDiscarded.visibility = View.VISIBLE
-            btnRequireService.isEnabled = false
-            btnAcceptRequest.isEnabled = false
-            btnDiscardRequest.isEnabled = false
-        }
-        if(chatVm.chat.value?.status == STATUS_ACCEPTED){
-            if(chatVm.chat.value?.offerer!!.id == Firebase.auth.uid) *//* Accepted and I'm Offerer *//*
-                tvChatDiscarded.text = getString(R.string.assigned_to_him)
-            if(chatVm.chat.value?.requester!!.id == Firebase.auth.uid) *//* Accepted and I'm Requester *//*
-                tvChatDiscarded.text = getString(R.string.assigned_to_you)
-            sendMsgBar.visibility = View.GONE
-            cardChatDiscarded.visibility = View.VISIBLE
-            btnRequireService.isEnabled = false
-            btnAcceptRequest.isEnabled = false
-            btnDiscardRequest.isEnabled = false
-        }*/
+
         textMessage = view.findViewById(R.id.edit_gchat_message)
 
-
-        val sendButton = view.findViewById<Button>(R.id.button_gchat_send)
-        sendButton.setOnClickListener {
-            if (textMessage.text.isNotEmpty()) {
-                btnRequireService.isEnabled = false
-                sendMessage(
-                    ChatMessage(
-                        Firebase.auth.currentUser!!.uid,
-                        textMessage.text.toString()/*,
-                        Calendar.getInstance(),*/
-                    )
-                )
-                textMessage.text.clear()
-            }
-        }
     }
 
-    override fun onDestroy() {
-        //chatVm.clearChat()
-        super.onDestroy()
-    }
 
     private fun setRecyclerViewAdapter(v: View) {
 
@@ -163,14 +134,6 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         val tvReviewsNumber = v.findViewById<TextView>(R.id.fragment_chat_tv_reviews_count)
         val tvTimeSlotTitle = v.findViewById<TextView>(R.id.fragment_chat_tv_offer_title)
         val tvProfileName = v.findViewById<TextView>(R.id.chat_profile_name)
-        btnAcceptRequest = v.findViewById<Button>(R.id.fragment_chat_btn_accept)
-        btnRequestService = v.findViewById<Button>(R.id.fragment_chat_btn_request_service)
-        btnDiscardRequest = v.findViewById<Button>(R.id.fragment_chat_btn_discard)
-
-
-        rlSendMsgBar = v.findViewById(R.id.layout_gchat_chatbox)
-        cvMessageChatStatus = v.findViewById(R.id.card_chat_discarded)
-        tvChatStatus = v.findViewById(R.id.tv_chat_discarded)
 
 
         val pbProfilePic = v.findViewById<ProgressBar>(R.id.fragment_chat_pb_profile_pic)
@@ -179,6 +142,9 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         Helper.loadImageIntoView(civProfilePic, pbProfilePic, otherUser.profilePicUrl)
         tvTimeSlotTitle.text = cli.timeSlot.title
         tvProfileName.text = otherUser.nick
+
+        val sendButton = v.findViewById<Button>(R.id.button_gchat_send)
+
 
 
         btnRequestService.setOnClickListener {
@@ -203,7 +169,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 
 
         /* Chatting to the offerer */
-        if (cli.getType() == Chat.CHAT_TYPE_TO_OFFERER) {
+        if (cli.getType() == Chat.CHAT_TYPE_TO_OFFERER) { // TODO(invert type and status if, in order to reduce duplicated code)
 
             btnDiscardRequest.visibility = View.GONE
             btnAcceptRequest.visibility = View.GONE
@@ -214,9 +180,12 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
             when (cli.status) {
                 Chat.STATUS_UNINTERESTED -> {
                     btnRequestService.isEnabled = true
+                  /*  cvMessageChatStatus.visibility = View.GONE*/
+
                     Log.d(TAG, "STATUS UNIINTERESTED")
                 }
                 Chat.STATUS_INTERESTED -> {
+                    /*cvMessageChatStatus.visibility = View.GONE*/
                     Log.d(TAG, "STATUS INTERESTED")
                     btnRequestService.text = "Service requested"
                     Helper.setConfirmationOnButton(requireContext(), btnRequestService)
@@ -228,12 +197,17 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
                     );Helper.setConfirmationOnButton(
                         requireContext(),
                         btnRequestService
-                    ); chatToAccepted(v, cli)
+                    ); chatToAccepted(v, cli.getType())
                 }
                 Chat.STATUS_DISCARDED -> {
                     Log.d(TAG, "STATUS DISCARDED");
                     Helper.setConfirmationOnButton(requireContext(), btnRequestService);
-                    chatToDiscarded(v)
+                    chatToDiscarded(v, cli.getType())
+                }
+                Chat.STATUS_COMPLETED -> {
+                    Log.d(TAG, "STATUS COMPLETED");
+                    sendButton.isEnabled = false
+                    textMessage.inputType = InputType.TYPE_NULL
                 }
 
             }
@@ -246,16 +220,36 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
             Log.d(TAG, "TYPE TO REQUESTER")
 
             when (cli.status) {
-                Chat.STATUS_UNINTERESTED -> Log.d(TAG, "STATUS UNINTERESTED")
-                Chat.STATUS_INTERESTED -> Log.d(TAG, "STATUS INTERESTED")
+                Chat.STATUS_UNINTERESTED -> { Log.d(TAG, "STATUS UNINTERESTED"); /*cvMessageChatStatus.visibility = View.GONE*/ }
+                Chat.STATUS_INTERESTED -> {Log.d(TAG, "STATUS INTERESTED") ; /*cvMessageChatStatus.visibility = View.GONE*/}
                 Chat.STATUS_ACCEPTED -> {
                     Log.d(TAG, "STATUS ACCEPTED");
-                    chatToAccepted(v, cli)
+                    chatToAccepted(v, cli.getType())
                 }
                 Chat.STATUS_DISCARDED -> {
                     Log.d(TAG, "STATUS DISCARDED")
-                    chatToDiscarded(v)
+                    chatToDiscarded(v, cli.getType())
                 }
+                Chat.STATUS_COMPLETED -> {
+                    Log.d(TAG, "STATUS COMPLETED");
+                    sendButton.isEnabled = false
+                    textMessage.inputType = InputType.TYPE_NULL //disabling textMessageBox
+                }
+
+            }
+        }
+
+        sendButton.setOnClickListener {
+            if (textMessage.text.isNotEmpty()) {
+                btnRequestService.isEnabled = false
+                sendMessage(
+                    ChatMessage(
+                        Firebase.auth.currentUser!!.uid,
+                        textMessage.text.toString()/*,
+                        Calendar.getInstance(),*/
+                    )
+                )
+                textMessage.text.clear()
             }
         }
 
@@ -278,22 +272,26 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         }*/
     }
 
-    private fun chatToDiscarded(v: View) {
-        tvChatStatus.text = getString(R.string.this_service_has_been_assigned_to_another_user)
-        rlSendMsgBar.visibility = View.GONE
+    private fun chatToDiscarded(v: View, type: Int) {
+        when(type){
+            Chat.CHAT_TYPE_TO_OFFERER -> { tvChatStatusTitle.text = getString(R.string.service_not_available); tvChatStatusInfo.text = getString(R.string.service_assigned_to_another) }
+            Chat.CHAT_TYPE_TO_REQUESTER -> {tvChatStatusTitle.text = "Service discarded"; tvChatStatusInfo.text = "You have discarded the request by this user!"}
+        }
+
+        //rlSendMsgBar.visibility = View.GONE //keep chat always available to simplify things..
         cvMessageChatStatus.visibility = View.VISIBLE
         btnRequestService.isEnabled = false
         btnAcceptRequest.isEnabled = false
         btnDiscardRequest.isEnabled = false
     }
 
-    private fun chatToAccepted(v: View, c: Chat) {
-        val str =
-            if (c.timeSlot.assignedTo.id == Firebase.auth.uid) getString(R.string.assigned_to_you) else getString(
-                R.string.assigned_to_him
-            )
-        tvChatStatus.text = str
-        rlSendMsgBar.visibility = View.GONE
+    private fun chatToAccepted(v: View, type: Int) {
+        when(type){
+            Chat.CHAT_TYPE_TO_OFFERER -> { tvChatStatusTitle.text = "Service assigned"; tvChatStatusInfo.text = "Service has been assigned to you. Go to the calendar section to see your assigned services." }
+            Chat.CHAT_TYPE_TO_REQUESTER -> {tvChatStatusTitle.text = "Service accepted"; tvChatStatusInfo.text = "Service has been assigned to this user. Go to the calendar section to see services accepted by you."}
+        }
+
+        //rlSendMsgBar.visibility = View.GONE //keep chat always enabled to simplify things..
         cvMessageChatStatus.visibility = View.VISIBLE
 
 
@@ -309,6 +307,12 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
             currentChat,
             chatMessage
         ) /* This means that we're creating the request also*/
+    }
+
+    override fun onDestroy() {
+        Log.d(TAG, "View destroyed")
+        chatVm.clearChat()
+        super.onDestroy()
     }
 
     companion object {

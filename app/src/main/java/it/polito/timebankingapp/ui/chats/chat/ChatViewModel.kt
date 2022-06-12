@@ -29,42 +29,18 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
     private val _chat = MutableLiveData<Chat>()
     val chat: LiveData<Chat> = _chat
 
-    private val _isLoading = MutableLiveData<Boolean>()
-    val isLoading: LiveData<Boolean> = _isLoading
-
-
     private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
 
     private lateinit var messagesListener: ListenerRegistration
-    private lateinit var otherUserListener: ListenerRegistration
+    private lateinit var chatListener: ListenerRegistration
 
 
-    /* Function invoked when first message is sent ( and the request isn't been created)*/
-    /*fun sendFirstMessage(message: ChatMessage) {
-        val req = _chat.value!!.copy(status = Chat.STATUS_INTERESTED)
-        val requestRef = db.collection("requests").document(chat.value!!.requestId)
-        requestRef.set(req).addOnSuccessListener {
-            assert(_chat.value!!.status == Chat.STATUS_UNINTERESTED)
-
-            requestRef.collection("messages").document().set(
-                message
-            ).addOnSuccessListener {
-                *//*update unreadChats*//*
-                db.collection("timeSlots").document(chat.value!!.timeSlotId).update("unreadChats", FieldValue.increment(1))
-
-                _chatMessages.postValue(listOf(message))
-                registerMessagesListener(req)
-            }
-        }.addOnFailureListener {
-            Log.d("sendMessages", "$it")
-        }
-    }*/
 
 
     override fun onCleared() {
         if (::messagesListener.isInitialized)
             messagesListener.remove()
-        otherUserListener.remove()
+        chatListener.remove()
         super.onCleared()
     }
 
@@ -74,111 +50,22 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
         val reqDocRef = db.collection("requests").document(chat.requestId)
         val msgsDocRef =
             db.collection("requests").document(chat.requestId).collection("messages").document()
-        val timeSlotDocRef = db.collection("timeSlots").document(chat.timeSlotId)
+        val timeSlotDocRef = db.collection("timeSlots").document(chat.timeSlot.id)
 
-        /*val incrementUnreadChats =
-            if(chat.requester.id == Firebase.auth.uid) {
-                if (chat.status == Chat.STATUS_UNINTERESTED) //I am requester, new request
-                    true
-                else
-                    chat.lastMessage.userId != Firebase.auth.uid
-            }
-            else
-                false*/
-        /*var incrementUnreadChats = false
-        var whoUpdates = ""
-
-        if (chat.status == Chat.STATUS_UNINTERESTED) { *//* I am the requester, NEW REQUEST*//*
-            whoUpdates = "offerer"
-            incrementUnreadChats = true
-        } else { *//* Already existing chat *//*
-            if (chat.lastMessage.userId != Firebase.auth.uid) { *//* is a new message that has to increment the counter *//*
-                incrementUnreadChats = true
-                if (chat.offerer.id == Firebase.auth.uid)  *//* I am the offerer, update requesterUnreadChats*//*
-                    whoUpdates = "requester"
-                else
-                    whoUpdates = "offerer"
-
-            }
-        }*/
-
-        if (chat.status == Chat.STATUS_UNINTERESTED) //first message
-            registerMessagesListener(chat)
-
-        chat.sendMessage(message)
-
-        db.runBatch { batch ->
-            batch.set(reqDocRef, chat)
-            batch.set(msgsDocRef, message)
-            /*if (incrementUnreadChats) {
-                batch.update(timeSlotDocRef, "${whoUpdates}UnreadChats", FieldValue.increment(1))*/
-//                already Managed by reqDocRef.set
-//                batch.update(reqDocRef, "timeSlot.${whoUpdates}UnreadChats", FieldValue.increment(1))
-            }
-//            already Managed by reqDocRef.set
-//            batch.update(reqDocRef, "${whoUpdates}UnreadMsg", FieldValue.increment(1))
-        .addOnSuccessListener {
-            _chat.postValue(chat)
-
-            Log.d("sendMessageAndUpdate", "Everything updated")
-        }.addOnFailureListener {
-            Log.d("sendMessageAndUpdate", "Oh, no")
+        if (chat.status == Chat.STATUS_UNINTERESTED){ //first message
+            reqDocRef.set(chat.copy(status = Chat.STATUS_INTERESTED)) //write chat/request for the first time
+            updateChat(reqDocRef) //register listeners
         }
+
+        msgsDocRef.set(message) //write message in db
     }
 
 
-    /*fun sendMessage(message: ChatMessage) {
-        val requestRef = db.collection("requests").document(chat.value!!.requestId)
-        requestRef.get().addOnSuccessListener { *//* Chat correctly taken -> sendTheMessage *//*
-            *//*_chat.value =
-                chat.value!!.copy(unreadMsgs = it.getLong("unreadMsgs")?.toInt() ?: 0)
-                Log.d("sendMessage", "{$_chat.value}")
-*//*
-            requestRef.collection("messages").document().set(
-                mapOf(
-                    "messageText" to message.messageText,
-                    "timestamp" to message.timestamp.time,
-                    "userId" to message.userId,
-                )
-            ).addOnSuccessListener { //Message Correctly sent -> updateLastMessageField
-
-                requestRef.update(
-                    mapOf(
-                        "lastMessageText" to message.messageText,
-                        "lastMessageTime" to message.timestamp.time,
-                        "unreadMsgs" to chat.value!!.offererUnreadMsg + 1,
-                    )
-                ).addOnSuccessListener { //Field correctly updated -> update View Model
-                    //_chat.value = chat.value!!.incUnreadMsg()
-                    _chat.value!!.incUnreadMsg()
-
-                    Log.d("sendMessage", "success")
-                }
-            }.addOnFailureListener { Log.d("sendMessage", "failure") }
-        }
-    }*/
-
-    private fun QueryDocumentSnapshot.toChatMessage(): ChatMessage? {
-        return try {
-            //val messageId = get("messageId") as String
-            val userId = get("userId") as String
-            val messageText = get("messageText") as String
-            val timestamp = get("timestamp") as Timestamp
 
 
-            val cal = Calendar.getInstance()
-            cal.time = timestamp.toDate()
-
-            ChatMessage(userId, messageText/*, cal*/)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            null
-        }
-    }
 
     /* Coming from a chatListFragment -> download just the messages */
     fun registerMessagesListener(chat: Chat) {
-        _chat.value = chat
         messagesListener = db.collection("requests").document(chat.requestId).collection("messages")
             .orderBy("timestamp")
             .addSnapshotListener { v, e ->
@@ -192,7 +79,6 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
 
     /* Coming from TimeSlotDetail or TimeSlotList, check if requests from current user to timeSlot exists, otherwise download just the userProfile */
     fun selectChatFromTimeSlot(timeSlot: TimeSlot, requester: CompactUser) {
-        _isLoading.postValue(true)
         val chatId = makeRequestId(timeSlot.id, Firebase.auth.uid!!)
         val chatRef = db.collection("requests").document(chatId)
 
@@ -204,17 +90,20 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
         /* If the request already exists, download it, otherwise just download offerer profile and don't make the request. */
         chatRef.get().addOnSuccessListener { docSnapShot ->
             if (docSnapShot.exists()) {
-                /*Download user profile */
+
+                updateChat(chatRef) //update (without registering) chat + messages
+
+                /*Download user profile *//*
                 updateChatInfo(chatRef)
 
-                /* Download messages */
+                *//* Download messages *//*
                 messagesListener = chatRef.collection("messages").orderBy("timestamp")
                     .addSnapshotListener { v, e ->
                         if (e == null) {
                             _chatMessages.value = v!!.mapNotNull { d -> d.toChatMessage() }
                         } else
                             _chatMessages.value = emptyList()
-                    }
+                    }*/
             } else {
                 clearMessages()
                 updateChatInfo(timeSlot, requester)
@@ -222,82 +111,32 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun selectChatFromChatList(chat: Chat) {
-        /* remember to register listener */
-        _isLoading.postValue(true)
-        _chat.postValue(chat)
-        _isLoading.postValue(false)
-    }
-
-
-        /*val resetUnreadMsgs = chat.lastMessage.userId != Firebase.auth.uid
-        //var resetUnreadChats = false
-
-
-
-        if (resetUnreadMsgs) { *//* I am visualizing a chat *//*
-            if (chat.timeSlot.offerer.id == Firebase.auth.uid) { *//* I am the offerer *//*
-                whoUpdates = "offerer"
-                chat.offererUnreadMsg = 0 *//* Set counters for offerer *//*
-                if (chat.timeSlot.offererUnreadChats > 0) {
-                    chat.timeSlot.offererUnreadChats--
-                    resetUnreadChats = true
-                }
-            } else { *//* I am the requester *//*
-                whoUpdates = "requester"
-                chat.requesterUnreadMsg = 0 *//* Set counters for requester *//*
-                if (chat.timeSlot.requesterUnreadChats > 0) {
-                    resetUnreadChats = true
-                    chat.timeSlot.requesterUnreadChats--
+    /* Register two listeners for the current chat */
+    private fun updateChat(chatRef: DocumentReference) {
+        Log.d(TAG, "updateChat...")
+        chatListener = chatRef.addSnapshotListener {v,e ->
+            if(e==null){
+                _chat.postValue(v!!.toObject<Chat>())
+                //_isLoading.postValue(false) /* ...line 115 */
+                messagesListener = chatRef.collection("messages").orderBy("timestamp").addSnapshotListener { v2, e2 ->
+                    if (e2 == null) {
+                        _chatMessages.postValue(v2!!.mapNotNull { d -> d.toChatMessage() })
+                    } else
+                        _chatMessages.postValue(emptyList())
                 }
             }
+            else
+                _chat.postValue(Chat())
+
         }
+    }
 
-        val reqDocRef = db.collection("requests").document(chat.requestId)
-        val timeSlotDocRef = db.collection("timeSlots").document(chat.timeSlotId)
+    fun selectChatFromChatList(chat: Chat) {
+        /* remember to register listener */
+        //_chat.postValue(chat)
+        updateChat(db.collection("requests").document(chat.requestId))
+    }
 
-        db.runBatch { batch ->
-            if (resetUnreadMsgs)
-                when (whoUpdates) {
-                    "offerer" ->
-                        batch.update(reqDocRef, "${whoUpdates}UnreadMsg", chat.offererUnreadMsg)
-                    "requester" ->
-                        batch.update(reqDocRef, "${whoUpdates}UnreadMsg", chat.requesterUnreadMsg)
-                }
-            if (resetUnreadChats)
-                when (whoUpdates) {
-                    "offerer" -> {
-                        batch.update(
-                            reqDocRef,
-                            "timeSlot.${whoUpdates}UnreadChats",
-                            chat.timeSlot.offererUnreadChats
-                        )
-                        batch.update(
-                            timeSlotDocRef,
-                            "${whoUpdates}UnreadChats",
-                            chat.timeSlot.offererUnreadChats
-                        )
-                    }
-                    "requester" -> {
-                        batch.update(
-                            reqDocRef,
-                            "timeSlot.${whoUpdates}UnreadChats",
-                            chat.timeSlot.requesterUnreadChats
-                        )
-                        batch.update(
-                            timeSlotDocRef,
-                            "${whoUpdates}UnreadChats",
-                            chat.timeSlot.requesterUnreadChats
-                        )
-                    }
-                }
-        }.addOnSuccessListener {
-
-            Log.d("sendMessageAndUpdate", "Everything updated")
-        }.addOnFailureListener {
-            Log.d("sendMessageAndUpdate", "Oh, no")
-        }
-    }*/
 
     /* Update chatInfo (chat not yet created on db) from users table given a timeSlot*/
     fun updateChatInfo(
@@ -314,61 +153,20 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
             status = Chat.STATUS_UNINTERESTED
         )
 
+        Log.d(TAG, "Update chat info...")
         _chat.postValue(chat)
-        _isLoading.postValue(false)
-
 
 //        Log.d("ChatViewModel", "chat: ${_chat.value!!}")
-
         if (requestService)
             requestService(chat)
-
-        /*otherUserListener = db.collection("users").document(timeSlot.userId)
-            .addSnapshotListener { v, e ->
-                if (e == null) {
-                    if (v != null) {
-                        user =
-                            v.toUser()!! *//* If u get an exception here, something is not updated in db *//*
-
-                        _chat.value = Chat().copy(
-                            timeSlot = timeSlot,
-                            offerer = offerer ?: user.toCompactUser(),
-                            requester = currentUser,
-                            status = Chat.STATUS_UNINTERESTED,
-                        )
-                    }
-                }
-            }*/
     }
 
     /* Update userInfo from the requests table */
     fun updateChatInfo(chatRef: DocumentReference) {
-        otherUserListener = chatRef.addSnapshotListener { v, e ->
+        chatRef.addSnapshotListener { v, e ->
             if (e == null) {
                 val req = v!!.toObject<Chat>()
                 if (req != null) {
-                    _chat.value = (req)
-                    _isLoading.postValue(false)
-
-                    /*
-                    val c = _chat.value!!
-                    val resetUnreadMsgs = c.lastMessage.userId != Firebase.auth.uid
-                    if(resetUnreadMsgs)
-                        c.offererUnreadMsg = 0
-                        */
-
-                    /* Check if have to clear unreadMsg and Chat */
-                    /*if (req.lastMessage.userId != Firebase.auth.uid) { //have to clear unreadMsg and decrement unreadChats
-                        if (req.requester.id == Firebase.auth.uid) { //I am requester
-                            *//*req.offererUnreadMsg = 0
-                            req.timeSlot.requesterUnreadChats--*//*
-                        }
-                        if (req.offerer.id == Firebase.auth.uid) {
-                            *//*req.offererUnreadMsg = 0
-                            req.timeSlot.offererUnreadChats--*//*
-                        }
-                    }*/
-
 
                     val reqDocRef = db.collection("requests").document(chat.value!!.requestId)
 
@@ -378,6 +176,7 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
 //                        batch.update(reqDocRef, "unreadMsgs", req.offererUnreadMsg)
                     }.addOnSuccessListener {
                         _chat.postValue(req!!)
+
 //                        _chat.postValue(chat.value)
                         Log.d("sendMessageAndUpdate", "Everything updated")
                     }.addOnFailureListener {
@@ -394,44 +193,48 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
 
     fun clearChat() {
         _chat.postValue(Chat())
-        _chatMessages.value = listOf()
+        _chatMessages.postValue(listOf())
     }
 
     fun clearMessages() {
         _chatMessages.value = listOf()
     }
 
-    /* Function to call to get Interested */
+    /* Function called when Request Service button is pressed */
     fun requestService(chat: Chat) {
 //        Log.d("chatViewModel", _chat.value!!.toString())
-        _isLoading.postValue(true)
+        //_isLoading.postValue(true)
         val requestRef = db.collection("requests").document(chat.requestId)
         val interestedChat = chat.copy(
             status = Chat.STATUS_INTERESTED
         )
+        updateChat(requestRef) //Update all the listeners
 
         requestRef.set(interestedChat).addOnSuccessListener { v ->
-            _chat.postValue(interestedChat)
+            /*_chat.postValue(interestedChat)
             _isLoading.postValue(false)
-            registerMessagesListener(interestedChat)
 
-            val msg = ChatMessage(
-                messageText = Helper.requestMessage(interestedChat),
-                userId = interestedChat.requester.id,
-                timestamp = Date()
-            )
-            sendMessageAndUpdate(interestedChat, msg)
+            registerChatListener(requestRef)
+            registerMessagesListener(interestedChat)*/
+            Log.d(TAG, "Status successfully changed to interested!")
+
         }
+        val msg = ChatMessage(
+            messageText = Helper.requestMessage(interestedChat),
+            userId = interestedChat.requester.id,
+            timestamp = Date()
+        )
+        sendMessageAndUpdate(interestedChat, msg)
+
     }
 
+    /* Function that changes chat status*/
     fun updateStatus(chatId: String, newStatus: Int) {
-        val reqTsDocRef =
-            db.collection("requests").whereEqualTo("timeSlotsId", Helper.extractTimeSlotId(chatId))
+        //_isLoading.postValue(true)
         val reqDocRef = db.collection("requests")
 
-        reqDocRef.document(chatId).get().addOnSuccessListener { doc ->
-            doc.reference.update(mapOf("status" to newStatus))
-            _chat.value = chat.value?.copy(status = newStatus)
+        reqDocRef.document(chatId).update(mapOf("status" to newStatus)).addOnSuccessListener {
+            Log.d(TAG, "Status successfully changed to $newStatus")
         }
     }
 
@@ -439,7 +242,6 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
     fun acceptRequest(chat: Chat) {
         /* query the db */
         val chatId = chat.requestId
-        _isLoading.postValue(true)
         val reqTsDocs =
             db.collection("requests").whereEqualTo("timeSlotsId", Helper.extractTimeSlotId(chatId))
         val reqDocRef = db.collection("requests").document(chatId)
@@ -465,7 +267,6 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
                 transaction.update(tsDocRef, "status", TimeSlot.TIME_SLOT_STATUS_AVAILABLE)
                 reqDocRef.update("timeSlot.status", Chat.STATUS_ACCEPTED)
                 _chat.postValue(chat.copy(status = Chat.STATUS_INTERESTED))
-                _isLoading.postValue(false)
                 false
                 //newBalance
             } else { //Balance is ok => transfer credit => update references
@@ -515,32 +316,43 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
                                 )
                             )
 
-
                     }
                     _chat.postValue(chat.copy(status = Chat.STATUS_ACCEPTED))
-                    _isLoading.postValue(false)
                 }
             }
             else{
-
                 _chat.postValue(chat.copy(status = Chat.STATUS_UNINTERESTED))
-                _isLoading.postValue(false)
             }
 
         }.addOnFailureListener{Log.d(TAG, "FAILURE : {$it}") }
     }
 
     fun discardRequest(chatId: String) {
-        _isLoading.postValue(true)
         updateStatus(chatId, Chat.STATUS_DISCARDED)
-        _isLoading.postValue(false)
-
         /* query the db */
     }
 
     fun getChat(chatId: String): Task<DocumentSnapshot> {
         return db.collection("requests").document(chatId).get()
     }
+
+    private fun QueryDocumentSnapshot.toChatMessage(): ChatMessage? {
+        return try {
+            //val messageId = get("messageId") as String
+            val userId = get("userId") as String
+            val messageText = get("messageText") as String
+            val timestamp = get("timestamp") as Timestamp
+
+            val cal = Calendar.getInstance()
+            cal.time = timestamp.toDate()
+
+            ChatMessage(userId, messageText/*, cal*/)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
+    }
+
 
     companion object {
         const val TAG = "ChatViewModel"

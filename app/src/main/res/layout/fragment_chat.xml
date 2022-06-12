@@ -125,7 +125,7 @@
             android:layout_weight="1"
             android:backgroundTint="#B71C1C"
             android:text="@string/discard"
-            android:visibility="gone" />
+            android:visibility="invisible" />
 
         <Button
             android:id="@+id/fragment_chat_btn_accept"
@@ -135,7 +135,7 @@
             android:layout_marginEnd="16dp"
             android:layout_weight="1"
             android:text="@string/accept"
-            android:visibility="gone" />
+            android:visibility="invisible" />
 
         <Button
             android:id="@+id/fragment_chat_btn_request_service"
@@ -143,7 +143,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/request_service"
-            android:visibility="gone" />
+            android:visibility="invisible" />
     </LinearLayout>
 
     <View
@@ -162,11 +162,12 @@
         android:name="it.polito.timebankingapp.ui.chat.ChatFragment"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginBottom="4dp"
+        android:layout_marginBottom="2dp"
         app:layoutManager="LinearLayoutManager"
         app:layout_constrainedHeight="true"
-        app:layout_constraintBottom_toTopOf="@+id/card_chat_discarded"
+        app:layout_constraintBottom_toTopOf="@+id/fragment_chat_cv_status"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/divider19"
         tools:context=".ui.chats.chat.ChatFragment">
@@ -174,14 +175,57 @@
     </androidx.recyclerview.widget.RecyclerView>
 
 
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/fragment_chat_cv_status"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:cardCornerRadius="0dp"
+        app:contentPadding="16dp"
+        app:layout_constraintEnd_toEndOf="@+id/divider7"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/recycler_gchat"
+        app:strokeColor="@color/divider"
+        app:strokeWidth="1dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/fragment_chat_tv_status_main"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:alpha="0.9"
+                android:text="@string/this_service_has_been_assigned_to_another_user"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textStyle="bold"
+                tools:text="Service not available" />
+
+            <TextView
+                android:id="@+id/fragment_chat_tv_status_second"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:text="TextView"
+                tools:text="Service has been assigned to another user" />
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
     <View
         android:id="@+id/divider7"
         android:layout_width="match_parent"
         android:layout_height="1dp"
+        android:layout_marginTop="8dp"
         android:background="?android:attr/listDivider"
         app:layout_constraintBottom_toTopOf="@+id/layout_gchat_chatbox"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/fragment_chat_cv_status"
+        app:layout_constraintVertical_bias="1.0" />
 
     <RelativeLayout
         android:id="@+id/layout_gchat_chatbox"
@@ -190,7 +234,8 @@
         android:layout_marginBottom="2dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/divider7">
 
 
         <EditText
@@ -219,27 +264,6 @@
             android:textColor="@color/primary" />
 
     </RelativeLayout>
-
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/card_chat_discarded"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="24dp"
-        android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@+id/layout_gchat_chatbox"
-        app:layout_constraintEnd_toEndOf="@+id/divider7"
-        app:layout_constraintStart_toStartOf="parent">
-
-        <TextView
-            android:id="@+id/tv_chat_discarded"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:alpha="0.9"
-            android:text="@string/this_service_has_been_assigned_to_another_user"
-            android:textAlignment="center"
-            android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-            android:textStyle="bold" />
-    </com.google.android.material.card.MaterialCardView>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

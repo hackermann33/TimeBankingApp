@@ -134,18 +134,10 @@ class TimeSlotAdapter(
                 }
             }
         }, detailAction = {
-            val destination = when(type) {
-                "skill_specific" -> R.id.action_skillSpecificTimeSlotListFragment_to_nav_timeSlotDetails
-                "personal" -> R.id.action_nav_personalTimeSlotList_to_nav_timeSlotDetails
-                "interesting" -> R.id.action_nav_interestingTimeSlotList_to_nav_timeSlotDetails
-                else -> {R.id.nav_timeSlotDetails}
-            }
+
 
             selectTimeSlot(item)
-            Navigation.findNavController(it).navigate(
-                destination,
-                bundleOf("point_of_origin" to type, "userId" to item.userId)
-            )
+
         }, requestAction = {
             //downloadUser(item.userId)
             requestTimeSlot(item)
