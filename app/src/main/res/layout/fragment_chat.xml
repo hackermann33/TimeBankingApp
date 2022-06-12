@@ -97,9 +97,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="4dp"
-            android:text="@string/n_reviews"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
-            android:textColor="@color/accent" />
+            android:textColor="@color/accent"
+            tools:text="@string/n_reviews" />
     </LinearLayout>
 
     <LinearLayout

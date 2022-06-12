@@ -5,8 +5,11 @@ import android.text.InputType
 import android.util.Log
 import android.view.View
 import android.view.View.OnLayoutChangeListener
+import android.view.inputmethod.EditorInfo
 import android.widget.*
+import android.widget.TextView.OnEditorActionListener
 import androidx.cardview.widget.CardView
+import androidx.core.view.setPadding
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -95,6 +98,33 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 
         textMessage = view.findViewById(R.id.edit_gchat_message)
 
+        textMessage.setOnEditorActionListener(OnEditorActionListener { v, actionId, event ->
+            var handled = false
+            if (actionId == EditorInfo.IME_ACTION_SEND) {
+                sendMessage(btnRequireService)
+                handled = true
+            }
+            handled
+        })
+
+        val sendButton = view.findViewById<Button>(R.id.button_gchat_send)
+        sendButton.setOnClickListener {
+            sendMessage(btnRequireService)
+        }
+    }
+
+    private fun sendMessage(btnRequireService: Button){
+        if (textMessage.text.isNotEmpty()) {
+            btnRequireService.isEnabled = false
+            sendMessage(
+                ChatMessage(
+                    Firebase.auth.currentUser!!.uid,
+                    textMessage.text.toString()/*,
+                        Calendar.getInstance(),*/
+                )
+            )
+            textMessage.text.clear()
+        }
     }
 
 
