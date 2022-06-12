@@ -225,7 +225,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/fragment_chat_cv_status"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintVertical_bias="1.0"
+        tools:visibility="gone" />
 
     <RelativeLayout
         android:id="@+id/layout_gchat_chatbox"
@@ -240,28 +241,35 @@
 
         <EditText
             android:id="@+id/edit_gchat_message"
+            style="@style/Widget.AppCompat.AutoCompleteTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
+            android:layout_alignParentStart="true"
             android:layout_marginStart="8dp"
-            android:layout_toStartOf="@+id/button_gchat_send"
+            android:layout_toStartOf="@id/button_gchat_send"
             android:background="@android:color/transparent"
             android:hint="@string/hint_enter_message"
             android:imeOptions="actionSend"
             android:inputType="text"
+            android:maxLength="20"
             android:maxLines="6"
             android:minHeight="48dp"
+            android:singleLine="false"
             tools:ignore="Autofill" />
 
-        <Button
+        <ImageButton
             android:id="@+id/button_gchat_send"
-            android:layout_width="64dp"
-            android:layout_height="48dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="false"
             android:layout_alignParentEnd="true"
-            android:background="?attr/selectableItemBackground"
-            android:text="@string/send"
-            android:textAppearance="@style/TextAppearance.AppCompat.Small"
-            android:textColor="@color/primary" />
+            android:background="@android:drawable/screen_background_light_transparent"
+            android:contentDescription="send a message"
+            android:minWidth="48dp"
+            android:minHeight="48dp"
+            android:src="@drawable/ic_baseline_send_24"
+            android:visibility="visible"
+            app:tint="@color/accent" />
 
     </RelativeLayout>
 

@@ -9,8 +9,8 @@ import android.view.inputmethod.EditorInfo
 import android.widget.*
 import android.widget.TextView.OnEditorActionListener
 import androidx.cardview.widget.CardView
-import androidx.core.view.setPadding
 import androidx.core.view.isVisible
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -85,7 +85,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         rlSendMsgBar = view.findViewById(R.id.layout_gchat_chatbox)
         cvMessageChatStatus = view.findViewById(R.id.fragment_chat_cv_status)
 
-        Log.d(TAG, "\n\nstatus visibile: ${cvMessageChatStatus.isVisible}")
+        Log.d(TAG, "status visibile: ${cvMessageChatStatus.isVisible}")
 
         tvChatStatusTitle = view.findViewById(R.id.fragment_chat_tv_status_main)
         tvChatStatusInfo = view.findViewById(R.id.fragment_chat_tv_status_second)
@@ -94,6 +94,9 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         btnDiscardRequest = view.findViewById(R.id.fragment_chat_btn_discard)
         btnRequestService = view.findViewById(R.id.fragment_chat_btn_request_service)
 
+        val sendButton = view.findViewById<ImageButton>(R.id.button_gchat_send)
+        sendButton.imageAlpha = 0x3f
+
 
 
         textMessage = view.findViewById(R.id.edit_gchat_message)
@@ -101,21 +104,28 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         textMessage.setOnEditorActionListener(OnEditorActionListener { v, actionId, event ->
             var handled = false
             if (actionId == EditorInfo.IME_ACTION_SEND) {
-                sendMessage(btnRequireService)
+                sendMessage()
                 handled = true
             }
             handled
         })
 
-        val sendButton = view.findViewById<Button>(R.id.button_gchat_send)
+
+        textMessage.doAfterTextChanged {
+            Log.d(TAG, "...text changed: $it enable: ${!it.isNullOrEmpty()}")
+            val enabled = !it.isNullOrEmpty()
+            sendButton.isEnabled = enabled
+            sendButton.imageAlpha = if(enabled) 0xFF else 0x3f
+        }
+
         sendButton.setOnClickListener {
-            sendMessage(btnRequireService)
+            sendMessage()
         }
     }
 
-    private fun sendMessage(btnRequireService: Button){
+    private fun sendMessage(){
         if (textMessage.text.isNotEmpty()) {
-            btnRequireService.isEnabled = false
+            btnRequestService.isEnabled = false
             sendMessage(
                 ChatMessage(
                     Firebase.auth.currentUser!!.uid,
@@ -173,7 +183,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         tvTimeSlotTitle.text = cli.timeSlot.title
         tvProfileName.text = otherUser.nick
 
-        val sendButton = v.findViewById<Button>(R.id.button_gchat_send)
+        val sendButton = v.findViewById<ImageButton>(R.id.button_gchat_send)
 
 
 
