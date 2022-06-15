@@ -161,36 +161,6 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
             requestService(chat)
     }
 
-    /* Update userInfo from the requests table */
-    fun updateChatInfo(chatRef: DocumentReference) {
-        chatRef.addSnapshotListener { v, e ->
-            if (e == null) {
-                val req = v!!.toObject<Chat>()
-                if (req != null) {
-
-                    val reqDocRef = db.collection("requests").document(chat.value!!.requestId)
-
-                    /* LAST PROBLEM IS HERE */
-                    db.runBatch { batch ->
-                        batch.set(reqDocRef, req)
-//                        batch.update(reqDocRef, "unreadMsgs", req.offererUnreadMsg)
-                    }.addOnSuccessListener {
-                        _chat.postValue(req!!)
-
-//                        _chat.postValue(chat.value)
-                        Log.d("sendMessageAndUpdate", "Everything updated")
-                    }.addOnFailureListener {
-                        Log.d("sendMessageAndUpdate", "Oh, no")
-                    }
-
-                } else {
-                    Log.d("selectChat", "this should not happen")
-                    throw Exception("chat not found in the DB!!!")
-                }
-            }
-        }
-    }
-
     fun clearChat() {
         _chat.postValue(Chat())
         _chatMessages.postValue(listOf())
@@ -252,6 +222,7 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
         val timeSlotsDocRef = db.collection("timeSlots")
 
 
+        reqDocRef.update(mapOf("status" to Chat.STATUS_ACCEPTED))
         db.runTransaction { transaction ->
             val snapshot = transaction.get(reqDocRef)
             val duration = snapshot.getString("timeSlot.duration")?.toInt()!!
@@ -266,13 +237,13 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
                 transaction.update(tsDocRef, "assignedTo", CompactUser())
                 transaction.update(tsDocRef, "status", TimeSlot.TIME_SLOT_STATUS_AVAILABLE)
                 reqDocRef.update("timeSlot.status", Chat.STATUS_ACCEPTED)
-                _chat.postValue(chat.copy(status = Chat.STATUS_INTERESTED))
+                //_chat.postValue(chat.copy(status = Chat.STATUS_INTERESTED))
                 false
                 //newBalance
             } else { //Balance is ok => transfer credit => update references
                 Log.d(TAG, "balance is okay: $newBalance")
 
-                transaction.update(reqDocRef,"status", Chat.STATUS_ACCEPTED)
+                //transaction.update(reqDocRef,"status", Chat.STATUS_ACCEPTED)
                 transaction.update(reqDocRef,"timeSlot.status", TimeSlot.TIME_SLOT_STATUS_ASSIGNED)
                 transaction.update(reqDocRef, "timeSlot.assignedTo", chat.requester)
 

@@ -80,6 +80,7 @@ data class Chat(
         lastMessage = message
     }
 
+    @Exclude
     fun isEmpty() = this.requestId == "_"
 
     companion object {
