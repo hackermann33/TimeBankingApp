@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import de.hdodenhof.circleimageview.CircleImageView
@@ -62,7 +63,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         chatVm.chat.observe(viewLifecycleOwner) {
             //if (!it) {
                 if(!it.isEmpty()) {
-                    Log.d(TAG, "UI rendering... $it ${Calendar.getInstance().timeInMillis}")
+                    Log.d(TAG, "UI rendering... status: ${it.status} tsStatus: ${it.timeSlot.status}")
                     currentChat = it// chatVm.chat.value!!
                     updateChatUi(view, currentChat)
                 }
@@ -194,7 +195,16 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         }
 
         btnAcceptRequest.setOnClickListener {
-            chatVm.acceptRequest(cli)
+            chatVm.acceptRequest(cli).addOnSuccessListener { res ->
+                val msg = if(res) "TimeSlot correctly assigned" else "Requester balance isn't enough"
+                val snackBar = Snackbar.make(v, msg, Snackbar.LENGTH_LONG)
+                snackBar.setAction("DISMISS") { snackBar.dismiss() }.show()
+
+                /* balance sufficiente*/
+
+            }
+                .addOnFailureListener{/* Some problem happened */
+            }
             /*btnAcceptRequest.isEnabled = false
             btnDiscardRequest.alpha = 0.8F
             btnDiscardRequest.isEnabled = false*/
@@ -220,11 +230,12 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
             when (cli.status) {
                 Chat.STATUS_UNINTERESTED -> {
                     btnRequestService.isEnabled = true
-                  /*  cvMessageChatStatus.visibility = View.GONE*/
+                    cvMessageChatStatus.visibility = View.GONE
 
                     Log.d(TAG, "STATUS UNIINTERESTED")
                 }
                 Chat.STATUS_INTERESTED -> {
+
                     /*cvMessageChatStatus.visibility = View.GONE*/
                     Log.d(TAG, "STATUS INTERESTED")
                     btnRequestService.text = "Service requested"
@@ -260,8 +271,13 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
             Log.d(TAG, "TYPE TO REQUESTER")
 
             when (cli.status) {
-                Chat.STATUS_UNINTERESTED -> { Log.d(TAG, "STATUS UNINTERESTED"); /*cvMessageChatStatus.visibility = View.GONE*/ }
-                Chat.STATUS_INTERESTED -> {Log.d(TAG, "STATUS INTERESTED") ; /*cvMessageChatStatus.visibility = View.GONE*/}
+                Chat.STATUS_INTERESTED -> {
+                    btnAcceptRequest.isEnabled = true
+                    btnDiscardRequest.isEnabled = true
+                    cvMessageChatStatus.visibility = View.GONE
+                    Log.d(TAG, "STATUS INTERESTED") ; /*cvMessageChatStatus.visibility = View.GONE*/
+
+                }
                 Chat.STATUS_ACCEPTED -> {
                     Log.d(TAG, "STATUS ACCEPTED");
                     chatToAccepted(v, cli.getType())

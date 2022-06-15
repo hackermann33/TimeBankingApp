@@ -209,7 +209,7 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
     }
 
 
-    fun acceptRequest(chat: Chat) {
+    fun acceptRequest(chat: Chat): Task<Boolean> {
         /* query the db */
         val chatId = chat.requestId
         val reqTsDocs =
@@ -223,7 +223,7 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
 
 
         reqDocRef.update(mapOf("status" to Chat.STATUS_ACCEPTED))
-        db.runTransaction { transaction ->
+        return db.runTransaction { transaction ->
             val snapshot = transaction.get(reqDocRef)
             val duration = snapshot.getString("timeSlot.duration")?.toInt()!!
             val newBalance = snapshot.getLong("requester.balance")!! - duration
@@ -232,11 +232,10 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
             if (newBalance < 0) { //Not enough balance => Backtrack
                 /*transaction.update(reqDocRef, "status", Chat.STATUS_INTERESTED)
                 */
-                transaction.update(reqDocRef, "status", Chat.STATUS_INTERESTED)
-
+                val updatedChat = chat.copy(status=Chat.STATUS_INTERESTED, timeSlot=chat.timeSlot.copy(status=TimeSlot.TIME_SLOT_STATUS_AVAILABLE))
+                transaction.set(reqDocRef, updatedChat)
                 transaction.update(tsDocRef, "assignedTo", CompactUser())
                 transaction.update(tsDocRef, "status", TimeSlot.TIME_SLOT_STATUS_AVAILABLE)
-                reqDocRef.update("timeSlot.status", Chat.STATUS_ACCEPTED)
                 //_chat.postValue(chat.copy(status = Chat.STATUS_INTERESTED))
                 false
                 //newBalance
@@ -270,17 +269,13 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
                 )
                 transaction.update(requesterDocRef, "balance", newBalance)
 
-                                    /* !!!!tocheck ==> */
-                true //newBalance
-            }
-            }.addOnSuccessListener {  result ->
-            Log.d(TAG, "SUCCESS $result")
-            if(result) {/*Balance is okay => update all info*/
+
+
                 reqTsDocs.get().addOnSuccessListener { //aggiorno copie di timeSlots all'interno di chats/requests
                     /* TODO(Controlla il credito) */
                     for (doc in it.documents) {
                         if (doc.get("requestId") != chatId)
-                            doc.reference.update(
+                            transaction.update(doc.reference,
                                 mapOf(
                                     "status" to Chat.STATUS_DISCARDED,
                                     "assignedTo" to chat.requester
@@ -288,14 +283,12 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
                             )
 
                     }
-                    _chat.postValue(chat.copy(status = Chat.STATUS_ACCEPTED))
                 }
-            }
-            else{
-                _chat.postValue(chat.copy(status = Chat.STATUS_UNINTERESTED))
-            }
 
-        }.addOnFailureListener{Log.d(TAG, "FAILURE : {$it}") }
+                /* !!!!tocheck ==> */
+                true //newBalance
+            }
+            }
     }
 
     fun discardRequest(chatId: String) {
