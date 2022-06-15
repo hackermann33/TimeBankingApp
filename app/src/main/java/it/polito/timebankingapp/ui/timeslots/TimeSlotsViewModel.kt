@@ -295,6 +295,8 @@ class TimeSlotsViewModel(application: Application) : AndroidViewModel(applicatio
     "age": 13,
     "favorites.color": "Red"
   });*/
+
+        /*
         val myUid = Firebase.auth.uid!!
         //db.collection("requests").whereEqualTo("requester.id", myUid)
         db.collection("timeSlots").document(ts.id)
@@ -308,6 +310,22 @@ class TimeSlotsViewModel(application: Application) : AndroidViewModel(applicatio
                         }
                     }
             }
+*/
+
+
+            //elimino tutte le richieste
+            db.collection("requests").whereEqualTo("timeSlot.id", ts.id)
+                .get().addOnSuccessListener {
+                    for (doc in it.documents) {
+                        doc.reference.update(mapOf("status" to Chat.STATUS_DISCARDED)) //chat discarded anche all'utente accettato?
+                        //doc.reference.delete()
+                    }
+                    db.collection("timeSlots").document(ts.id)
+                        .update("status", TimeSlot.TIME_SLOT_STATUS_COMPLETED).addOnSuccessListener {
+                            Log.d("timeSlot_completed", "success")
+                        }
+                }
+
     }
 
     fun addNewSkill(skillStr: String): Task<Void> {
