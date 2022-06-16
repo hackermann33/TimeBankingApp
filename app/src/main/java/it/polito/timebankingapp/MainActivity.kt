@@ -183,7 +183,7 @@ class MainActivity : AppCompatActivity() {
         val googleSignInClient = this.let { GoogleSignIn.getClient(it, gso) }
         googleSignInClient.signOut();
         profilePic.setImageResource(R.drawable.default_avatar)
-        pBUserPic.visibility = View.VISIBLE 
+        pBUserPic.visibility = View.VISIBLE
         //navController.navigate(R.id.action_global_to_nav_login)
     }
 
