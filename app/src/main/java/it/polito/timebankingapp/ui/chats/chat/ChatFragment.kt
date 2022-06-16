@@ -31,7 +31,7 @@ import it.polito.timebankingapp.model.Chat.Companion.STATUS_DISCARDED
 import it.polito.timebankingapp.model.chat.ChatMessage
 import it.polito.timebankingapp.model.user.CompactUser
 import it.polito.timebankingapp.ui.profile.ProfileViewModel
-import java.util.*
+import it.polito.timebankingapp.ui.timeslots.TimeSlotsViewModel
 
 
 class ChatFragment : Fragment(R.layout.fragment_chat) {
@@ -57,6 +57,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 
     private val chatVm: ChatViewModel by activityViewModels()
     private val profileVM : ProfileViewModel by activityViewModels()
+    private val timeSlotVm: TimeSlotsViewModel by activityViewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         firstTime = true
@@ -104,7 +105,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         val sendButton = view.findViewById<ImageButton>(R.id.button_gchat_send)
         sendButton.imageAlpha = 0x3f
 
-
+        /* Navigation to showProfile*/
         val clOtherProfile = view.findViewById<ConstraintLayout>(R.id.fragment_chat_cl_other_profile)
         clOtherProfile.setOnClickListener {
             val userId = Helper.getOtherUser(currentChat).id
@@ -112,6 +113,12 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 
             findNavController().navigate(R.id.action_nav_chat_to_nav_showProfile, bundleOf("point_of_origin" to "skill_specific", "userId" to userId), /* TODO (Edit this bundle in order to avoid casini ) */
             )
+        }
+
+        val tvTimeSlotTitle = view.findViewById<TextView>(R.id.fragment_chat_tv_time_slot_title)
+        tvTimeSlotTitle.setOnClickListener {
+            timeSlotVm.updateSelectedTimeSlot(currentChat.timeSlot.id)
+            findNavController().navigate(R.id.action_nav_chat_to_nav_timeSlotDetails)
         }
 
         textMessage = view.findViewById(R.id.edit_gchat_message)
@@ -187,7 +194,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         val civProfilePic = v.findViewById<CircleImageView>(R.id.chat_profile_pic)
         val rbReviewScore = v.findViewById<RatingBar>(R.id.fragment_chat_rb_review_score)
         val tvReviewsNumber = v.findViewById<TextView>(R.id.fragment_chat_tv_reviews_count)
-        val tvTimeSlotTitle = v.findViewById<TextView>(R.id.fragment_chat_tv_offer_title)
+        val tvTimeSlotTitle = v.findViewById<TextView>(R.id.fragment_chat_tv_time_slot_title)
         val tvProfileName = v.findViewById<TextView>(R.id.chat_profile_name)
 
 
@@ -233,7 +240,6 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 
         /* Chatting to the offerer */
         if (cli.getType() == Chat.CHAT_TYPE_TO_OFFERER) { // TODO(invert type and status if, in order to reduce duplicated code)
-
             btnDiscardRequest.visibility = View.GONE
             btnAcceptRequest.visibility = View.GONE
             btnRequestService.visibility = View.VISIBLE

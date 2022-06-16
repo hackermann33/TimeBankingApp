@@ -279,8 +279,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_timeslots_list) {
             )
         }
 
-        vm.setSelectedTimeSlot(ts)
-
+        vm.updateSelectedTimeSlot(ts.id)
     }
 
     override fun onDetach() {

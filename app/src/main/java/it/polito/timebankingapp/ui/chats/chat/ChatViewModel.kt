@@ -18,7 +18,6 @@ import it.polito.timebankingapp.model.Helper
 import it.polito.timebankingapp.model.chat.ChatMessage
 import it.polito.timebankingapp.model.timeslot.TimeSlot
 import it.polito.timebankingapp.model.user.CompactUser
-import it.polito.timebankingapp.model.user.User
 import java.util.*
 
 class ChatViewModel(application: Application) : AndroidViewModel(application) {
@@ -36,7 +35,6 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
 
 
 
-
     override fun onCleared() {
         if (::messagesListener.isInitialized)
             messagesListener.remove()
@@ -50,7 +48,6 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
         val reqDocRef = db.collection("requests").document(chat.requestId)
         val msgsDocRef =
             db.collection("requests").document(chat.requestId).collection("messages").document()
-        val timeSlotDocRef = db.collection("timeSlots").document(chat.timeSlot.id)
 
         if (chat.status == Chat.STATUS_UNINTERESTED){ //first message
             reqDocRef.set(chat.copy(status = Chat.STATUS_INTERESTED)) //write chat/request for the first time
@@ -59,23 +56,6 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
 
         msgsDocRef.set(message) //write message in db
     }
-
-
-
-
-
-    /* Coming from a chatListFragment -> download just the messages */
-    fun registerMessagesListener(chat: Chat) {
-        messagesListener = db.collection("requests").document(chat.requestId).collection("messages")
-            .orderBy("timestamp")
-            .addSnapshotListener { v, e ->
-                if (e == null) {
-                    _chatMessages.value = v!!.mapNotNull { d -> d.toChatMessage() }
-                } else
-                    _chatMessages.value = emptyList()
-            }
-    }
-
 
     /* Coming from TimeSlotDetail or TimeSlotList, check if requests from current user to timeSlot exists, otherwise download just the userProfile */
     fun selectChatFromTimeSlot(timeSlot: TimeSlot, requester: CompactUser) {
@@ -89,24 +69,11 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
 
         /* If the request already exists, download it, otherwise just download offerer profile and don't make the request. */
         chatRef.get().addOnSuccessListener { docSnapShot ->
-            if (docSnapShot.exists()) {
-
+            if (docSnapShot.exists())
                 updateChat(chatRef) //update (without registering) chat + messages
-
-                /*Download user profile *//*
-                updateChatInfo(chatRef)
-
-                *//* Download messages *//*
-                messagesListener = chatRef.collection("messages").orderBy("timestamp")
-                    .addSnapshotListener { v, e ->
-                        if (e == null) {
-                            _chatMessages.value = v!!.mapNotNull { d -> d.toChatMessage() }
-                        } else
-                            _chatMessages.value = emptyList()
-                    }*/
-            } else {
+            else {
                 clearMessages()
-                updateChatInfo(timeSlot, requester)
+                createUninterestedChat(timeSlot, requester)
             }
         }
     }
@@ -117,36 +84,33 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
         chatListener = chatRef.addSnapshotListener {v,e ->
             if(e==null){
                 _chat.postValue(v!!.toObject<Chat>())
-                //_isLoading.postValue(false) /* ...line 115 */
-                messagesListener = chatRef.collection("messages").orderBy("timestamp").addSnapshotListener { v2, e2 ->
-                    if (e2 == null) {
-                        _chatMessages.postValue(v2!!.mapNotNull { d -> d.toChatMessage() })
-                    } else
-                        _chatMessages.postValue(emptyList())
-                }
             }
             else
                 _chat.postValue(Chat())
+        }
 
+        messagesListener = chatRef.collection("messages").orderBy("timestamp").addSnapshotListener { v2, e2 ->
+            if (e2 == null) {
+                _chatMessages.postValue(v2!!.mapNotNull { d -> d.toChatMessage() })
+            } else
+                _chatMessages.postValue(emptyList())
         }
     }
 
     fun selectChatFromChatList(chat: Chat) {
         /* remember to register listener */
-        //_chat.postValue(chat)
         updateChat(db.collection("requests").document(chat.requestId))
     }
 
+    /* TODO(When UNINTERESTED LiveUpdate are not available. Substitute this two paramenters with 2 id's
+        and add 2 db queries in order to implement it.)*/
 
-    /* Update chatInfo (chat not yet created on db) from users table given a timeSlot*/
-    fun updateChatInfo(
+    /* Create an uninterested chat given a timeSlot and the current user */
+    fun createUninterestedChat(
         timeSlot: TimeSlot,
-        currentUser: CompactUser,
-        requestService: Boolean = false
-    ) {
-        var user: User
+        currentUser: CompactUser, ) {
 
-        val chat = Chat(
+        val tmpChat = Chat(
             timeSlot = timeSlot,
             offerer = timeSlot.offerer,
             requester = currentUser,
@@ -154,11 +118,7 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
         )
 
         Log.d(TAG, "Update chat info...")
-        _chat.postValue(chat)
-
-//        Log.d("ChatViewModel", "chat: ${_chat.value!!}")
-        if (requestService)
-            requestService(chat)
+        _chat.postValue(tmpChat) /* When a chat is uninterested, is not written in db yet.*/
     }
 
     fun clearChat() {

@@ -39,6 +39,7 @@ class TimeSlotsViewModel(application: Application) : AndroidViewModel(applicatio
     private val _selectedSkill = MutableLiveData<String?>()
     var selectedSkill: LiveData<String?> = _selectedSkill
 
+    private lateinit var selectedTimeSlotListener: ListenerRegistration
     private lateinit var l2: ListenerRegistration
     private lateinit var l3: ListenerRegistration
 
@@ -244,6 +245,17 @@ class TimeSlotsViewModel(application: Application) : AndroidViewModel(applicatio
         _isLoading.postValue(true)
         _selectedTimeSlot.value = ts
         _isLoading.postValue(false)
+    }
+
+    fun updateSelectedTimeSlot(timeSlotId: String){
+        selectedTimeSlotListener = db.collection("timeSlots").document(timeSlotId).addSnapshotListener{v,e ->
+            if(e==null){
+                _selectedTimeSlot.postValue(v!!.toObject<TimeSlot>())
+            }
+            else{
+                _selectedTimeSlot.postValue(TimeSlot())
+            }
+        }
     }
 
     fun setFilteringSkill(skill: String) {

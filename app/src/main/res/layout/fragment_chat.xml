@@ -50,7 +50,7 @@
         </RelativeLayout>
 
         <TextView
-            android:id="@+id/fragment_chat_tv_offer_title"
+            android:id="@+id/fragment_chat_tv_time_slot_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -81,7 +81,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@+id/fragment_chat_rl_profile_pic"
-            app:layout_constraintTop_toBottomOf="@+id/fragment_chat_tv_offer_title" />
+            app:layout_constraintTop_toBottomOf="@+id/fragment_chat_tv_time_slot_title" />
 
         <LinearLayout
             android:id="@+id/linearLayout3"
