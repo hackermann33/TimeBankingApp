@@ -19,6 +19,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.google.android.gms.tasks.Task
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.google.android.material.datepicker.MaterialDatePicker
@@ -26,6 +27,7 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
+import com.google.firebase.firestore.QuerySnapshot
 import it.polito.timebankingapp.MainActivity
 import it.polito.timebankingapp.R
 import it.polito.timebankingapp.model.timeslot.TimeSlot
@@ -103,7 +105,15 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
 
         if (!addMode) {
             requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
-                handleTimeSlotConfirmation()
+
+                handleTimeSlotConfirmation()!!.addOnSuccessListener {
+                    setFragmentResult("timeSlot", bundleOf("timeSlotConfirm" to 2))
+                    findNavController().navigateUp()
+                }.addOnFailureListener{
+                    setFragmentResult("timeSlot", bundleOf("timeSlotConfirm" to 3))
+                    this.handleOnBackPressed()
+                    findNavController().navigateUp()
+                }
             }
 
         } else {
@@ -198,7 +208,7 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
         }
     }
 
-    private fun handleTimeSlotConfirmation() {
+    private fun handleTimeSlotConfirmation(): Task<QuerySnapshot>? {
 
         retrieveTimeSlotData()
         if (tsToEdit.isValid()) {
@@ -210,13 +220,8 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
                     setFragmentResult("timeSlot", bundleOf("timeSlotConfirm" to 3))
                 }
             } else {
-                vm.editTimeSlot(tsToEdit).addOnSuccessListener {
-                    setFragmentResult("timeSlot", bundleOf("timeSlotConfirm" to 2))
-                }.addOnFailureListener{
-                    setFragmentResult("timeSlot", bundleOf("timeSlotConfirm" to 3))
-                }
+                return vm.editTimeSlot(tsToEdit)
             }
-
             findNavController().navigateUp()
         } else {
             val dialogTitle: String
@@ -237,6 +242,7 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
                 }
                 .show()
         }
+        return null
     }
 
     private fun showTimeSlot() {

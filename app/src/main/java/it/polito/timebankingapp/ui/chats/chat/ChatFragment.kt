@@ -252,7 +252,6 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
                         snackBar.setAction("DISMISS") { snackBar.dismiss() }.show()
                     }
 
-                    if(firstTime) firstTime = false
                     /*cvMessageChatStatus.visibility = View.GONE*/
                     Log.d(TAG, "STATUS INTERESTED")
                     btnRequestService.text = "Service requested"
@@ -260,6 +259,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
                     Helper.setConfirmationOnButton(requireContext(), btnRequestService)
                 }
                 Chat.STATUS_ACCEPTED -> {
+                    if(firstTime) firstTime = false
                     Log.d(
                         TAG,
                         "STATUS ACCEPTED"
