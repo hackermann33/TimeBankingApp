@@ -269,8 +269,6 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
                 )
                 transaction.update(requesterDocRef, "balance", newBalance)
 
-
-
                 reqTsDocs.get().addOnSuccessListener { //aggiorno copie di timeSlots all'interno di chats/requests
                     /* TODO(Controlla il credito) */
                     for (doc in it.documents) {
