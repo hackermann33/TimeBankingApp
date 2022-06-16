@@ -233,22 +233,25 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
                 /* !!!!tocheck ==> */
                 true //newBalance
             }
+            // commento
             }.addOnSuccessListener {
             reqTsDocs.get().addOnSuccessListener { reqs-> //aggiorno copie di timeSlots all'interno di chats/requests
-                db.runBatch {
-                    batch ->
-                    for (doc in reqs.documents) {
-                        Log.d(TAG, "ci passo: ${doc.reference}")
-                        if (doc.get("requestId") != chatId)
-                            batch.update(doc.reference,
-                                mapOf(
-                                    "status" to Chat.STATUS_DISCARDED,
-                                    "assignedTo" to chat.requester
+                if(it == true) {
+                    db.runBatch { batch ->
+                        for (doc in reqs.documents) {
+                            Log.d(TAG, "ci passo: ${doc.reference}")
+                            if (doc.get("requestId") != chatId)
+                                batch.update(
+                                    doc.reference,
+                                    mapOf(
+                                        "status" to Chat.STATUS_DISCARDED,
+                                        "assignedTo" to chat.requester
+                                    )
                                 )
-                            )
 
+                        }
                     }
-                    }
+                }
 
         } }
     }
