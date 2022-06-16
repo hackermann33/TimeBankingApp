@@ -273,7 +273,7 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
                 /* !!!!tocheck ==> */
                 true //newBalance
             }
-            // commento
+            // commento2
             }.addOnSuccessListener {
             reqTsDocs.get().addOnSuccessListener { reqs-> //aggiorno copie di timeSlots all'interno di chats/requests
                 if(it == true) {
