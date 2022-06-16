@@ -7,10 +7,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.firestore.DocumentReference
-import com.google.firebase.firestore.DocumentSnapshot
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.ListenerRegistration
+import com.google.firebase.firestore.*
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
 import it.polito.timebankingapp.model.Chat
@@ -203,7 +200,7 @@ class TimeSlotsViewModel(application: Application) : AndroidViewModel(applicatio
     }
 
 
-    fun addTimeSlot(ts: TimeSlot) {
+    fun addTimeSlot(ts: TimeSlot): Task<Void> {
         val data = HashMap<String, Any>()
 
         val newTimeSlotRef = db.collection("timeSlots").document()
@@ -211,20 +208,7 @@ class TimeSlotsViewModel(application: Application) : AndroidViewModel(applicatio
         ts.id = newTimeSlotRef.id //imposta id generato da firebase
         ts.userId = Firebase.auth.currentUser?.uid ?: ""
 
-        newTimeSlotRef.set(ts).addOnSuccessListener {
-            Log.d("timeSlots_add", "Successfully added")
-            val skillRef: DocumentReference = db.collection("skills").document(ts.relatedSkill)
-            skillRef.get().addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    val document = task.result
-                    if (!document.exists()) {
-                        skillRef.set(data)
-                    }
-                } else {
-                    Log.d("timeSlots_add", "Failed with: ", task.exception)
-                }
-            }
-        }.addOnFailureListener { Log.d("timeSlots_add", "Error on adding") }
+        return newTimeSlotRef.set(ts)
 
         /*db.collection("timeSlots").document().set(ts).addOnSuccessListener {
             Log.d("timeSlots_add","Successfully added")
@@ -233,19 +217,21 @@ class TimeSlotsViewModel(application: Application) : AndroidViewModel(applicatio
     }
 
 
-    fun editTimeSlot(ts: TimeSlot) {
-
+    fun editTimeSlot(ts: TimeSlot): Task<QuerySnapshot> {
         val tsReqDocRef = db.collection("timeSlots").document(ts.id)
         val requests = db.collection("requests").whereEqualTo("timeSlot.id", ts.id)
 
-        db.runTransaction {
-            transaction ->
-            transaction.set(tsReqDocRef, ts)
+        return requests.get().addOnSuccessListener {
+            db.runBatch {
+                    batch ->
+                    batch.set(tsReqDocRef, ts)
 
-            requests.get().addOnSuccessListener {
+                Log.d("edit", "$it")
                 for(doc in it.documents)
-                    transaction.update(doc.reference, mapOf("timeSlot" to ts))
+                    batch.update(doc.reference, mapOf("timeSlot" to ts))
             }
+        }.addOnFailureListener{
+            Log.d("edit", "$it")
         }
     }
 

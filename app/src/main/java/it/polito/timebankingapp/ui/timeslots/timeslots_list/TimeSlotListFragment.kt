@@ -89,18 +89,24 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_timeslots_list) {
             setFragmentResultListener("timeSlot") { _, bundle ->
                 val result = bundle.getInt("timeSlotConfirm")
 
-                if (result == 1) {
-                    val snackBar = Snackbar.make(
-                        view,
-                        "New time slot successfully added.",
-                        Snackbar.LENGTH_LONG
-                    )
-                    snackBar.setAction("DISMISS") { snackBar.dismiss() }.show()
-                } else if (result == 2) {
-                    val snackBar =
-                        Snackbar.make(view, "Time slot successfully edited.", Snackbar.LENGTH_LONG)
-                    snackBar.setAction("DISMISS") { snackBar.dismiss() }.show()
+                var msg = when(result){
+                     1 ->  {
+                         "New time slot successfully added."
+                    }
+                    2 -> {
+                        "Time slot successfully edited."
+                    }
+                    3 ->{
+                        "Ops, something went wrong. Time slot not created/updated"
+                    }
+                    else -> { "This should not happen"}
                 }
+
+                val snackBar =
+                    Snackbar.make(view, msg, Snackbar.LENGTH_LONG)
+                snackBar.setAction("DISMISS") { snackBar.dismiss() }.show()
+
+
             }
         }
 

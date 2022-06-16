@@ -204,11 +204,17 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
         if (tsToEdit.isValid()) {
             //tsToEdit = ts.copy()
             if (addMode) {
-                vm.addTimeSlot(tsToEdit)
-                setFragmentResult("timeSlot", bundleOf("timeSlotConfirm" to 1))
+                vm.addTimeSlot(tsToEdit).addOnSuccessListener {
+                    setFragmentResult("timeSlot", bundleOf("timeSlotConfirm" to 1))
+                }.addOnFailureListener{
+                    setFragmentResult("timeSlot", bundleOf("timeSlotConfirm" to 3))
+                }
             } else {
-                vm.editTimeSlot(tsToEdit)
-                setFragmentResult("timeSlot", bundleOf("timeSlotConfirm" to 2))
+                vm.editTimeSlot(tsToEdit).addOnSuccessListener {
+                    setFragmentResult("timeSlot", bundleOf("timeSlotConfirm" to 2))
+                }.addOnFailureListener{
+                    setFragmentResult("timeSlot", bundleOf("timeSlotConfirm" to 3))
+                }
             }
 
             findNavController().navigateUp()

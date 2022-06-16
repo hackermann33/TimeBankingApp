@@ -84,6 +84,11 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
                     Snackbar.make(view, "Time slot successfully edited.", Snackbar.LENGTH_LONG)
                 snackBar.setAction("DISMISS") { snackBar.dismiss() }.show()
             }
+            else if(result == 3) {
+                val snackBar =
+                    Snackbar.make(view, "Something went wrong. Time slot was not edited!", Snackbar.LENGTH_LONG)
+                snackBar.setAction("DISMISS") { snackBar.dismiss() }.show()
+            }
         }
     }
 
