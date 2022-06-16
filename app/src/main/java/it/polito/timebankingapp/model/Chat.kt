@@ -16,14 +16,11 @@ data class Chat(
 )
 {
 
-
-
-
     /* This could be useless, put just to be safe*/
     val timeSlotId: String = timeSlot.id
 
     val users = listOf(requester.id, offerer.id)
-
+    /*val users = mapOf(requester.id to true, offerer.id to true)*/
 
     fun incUnreadMsg(): Chat {
         return this.copy(offererUnreadMsg = offererUnreadMsg+1)

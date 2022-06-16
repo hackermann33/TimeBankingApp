@@ -234,7 +234,19 @@ class TimeSlotsViewModel(application: Application) : AndroidViewModel(applicatio
 
 
     fun editTimeSlot(ts: TimeSlot) {
-        db.collection("timeSlots").document(ts.id).set(ts)
+
+        val tsReqDocRef = db.collection("timeSlots").document(ts.id)
+        val requests = db.collection("requests").whereEqualTo("timeSlot.id", ts.id)
+
+        db.runTransaction {
+            transaction ->
+            transaction.set(tsReqDocRef, ts)
+
+            requests.get().addOnSuccessListener {
+                for(doc in it.documents)
+                    transaction.update(doc.reference, mapOf("timeSlot" to ts))
+            }
+        }
     }
 
     override fun onCleared() {
