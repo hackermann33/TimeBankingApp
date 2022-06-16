@@ -317,7 +317,10 @@ class TimeSlotsViewModel(application: Application) : AndroidViewModel(applicatio
         db.collection("requests").whereEqualTo("timeSlot.id", ts.id).whereEqualTo("status", 1)
             .get().addOnSuccessListener {
                 for (doc in it.documents) {
-                    doc.reference.update(mapOf("status" to Chat.STATUS_COMPLETED)) //chat discarded anche all'utente accettato?
+                    doc.reference.update(mapOf("status" to Chat.STATUS_COMPLETED))
+                        .addOnSuccessListener {
+                            Log.d("timeSlot_completed", " update success")
+                        }
                     //doc.reference.delete()
                 }
                 db.collection("timeSlots").document(ts.id)

@@ -98,10 +98,10 @@ class TimeSlotMonthCalendar : Fragment(R.layout.fragment_time_slot_month_calenda
 
 
         vm.timeSlots.observe(viewLifecycleOwner) { it ->
+            events.clear()
             if (it.isNotEmpty()) {
                 //setVoidMessage(view, false)
                 val acceptedTimeSlots = it
-                events.clear()
 
                 for (i in it.indices) {
                     val values = acceptedTimeSlots[i].date.split("/")
@@ -113,7 +113,10 @@ class TimeSlotMonthCalendar : Fragment(R.layout.fragment_time_slot_month_calenda
                             updateAdapterForDate(it)
                     }
                 }
+            } else {
+                updateAdapterForDate(LocalDate.now())
             }
+
         }
 
         //dati statici
