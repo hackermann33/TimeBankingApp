@@ -213,7 +213,7 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
         /* query the db */
         val chatId = chat.requestId
         val reqTsDocs =
-            db.collection("requests").whereEqualTo("timeSlotsId", Helper.extractTimeSlotId(chatId))
+            db.collection("requests").whereEqualTo("timeSlot.id", Helper.extractTimeSlotId(chatId))
         val reqDocRef = db.collection("requests").document(chatId)
         val tsDocRef = db.collection("timeSlots").document(chat.timeSlot.id)
         val offererDocRef = db.collection("users").document(chat.offerer.id)
@@ -274,10 +274,10 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
                 true //newBalance
             }
             }.addOnSuccessListener {
-            reqTsDocs.get().addOnSuccessListener { //aggiorno copie di timeSlots all'interno di chats/requests
+            reqTsDocs.get().addOnSuccessListener { reqs-> //aggiorno copie di timeSlots all'interno di chats/requests
                 db.runBatch {
                     batch ->
-                    for (doc in it.documents) {
+                    for (doc in reqs.documents) {
                         Log.d(TAG, "ci passo: ${doc.reference}")
                         if (doc.get("requestId") != chatId)
                             batch.update(doc.reference,
