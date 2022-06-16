@@ -288,7 +288,7 @@ class EditProfileFragment : Fragment(R.layout.fragment_editprofile) {
         if (usr.isValid()) {
             retrieveUserData()
             //var path = saveToInternalStorage(profilePic.drawable.toBitmap(), true)
-
+            usr.profilePicUrl = vm.user.value!!.profilePicUrl
             vm.editUser(usr)
             //setFragmentResult("profile", b)
             //returnIntent.putExtra("it.polito.timebankingapp.EditProfileActivity.user", usr)
