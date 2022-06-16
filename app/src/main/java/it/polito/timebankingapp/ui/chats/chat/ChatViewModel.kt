@@ -269,11 +269,18 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
                 )
                 transaction.update(requesterDocRef, "balance", newBalance)
 
-                reqTsDocs.get().addOnSuccessListener { //aggiorno copie di timeSlots all'interno di chats/requests
+
+                /* !!!!tocheck ==> */
+                true //newBalance
+            }
+            }.addOnSuccessListener {
+            reqTsDocs.get().addOnSuccessListener { //aggiorno copie di timeSlots all'interno di chats/requests
+                db.runBatch {
+                    batch ->
                     for (doc in it.documents) {
                         Log.d(TAG, "ci passo: ${doc.reference}")
                         if (doc.get("requestId") != chatId)
-                            transaction.update(doc.reference,
+                            batch.update(doc.reference,
                                 mapOf(
                                     "status" to Chat.STATUS_DISCARDED,
                                     "assignedTo" to chat.requester
@@ -281,12 +288,9 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
                             )
 
                     }
-                }
+                    }
 
-                /* !!!!tocheck ==> */
-                true //newBalance
-            }
-            }
+        } }
     }
 
     fun discardRequest(chatId: String) {
