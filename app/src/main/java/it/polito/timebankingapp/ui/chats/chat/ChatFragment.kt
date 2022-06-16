@@ -9,10 +9,13 @@ import android.view.inputmethod.EditorInfo
 import android.widget.*
 import android.widget.TextView.OnEditorActionListener
 import androidx.cardview.widget.CardView
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
@@ -27,6 +30,7 @@ import it.polito.timebankingapp.model.Chat.Companion.STATUS_COMPLETED
 import it.polito.timebankingapp.model.Chat.Companion.STATUS_DISCARDED
 import it.polito.timebankingapp.model.chat.ChatMessage
 import it.polito.timebankingapp.model.user.CompactUser
+import it.polito.timebankingapp.ui.profile.ProfileViewModel
 import java.util.*
 
 
@@ -48,12 +52,14 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
     private lateinit var tvChatStatusTitle: TextView
     private lateinit var tvChatStatusInfo: TextView
 
+    private var firstTime: Boolean = true
+
 
     private val chatVm: ChatViewModel by activityViewModels()
-    //private val profileVM : ProfileViewModel by activityViewModels()
+    private val profileVM : ProfileViewModel by activityViewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-
+        firstTime = true
         /*TODO(To remove glitch between transictions (require -> offerer) use a bundle to understand where do you come from)  */
         /*chatVm.chat.observe(viewLifecycleOwner) { cli ->
                 currentChat = cli
@@ -99,6 +105,14 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         sendButton.imageAlpha = 0x3f
 
 
+        val clOtherProfile = view.findViewById<ConstraintLayout>(R.id.fragment_chat_cl_other_profile)
+        clOtherProfile.setOnClickListener {
+            val userId = Helper.getOtherUser(currentChat).id
+            profileVM.retrieveTimeSlotProfileData(userId)
+
+            findNavController().navigate(R.id.action_nav_chat_to_nav_showProfile, bundleOf("point_of_origin" to "skill_specific", "userId" to userId), /* TODO (Edit this bundle in order to avoid casini ) */
+            )
+        }
 
         textMessage = view.findViewById(R.id.edit_gchat_message)
 
@@ -187,7 +201,6 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         val sendButton = v.findViewById<ImageButton>(R.id.button_gchat_send)
 
 
-
         btnRequestService.setOnClickListener {
             //Helper.setConfirmationOnButton(requireContext(), btnRequestService) <= add if you can't do it without it
             /*btnRequireService.isEnabled = false *//*TODO(Reabilitate if error happens during requests) */
@@ -230,15 +243,20 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
             when (cli.status) {
                 Chat.STATUS_UNINTERESTED -> {
                     btnRequestService.isEnabled = true
-                    cvMessageChatStatus.visibility = View.GONE
-
+                    /*cvMessageChatStatus.visibility = View.GONE*/
                     Log.d(TAG, "STATUS UNIINTERESTED")
                 }
                 Chat.STATUS_INTERESTED -> {
+                    if(!firstTime){
+                        val snackBar = Snackbar.make(v, "Offerer tried to accept you request but you didn't have enough balance.", Snackbar.LENGTH_LONG)
+                        snackBar.setAction("DISMISS") { snackBar.dismiss() }.show()
+                    }
 
+                    if(firstTime) firstTime = false
                     /*cvMessageChatStatus.visibility = View.GONE*/
                     Log.d(TAG, "STATUS INTERESTED")
                     btnRequestService.text = "Service requested"
+                    cvMessageChatStatus.visibility = View.GONE
                     Helper.setConfirmationOnButton(requireContext(), btnRequestService)
                 }
                 Chat.STATUS_ACCEPTED -> {

@@ -180,7 +180,6 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
 
     private fun updateUserToDb(user: User) {
         db.collection("users").document(user.id).set(user).addOnSuccessListener {  }.addOnFailureListener{}
-
     }
 
     fun getUserFromId(userId: String): Task<DocumentSnapshot> {
@@ -194,10 +193,10 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
                 if (e == null) {
                     if (v != null) {
                         timeslotUsr = v.toObject<User>()!!
-                        _timeslotUser.value = timeslotUsr
+                        _timeslotUser.postValue(timeslotUsr)
                     }
 
-                } else _timeslotUser.value = User()
+                } else _timeslotUser.postValue(User())
             }
     }
 
