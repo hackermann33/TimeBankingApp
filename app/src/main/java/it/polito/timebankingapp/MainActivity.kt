@@ -42,6 +42,9 @@ class MainActivity : AppCompatActivity() {
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var navController: NavController
 
+    private lateinit var pBUserPic: ProgressBar
+    private lateinit var profilePic: ImageView
+
     val vm by viewModels<ProfileViewModel>()
     val timeSlotVm by viewModels<TimeSlotsViewModel>()
     val chatListVm by viewModels<ChatListViewModel>()
@@ -145,9 +148,9 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        val pBUserPic =
+        pBUserPic =
             navView.getHeaderView(0).findViewById<ProgressBar>(R.id.profile_pic_progress_bar)
-        val profilePic =
+        profilePic =
             navView.getHeaderView(0).findViewById<ImageView>(R.id.fragment_show_profile_iv_profile_pic)
 
 
@@ -179,6 +182,8 @@ class MainActivity : AppCompatActivity() {
             .build()
         val googleSignInClient = this.let { GoogleSignIn.getClient(it, gso) }
         googleSignInClient.signOut();
+        profilePic.setImageResource(R.drawable.default_avatar)
+        pBUserPic.visibility = View.VISIBLE 
         //navController.navigate(R.id.action_global_to_nav_login)
     }
 
