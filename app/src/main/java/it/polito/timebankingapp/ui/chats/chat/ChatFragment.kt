@@ -71,11 +71,15 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         */
         chatVm.chat.observe(viewLifecycleOwner) {
             //if (!it) {
+            if(!it.isEmpty()) {
                 currentChat = it
-                Log.d(TAG, "UI rendering... reqId: ${it.requestId} status: ${it.status} title: ${it.timeSlot.title} tsStatus: ${it.timeSlot.status}")
-            // chatVm.chat.value!!
+                Log.d(
+                    TAG,
+                    "UI rendering... reqId: ${it.requestId} status: ${it.status} title: ${it.timeSlot.title} tsStatus: ${it.timeSlot.status}"
+                )
+                // chatVm.chat.value!!
                 updateChatUi(view, currentChat)
-
+            }
                 //}
         }
 

@@ -64,7 +64,6 @@ class ChatListFragment : Fragment(R.layout.fragment_chat_list) {
                 //chatListViewModel.setIsClearedFlag(false)
             //else
                 if(!isLoading) {
-
                     val chatList = if(chatListType == Type.GLOBAL) chatListViewModel.allChatList.value!! else chatListViewModel.timeSlotChatList.value!!
                     if (chatList.isEmpty())
                         showNoChatsMessage(view, /*true*/ false)
