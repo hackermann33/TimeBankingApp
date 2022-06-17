@@ -10,7 +10,7 @@
         android:id="@+id/fragment_chat_cl_other_profile"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/change_color"
+        android:background="@drawable/change_color_clicked"
         android:clickable="true"
         android:focusable="auto"
         android:paddingBottom="8dp"
@@ -139,6 +139,7 @@
                 android:layout_weight="1"
                 android:backgroundTint="#B71C1C"
                 android:text="@string/discard"
+                android:textColor="@color/background"
                 android:visibility="gone" />
 
             <Button
@@ -150,6 +151,7 @@
                 android:layout_weight="1"
                 android:backgroundTint="@color/primary"
                 android:text="@string/accept"
+                android:textColor="@color/background"
                 android:visibility="gone" />
 
             <Button

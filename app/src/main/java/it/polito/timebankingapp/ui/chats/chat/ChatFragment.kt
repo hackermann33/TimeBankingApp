@@ -360,7 +360,6 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
                     tvChatStatusInfo.text = "TimeSlot is completed. Put a review  to the requester in Completed Time Slots section " +
                             "if you haven't already done."
 
-
                     etMessageInput.inputType = InputType.TYPE_NULL
                     cvMessageChatStatus.visibility = View.VISIBLE
 
@@ -368,9 +367,12 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
                     etMessageInput.hint = "Chat disabled"
 
                     btnAcceptRequest.isEnabled = false
+                    //btnAcceptRequest.isClickable = false
+                    btnAcceptRequest.alpha = 0.6F
 
                     btnDiscardRequest.isEnabled = false
-
+                    //btnDiscardRequest.isClickable = false
+                    btnDiscardRequest.alpha = 0.6F
                 }
 
             }
@@ -418,8 +420,15 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         //rlSendMsgBar.visibility = View.GONE //keep chat always available to simplify things..
         cvMessageChatStatus.visibility = View.VISIBLE
         btnRequestService.isEnabled = false
-        btnAcceptRequest.isEnabled = false
-        btnDiscardRequest.isEnabled = false
+
+        //btnAcceptRequest.isEnabled = false
+        btnAcceptRequest.isClickable = false
+        btnAcceptRequest.alpha = 0.6F
+
+        //btnDiscardRequest.isEnabled = false
+        btnDiscardRequest.isClickable = false
+        btnAcceptRequest.alpha = 0.6F
+
     }
 
     private fun chatToAccepted(v: View, type: Int) {
@@ -433,7 +442,13 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 
 
         btnRequestService.isEnabled = false
+        //btnRequestService.isClickable = false
+        btnAcceptRequest.alpha = 0.6F
+
         btnAcceptRequest.isEnabled = false
+        //btnAcceptRequest.isClickable = false
+        btnAcceptRequest.alpha = 0.6F
+
         btnDiscardRequest.isEnabled = false
 
     }
