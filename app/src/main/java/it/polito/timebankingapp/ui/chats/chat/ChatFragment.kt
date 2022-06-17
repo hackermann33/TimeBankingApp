@@ -57,31 +57,23 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
     private var passedFromInterested: Boolean = false
 
 
-
     private val chatVm: ChatViewModel by activityViewModels()
-    private val profileVM : ProfileViewModel by activityViewModels()
+    private val profileVM: ProfileViewModel by activityViewModels()
     private val timeSlotVm: TimeSlotsViewModel by activityViewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         passedFromInterested = false
-        /*TODO(To remove glitch between transictions (require -> offerer) use a bundle to understand where do you come from)  */
-        /*chatVm.chat.observe(viewLifecycleOwner) { cli ->
-                currentChat = cli
-                updateChatUi(view, cli)
-        }
-        */
+
         chatVm.chat.observe(viewLifecycleOwner) {
-            //if (!it) {
-            if(!it.isEmpty()) {
+            if (!it.isEmpty()) { /* Update Ui if it's not empty*/
                 currentChat = it
                 Log.d(
                     TAG,
                     "UI rendering... reqId: ${it.requestId} status: ${it.status} title: ${it.timeSlot.title} tsStatus: ${it.timeSlot.status}"
                 )
-                // chatVm.chat.value!!
                 updateChatUi(view, currentChat)
             }
-                //}
+
         }
 
         setRecyclerViewAdapter(view)
@@ -109,24 +101,35 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         btnDiscardRequest = view.findViewById(R.id.fragment_chat_btn_discard)
         btnRequestService = view.findViewById(R.id.fragment_chat_btn_request_service)
 
-        val sendButton = view.findViewById<ImageButton>(R.id.button_gchat_send)
-        sendButton.imageAlpha = 0x3f
 
         /* Navigation to showProfile*/
-        val clOtherProfile = view.findViewById<ConstraintLayout>(R.id.fragment_chat_cl_other_profile)
+        val clOtherProfile =
+            view.findViewById<ConstraintLayout>(R.id.fragment_chat_cl_other_profile)
         clOtherProfile.setOnClickListener {
             val userId = Helper.getOtherUser(currentChat).id
             profileVM.retrieveTimeSlotProfileData(userId)
 
-            findNavController().navigate(R.id.action_nav_chat_to_nav_showProfile, bundleOf("point_of_origin" to "skill_specific", "userId" to userId), /* TODO (Edit this bundle in order to avoid casini ) */
+            findNavController().navigate(
+                R.id.action_nav_chat_to_nav_showProfile,
+                bundleOf(
+                    "point_of_origin" to "skill_specific",
+                    "userId" to userId
+                ), /* TODO (Edit this bundle in order to avoid casini ) */
             )
         }
 
+        /* Navigation to detail */
         val tvTimeSlotTitle = view.findViewById<TextView>(R.id.fragment_chat_tv_time_slot_title)
         tvTimeSlotTitle.setOnClickListener {
             timeSlotVm.updateSelectedTimeSlot(currentChat.timeSlot.id)
-            findNavController().navigate(R.id.action_nav_chat_to_nav_timeSlotDetails, bundleOf("isPersonal" to (currentChat.offerer.id == Firebase.auth.uid)))
+            findNavController().navigate(
+                R.id.action_nav_chat_to_nav_timeSlotDetails,
+                bundleOf("isPersonal" to (currentChat.offerer.id == Firebase.auth.uid))
+            )
         }
+
+        val btnSendMessage = view.findViewById<ImageButton>(R.id.button_gchat_send)
+        btnSendMessage.imageAlpha = 0x3f
 
         etMessageInput = view.findViewById(R.id.edit_gchat_message)
 
@@ -139,27 +142,26 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
             handled
         })
 
-
         etMessageInput.doAfterTextChanged {
             Log.d(TAG, "...text changed: $it enable: ${!it.isNullOrEmpty()}")
             val enabled = !it.isNullOrEmpty()
-            sendButton.isEnabled = enabled
-            sendButton.imageAlpha = if(enabled) 0xFF else 0x3f
+            btnSendMessage.isEnabled = enabled
+            btnSendMessage.imageAlpha = if (enabled) 0xFF else 0x3f
         }
 
-        sendButton.setOnClickListener {
+        btnSendMessage.setOnClickListener {
             sendMessage()
         }
     }
 
-    private fun sendMessage(){
+    private fun sendMessage() {
         if (etMessageInput.text.isNotEmpty()) {
             btnRequestService.isEnabled = false
             sendMessage(
                 ChatMessage(
                     Firebase.auth.currentUser!!.uid,
                     etMessageInput.text.toString(),
-                        Calendar.getInstance().time,
+                    Calendar.getInstance().time,
                 )
             )
             etMessageInput.text.clear()
@@ -223,7 +225,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 
         btnAcceptRequest.setOnClickListener {
             chatVm.acceptRequestAndUpdate(cli).addOnSuccessListener { res ->
-                if(res) {
+                if (res) {
                     val msg = "TimeSlot correctly assigned"
                     val snackBar = Snackbar.make(v, msg, Snackbar.LENGTH_LONG)
                     snackBar.setAction("DISMISS") { snackBar.dismiss() }.show()
@@ -231,8 +233,8 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
                 /* balance sufficiente*/
 
             }
-                .addOnFailureListener{/* Some problem happened */
-            }
+                .addOnFailureListener {/* Some problem happened */
+                }
             /*btnAcceptRequest.isEnabled = false
             btnDiscardRequest.alpha = 0.8F
             btnDiscardRequest.isEnabled = false*/
@@ -258,9 +260,10 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
                 Chat.STATUS_UNINTERESTED -> {
                     btnRequestService.isEnabled = true
 
-                    if(passedFromInterested){
-                        val msg = "Offerer tried to accept your request but your balance was not enough." +
-                                "Your request has been deleted"
+                    if (passedFromInterested) {
+                        val msg =
+                            "Offerer tried to accept your request but your balance was not enough." +
+                                    "Your request has been deleted"
                         val snackBar = Snackbar.make(v, msg, Snackbar.LENGTH_LONG)
                         snackBar.setAction("DISMISS") { snackBar.dismiss() }.show()
 
@@ -272,7 +275,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
                     Log.d(TAG, "STATUS UNIINTERESTED")
                 }
                 Chat.STATUS_INTERESTED -> {
-                    if(!passedFromInterested) passedFromInterested = true
+                    if (!passedFromInterested) passedFromInterested = true
 
                     /*cvMessageChatStatus.visibility = View.GONE*/
                     Log.d(TAG, "STATUS INTERESTED")
@@ -302,12 +305,13 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
                     cvMessageChatStatus.visibility = View.VISIBLE
                     if (cli.timeSlot.assignedTo.id == Firebase.auth.uid!!) {
                         tvChatStatusTitle.text = "TimeSlot is completed by you"
-                        tvChatStatusInfo.text = "TimeSlot is completed. Put a review in Completed Time Slots section to the offerer " +
-                                "if you haven't already done."
-                    }
-                    else {
+                        tvChatStatusInfo.text =
+                            "TimeSlot is completed. Put a review in Completed Time Slots section to the offerer " +
+                                    "if you haven't already done."
+                    } else {
                         tvChatStatusTitle.text = "TimeSlot completed by another user"
-                        tvChatStatusInfo.text = "TimeSlot is completed by another user. Chat has been disabled"
+                        tvChatStatusInfo.text =
+                            "TimeSlot is completed by another user. Chat has been disabled"
                     }
 
                     Helper.setConfirmationOnButton(requireContext(), btnRequestService);
@@ -328,7 +332,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
                 Chat.STATUS_UNINTERESTED -> {
                     btnRequestService.isEnabled = true
 
-                    if(passedFromInterested){
+                    if (passedFromInterested) {
                         cvMessageChatStatus.visibility = View.GONE
                         setFragmentResult("chatFragment", bundleOf("SNACKBAR" to true))
                         findNavController().navigateUp()
@@ -337,11 +341,11 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
                     Log.d(TAG, "STATUS UNIINTERESTED")
                 }
                 Chat.STATUS_INTERESTED -> {
-                    if(!passedFromInterested) passedFromInterested = true
+                    if (!passedFromInterested) passedFromInterested = true
                     btnAcceptRequest.isEnabled = true
                     btnDiscardRequest.isEnabled = true
                     cvMessageChatStatus.visibility = View.GONE
-                    Log.d(TAG, "STATUS INTERESTED") ; /*cvMessageChatStatus.visibility = View.GONE*/
+                    Log.d(TAG, "STATUS INTERESTED"); /*cvMessageChatStatus.visibility = View.GONE*/
 
                 }
                 Chat.STATUS_ACCEPTED -> {
@@ -358,8 +362,9 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
                     etMessageInput.inputType = InputType.TYPE_NULL //disabling textMessageBox
 
                     tvChatStatusTitle.text = "TimeSlot completed"
-                    tvChatStatusInfo.text = "TimeSlot is completed. Put a review  to the requester in Completed Time Slots section " +
-                            "if you haven't already done."
+                    tvChatStatusInfo.text =
+                        "TimeSlot is completed. Put a review  to the requester in Completed Time Slots section " +
+                                "if you haven't already done."
 
                     etMessageInput.inputType = InputType.TYPE_NULL
                     cvMessageChatStatus.visibility = View.VISIBLE
@@ -379,26 +384,33 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
             }
         }
 
-        sendButton.setOnClickListener {
+        /*sendButton.setOnClickListener {
             if (etMessageInput.text.isNotEmpty()) {
                 btnRequestService.isEnabled = false
                 sendMessage(
                     ChatMessage(
                         Firebase.auth.currentUser!!.uid,
-                        etMessageInput.text.toString()/*,
-                        Calendar.getInstance(),*/
+                        etMessageInput.text.toString()*//*,
+                        Calendar.getInstance(),*//*
                     )
                 )
                 etMessageInput.text.clear()
             }
-        }
+        }*/
 
     }
 
     private fun chatToDiscarded(v: View, type: Int) {
-        when(type){
-            Chat.CHAT_TYPE_TO_OFFERER -> { tvChatStatusTitle.text = getString(R.string.service_not_available); tvChatStatusInfo.text = getString(R.string.service_assigned_to_another) }
-            Chat.CHAT_TYPE_TO_REQUESTER -> {tvChatStatusTitle.text = "Service discarded"; tvChatStatusInfo.text = "You have discarded the request by this user!"}
+        when (type) {
+            Chat.CHAT_TYPE_TO_OFFERER -> {
+                tvChatStatusTitle.text =
+                    getString(R.string.service_not_available); tvChatStatusInfo.text =
+                    getString(R.string.service_assigned_to_another)
+            }
+            Chat.CHAT_TYPE_TO_REQUESTER -> {
+                tvChatStatusTitle.text = "Service discarded"; tvChatStatusInfo.text =
+                    "You have discarded the request by this user!"
+            }
         }
 
         //rlSendMsgBar.visibility = View.GONE //keep chat always available to simplify things..
@@ -416,9 +428,15 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
     }
 
     private fun chatToAccepted(v: View, type: Int) {
-        when(type){
-            Chat.CHAT_TYPE_TO_OFFERER -> { tvChatStatusTitle.text = "Service assigned"; tvChatStatusInfo.text = "Service has been assigned to you. Go to the calendar section to see your assigned services." }
-            Chat.CHAT_TYPE_TO_REQUESTER -> {tvChatStatusTitle.text = "Service accepted"; tvChatStatusInfo.text = "Service has been assigned to this user. Go to the calendar section to see services accepted by you."}
+        when (type) {
+            Chat.CHAT_TYPE_TO_OFFERER -> {
+                tvChatStatusTitle.text = "Service assigned"; tvChatStatusInfo.text =
+                    "Service has been assigned to you. Go to the calendar section to see your assigned services."
+            }
+            Chat.CHAT_TYPE_TO_REQUESTER -> {
+                tvChatStatusTitle.text = "Service accepted"; tvChatStatusInfo.text =
+                    "Service has been assigned to this user. Go to the calendar section to see services accepted by you."
+            }
         }
 
         //rlSendMsgBar.visibility = View.GONE //keep chat always enabled to simplify things..
