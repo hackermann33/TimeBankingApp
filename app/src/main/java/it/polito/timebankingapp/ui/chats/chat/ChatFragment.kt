@@ -352,7 +352,21 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
                     sendButton.isEnabled = false
                     etMessageInput.inputType = InputType.TYPE_NULL //disabling textMessageBox
 
-                    tvChatStatusInfo.text = "TimeSlot completed"
+                    tvChatStatusTitle.text = "TimeSlot completed"
+                    tvChatStatusInfo.text = "TimeSlot is completed. Put a review  to the requester in Completed Time Slots section " +
+                            "if you haven't already done."
+
+
+                    etMessageInput.inputType = InputType.TYPE_NULL
+                    cvMessageChatStatus.visibility = View.VISIBLE
+
+                    sendButton.visibility = View.GONE
+                    etMessageInput.hint = "Chat disabled"
+
+                    btnAcceptRequest.isEnabled = false
+
+                    btnDiscardRequest.isEnabled = false
+
                 }
 
             }

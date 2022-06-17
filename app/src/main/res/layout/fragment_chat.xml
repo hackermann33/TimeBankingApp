@@ -124,6 +124,7 @@
             android:layout_marginTop="4dp"
             android:layout_marginEnd="16dp"
             android:orientation="horizontal"
+            android:visibility="visible"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
@@ -138,7 +139,7 @@
                 android:layout_weight="1"
                 android:backgroundTint="#B71C1C"
                 android:text="@string/discard"
-                android:visibility="invisible" />
+                android:visibility="gone" />
 
             <Button
                 android:id="@+id/fragment_chat_btn_accept"
@@ -147,8 +148,9 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="16dp"
                 android:layout_weight="1"
+                android:backgroundTint="@color/primary"
                 android:text="@string/accept"
-                android:visibility="invisible" />
+                android:visibility="gone" />
 
             <Button
                 android:id="@+id/fragment_chat_btn_request_service"
@@ -156,7 +158,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/request_service"
-                android:visibility="invisible" />
+                android:visibility="gone" />
         </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
