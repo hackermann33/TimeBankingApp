@@ -47,16 +47,19 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
         super.onCreate(savedInstanceState)
         userId = arguments?.getString("userId").toString()
 
+        isPersonal = arguments?.getBoolean("isPersonal") ?: false
         setHasOptionsMenu(true)
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+
         globalModel.selectedTimeSlot.observe(viewLifecycleOwner) {
             timeSlot = it
 
-            isPersonal = timeSlot.userId == Firebase.auth.uid
+
 
             /* If it's not personal, retrieve request infos too */
             if(!isPersonal)
@@ -241,6 +244,7 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
 
             chatVm.selectChatFromTimeSlot(timeSlot, profileViewModel.user.value!!.toCompactUser() )
     }
+
 
     private fun editTimeslot() {
         //launch edit timeslot fragment

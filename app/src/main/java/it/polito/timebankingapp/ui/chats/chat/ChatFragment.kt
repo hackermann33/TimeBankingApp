@@ -120,7 +120,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         val tvTimeSlotTitle = view.findViewById<TextView>(R.id.fragment_chat_tv_time_slot_title)
         tvTimeSlotTitle.setOnClickListener {
             timeSlotVm.updateSelectedTimeSlot(currentChat.timeSlot.id)
-            findNavController().navigate(R.id.action_nav_chat_to_nav_timeSlotDetails)
+            findNavController().navigate(R.id.action_nav_chat_to_nav_timeSlotDetails, bundleOf("isPersonal" to (currentChat.offerer.id == Firebase.auth.uid)))
         }
 
         etMessageInput = view.findViewById(R.id.edit_gchat_message)
