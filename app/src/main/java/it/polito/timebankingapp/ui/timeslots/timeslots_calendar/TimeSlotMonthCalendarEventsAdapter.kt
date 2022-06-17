@@ -35,11 +35,14 @@ class TimeSlotMonthCalendarEventsAdapter(/*val vm : TimeSlotsViewModel*/) :
         private val tsTitle: TextView = mainView.findViewById(R.id.calendar_item_ts_title)
         private val tsLocation: TextView = mainView.findViewById(R.id.calendar_item_ts_location)
         private val tsTimestamp: TextView = mainView.findViewById(R.id.calendar_item_ts_timestamp)
+        private val tsUserNickname: TextView = mainView.findViewById(R.id.calendar_item_ts_nickname)
+        private val tsUserNicknameLabel: TextView = mainView.findViewById(R.id.nickname_label)
         private val tsType: Chip = mainView.findViewById(R.id.calendar_item_ts_type)
         private lateinit var completeButton: ImageView
 
         fun bind(event: Event, completeTsAction: (v: View) -> Unit,) {
             tsTitle.text = event.ts.title
+
             tsLocation.text = event.ts.location
             tsTimestamp.text = event.ts.date.plus(" - ").plus(event.ts.time)
             tsEstimatedTime.text = event.ts.duration.plus(" hours")
@@ -50,9 +53,13 @@ class TimeSlotMonthCalendarEventsAdapter(/*val vm : TimeSlotsViewModel*/) :
             if(event.isOffered) {
                 tsType.text = "My Offer"
                 tsType.setChipBackgroundColorResource(R.color.accent)
+                tsUserNickname.text = event.ts.assignedTo.nick
+                tsUserNicknameLabel.text = "Requester nickname:"
             } else {
                 tsType.text = "Request"
                 tsType.setChipBackgroundColorResource(R.color.primary)
+                tsUserNickname.text = event.ts.offerer.nick
+                tsUserNicknameLabel.text = "Offerer nickname:"
             }
         }
     }

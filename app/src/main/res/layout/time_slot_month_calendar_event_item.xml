@@ -127,11 +127,33 @@
                 android:text="@string/time_slots_item_duration"
                 android:textColor="#8E8E8E"
                 android:visibility="visible"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/duration_label"
-                app:layout_constraintTop_toBottomOf="@+id/calendar_item_ts_timestamp"
-                app:layout_constraintVertical_bias="0.0" />
+                app:layout_constraintTop_toBottomOf="@+id/calendar_item_ts_timestamp" />
+
+            <TextView
+                android:id="@+id/nickname_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:textColor="#8E8E8E"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/duration_label"
+                tools:text="offerer/requester:" />
+
+            <TextView
+                android:id="@+id/calendar_item_ts_nickname"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:textColor="#8E8E8E"
+                android:visibility="visible"
+                app:layout_constraintBottom_toBottomOf="@+id/nickname_label"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/nickname_label"
+                app:layout_constraintTop_toTopOf="@+id/nickname_label"
+                tools:text="username" />
+
 
             <TextView
                 android:id="@+id/type_label"
@@ -142,7 +164,11 @@
                 android:textColor="#8E8E8E"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/duration_label" />
+                app:layout_constraintTop_toBottomOf="@+id/nickname_label" />
+
+
+
+
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/calendar_item_ts_type"
