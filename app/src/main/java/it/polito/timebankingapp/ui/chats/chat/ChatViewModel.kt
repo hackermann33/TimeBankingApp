@@ -34,7 +34,6 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
     private lateinit var chatListener: ListenerRegistration
 
 
-
     override fun onCleared() {
         if (::messagesListener.isInitialized)
             messagesListener.remove()
@@ -49,7 +48,7 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
         val msgsDocRef =
             db.collection("requests").document(chat.requestId).collection("messages").document()
 
-        if (chat.status == Chat.STATUS_UNINTERESTED){ //first message
+        if (chat.status == Chat.STATUS_UNINTERESTED) { //first message
             reqDocRef.set(chat.copy(status = Chat.STATUS_INTERESTED)) //write chat/request for the first time
             updateChat(reqDocRef) //register listeners
         }
@@ -81,20 +80,25 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
     /* Register two listeners for the current chat */
     private fun updateChat(chatRef: DocumentReference) {
         Log.d(TAG, "updateChat...")
-        chatListener = chatRef.addSnapshotListener {v,e ->
-            if(e==null){
-                _chat.postValue(v!!.toObject<Chat>())
-            }
-            else
+        chatListener = chatRef.addSnapshotListener { v, e ->
+            if (e == null) {
+                if(!v!!.exists())
+                    _chat.postValue(_chat.value!!.apply { toStatus(Chat.STATUS_UNINTERESTED) })
+                else {
+                    _chat.postValue(v.toObject<Chat>())
+                    Log.d(TAG,"updateChat v: $v")
+                }
+            } else
                 _chat.postValue(Chat())
         }
 
-        messagesListener = chatRef.collection("messages").orderBy("timestamp").addSnapshotListener { v2, e2 ->
-            if (e2 == null) {
-                _chatMessages.postValue(v2!!.mapNotNull { d -> d.toChatMessage() })
-            } else
-                _chatMessages.postValue(emptyList())
-        }
+        messagesListener =
+            chatRef.collection("messages").orderBy("timestamp").addSnapshotListener { v2, e2 ->
+                if (e2 == null) {
+                    _chatMessages.postValue(v2!!.mapNotNull { d -> d.toChatMessage() })
+                } else
+                    _chatMessages.postValue(emptyList())
+            }
     }
 
     fun selectChatFromChatList(chat: Chat) {
@@ -108,7 +112,8 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
     /* Create an uninterested chat given a timeSlot and the current user */
     fun createUninterestedChat(
         timeSlot: TimeSlot,
-        currentUser: CompactUser, ) {
+        currentUser: CompactUser,
+    ) {
 
         val tmpChat = Chat(
             timeSlot = timeSlot,
@@ -132,30 +137,21 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
 
     /* Function called when Request Service button is pressed */
     fun requestService(chat: Chat) {
-//        Log.d("chatViewModel", _chat.value!!.toString())
-        //_isLoading.postValue(true)
+
         val requestRef = db.collection("requests").document(chat.requestId)
-        val interestedChat = chat.copy(
-            status = Chat.STATUS_INTERESTED
-        )
+
+        val interestedChat: Chat = chat.apply { toStatus(Chat.STATUS_INTERESTED) }
+
         updateChat(requestRef) //Update all the listeners
 
-        requestRef.set(interestedChat).addOnSuccessListener { v ->
-            /*_chat.postValue(interestedChat)
-            _isLoading.postValue(false)
+        requestRef.set(interestedChat)
 
-            registerChatListener(requestRef)
-            registerMessagesListener(interestedChat)*/
-            Log.d(TAG, "Status successfully changed to interested!")
-
-        }
         val msg = ChatMessage(
             messageText = Helper.requestMessage(interestedChat),
             userId = interestedChat.requester.id,
             timestamp = Date()
         )
         sendMessageAndUpdate(interestedChat, msg)
-
     }
 
     /* Function that changes chat status*/
@@ -169,56 +165,99 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
     }
 
 
-    fun acceptRequest(chat: Chat): Task<Boolean> {
+    fun acceptRequestAndUpdate(currentChat: Chat): Task<Boolean> {
         /* query the db */
-        val chatId = chat.requestId
-        val reqTsDocs =
-            db.collection("requests").whereEqualTo("timeSlot.id", Helper.extractTimeSlotId(chatId))
-        val reqDocRef = db.collection("requests").document(chatId)
-        val tsDocRef = db.collection("timeSlots").document(chat.timeSlot.id)
-        val offererDocRef = db.collection("users").document(chat.offerer.id)
-        val requesterDocRef = db.collection("users").document(chat.requester.id)
+        val currentChatId = currentChat.requestId
+        val otherTimeSlotsChats =
+            db.collection("requests")
+                .whereEqualTo("timeSlot.id", Helper.extractTimeSlotId(currentChatId))
+                .whereNotEqualTo(
+                    "requester.id", currentChat.requester.id
+                )
+        val currentChatDocRef = db.collection("requests").document(currentChatId)
+        val currentTimeSlotDocRef = db.collection("timeSlots").document(currentChat.timeSlot.id)
+        val offererDocRef = db.collection("users").document(currentChat.offerer.id)
+        val requesterDocRef = db.collection("users").document(currentChat.requester.id)
 
-        val timeSlotsDocRef = db.collection("timeSlots")
+        /* update status and timeSlot(ref) in Chat */
+        val acceptedChat = currentChat.toStatus(Chat.STATUS_ACCEPTED)
 
+        /* 1. Set to Accept */
+        acceptRequestAndUpdate(
+            currentChatDocRef,
+            currentTimeSlotDocRef,
+            currentChat,
+            otherTimeSlotsChats
+        ).addOnSuccessListener { Log.d(TAG,"acceptRequestAndUpdateSuccess") }.addOnFailureListener{ Log.d(TAG, "acceptRequestAndUpdateFailure")}
 
-        reqDocRef.update(mapOf("status" to Chat.STATUS_ACCEPTED))
         return db.runTransaction { transaction ->
-            val snapshot = transaction.get(reqDocRef)
+            val snapshot = transaction.get(currentChatDocRef)
             val duration = snapshot.getString("timeSlot.duration")?.toInt()!!
             val newBalance = snapshot.getLong("requester.balance")!! - duration
 
-
             if (newBalance < 0) { //Not enough balance => Backtrack
                 /*transaction.update(reqDocRef, "status", Chat.STATUS_INTERESTED)
-                */
-                val updatedChat = chat.copy(status=Chat.STATUS_INTERESTED, timeSlot=chat.timeSlot.copy(status=TimeSlot.TIME_SLOT_STATUS_AVAILABLE))
-                transaction.set(reqDocRef, updatedChat)
-                transaction.update(tsDocRef, "assignedTo", CompactUser())
-                transaction.update(tsDocRef, "status", TimeSlot.TIME_SLOT_STATUS_AVAILABLE)
+            */
+                /* Delete requests and update*/
+                acceptRequestAndUpdate(
+                    currentChatDocRef,
+                    currentTimeSlotDocRef,
+                    currentChat,
+                    otherTimeSlotsChats,
+                    true
+                )
+
+
+                /*val updatedChat = currentChat.copy(
+                    status = Chat.STATUS_INTERESTED,
+                    timeSlot = currentChat.timeSlot.copy(status = TimeSlot.TIME_SLOT_STATUS_AVAILABLE)
+                )
+                transaction.update(currentChatDocRef, "status",  Chat.STATUS_INTERESTED)
+                transaction.update(currentChatDocRef, "timeSlot.status",  TimeSlot.TIME_SLOT_STATUS_AVAILABLE)
+                transaction.update(currentChatDocRef, "timeSlot.assignedTo",  CompactUser())
+
+                transaction.update(currentTimeSlotDocRef, "assignedTo", CompactUser())
+                transaction.update(
+                    currentTimeSlotDocRef,
+                    "status",
+                    TimeSlot.TIME_SLOT_STATUS_AVAILABLE
+                )
+*/
                 //_chat.postValue(chat.copy(status = Chat.STATUS_INTERESTED))
                 false
                 //newBalance
             } else { //Balance is ok => transfer credit => update references
                 Log.d(TAG, "balance is okay: $newBalance")
 
-                //transaction.update(reqDocRef,"status", Chat.STATUS_ACCEPTED)
-                transaction.update(reqDocRef,"timeSlot.status", TimeSlot.TIME_SLOT_STATUS_ASSIGNED)
-                transaction.update(reqDocRef, "timeSlot.assignedTo", chat.requester)
-
-
-                transaction.update(tsDocRef, "status", TimeSlot.TIME_SLOT_STATUS_ASSIGNED)
-                transaction.update(tsDocRef, "assignedTo", chat.requester)
+                /*//transaction.update(reqDocRef,"status", Chat.STATUS_ACCEPTED)
+                transaction.update(
+                    currentChatDocRef,
+                    "timeSlot.status",
+                    TimeSlot.TIME_SLOT_STATUS_ASSIGNED
+                )
+                transaction.update(
+                    currentChatDocRef,
+                    "timeSlot.assignedTo",
+                    currentChat.requester
+                )
 
 
                 transaction.update(
-                    reqDocRef,
+                    currentTimeSlotDocRef,
+                    "status",
+                    TimeSlot.TIME_SLOT_STATUS_ASSIGNED
+                )
+                transaction.update(currentTimeSlotDocRef, "assignedTo", currentChat.requester)*/
+
+
+                transaction.update(
+                    currentChatDocRef,
                     "requester.balance",
                     newBalance
                 ) //TODO(Delete if u have time)
-                transaction.update(reqDocRef, "timeSlot.requester.balance", newBalance)
+                transaction.update(currentChatDocRef, "timeSlot.requester.balance", newBalance)
                 transaction.update(
-                    reqDocRef,
+                    currentChatDocRef,
                     "offerer.balance",
                     FieldValue.increment(duration.toLong())
                 )
@@ -228,32 +267,112 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
                     FieldValue.increment(duration.toLong())
                 )
                 transaction.update(requesterDocRef, "balance", newBalance)
-
-
                 /* !!!!tocheck ==> */
                 true //newBalance
             }
             // commento
-            }.addOnSuccessListener {
-            reqTsDocs.get().addOnSuccessListener { reqs-> //aggiorno copie di timeSlots all'interno di chats/requests
-                if(it == true) {
-                    db.runBatch { batch ->
-                        for (doc in reqs.documents) {
-                            Log.d(TAG, "ci passo: ${doc.reference}")
-                            if (doc.get("requestId") != chatId)
-                                batch.update(
-                                    doc.reference,
-                                    mapOf(
-                                        "status" to Chat.STATUS_DISCARDED,
-                                        "assignedTo" to chat.requester
-                                    )
-                                )
+
+
+            /*.addOnSuccessListener {
+                    otherTimeSlotsChats.get()
+                        .addOnSuccessListener { reqs -> //aggiorno copie di timeSlots all'interno di chats/requests
+                            if (it == true) {
+                                updateAllReferences(reqs, currentChatId, currentChat)
+                            }
 
                         }
-                    }
                 }
+    */
+        }
+    }
 
-        } }
+
+    private fun acceptRequestAndUpdate(
+        currentChatDocRef: DocumentReference,
+        currentTimeSlotDocRef: DocumentReference,
+        currentChat: Chat,
+        otherTimeSlotsChats: Query,
+        undo: Boolean = false,
+    ): Task<Void> {
+        /* 1. Update current chat and current timeSlot */
+        var newChatStatus: Int = Chat.STATUS_ACCEPTED
+        var newTimeSlotStatus: Int = TimeSlot.TIME_SLOT_STATUS_ASSIGNED
+        var newRequester = currentChat.requester
+        var newOtherChatStatus = Chat.STATUS_DISCARDED
+        if (undo) {
+            newTimeSlotStatus = TimeSlot.TIME_SLOT_STATUS_AVAILABLE
+            newRequester = CompactUser()
+            newOtherChatStatus = Chat.STATUS_INTERESTED
+        }
+        return db.runBatch { batch ->
+
+            if (!undo) {
+                batch.update(currentChatDocRef, "status", newChatStatus)
+                batch.update(currentChatDocRef, "timeSlot.status", newTimeSlotStatus)
+                batch.update(currentChatDocRef, "timeSlot.assignedTo", newRequester)
+            } else {
+
+                batch.delete(currentChatDocRef)
+            }
+            /* Update timeSlot in timeSlot collection */
+            batch.update(currentTimeSlotDocRef, "status", newTimeSlotStatus)
+            batch.update(currentTimeSlotDocRef, "assignedTo", newRequester)
+
+        }.addOnSuccessListener {
+            currentChatDocRef.collection("messages").get().addOnSuccessListener {
+                db.runBatch {
+                        batch ->
+                        it.documents.forEach { doc ->
+                            batch.delete(doc.reference)
+                        }
+                }
+            }
+
+        }   /*2. Update references ( in table requests )*/
+            .addOnSuccessListener {
+
+                /* Update doc.timeSlot references collection requests */
+                otherTimeSlotsChats.get().addOnSuccessListener {
+                    db.runBatch { batch ->
+                        for (doc in it.documents) {
+                            batch.update(doc.reference, "status", newOtherChatStatus)
+                            batch.update(
+                                doc.reference,
+                                "timeSlot.status",
+                                newTimeSlotStatus
+                            )
+                            batch.update(
+                                doc.reference,
+                                "timeSlot.assignedTo",
+                                newRequester
+                            )
+                        }
+                    }
+                }.addOnFailureListener {
+                    Log.d(TAG, "$it")
+                }
+            }
+    }
+
+    private fun updateAllReferences(
+        reqs: QuerySnapshot,
+        chatId: String,
+        chat: Chat
+    ) {
+        db.runBatch { batch ->
+            for (doc in reqs.documents) {
+                Log.d(TAG, "ci passo: ${doc.reference}")
+                if (doc.get("requestId") != chatId) /* Se è diversa dalla chat corrente */
+                    batch.update(
+                        doc.reference,
+                        mapOf(
+                            "status" to Chat.STATUS_DISCARDED,
+                            "assignedTo" to chat.requester
+                        )
+                    )
+
+            }
+        }
     }
 
     fun discardRequest(chatId: String) {
@@ -267,7 +386,7 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
 
     private fun QueryDocumentSnapshot.toChatMessage(): ChatMessage? {
         return try {
-            //val messageId = get("messageId") as String
+            // messageId = get("messageId") as String
             val userId = get("userId") as String
             val messageText = get("messageText") as String
             val timestamp = get("timestamp") as Timestamp

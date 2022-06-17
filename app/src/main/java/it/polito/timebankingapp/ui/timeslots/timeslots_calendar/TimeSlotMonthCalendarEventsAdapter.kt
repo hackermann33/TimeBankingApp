@@ -75,6 +75,7 @@ class TimeSlotMonthCalendarEventsAdapter(/*val vm : TimeSlotsViewModel*/) :
             val timeValues = events[position].ts.time.split(":")
             val duration = events[position].ts.duration.toInt()
 
+
             val expectedTsTimeStamp = LocalDateTime.of(dateValues[2].toInt(),dateValues[1].toInt(),
                 dateValues[0].toInt(),timeValues[0].toInt()+duration,timeValues[0].toInt())
 

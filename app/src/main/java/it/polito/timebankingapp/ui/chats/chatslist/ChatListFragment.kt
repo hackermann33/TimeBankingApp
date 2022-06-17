@@ -7,8 +7,10 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.setFragmentResultListener
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
 import it.polito.timebankingapp.R
 import it.polito.timebankingapp.model.Chat
 import it.polito.timebankingapp.ui.chats.chat.ChatViewModel
@@ -40,6 +42,19 @@ class ChatListFragment : Fragment(R.layout.fragment_chat_list) {
 
         adTmp = ChatListViewAdapter(listOf(), ::selectChat, chatListType)
         rv.adapter = adTmp
+
+
+        setFragmentResultListener("chatFragment") { _, bundle ->
+            val result = bundle.getBoolean("SNACKBAR")
+            val msg = "Requester hasn't enough balance." +
+                    "The request has been deleted"
+            if(result) {
+                val snackBar =
+                    Snackbar.make(view, msg, Snackbar.LENGTH_LONG)
+                snackBar.setAction("DISMISS") { snackBar.dismiss() }.show()
+            }
+
+        }
 
 
 
@@ -107,6 +122,8 @@ class ChatListFragment : Fragment(R.layout.fragment_chat_list) {
         //chatListViewModel.setIsClearedFlag(true)
         super.onDetach()
     }
+
+
 
 
 

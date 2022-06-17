@@ -1,5 +1,6 @@
 package it.polito.timebankingapp.model
 
+import android.text.format.Time
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.Exclude
 import com.google.firebase.ktx.Firebase
@@ -79,6 +80,18 @@ data class Chat(
 
     @Exclude
     fun isEmpty() = this.requestId == "_"
+
+
+    fun toStatus(new_status: Int) {
+        this.status = new_status
+
+        when(new_status) {
+            STATUS_UNINTERESTED -> { timeSlot.status = TimeSlot.TIME_SLOT_STATUS_AVAILABLE; timeSlot.assignedTo = CompactUser()}
+            STATUS_ACCEPTED -> { timeSlot.status = TimeSlot.TIME_SLOT_STATUS_ASSIGNED; timeSlot.assignedTo = requester}
+            STATUS_COMPLETED -> timeSlot.status = TimeSlot.TIME_SLOT_STATUS_COMPLETED
+            else -> timeSlot.status = TimeSlot.TIME_SLOT_STATUS_AVAILABLE
+        }
+    }
 
     companion object {
         const val CHAT_TYPE_TO_REQUESTER = 0

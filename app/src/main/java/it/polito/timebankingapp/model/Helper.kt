@@ -198,6 +198,14 @@ class Helper {
             btn.setCompoundDrawablesWithIntrinsicBounds(null,null,drawCheckedIcon, null)
         }
 
+        fun resetConfirmationOnButton(context: Context, btn: Button) {
+            btn.isEnabled = true
+            btn.text = "Request service"
+            btn.setCompoundDrawablesWithIntrinsicBounds(null,null,null, null)
+        }
+
+
+
         fun getReviewType(timeSlot: TimeSlot): Int {
             if(timeSlot.offerer.id == Firebase.auth.uid)
                 return Review.AS_OFFERER_TYPE

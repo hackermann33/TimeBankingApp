@@ -161,7 +161,7 @@ class TimeSlotsViewModel(application: Application) : AndroidViewModel(applicatio
 
         val myUid = Firebase.auth.uid!!
         //db.collection("requests").whereEqualTo("requester.id", myUid)
-        db.collection("requests").whereArrayContains("users", myUid)
+        l = db.collection("requests").whereArrayContains("users", myUid)
             //.whereIn("status", listOf(Chat.STATUS_ACCEPTED)).addSnapshotListener{ v, e ->
             .whereEqualTo("status", Chat.STATUS_ACCEPTED).addSnapshotListener { v, e ->
                 if (e == null) {
@@ -223,15 +223,14 @@ class TimeSlotsViewModel(application: Application) : AndroidViewModel(applicatio
         val requests = db.collection("requests").whereEqualTo("timeSlot.id", ts.id)
 
         return requests.get().addOnSuccessListener {
-            db.runBatch {
-                    batch ->
-                    batch.set(tsReqDocRef, ts)
+            db.runBatch { batch ->
+                batch.set(tsReqDocRef, ts)
 
                 Log.d("edit", "$it")
-                for(doc in it.documents)
+                for (doc in it.documents)
                     batch.update(doc.reference, mapOf("timeSlot" to ts))
             }
-        }.addOnFailureListener{
+        }.addOnFailureListener {
             Log.d("edit", "$it")
         }
     }
@@ -247,15 +246,15 @@ class TimeSlotsViewModel(application: Application) : AndroidViewModel(applicatio
         _isLoading.postValue(false)
     }
 
-    fun updateSelectedTimeSlot(timeSlotId: String){
-        selectedTimeSlotListener = db.collection("timeSlots").document(timeSlotId).addSnapshotListener{v,e ->
-            if(e==null){
-                _selectedTimeSlot.postValue(v!!.toObject<TimeSlot>())
+    fun updateSelectedTimeSlot(timeSlotId: String) {
+        selectedTimeSlotListener =
+            db.collection("timeSlots").document(timeSlotId).addSnapshotListener { v, e ->
+                if (e == null) {
+                    _selectedTimeSlot.postValue(v!!.toObject<TimeSlot>())
+                } else {
+                    _selectedTimeSlot.postValue(TimeSlot())
+                }
             }
-            else{
-                _selectedTimeSlot.postValue(TimeSlot())
-            }
-        }
     }
 
     fun setFilteringSkill(skill: String) {
@@ -296,51 +295,16 @@ class TimeSlotsViewModel(application: Application) : AndroidViewModel(applicatio
 
     }
 
+    /* Set the timeSlot as completed (and update all the requests) */
     fun setTimeSlotAsCompleted(ts: TimeSlot) {
-
-/*
-* db.collection("users")
-  .document("frank")
-  .update({
-    "age": 13,
-    "favorites.color": "Red"
-  });*/
-
-        /*
-        val myUid = Firebase.auth.uid!!
-        //db.collection("requests").whereEqualTo("requester.id", myUid)
         db.collection("timeSlots").document(ts.id)
             .update("status", TimeSlot.TIME_SLOT_STATUS_COMPLETED).addOnSuccessListener {
-                //elimino tutte le richieste
-                db.collection("requests").whereEqualTo("timeSlot.id", ts.id).get()
-                    .addOnSuccessListener {
-                        for (doc in it.documents) {
-                            doc.reference.update(mapOf("status" to Chat.STATUS_DISCARDED))
-                            //doc.reference.delete()
-                        }
-                    }
-            }
-*/
-
-
-        //elimino tutte le richieste
-        db.collection("requests").whereEqualTo("timeSlot.id", ts.id).whereEqualTo("status", 1)
-            .get().addOnSuccessListener {
-                for (doc in it.documents) {
-                    doc.reference.update(mapOf("status" to Chat.STATUS_COMPLETED))
-                        .addOnSuccessListener {
-                            Log.d("timeSlot_completed", " update success")
-                        }
-                    //doc.reference.delete()
-                }
-                db.collection("timeSlots").document(ts.id)
-                    .update("status", TimeSlot.TIME_SLOT_STATUS_COMPLETED).addOnSuccessListener {
-                        Log.d("timeSlot_completed", "success")
-                    }
+                Log.d("timeSlot_completed", "success")
             }.addOnFailureListener{
                 Log.d("timeslot_completed", it.stackTraceToString())
             }
-
+        
+        /* Here disable  others requests */
     }
 
     fun addNewSkill(skillStr: String): Task<Void> {

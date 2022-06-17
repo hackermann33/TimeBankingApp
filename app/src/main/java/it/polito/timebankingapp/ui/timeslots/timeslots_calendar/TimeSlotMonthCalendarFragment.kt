@@ -3,6 +3,7 @@ package it.polito.timebankingapp.ui.timeslots.timeslots_calendar
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -100,6 +101,7 @@ class TimeSlotMonthCalendar : Fragment(R.layout.fragment_time_slot_month_calenda
         vm.timeSlots.observe(viewLifecycleOwner) { it ->
             events.clear()
             if (it.isNotEmpty()) {
+                Log.d("CalendarFragment", "Rendering...$it")
                 //setVoidMessage(view, false)
                 val acceptedTimeSlots = it
 

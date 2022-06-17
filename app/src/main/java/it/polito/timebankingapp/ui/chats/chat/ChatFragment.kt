@@ -15,6 +15,7 @@ import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.setFragmentResult
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -52,7 +53,8 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
     private lateinit var tvChatStatusTitle: TextView
     private lateinit var tvChatStatusInfo: TextView
 
-    private var firstTime: Boolean = true
+    private var passedFromInterested: Boolean = false
+
 
 
     private val chatVm: ChatViewModel by activityViewModels()
@@ -60,7 +62,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
     private val timeSlotVm: TimeSlotsViewModel by activityViewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        firstTime = true
+        passedFromInterested = false
         /*TODO(To remove glitch between transictions (require -> offerer) use a bundle to understand where do you come from)  */
         /*chatVm.chat.observe(viewLifecycleOwner) { cli ->
                 currentChat = cli
@@ -69,11 +71,11 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         */
         chatVm.chat.observe(viewLifecycleOwner) {
             //if (!it) {
-                if(!it.isEmpty()) {
-                    Log.d(TAG, "UI rendering... status: ${it.status} tsStatus: ${it.timeSlot.status}")
-                    currentChat = it// chatVm.chat.value!!
-                    updateChatUi(view, currentChat)
-                }
+                currentChat = it
+                Log.d(TAG, "UI rendering... reqId: ${it.requestId} status: ${it.status} title: ${it.timeSlot.title} tsStatus: ${it.timeSlot.status}")
+            // chatVm.chat.value!!
+                updateChatUi(view, currentChat)
+
                 //}
         }
 
@@ -215,11 +217,12 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         }
 
         btnAcceptRequest.setOnClickListener {
-            chatVm.acceptRequest(cli).addOnSuccessListener { res ->
-                val msg = if(res) "TimeSlot correctly assigned" else "Requester balance isn't enough"
-                val snackBar = Snackbar.make(v, msg, Snackbar.LENGTH_LONG)
-                snackBar.setAction("DISMISS") { snackBar.dismiss() }.show()
-
+            chatVm.acceptRequestAndUpdate(cli).addOnSuccessListener { res ->
+                if(res) {
+                    val msg = "TimeSlot correctly assigned"
+                    val snackBar = Snackbar.make(v, msg, Snackbar.LENGTH_LONG)
+                    snackBar.setAction("DISMISS") { snackBar.dismiss() }.show()
+                }
                 /* balance sufficiente*/
 
             }
@@ -249,14 +252,22 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
             when (cli.status) {
                 Chat.STATUS_UNINTERESTED -> {
                     btnRequestService.isEnabled = true
+
+                    if(passedFromInterested){
+                        val msg = "Offerer tried to accept your request but your balance was not enough." +
+                                "Your request has been deleted"
+                        val snackBar = Snackbar.make(v, msg, Snackbar.LENGTH_LONG)
+                        snackBar.setAction("DISMISS") { snackBar.dismiss() }.show()
+
+                        cvMessageChatStatus.visibility = View.GONE
+                        Helper.resetConfirmationOnButton(requireContext(), btnRequestService)
+                        passedFromInterested = false
+                    }
                     /*cvMessageChatStatus.visibility = View.GONE*/
                     Log.d(TAG, "STATUS UNIINTERESTED")
                 }
                 Chat.STATUS_INTERESTED -> {
-                    if(!firstTime){
-                        val snackBar = Snackbar.make(v, "Offerer tried to accept you request but you didn't have enough balance.", Snackbar.LENGTH_LONG)
-                        snackBar.setAction("DISMISS") { snackBar.dismiss() }.show()
-                    }
+                    if(!passedFromInterested) passedFromInterested = true
 
                     /*cvMessageChatStatus.visibility = View.GONE*/
                     Log.d(TAG, "STATUS INTERESTED")
@@ -265,7 +276,6 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
                     Helper.setConfirmationOnButton(requireContext(), btnRequestService)
                 }
                 Chat.STATUS_ACCEPTED -> {
-                    if(firstTime) firstTime = false
                     Log.d(
                         TAG,
                         "STATUS ACCEPTED"
@@ -295,7 +305,19 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
             Log.d(TAG, "TYPE TO REQUESTER")
 
             when (cli.status) {
+                Chat.STATUS_UNINTERESTED -> {
+                    btnRequestService.isEnabled = true
+
+                    if(passedFromInterested){
+                        cvMessageChatStatus.visibility = View.GONE
+                        setFragmentResult("chatFragment", bundleOf("SNACKBAR" to true))
+                        findNavController().navigateUp()
+                    }
+                    /*cvMessageChatStatus.visibility = View.GONE*/
+                    Log.d(TAG, "STATUS UNIINTERESTED")
+                }
                 Chat.STATUS_INTERESTED -> {
+                    if(!passedFromInterested) passedFromInterested = true
                     btnAcceptRequest.isEnabled = true
                     btnDiscardRequest.isEnabled = true
                     cvMessageChatStatus.visibility = View.GONE

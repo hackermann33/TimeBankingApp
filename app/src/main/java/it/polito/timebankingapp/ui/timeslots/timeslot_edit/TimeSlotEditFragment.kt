@@ -105,13 +105,11 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
 
         if (!addMode) {
             requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
-
-                handleTimeSlotConfirmation()!!.addOnSuccessListener {
+                handleTimeSlotConfirmation()?.addOnSuccessListener {
                     setFragmentResult("timeSlot", bundleOf("timeSlotConfirm" to 2))
                     findNavController().navigateUp()
-                }.addOnFailureListener{
+                }?.addOnFailureListener{
                     setFragmentResult("timeSlot", bundleOf("timeSlotConfirm" to 3))
-                    this.handleOnBackPressed()
                     findNavController().navigateUp()
                 }
             }
@@ -197,8 +195,15 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             android.R.id.home -> {
-                if (!addMode)
-                    handleTimeSlotConfirmation()
+                if (!addMode) {
+                    handleTimeSlotConfirmation()?.addOnSuccessListener {
+                        setFragmentResult("timeSlot", bundleOf("timeSlotConfirm" to 2))
+                        findNavController().navigateUp()
+                    }?.addOnFailureListener {
+                        setFragmentResult("timeSlot", bundleOf("timeSlotConfirm" to 3))
+                        findNavController().navigateUp()
+                    }
+                }
                 else {
                     findNavController().navigateUp()
                 }
@@ -216,13 +221,14 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
             if (addMode) {
                 vm.addTimeSlot(tsToEdit).addOnSuccessListener {
                     setFragmentResult("timeSlot", bundleOf("timeSlotConfirm" to 1))
+                    findNavController().navigateUp()
                 }.addOnFailureListener{
                     setFragmentResult("timeSlot", bundleOf("timeSlotConfirm" to 3))
+                    findNavController().navigateUp()
                 }
             } else {
                 return vm.editTimeSlot(tsToEdit)
             }
-            findNavController().navigateUp()
         } else {
             val dialogTitle: String
             val dialogBody: String
