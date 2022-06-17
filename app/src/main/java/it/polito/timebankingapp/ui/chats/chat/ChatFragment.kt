@@ -33,6 +33,7 @@ import it.polito.timebankingapp.model.chat.ChatMessage
 import it.polito.timebankingapp.model.user.CompactUser
 import it.polito.timebankingapp.ui.profile.ProfileViewModel
 import it.polito.timebankingapp.ui.timeslots.TimeSlotsViewModel
+import java.util.*
 
 
 class ChatFragment : Fragment(R.layout.fragment_chat) {
@@ -157,8 +158,8 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
             sendMessage(
                 ChatMessage(
                     Firebase.auth.currentUser!!.uid,
-                    etMessageInput.text.toString()/*,
-                        Calendar.getInstance(),*/
+                    etMessageInput.text.toString(),
+                        Calendar.getInstance().time,
                 )
             )
             etMessageInput.text.clear()
@@ -392,23 +393,6 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
             }
         }
 
-
-/*
-        civProfilePic.setOnClickListener {
-            v.findNavController().navigate(
-                R.id.action_nav_chat_to_nav_showProfile,
-                bundleOf("point_of_origin" to "skill_specific")
-            )
-        }
-*/
-
-/*
-        tvProfileName.setOnClickListener {
-            v.findNavController().navigate(
-                R.id.action_nav_chat_to_nav_showProfile,
-                bundleOf("point_of_origin" to "skill_specific")
-            )
-        }*/
     }
 
     private fun chatToDiscarded(v: View, type: Int) {
@@ -442,14 +426,13 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 
 
         btnRequestService.isEnabled = false
-        //btnRequestService.isClickable = false
-        btnAcceptRequest.alpha = 0.6F
 
         btnAcceptRequest.isEnabled = false
         //btnAcceptRequest.isClickable = false
         btnAcceptRequest.alpha = 0.6F
 
         btnDiscardRequest.isEnabled = false
+        btnDiscardRequest.alpha = 0.6F
 
     }
 
