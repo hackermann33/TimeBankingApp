@@ -28,6 +28,7 @@ import com.google.android.material.textfield.TextInputLayout
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
 import com.google.firebase.firestore.QuerySnapshot
+import com.google.firebase.ktx.Firebase
 import it.polito.timebankingapp.MainActivity
 import it.polito.timebankingapp.R
 import it.polito.timebankingapp.model.timeslot.TimeSlot
@@ -83,7 +84,7 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
         setHasOptionsMenu(true)
 
         tsToEdit = if (!addMode) arguments?.getSerializable("timeslot") as TimeSlot
-        else TimeSlot().also { it.offerer = usrVm.user.value!!.toCompactUser() }
+        else TimeSlot(offerer = usrVm.user.value!!.toCompactUser())
 
         calendar = tsToEdit.getCalendar()
 

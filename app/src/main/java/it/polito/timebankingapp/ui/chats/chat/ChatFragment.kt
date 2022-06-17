@@ -40,7 +40,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
     private lateinit var rv: RecyclerView
     private lateinit var currentChat: Chat
     private lateinit var adTmp: ChatViewAdapter
-    private lateinit var textMessage: EditText
+    private lateinit var etMessageInput: EditText
     private lateinit var layoutManager: LinearLayoutManager
 
 
@@ -123,9 +123,9 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
             findNavController().navigate(R.id.action_nav_chat_to_nav_timeSlotDetails)
         }
 
-        textMessage = view.findViewById(R.id.edit_gchat_message)
+        etMessageInput = view.findViewById(R.id.edit_gchat_message)
 
-        textMessage.setOnEditorActionListener(OnEditorActionListener { v, actionId, event ->
+        etMessageInput.setOnEditorActionListener(OnEditorActionListener { v, actionId, event ->
             var handled = false
             if (actionId == EditorInfo.IME_ACTION_SEND) {
                 sendMessage()
@@ -135,7 +135,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         })
 
 
-        textMessage.doAfterTextChanged {
+        etMessageInput.doAfterTextChanged {
             Log.d(TAG, "...text changed: $it enable: ${!it.isNullOrEmpty()}")
             val enabled = !it.isNullOrEmpty()
             sendButton.isEnabled = enabled
@@ -148,16 +148,16 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
     }
 
     private fun sendMessage(){
-        if (textMessage.text.isNotEmpty()) {
+        if (etMessageInput.text.isNotEmpty()) {
             btnRequestService.isEnabled = false
             sendMessage(
                 ChatMessage(
                     Firebase.auth.currentUser!!.uid,
-                    textMessage.text.toString()/*,
+                    etMessageInput.text.toString()/*,
                         Calendar.getInstance(),*/
                 )
             )
-            textMessage.text.clear()
+            etMessageInput.text.clear()
         }
     }
 
@@ -292,7 +292,22 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
                 Chat.STATUS_COMPLETED -> {
                     Log.d(TAG, "STATUS COMPLETED");
                     sendButton.isEnabled = false
-                    textMessage.inputType = InputType.TYPE_NULL
+                    etMessageInput.inputType = InputType.TYPE_NULL
+
+                    cvMessageChatStatus.visibility = View.VISIBLE
+                    if (cli.timeSlot.assignedTo.id == Firebase.auth.uid!!) {
+                        tvChatStatusTitle.text = "TimeSlot is completed by you"
+                        tvChatStatusInfo.text = "TimeSlot is completed. Put a review in Completed Time Slots section to the offerer " +
+                                "if you haven't already done."
+                    }
+                    else {
+                        tvChatStatusTitle.text = "TimeSlot completed by another user"
+                        tvChatStatusInfo.text = "TimeSlot is completed by another user. Chat has been disabled"
+                    }
+
+                    Helper.setConfirmationOnButton(requireContext(), btnRequestService);
+                    sendButton.visibility = View.GONE
+                    etMessageInput.hint = "Chat disabled"
                 }
 
             }
@@ -335,23 +350,25 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
                 Chat.STATUS_COMPLETED -> {
                     Log.d(TAG, "STATUS COMPLETED");
                     sendButton.isEnabled = false
-                    textMessage.inputType = InputType.TYPE_NULL //disabling textMessageBox
+                    etMessageInput.inputType = InputType.TYPE_NULL //disabling textMessageBox
+
+                    tvChatStatusInfo.text = "TimeSlot completed"
                 }
 
             }
         }
 
         sendButton.setOnClickListener {
-            if (textMessage.text.isNotEmpty()) {
+            if (etMessageInput.text.isNotEmpty()) {
                 btnRequestService.isEnabled = false
                 sendMessage(
                     ChatMessage(
                         Firebase.auth.currentUser!!.uid,
-                        textMessage.text.toString()/*,
+                        etMessageInput.text.toString()/*,
                         Calendar.getInstance(),*/
                     )
                 )
-                textMessage.text.clear()
+                etMessageInput.text.clear()
             }
         }
 

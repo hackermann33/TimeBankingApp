@@ -216,15 +216,13 @@
                 android:alpha="0.9"
                 android:text="@string/this_service_has_been_assigned_to_another_user"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textStyle="bold"
-                tools:text="Service not available" />
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/fragment_chat_tv_status_second"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
-                android:text="TextView"
                 tools:text="Service has been assigned to another user" />
         </LinearLayout>
 

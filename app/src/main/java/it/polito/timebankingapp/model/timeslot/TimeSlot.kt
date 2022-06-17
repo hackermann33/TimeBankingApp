@@ -27,6 +27,8 @@ data class TimeSlot(
     var status: Int = 0
 ) : Serializable {
 
+    val users = listOf(assignedTo.id, offerer.id)
+
     override fun toString(): String = "{ title:$title, description: $description, date: $date, time: $time, duration: $duration, location: $location"
 
     @Exclude

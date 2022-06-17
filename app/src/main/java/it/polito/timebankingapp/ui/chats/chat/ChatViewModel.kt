@@ -310,6 +310,7 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
                 batch.update(currentChatDocRef, "status", newChatStatus)
                 batch.update(currentChatDocRef, "timeSlot.status", newTimeSlotStatus)
                 batch.update(currentChatDocRef, "timeSlot.assignedTo", newRequester)
+                batch.update(currentChatDocRef, "timeSlot.users", listOf(newRequester.id, currentChat.offerer.id))
             } else {
 
                 batch.delete(currentChatDocRef)
@@ -317,20 +318,22 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
             /* Update timeSlot in timeSlot collection */
             batch.update(currentTimeSlotDocRef, "status", newTimeSlotStatus)
             batch.update(currentTimeSlotDocRef, "assignedTo", newRequester)
+            batch.update(currentTimeSlotDocRef, "users", listOf(newRequester.id, currentChat.offerer.id))
 
         }.addOnSuccessListener {
-            currentChatDocRef.collection("messages").get().addOnSuccessListener {
-                db.runBatch {
-                        batch ->
+            if(undo) {
+                /* Delete all messages */
+                currentChatDocRef.collection("messages").get().addOnSuccessListener {
+                    db.runBatch { batch ->
                         it.documents.forEach { doc ->
                             batch.delete(doc.reference)
                         }
+                    }
                 }
             }
 
         }   /*2. Update references ( in table requests )*/
             .addOnSuccessListener {
-
                 /* Update doc.timeSlot references collection requests */
                 otherTimeSlotsChats.get().addOnSuccessListener {
                     db.runBatch { batch ->
@@ -345,6 +348,11 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
                                 doc.reference,
                                 "timeSlot.assignedTo",
                                 newRequester
+                            )
+                            batch.update(
+                                doc.reference,
+                                "timeSlot.users",
+                                listOf(newRequester.id, currentChat.offerer.id)
                             )
                         }
                     }
