@@ -36,6 +36,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
+                android:animateLayoutChanges="true"
                 android:background="@drawable/change_color_clicked"
                 android:clickable="true"
                 android:focusable="true"
@@ -129,10 +130,12 @@
                 android:background="?android:attr/listDivider" />
 
             <LinearLayout
+                android:id="@+id/fragment_time_slot_details_ll_content"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
-                android:padding="16dp">
+                android:padding="16dp"
+                android:visibility="gone">
 
                 <TextView
                     android:id="@+id/time_slot_title"

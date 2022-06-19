@@ -3,10 +3,7 @@ package it.polito.timebankingapp.ui.timeslots.timeslot_details
 import android.os.Bundle
 import android.util.Log
 import android.view.*
-import android.widget.Button
-import android.widget.ProgressBar
-import android.widget.RatingBar
-import android.widget.TextView
+import android.widget.*
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
@@ -103,6 +100,8 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
 
 
     private fun showTimeSlot(view: View, ts: TimeSlot, requestStatus: Int?) {
+        val llContent = view.findViewById<LinearLayout>(R.id.fragment_time_slot_details_ll_content)
+
         view.findViewById<TextView>(R.id.time_slot_title).text = (ts.title)
         view.findViewById<TextView>(R.id.time_slot_date).text = ts.date
         view.findViewById<TextView>(R.id.time_slot_time).text = ts.time
@@ -196,6 +195,7 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
             btnRequestService.visibility = View.VISIBLE
 
         }
+        llContent.visibility = View.VISIBLE
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
