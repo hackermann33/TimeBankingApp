@@ -9,7 +9,6 @@ import android.view.View
 import android.widget.*
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResultListener
 import androidx.navigation.NavDestination
@@ -279,7 +278,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_timeslots_list) {
             )
         }
 
-        vm.updateSelectedTimeSlot(ts.id)
+        vm.setSelectedTimeSlot(ts)
     }
 
     override fun onDetach() {

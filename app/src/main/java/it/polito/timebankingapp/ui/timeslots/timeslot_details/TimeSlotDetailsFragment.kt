@@ -55,8 +55,6 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-
         globalModel.selectedTimeSlot.observe(viewLifecycleOwner) {
             if(it!=null) {
                 timeSlot = it
@@ -172,6 +170,8 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
 
         if(isPersonal) {
             clOffererProfile.visibility = View.GONE
+            btnAskInfo.visibility = View.GONE
+            btnRequestService.visibility = View.GONE
         }
         else{
             //se esiste già una richiesta, disabilita btnRequestService
@@ -186,6 +186,7 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
                     Chat.STATUS_COMPLETED -> btnRequestService.text = "Service completed"
                 }
             }else { //STATUS_UNINTERESTED
+                btnAskInfo.text = "Ask info"
                 Helper.resetConfirmationOnButton(requireContext(), btnRequestService)
             }
 
