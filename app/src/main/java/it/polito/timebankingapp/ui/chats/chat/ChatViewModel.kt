@@ -402,7 +402,7 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
             val cal = Calendar.getInstance()
             cal.time = timestamp.toDate()
 
-            ChatMessage(userId, messageText/*, cal*/)
+            ChatMessage(userId, messageText/*, cal*/, timestamp.toDate())
         } catch (e: Exception) {
             e.printStackTrace()
             null
