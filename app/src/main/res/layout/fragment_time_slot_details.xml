@@ -41,8 +41,7 @@
                 android:focusable="true"
                 android:orientation="horizontal"
                 android:paddingTop="8dp"
-                android:paddingBottom="8dp"
-                android:visibility="visible">
+                android:paddingBottom="8dp">
 
 
                 <RelativeLayout
@@ -187,7 +186,7 @@
                     android:elevation="2dp"
                     android:text="ask for info"
                     android:textColor="@color/accent"
-                    android:visibility="invisible"
+                    android:visibility="gone"
                     app:strokeColor="@color/accent" />
 
                 <Button
@@ -195,7 +194,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/request_service"
-                    android:visibility="invisible" />
+                    android:visibility="gone" />
 
                 <View
                     android:id="@+id/divider"

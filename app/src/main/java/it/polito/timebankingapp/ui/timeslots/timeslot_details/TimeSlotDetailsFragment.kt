@@ -34,13 +34,14 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
     private val globalModel : TimeSlotsViewModel by activityViewModels()
     private val profileViewModel: ProfileViewModel by activityViewModels()
     private val chatVm: ChatViewModel by activityViewModels()
-
-
     //private lateinit var type: String
     private var isPersonal: Boolean = false
     private lateinit var userId: String
 
+
     private lateinit var timeSlot: TimeSlot
+    private lateinit var btnAskInfo: Button
+    private lateinit var btnRequestService: Button
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,27 +58,34 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
 
 
         globalModel.selectedTimeSlot.observe(viewLifecycleOwner) {
-            timeSlot = it
+            if(it!=null) {
+                timeSlot = it
 
-            isPersonal = (timeSlot.offerer.id == Firebase.auth.uid)
+                isPersonal = (timeSlot.offerer.id == Firebase.auth.uid)
 
-            /* If it's not personal, retrieve request infos too */
-            if(!isPersonal)
-                chatVm.getChat(Helper.makeRequestId(timeSlot.id, Firebase.auth.uid!!)).addOnSuccessListener { req ->
-                    showTimeSlot(view, timeSlot, req.toObject<Chat>()?.status ?: Chat().status)
-                }
-            else
-                showTimeSlot(view, timeSlot, null)
-
+                /* If it's not personal, retrieve request infos too */
+                if (!isPersonal)
+                    chatVm.getChat(Helper.makeRequestId(timeSlot.id, Firebase.auth.uid!!))
+                        .addOnSuccessListener { req ->
+                            showTimeSlot(
+                                view,
+                                timeSlot,
+                                req.toObject<Chat>()?.status ?: Chat().status
+                            )
+                        }
+                else
+                    showTimeSlot(view, timeSlot, null)
+            }
         }
 
-        //showTimeSlot(view, arguments?.getSerializable("timeslot") as TimeSlot?) //temp
-        /* da decommentare quando si userà decentemente la viewmodel
-        model.selected.observe(viewLifecycleOwner, Observer<TimeSlot> { ts ->
-            // Update the UI
-            showTimeSlot(view, ts)
-        })
-        */
+        btnAskInfo = view.findViewById<Button>(R.id.openChatButton)
+        btnRequestService = view.findViewById<Button>(R.id.button_request_service)
+
+        btnAskInfo.setOnClickListener {
+            showTimeSlotRequest(timeSlot)
+            findNavController().navigate(R.id.action_nav_timeSlotDetails_to_nav_chat)
+        }
+
 
         setFragmentResultListener("timeSlot") { _, bundle ->
             val result = bundle.getInt("timeSlotConfirm")
@@ -116,8 +124,6 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
         val rbOffererReviews = view.findViewById<RatingBar>(R.id.fragment_time_slot_details_rb_offerer_review)
         val tvReviewsNumber = view.findViewById<TextView>(R.id.fragment_time_slot_details_tv_reviews_number)
 
-        val btnAskInfo = view.findViewById<Button>(R.id.openChatButton)
-        val btnRequestService = view.findViewById<Button>(R.id.button_request_service)
 
 
         Helper.loadImageIntoView(civOffererPic, pb, ts.offerer.profilePicUrl)
@@ -134,47 +140,14 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
             )
         }
 
+        /* Rememeber to update number of chats for that timeSlot*/
+        btnRequestService.setOnClickListener {
+            /*val timeSlotToRequest = ts
+            val chatId = Helper.makeRequestId(ts.id, Firebase.auth.uid!!)
 
-        if(isPersonal) {
-            clOffererProfile.visibility = View.GONE
-            btnAskInfo.visibility = View.GONE
-            btnRequestService.visibility = View.GONE
-        }
-        else{
-            //se esiste già una richiesta, disabilita btnRequestService
-            /* Retrieve status of the current chat/request */
-            btnAskInfo.visibility = View.VISIBLE
-            btnRequestService.visibility = View.VISIBLE
-
-            if(requestStatus != Chat.STATUS_UNINTERESTED) {
-                Helper.setConfirmationOnButton(requireContext(), btnRequestService)
-                clOffererProfile.visibility = View.VISIBLE
-                btnAskInfo.text = "Open chat"
-                when(requestStatus){
-                    Chat.STATUS_INTERESTED -> btnRequestService.text = "Service requested"
-                    Chat.STATUS_ACCEPTED -> btnRequestService.text = "Service accepted"
-                    Chat.STATUS_COMPLETED -> btnRequestService.text = "Service completed"
-                }
-            }else { //STATUS_UNINTERESTED
-                clOffererProfile.visibility = View.VISIBLE
-            }
-
-
-            btnAskInfo.setOnClickListener {
-                showTimeSlotRequest(ts)
-                findNavController().navigate(R.id.action_nav_timeSlotDetails_to_nav_chat)
-            }
-
-
-
-            /* Rememeber to update number of chats for that timeSlot*/
-            btnRequestService.setOnClickListener {
-                /*val timeSlotToRequest = ts
-                val chatId = Helper.makeRequestId(ts.id, Firebase.auth.uid!!)
-
-                globalModel.makeTimeSlotRequest(ts, profileViewModel.user.value!!)
-                    .addOnSuccessListener {
-                        *//* here I need to update chat *//*
+            globalModel.makeTimeSlotRequest(ts, profileViewModel.user.value!!)
+                .addOnSuccessListener {
+                    *//* here I need to update chat *//*
                         chatVm.updateChatInfo(
                             ts,
                             ts.offerer,
@@ -187,14 +160,40 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
                         Snackbar.make(view, "Oops, something gone wrong!", Snackbar.LENGTH_SHORT)
                             .show()
                     }*/
-                /*val btn = it as Button
-                btn.text = "Service requested"
-                Helper.setConfirmationOnButton(requireContext(), btn)
+            /*val btn = it as Button
+            btn.text = "Service requested"
+            Helper.setConfirmationOnButton(requireContext(), btn)
 
-                */
-                chatVm.requestService(Chat(timeSlot = ts, requester = profileViewModel.user.value!!.toCompactUser(), offerer = ts.offerer))
-                findNavController().navigate(R.id.action_nav_timeSlotDetails_to_nav_chat)
+            */
+            chatVm.requestService(Chat(timeSlot = ts, requester = profileViewModel.user.value!!.toCompactUser(), offerer = ts.offerer))
+            findNavController().navigate(R.id.action_nav_timeSlotDetails_to_nav_chat)
+        }
+
+
+        if(isPersonal) {
+            clOffererProfile.visibility = View.GONE
+        }
+        else{
+            //se esiste già una richiesta, disabilita btnRequestService
+            /* Retrieve status of the current chat/request */
+
+            if(requestStatus != Chat.STATUS_UNINTERESTED) {
+                Helper.setConfirmationOnButton(requireContext(), btnRequestService)
+                btnAskInfo.text = "Open chat"
+                when(requestStatus){
+                    Chat.STATUS_INTERESTED -> btnRequestService.text = "Service requested"
+                    Chat.STATUS_ACCEPTED -> btnRequestService.text = "Service accepted"
+                    Chat.STATUS_COMPLETED -> btnRequestService.text = "Service completed"
+                }
+            }else { //STATUS_UNINTERESTED
+                Helper.resetConfirmationOnButton(requireContext(), btnRequestService)
             }
+
+            clOffererProfile.visibility = View.VISIBLE
+
+            btnAskInfo.visibility = View.VISIBLE
+            btnRequestService.visibility = View.VISIBLE
+
         }
     }
 
@@ -257,5 +256,10 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
         }*/
         val b = bundleOf("timeslot" to timeSlot)
         findNavController().navigate(R.id.action_nav_timeSlotDetails_to_timeSlotEditFragment, b)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        globalModel.clearSelectedTimeSlot()
     }
 }

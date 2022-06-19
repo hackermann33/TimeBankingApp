@@ -24,8 +24,8 @@ class TimeSlotsViewModel(application: Application) : AndroidViewModel(applicatio
     private val _skillList = MutableLiveData<List<String>>()
     val skillList: LiveData<List<String>> = _skillList
 
-    private val _selectedTimeSlot = MutableLiveData<TimeSlot>()
-    val selectedTimeSlot: LiveData<TimeSlot> = _selectedTimeSlot
+    private val _selectedTimeSlot = MutableLiveData<TimeSlot?>()
+    val selectedTimeSlot: LiveData<TimeSlot?> = _selectedTimeSlot
 
     /*private val _unreadChats = MutableLiveData<Int>()
     val unreadChats: LiveData<Int> = _unreadChats
@@ -314,6 +314,10 @@ class TimeSlotsViewModel(application: Application) : AndroidViewModel(applicatio
 
     fun addNewSkill(skillStr: String): Task<Void> {
         return db.collection("skills").document(skillStr).set(mapOf<String, Any>())
+    }
+
+    fun clearSelectedTimeSlot() {
+        _selectedTimeSlot.postValue(null)
     }
 }
 /*

@@ -77,7 +77,7 @@ class TimeSlotAdapter(
 
                 status.text = when(ts.status) {
                     0 -> "Available"
-                    1 -> "Accepted"
+                    1 -> "Assigned"
                     2 -> "Completed"
                     else -> ""
                 }
