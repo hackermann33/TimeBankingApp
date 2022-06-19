@@ -54,12 +54,10 @@ class ShowProfileFragment : Fragment(R.layout.fragment_showprofile) {
         v = view
 
         //val progressBar = view.findViewById<ProgressBar>(R.id.profile_pic_progress_bar)
-        var bundle = Bundle()
 
         if (type == "skill_specific" || type == "completed" || type == "interesting") {
             vm.timeslotUser.observe(viewLifecycleOwner) {
                 timeSlotUser = it //oppure it
-                bundle = bundleOf("profile" to timeSlotUser, "type" to "timeslot") //per le recensioni
                 showProfile(view, timeSlotUser)
             }
 
@@ -71,7 +69,6 @@ class ShowProfileFragment : Fragment(R.layout.fragment_showprofile) {
         } else { //personal
             vm.user.observe(viewLifecycleOwner) {
                 user = it //oppure it
-                bundle = bundleOf("profile" to user, "type" to "personal") //per le recensioni
                 showProfile(view, user)
             }
 
@@ -216,8 +213,7 @@ class ShowProfileFragment : Fragment(R.layout.fragment_showprofile) {
 
     private fun editProfile() {
         //launch edit profile fragment
-        val b = bundleOf("profile" to user)
-        findNavController().navigate(R.id.action_showProfileFragment_to_editProfileActivity, b)
+        findNavController().navigate(R.id.action_showProfileFragment_to_editProfileActivity)
     }
 
 }

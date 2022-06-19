@@ -130,16 +130,21 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
     fun editUser(usr: User) {
 
         val srcRef = db.collection("users").document(usr.id).set(usr)
-        /*
-        Manage multiple updates !!!
-        val otherRef = db.collection("requests").whereArrayContains("users", usr.id).
+        //Manage multiple updates !!!
+        val otherRef1 = db.collection("requests").whereEqualTo("requester.id", usr.id)
+        val otherRef2 = db.collection("requests").whereEqualTo("offerer.id", usr.id)
 
-        db.runBatch{
-            batch ->
-            db.collection("users").document(usr.id).set(usr)
-
-        }*/
-
+        otherRef1.get().addOnSuccessListener {
+            db.runBatch {
+                batch -> it.forEach{batch.update(it.reference, "offerer", usr.toCompactUser())}
+            }
+        }.addOnSuccessListener {
+            otherRef2.get().addOnSuccessListener {
+                db.runBatch { batch ->
+                    it.forEach { batch.update(it.reference, "requester", usr.toCompactUser()) }
+                }
+            }
+        }
     }
 
 
