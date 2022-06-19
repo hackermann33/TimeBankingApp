@@ -40,6 +40,8 @@ class TimeSlotAdapter(
         private val location: TextView = mainView.findViewById(R.id.time_slots_item_location)
         private val start: TextView = mainView.findViewById(R.id.time_slots_item_start)
         private val duration: TextView = mainView.findViewById(R.id.time_slots_item_duration)
+        private val status: TextView = mainView.findViewById(R.id.time_slots_item_status)
+        private val statusLabel: TextView = mainView.findViewById(R.id.time_slots_item_status_label)
         private val typeLabel: TextView = mainView.findViewById(R.id.ts_type_label)
         private val typeChip: Chip = mainView.findViewById(R.id.timeslot_item_ts_type)
         private lateinit var editButton: ImageView
@@ -68,6 +70,17 @@ class TimeSlotAdapter(
                 chatButton.setBadgePadding(2)
                 chatButton.badgeValue = 0//ts.offererUnreadChats
                 chatButton.setOnClickListener(showRequestsAction)
+
+
+                status.visibility = View.VISIBLE
+                statusLabel.visibility = View.VISIBLE
+
+                status.text = when(ts.status) {
+                    0 -> "Available"
+                    1 -> "Assigned"
+                    2 -> "Completed"
+                    else -> ""
+                }
             }
             else if (type == "completed") {
                 editButton.visibility = View.GONE
@@ -86,7 +99,6 @@ class TimeSlotAdapter(
             }
             else {
                 editButton.visibility = View.GONE
-
 
                 /* remove badge from chat icon when requester */
                 chatButton.badgeColor = R.color.background
