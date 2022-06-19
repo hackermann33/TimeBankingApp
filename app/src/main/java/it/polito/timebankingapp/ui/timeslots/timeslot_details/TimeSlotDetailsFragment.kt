@@ -59,7 +59,7 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
         globalModel.selectedTimeSlot.observe(viewLifecycleOwner) {
             timeSlot = it
 
-
+            isPersonal = (timeSlot.offerer.id == Firebase.auth.uid)
 
             /* If it's not personal, retrieve request infos too */
             if(!isPersonal)
