@@ -149,7 +149,7 @@ class Helper {
         fun dateToDisplayString(d: Date): String {
             var pattern: String = when {
                 Helper.isYesterday(d) -> return "yesterday"
-                DateUtils.isToday(d.time) -> "HH:mm"
+                DateUtils.isToday(d.time) -> "hh:mm a"
                 else -> "dd/MM/yy"
             }
 
