@@ -53,14 +53,17 @@ class ChatViewAdapter(
         fun bind(message: ChatMessage, showDate: Boolean, chatDisabled: Boolean) {
             messageText.text = message.messageText
 
-//            dateText.text = message.timestamp /*if(message.timestamp. =split("-")[0]= "skip") "" else message.timestamp.split("-")[0]*/
-//            timeText.text = message.timestamp /*.split("-")[1]*/
             val cal = Calendar.getInstance()
             cal.time = message.timestamp
-            val pattern = "MMM d, yyyy"
-            val sdf  = SimpleDateFormat(pattern, Locale.getDefault())
+
+            var pattern = "hh:mm a"
+            var sdf  = SimpleDateFormat(pattern, Locale.getDefault())
+            val hour = sdf.format(cal.time)
+            //val hour = String.format("%02d:%02d", cal[Calendar.HOUR], cal[Calendar.MINUTE] )
+
+            pattern = "MMM d, yyyy"
+            sdf  = SimpleDateFormat(pattern, Locale.getDefault())
             val date = sdf.format(cal.time)
-            val hour = String.format("%02d:%02d", cal[Calendar.HOUR], cal[Calendar.MINUTE] )
 
             if(chatDisabled)
                 itemView.alpha = 0.7F
@@ -88,11 +91,14 @@ class ChatViewAdapter(
             val cal = Calendar.getInstance()
             cal.time = message.timestamp
 
-            val pattern = "MMM d, yyyy"
-            val sdf  = SimpleDateFormat(pattern)
-            val date = sdf.format(cal.time)
-            val hour = String.format("%02d:%02d", cal[Calendar.HOUR], cal[Calendar.MINUTE] )
+            var pattern = "hh:mm a"
+            var sdf  = SimpleDateFormat(pattern, Locale.getDefault())
+            val hour = sdf.format(cal.time)
+            //val hour = String.format("%02d:%02d", cal[Calendar.HOUR], cal[Calendar.MINUTE] )
 
+            pattern = "MMM d, yyyy"
+            sdf  = SimpleDateFormat(pattern, Locale.getDefault())
+            val date = sdf.format(cal.time)
             if(chatDisabled)
                 itemView.alpha = 0.7F
 
