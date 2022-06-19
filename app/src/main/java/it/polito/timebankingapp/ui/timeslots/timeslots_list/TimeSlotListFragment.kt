@@ -61,8 +61,8 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_timeslots_list) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         var mainTitle = ""
+        setHasOptionsMenu(true)
         if (type == "skill_specific") {
-            setHasOptionsMenu(true)
             mainTitle = "Offers for ${vm.selectedSkill.value.toString()}"
         } else if (type == "personal")
             mainTitle = "Your advertisements"
@@ -128,11 +128,11 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_timeslots_list) {
 
                     rv.adapter = adTmp
 
-                    if (type == "skill_specific") {
+                    //if (type == "skill_specific") {
                         setFilteringOptions(view, adTmp)
                         adTmp.setFilter(filterKeywords, filterParameter)
                         adTmp.setOrder(filterParameter, orderingDirection)
-                    }
+                    //}
                 }
             }
         }
