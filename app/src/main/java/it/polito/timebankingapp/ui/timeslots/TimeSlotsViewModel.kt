@@ -243,9 +243,10 @@ class TimeSlotsViewModel(application: Application) : AndroidViewModel(applicatio
     }
 
 
-    fun updateSelectedTimeSlot(timeSlotId: String) {
+    fun setSelectedTimeSlot(timeSlot: TimeSlot) {
+        _selectedTimeSlot.postValue(timeSlot)
         selectedTimeSlotListener =
-            db.collection("timeSlots").document(timeSlotId).addSnapshotListener { v, e ->
+            db.collection("timeSlots").document(timeSlot.id).addSnapshotListener { v, e ->
                 if (e == null) {
                     _selectedTimeSlot.postValue(v!!.toObject<TimeSlot>())
                 } else {
