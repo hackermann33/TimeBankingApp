@@ -68,16 +68,11 @@ class EditProfileFragment : Fragment(R.layout.fragment_editprofile) {
         super.onViewCreated(view, savedInstanceState)
 
         v = view
-        usr = arguments?.getSerializable("profile") as User? ?: User()
-
-
-
+        /*usr = arguments?.getSerializable("profile") as User? ?: User()*/
         ivProfilePic = view.findViewById(R.id.fragment_show_profile_iv_profile_pic)
 
         pbProfilePic = view.findViewById<ProgressBar>(R.id.fragment_show_profile_pb_profile_pic)
-        vm.user.observe(viewLifecycleOwner) {
-            Helper.loadImageIntoView(ivProfilePic, pbProfilePic, it.profilePicUrl)
-        }
+
 
 
         val sv = view.findViewById<ScrollView>(R.id.editScrollView2)
@@ -99,41 +94,18 @@ class EditProfileFragment : Fragment(R.layout.fragment_editprofile) {
             startActivityForResult(chooser, REQUEST_PIC)
         }
 
-        val btnAddSkill = view.findViewById<Button>(R.id.addSkillButton)
         skillsGroup = view.findViewById(R.id.editSkillsGroup)
 
-        val newSkillView = updateSkillsHints()
-
-        btnAddSkill.setOnClickListener {
-            var skillStr = newSkillView.text.toString()
-            skillStr = skillStr.lowercase()
-                .replace("\n", " ")
-                .trim()
-                .replaceFirstChar { it.uppercase() }
-                .replace("\\s+".toRegex(), " ")
-                .replaceFirstChar { it.uppercase() }
-
-            if (skillStr.isNotEmpty()) {
-                /*Adding to the global list of skill hints*/
-                if (!allSkills.contains(skillStr))
-                    timeSlotsVm.addNewSkill(skillStr).addOnSuccessListener { Log.d("EditProfile", "skill add success") }
-                        .addOnFailureListener { Log.d("EditProfile", "skill add failure: $it") }
-                if (!usr.skills.contains(skillStr)) {
-                    usr.skills.add(skillStr)
-                    addSkillChip(skillStr)
-                }
-                newSkillView.text.clear()
-                updateSkillsHints()
-            }
-        }
-
-        btnAddSkill.textSize = (4 * resources.displayMetrics.density)
 
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
             handleProfileConfirmation()
         }
 
-        showProfile(view)
+        vm.user.observe(viewLifecycleOwner){
+            usr = it
+            Helper.loadImageIntoView(ivProfilePic, pbProfilePic, it.profilePicUrl)
+            showProfile(view)
+        }
 
     }
 
@@ -169,9 +141,41 @@ class EditProfileFragment : Fragment(R.layout.fragment_editprofile) {
         val descriptionEdit = view.findViewById<EditText>(R.id.editDescription)
         descriptionEdit.setText(usr.description)
 
+        val newSkillView = updateSkillsHints()
+        val btnAddSkill = view.findViewById<Button>(R.id.addSkillButton)
+
+
         usr.skills.forEach { skill ->
             addSkillChip(skill)
         }
+
+        btnAddSkill.setOnClickListener {
+            var skillStr = newSkillView.text.toString()
+            skillStr = skillStr.lowercase()
+                .replace("\n", " ")
+                .trim()
+                .replaceFirstChar { it.uppercase() }
+                .replace("\\s+".toRegex(), " ")
+                .replaceFirstChar { it.uppercase() }
+
+            if (skillStr.isNotEmpty()) {
+                /*Adding to the global list of skill hints*/
+                if (!allSkills.contains(skillStr))
+                    timeSlotsVm.addNewSkill(skillStr).addOnSuccessListener { Log.d("EditProfile", "skill add success") }
+                        .addOnFailureListener { Log.d("EditProfile", "skill add failure: $it") }
+                if (!usr.skills.contains(skillStr)) {
+                    usr.skills.add(skillStr)
+                    addSkillChip(skillStr)
+                }
+                newSkillView.text.clear()
+                updateSkillsHints()
+            }
+        }
+
+        btnAddSkill.textSize = (4 * resources.displayMetrics.density)
+
+
+
     }
 
     private fun addSkillChip(text: String) {
