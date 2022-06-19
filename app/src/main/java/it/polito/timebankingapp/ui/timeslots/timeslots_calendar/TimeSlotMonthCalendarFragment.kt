@@ -111,8 +111,11 @@ class TimeSlotMonthCalendar : Fragment(R.layout.fragment_time_slot_month_calenda
                     tempDate?.let {
                         val isOffered = userVm.user.value?.id ?: "" == acceptedTimeSlots[i].userId
                         events[it] = events[it].orEmpty().plus(Event(UUID.randomUUID().toString(), acceptedTimeSlots[i], it, isOffered))
-                        if(i == acceptedTimeSlots.size-1)
-                            updateAdapterForDate(it)
+                        refreshDate(it)
+                        if(i == acceptedTimeSlots.size-1) {
+                            //refreshDate(LocalDate.now())
+                            updateAdapterForDate(LocalDate.now())
+                        }
                     }
                 }
             } else {
@@ -243,6 +246,12 @@ class TimeSlotMonthCalendar : Fragment(R.layout.fragment_time_slot_month_calenda
             binding.exThreeCalendar.notifyDateChanged(date)
             updateAdapterForDate(date)
         }
+    }
+
+
+    private fun refreshDate(date: LocalDate) {
+        binding.exThreeCalendar.notifyDateChanged(date)
+        //updateAdapterForDate(date)
     }
 
     private fun deleteEvent(event: Event) {
