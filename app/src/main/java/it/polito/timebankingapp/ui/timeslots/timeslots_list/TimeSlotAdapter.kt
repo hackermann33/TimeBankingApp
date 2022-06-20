@@ -16,6 +16,9 @@ import it.polito.timebankingapp.R
 import it.polito.timebankingapp.model.timeslot.TimeSlot
 import it.polito.timebankingapp.model.user.User
 import ru.nikartm.support.ImageBadgeView
+import java.text.SimpleDateFormat
+import java.util.*
+import java.util.logging.SimpleFormatter
 
 
 class TimeSlotAdapter(
@@ -41,7 +44,6 @@ class TimeSlotAdapter(
         private val start: TextView = mainView.findViewById(R.id.time_slots_item_start)
         private val duration: TextView = mainView.findViewById(R.id.time_slots_item_duration)
         private val status: TextView = mainView.findViewById(R.id.time_slots_item_status)
-        private val statusLabel: TextView = mainView.findViewById(R.id.time_slots_item_status_label)
         private val typeLabel: TextView = mainView.findViewById(R.id.ts_type_label)
         private val typeChip: Chip = mainView.findViewById(R.id.timeslot_item_ts_type)
         private lateinit var editButton: ImageView
@@ -57,7 +59,7 @@ class TimeSlotAdapter(
                  showAddReviewFrag: (v: View) -> Unit){
             title.text = ts.title
             location.text = ts.location
-            start.text = ts.date.plus(" ").plus(ts.time)
+            start.text = SimpleDateFormat("d MMM, yyyy, h:mm a", Locale.getDefault()).format(ts.getCalendar().time)//ts.date.plus(" ").plus(ts.time)
             duration.text = ts.duration.plus(" hour(s)")
             editButton = mainView.findViewById(R.id.time_slots_edit_button)
             chatButton = mainView.findViewById(R.id.imageView3)
@@ -73,7 +75,6 @@ class TimeSlotAdapter(
 
 
                 status.visibility = View.VISIBLE
-                statusLabel.visibility = View.VISIBLE
 
                 status.text = when(ts.status) {
                     0 -> "Available"

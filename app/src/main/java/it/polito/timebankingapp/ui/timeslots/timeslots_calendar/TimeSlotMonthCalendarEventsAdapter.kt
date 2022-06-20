@@ -6,9 +6,7 @@ import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.core.os.bundleOf
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
@@ -38,7 +36,7 @@ class TimeSlotMonthCalendarEventsAdapter(/*val vm : TimeSlotsViewModel*/) :
         private val tsUserNickname: TextView = mainView.findViewById(R.id.calendar_item_ts_nickname)
         private val tsUserNicknameLabel: TextView = mainView.findViewById(R.id.nickname_label)
         private val tsType: Chip = mainView.findViewById(R.id.calendar_item_ts_type)
-        private lateinit var completeButton: ImageView
+        private lateinit var completeButton: CheckBox
 
         fun bind(event: Event, completeTsAction: (v: View) -> Unit,) {
             tsTitle.text = event.ts.title

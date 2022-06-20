@@ -65,7 +65,7 @@ data class TimeSlot(
             cal.time = sdf.parse(this.date + " " + this.time) as Date // all done
         }
 
-        Log.d("getCalendar", cal.timeInMillis.toString())
+        Log.d("getCalendar", "${this.date} ${this.time}: ${cal.timeInMillis}")
         return cal
     }
 

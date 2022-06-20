@@ -24,7 +24,7 @@
 
             android:paddingStart="16dp"
             android:paddingTop="16dp"
-            android:paddingBottom="16dp">
+            android:paddingBottom="8dp">
 
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guideline3"
@@ -48,10 +48,12 @@
                 android:id="@+id/time_slots_item_title"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
                 android:layout_marginEnd="8dp"
                 android:fontFamily="@font/roboto_medium"
                 android:text="@string/time_slots_item_title"
-                android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                app:drawableTint="@color/primary"
                 app:layout_constraintEnd_toStartOf="@+id/guideline3"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -62,21 +64,24 @@
                 android:layout_height="48dp"
                 android:backgroundTint="?attr/colorPrimary"
                 android:contentDescription="@string/time_slots_edit_icon"
-                android:visibility="visible"
+                android:visibility="gone"
                 app:layout_constraintStart_toStartOf="@+id/guideline3"
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/ic_baseline_edit_24" />
 
             <TextView
-                android:textColor="#8E8E8E"
                 android:id="@+id/time_slots_item_location"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_weight="1"
+                android:elegantTextHeight="false"
                 android:text="@string/time_slots_item_location"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                android:textColor="#8E8E8E"
+                app:drawableStartCompat="@drawable/ic_baseline_location_on_24"
+                app:drawableTint="@color/primary_text"
                 app:layout_constraintEnd_toStartOf="@+id/guideline3"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/time_slots_item_title" />
@@ -112,81 +117,49 @@
                 app:srcCompat="@drawable/pencil_star_review_icon" />
 
 
-
-
-            <TextView
-                android:id="@+id/time_slots_item_start_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="@string/time_slots_item_start_label"
-                 android:textColor="#8E8E8E"
-                android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/time_slots_item_location" />
-
-            <TextView
-                android:id="@+id/time_slots_item_start"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/time_slots_item_start"
-                 android:textColor="#8E8E8E"
-                app:layout_constraintBottom_toBottomOf="@+id/time_slots_item_start_label"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.06"
-                app:layout_constraintStart_toEndOf="@+id/time_slots_item_start_label"
-                app:layout_constraintTop_toTopOf="@+id/time_slots_item_start_label" />
-
             <TextView
                 android:id="@+id/time_slots_item_duration_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:drawablePadding="4dp"
+                android:elegantTextHeight="true"
                 android:text="@string/time_slots_item_duration_label"
-                 android:textColor="#8E8E8E"
+                android:textColor="#8E8E8E"
                 android:textStyle="bold"
+                app:drawableStartCompat="@drawable/ic_baseline_access_time_24"
+                app:layout_constraintBottom_toTopOf="@+id/barrier2"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/time_slots_item_start_label" />
+                app:layout_constraintTop_toBottomOf="@+id/time_slots_item_location"
+                app:layout_constraintVertical_bias="0.0" />
 
             <TextView
                 android:id="@+id/time_slots_item_duration"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:textColor="#8E8E8E"
                 android:text="@string/time_slots_item_duration"
+                android:textColor="#8E8E8E"
                 app:layout_constraintBottom_toBottomOf="@+id/time_slots_item_duration_label"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.06"
                 app:layout_constraintStart_toEndOf="@+id/time_slots_item_duration_label"
                 app:layout_constraintTop_toTopOf="@+id/time_slots_item_duration_label" />
 
-            <TextView
-                android:id="@+id/time_slots_item_status_label"
+            <com.google.android.material.chip.Chip
+                android:id="@+id/time_slots_item_status"
+                style="@style/Widget.Material3.ChipGroup"
                 android:layout_width="wrap_content"
+
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="Status:"
-                android:textColor="#8E8E8E"
-                android:textStyle="bold"
-                android:visibility="gone"
+                android:textColor="@color/secondary_text"
+                app:layout_constraintBottom_toTopOf="@+id/divider19"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/time_slots_item_duration_label"
-                tools:text="Status" />
-
-            <TextView
-                android:id="@+id/time_slots_item_status"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:textColor="#8E8E8E"
-                android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="@+id/time_slots_item_status_label"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.06"
-                app:layout_constraintStart_toEndOf="@+id/time_slots_item_status_label"
-                app:layout_constraintTop_toTopOf="@+id/time_slots_item_status_label"
-                tools:text="type" />
+                tools:text="status" />
 
 
             <TextView
@@ -194,11 +167,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
                 android:text="@string/time_slots_item_type_label"
+
                 android:textColor="#8E8E8E"
                 android:textStyle="bold"
                 android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintBottom_toTopOf="@+id/divider19"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/time_slots_item_duration_label" />
 
@@ -219,6 +194,47 @@
                 app:layout_constraintStart_toEndOf="@+id/ts_type_label"
                 app:layout_constraintTop_toTopOf="@+id/ts_type_label"
                 tools:ignore="TouchTargetSizeCheck" />
+
+            <View
+                android:id="@+id/divider19"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="16dp"
+                android:background="?android:attr/listDivider"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/barrier2"
+                app:layout_constraintVertical_chainStyle="packed" />
+
+            <TextView
+                android:id="@+id/time_slots_item_start"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:drawablePadding="4dp"
+                android:elegantTextHeight="true"
+                android:text="@string/time_slots_item_start"
+                android:textColor="#8E8E8E"
+                app:drawableStartCompat="@drawable/ic_baseline_calendar_month_24"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/divider19" />
+
+            <androidx.constraintlayout.widget.Barrier
+                android:id="@+id/barrier2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                app:barrierDirection="bottom"
+                app:constraint_referenced_ids="time_slots_item_status,ts_type_label"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:layout_editor_absoluteY="126dp" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
