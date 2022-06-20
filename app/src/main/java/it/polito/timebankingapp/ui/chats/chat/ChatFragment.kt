@@ -373,11 +373,9 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
                     etMessageInput.hint = "Chat disabled"
 
                     btnAcceptRequest.isEnabled = false
-                    //btnAcceptRequest.isClickable = false
                     btnAcceptRequest.alpha = 0.6F
 
                     btnDiscardRequest.isEnabled = false
-                    //btnDiscardRequest.isClickable = false
                     btnDiscardRequest.alpha = 0.6F
                 }
 
@@ -417,13 +415,11 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         cvMessageChatStatus.visibility = View.VISIBLE
         btnRequestService.isEnabled = false
 
-        //btnAcceptRequest.isEnabled = false
-        btnAcceptRequest.isClickable = false
+        btnAcceptRequest.isEnabled = false
         btnAcceptRequest.alpha = 0.6F
 
-        //btnDiscardRequest.isEnabled = false
-        btnDiscardRequest.isClickable = false
-        btnAcceptRequest.alpha = 0.6F
+        btnDiscardRequest.isEnabled = false
+        btnDiscardRequest.alpha = 0.6F
 
     }
 
@@ -446,7 +442,6 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         btnRequestService.isEnabled = false
 
         btnAcceptRequest.isEnabled = false
-        //btnAcceptRequest.isClickable = false
         btnAcceptRequest.alpha = 0.6F
 
         btnDiscardRequest.isEnabled = false
