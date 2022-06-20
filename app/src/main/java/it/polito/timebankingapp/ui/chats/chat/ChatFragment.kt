@@ -155,12 +155,12 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
     }
 
     private fun sendMessage() {
-        if (etMessageInput.text.isNotEmpty()) {
+        if (etMessageInput.text.toString().trim().isNotEmpty()) {
             btnRequestService.isEnabled = false
             sendMessage(
                 ChatMessage(
                     Firebase.auth.currentUser!!.uid,
-                    etMessageInput.text.toString(),
+                    etMessageInput.text.toString().trim(),
                     Calendar.getInstance().time,
                 )
             )
