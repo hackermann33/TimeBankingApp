@@ -31,7 +31,7 @@ class SkillsListFragment : Fragment(R.layout.fragment_skills_list) {
         super.onViewCreated(view, savedInstanceState)
         v = view
 
-        val chipGroup: ChipGroup = v.findViewById(R.id.skillsGroup)
+        //val chipGroup: ChipGroup = v.findViewById(R.id.skillsGroup)
         val chipFlexGroup: FlexboxLayout = v.findViewById(R.id.skillsFlexGroup)
         val progressBar = view.findViewById<ProgressBar>(R.id.skill_list_progressBar)
 
