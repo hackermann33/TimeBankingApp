@@ -7,6 +7,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.widget.*
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -49,6 +50,20 @@ class AddReviewFragment : Fragment(R.layout.fragment_add_review) {
         reviewedUserNick = v.findViewById(R.id.add_review_user_fullname)
         reviewedUserProfilePic = v.findViewById(R.id.add_review_profile_pic)
         progressBar = v.findViewById(R.id.progressBar3)
+
+        val clOtherProfile = view.findViewById<ConstraintLayout>(R.id.reviewer_profile_cl)
+        clOtherProfile.setOnClickListener {
+            val userId = review.userToReview.id
+            pvm.retrieveTimeSlotProfileData(userId)
+
+            findNavController().navigate(
+                R.id.action_nav_addReview_to_nav_showProfile,
+                bundleOf(
+                    "point_of_origin" to "skill_specific",
+                    "userId" to userId
+                ), /* TODO (Edit this bundle in order to avoid casini ) */
+            )
+        }
 
         rvm.review.observe(viewLifecycleOwner) {
             review = it

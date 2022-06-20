@@ -226,7 +226,11 @@
         android:id="@+id/nav_addReview"
         android:name="it.polito.timebankingapp.ui.reviews.AddReviewFragment"
         android:label="Add new review"
-        tools:layout="@layout/fragment_add_review" />
+        tools:layout="@layout/fragment_add_review" >
+        <action
+            android:id="@+id/action_nav_addReview_to_nav_showProfile"
+            app:destination="@id/nav_showProfile" />
+    </fragment>
     <fragment
         android:id="@+id/nav_timeSlotMonthCalendar"
         android:name="it.polito.timebankingapp.ui.timeslots.timeslots_calendar.TimeSlotMonthCalendar"
