@@ -19,7 +19,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.toObject
+import com.google.firebase.ktx.Firebase
 import it.polito.timebankingapp.MainActivity
 import it.polito.timebankingapp.R
 import it.polito.timebankingapp.model.Helper
@@ -273,10 +275,10 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_timeslots_list) {
         }
         /* Added this check in order to avoid crash due to fast multiple-click on emulator*/
 
-        if(findNavController().currentDestination?.isInTimeSlotListFragment() ?: false){
+        if(findNavController().currentDestination?.isInTimeSlotListFragment() == true){
             Navigation.findNavController(requireView()).navigate(
                 destination,
-                bundleOf("point_of_origin" to type, "userId" to ts.userId)
+                bundleOf("isPersonal" to (ts.userId == Firebase.auth.uid))
             )
         }
 
