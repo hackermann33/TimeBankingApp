@@ -24,6 +24,7 @@
             android:id="@+id/fragment_chat_rl_profile_pic"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
             app:layout_constraintStart_toStartOf="parent"
@@ -53,9 +54,9 @@
             android:id="@+id/fragment_chat_tv_time_slot_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="16dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginEnd="16dp"
             android:layout_marginBottom="24dp"
             android:fontFamily="@font/roboto_medium"
             android:textAllCaps="true"
@@ -73,8 +74,9 @@
             android:id="@+id/chat_profile_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="4dp"
+            android:layout_marginEnd="16dp"
             android:lines="1"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             app:autoSizeTextType="none"
@@ -87,7 +89,8 @@
             android:id="@+id/linearLayout3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="4dp"
             android:gravity="center_vertical"
             android:orientation="horizontal"
             app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
@@ -160,7 +163,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/request_service"
-                android:visibility="gone" />
+                android:visibility="visible" />
         </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
