@@ -51,17 +51,23 @@
 
             <CheckBox
                 android:id="@+id/calendar_item_ts_complete"
-                style="@style/Widget.AppCompat.CompoundButton.CheckBox"
-                android:layout_width="48dp"
+                style="@android:style/Widget.CompoundButton.CheckBox"
+                android:layout_width="0dp"
                 android:layout_height="48dp"
                 android:layout_marginBottom="8dp"
-                android:backgroundTint="?attr/colorPrimary"
-                android:buttonTint="@color/text_standard"
+                android:button="@null"
                 android:checked="false"
                 android:contentDescription="@string/complete_task"
+                android:drawableEnd="?android:attr/listChoiceIndicatorMultiple"
+                android:foregroundTint="#00AFEA"
+                android:minHeight="48dp"
+                android:shadowColor="#000000"
+                android:text="Complete"
+                android:textAlignment="viewStart"
                 android:visibility="visible"
                 app:layout_constraintBottom_toTopOf="@id/divider18"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHeight_min="48dp"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView

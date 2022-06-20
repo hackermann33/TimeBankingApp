@@ -6,13 +6,17 @@
     android:layout_height="wrap_content">
 
     <com.google.android.material.card.MaterialCardView
+        android:id="@+id/time_slot_item_layout_cv_content"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:clickable="true"
+        android:focusable="true"
+        android:longClickable="true"
         app:cardCornerRadius="15dp"
         app:cardElevation="5dp"
         app:cardPreventCornerOverlap="false"
-        app:contentPaddingTop="-8dp"
         app:cardUseCompatPadding="true"
+        app:contentPaddingTop="-8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -60,14 +64,14 @@
 
             <ImageButton
                 android:id="@+id/time_slots_edit_button"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:backgroundTint="?attr/colorPrimary"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginEnd="16dp"
+                android:background="@drawable/pencil_edit_icon_18"
+                android:backgroundTint="@color/primary"
                 android:contentDescription="@string/time_slots_edit_icon"
-                android:visibility="gone"
-                app:layout_constraintStart_toStartOf="@+id/guideline3"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ic_baseline_edit_24" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/time_slots_item_location"
@@ -79,17 +83,21 @@
                 android:elegantTextHeight="false"
                 android:text="@string/time_slots_item_location"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                android:textColor="#8E8E8E"
+                android:textColor="#546E7A"
                 app:drawableStartCompat="@drawable/ic_baseline_location_on_24"
                 app:drawableTint="@color/primary_text"
                 app:layout_constraintEnd_toStartOf="@+id/guideline3"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/time_slots_item_title" />
 
+
             <ru.nikartm.support.ImageBadgeView
                 android:id="@+id/imageView3"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginEnd="16dp"
+                android:backgroundTint="#631313"
+                android:tint="@color/primary"
                 android:visibility="visible"
                 app:ibv_badgePadding="2dp"
                 app:ibv_badgePosition="top_right"
@@ -97,10 +105,9 @@
                 app:ibv_badgeTextStyle="bold"
                 app:ibv_badgeValue="1"
                 app:ibv_fixedBadgeRadius="11dp"
-                app:layout_constraintStart_toStartOf="@+id/guideline3"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/barrier"
-                app:srcCompat="@drawable/ic_outline_chat_24" />
-
+                app:srcCompat="@drawable/messenger" />
 
             <ImageButton
                 android:id="@+id/time_slots_review_button"
@@ -140,7 +147,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="@string/time_slots_item_duration"
-                android:textColor="#8E8E8E"
+                android:textColor="#546E7A"
                 app:layout_constraintBottom_toBottomOf="@+id/time_slots_item_duration_label"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.06"
@@ -216,7 +223,7 @@
                 android:drawablePadding="4dp"
                 android:elegantTextHeight="true"
                 android:text="@string/time_slots_item_start"
-                android:textColor="#8E8E8E"
+                android:textColor="#546E7A"
                 app:drawableStartCompat="@drawable/ic_baseline_calendar_month_24"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

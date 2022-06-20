@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.cardview.widget.CardView
 import androidx.core.os.bundleOf
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.DiffUtil
@@ -107,7 +108,7 @@ class TimeSlotAdapter(
                 chatButton.setOnClickListener(requestAction)
             }
 
-            this.mainView.setOnClickListener(detailAction)
+            mainView.findViewById<CardView>(R.id.time_slot_item_layout_cv_content).setOnClickListener(detailAction)
         }
     }
 

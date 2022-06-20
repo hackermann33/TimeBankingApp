@@ -123,4 +123,5 @@
     <string name="assigned_to_you">:) \nThis Service has already been assigned to you!</string>
     <string name="service_not_available">Service not available</string>
     <string name="service_assigned_to_another">Service could been assigned to another user or your request has been discarded!</string>
+    <string name="publish_review">publish</string>
 </resources>

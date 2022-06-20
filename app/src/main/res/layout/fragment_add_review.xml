@@ -49,6 +49,27 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.0">
 
+                <RatingBar
+                    android:id="@+id/add_review_rating_bar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="10dp"
+                    android:contentDescription="@string/rating_bar"
+                    android:isIndicator="false"
+                    android:numStars="5"
+                    android:stepSize="1"
+                    android:theme="@style/RatingBar" />
+
+                <TextView
+                    android:id="@+id/ratingWarningLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@string/rating_score_warning_label"
+                    android:textColor="#F44336"
+                    android:visibility="invisible" />
+
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -99,13 +120,13 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/add_review_textLay"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    >
+                    app:counterEnabled="true"
+                    app:counterMaxLength="500">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/add_review_text"
@@ -120,36 +141,16 @@
 
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <RatingBar
-                    android:stepSize="1"
-                    android:layout_marginTop="10dp"
-                    android:id="@+id/add_review_rating_bar"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:contentDescription="@string/rating_bar"
-                    android:isIndicator="false"
-                    android:numStars="5"
-                    android:theme="@style/RatingBar" />
-
-                <TextView
-                    android:id="@+id/ratingWarningLabel"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:textColor="#F44336"
-                    android:text="@string/rating_score_warning_label"
-                    android:visibility="invisible" />
-
                 <Button
                     android:id="@+id/add_review_button"
                     android:layout_width="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="16dp"
                     android:layout_height="0dp"
                     android:layout_gravity="center"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="16dp"
                     android:layout_weight="1"
-                    android:text="@string/add_review" />
+                    android:text="@string/add_review"
+                    android:visibility="gone" />
             </LinearLayout>
 
         </LinearLayout>

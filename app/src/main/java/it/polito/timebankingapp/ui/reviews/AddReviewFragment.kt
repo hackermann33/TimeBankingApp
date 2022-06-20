@@ -1,11 +1,11 @@
 package it.polito.timebankingapp.ui.reviews
 
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
-import android.widget.Button
-import android.widget.RatingBar
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -31,39 +31,58 @@ class AddReviewFragment : Fragment(R.layout.fragment_add_review) {
     private lateinit var ratingBar: RatingBar
     private lateinit var reviewTextView: TextView
     private lateinit var warningLabel: TextView
+    private lateinit var review: Review
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setHasOptionsMenu(true)
         v = view
 
         rvm.review.observe(viewLifecycleOwner) {
-            updateUi(view, it)
+            review = it
+            updateUi(view)
         }
     }
 
-    fun updateUi(v: View, r: Review) {
-        submitBtn = v.findViewById(R.id.add_review_button)
-        ratingBar = v.findViewById(R.id.add_review_rating_bar)
-        reviewTextView = v.findViewById(R.id.add_review_text)
-        warningLabel = v.findViewById(R.id.ratingWarningLabel)
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_publish_review, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
 
-        if (!r.published) {
-            submitBtn.setOnClickListener {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.option1 -> {
                 val rating = ratingBar.rating
                 val text = reviewTextView.text.toString()
 
                 if (rating >= 1) {
-                    r.reviewText = text
-                    r.stars = rating.toInt()
-                    r.timestamp = java.util.Date()
-                    rvm.addReview(r)
+                    review.reviewText = text
+                    review.stars = rating.toInt()
+                    review.timestamp = java.util.Date()
+                    rvm.addReview(review)
                     findNavController().navigateUp()
                     Toast.makeText(activity, "Review successfully added!", Toast.LENGTH_SHORT)
                         .show();
                 } else {
                     warningLabel.visibility = View.VISIBLE //ERROR MESSAGE
                 }
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+
+    fun updateUi(v: View) {
+        submitBtn = v.findViewById(R.id.add_review_button)
+        ratingBar = v.findViewById(R.id.add_review_rating_bar)
+        reviewTextView = v.findViewById(R.id.add_review_text)
+        warningLabel = v.findViewById(R.id.ratingWarningLabel)
+
+        if (!review.published) {
+            submitBtn.setOnClickListener {
+
             }
         } else {
             submitBtn.setOnClickListener {
