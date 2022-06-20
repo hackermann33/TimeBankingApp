@@ -2,6 +2,7 @@ package it.polito.timebankingapp.ui.timeslots.timeslots_list
 
 import android.content.res.Resources
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -143,17 +144,18 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_timeslots_list) {
     private fun setReview(timeSlot: TimeSlot) {
         val reviewType = Helper.getReviewType(timeSlot)
 
-        val userToReview = Helper.getUserToReview(timeSlot)
+        val userToReviewId = Helper.getUserToReview(timeSlot).id
 
+        var userToReview:User
         var reviewer: User
-        userVm.getUserFromId(Helper.getReviewer(timeSlot).id).addOnSuccessListener {
-            reviewer = it.toObject<User>()!!
+        userVm.getUserFromId(userToReviewId).addOnSuccessListener {
+            userToReview = it.toObject<User>()!!
 
             var rev: Review?
-            /* TODO(Check that the review is not already present inside that user => you need a query to users table, in that case just show the review) */
 
-            rev = revVm.checkIfAlreadyReviewed(timeSlot, userVm.user.value!!, reviewer)
-            if (rev == null) { //recensione già presente
+            rev = revVm.checkIfAlreadyReviewed(timeSlot, userVm.user.value!!, userToReview)
+            Log.d("Review", "rev: $rev")
+            if (rev == null) { //recensione non è già presente
                 rev = Review(
                     referredTimeSlotId = timeSlot.id,
                     referredTimeslotTitle = timeSlot.title,

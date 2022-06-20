@@ -33,7 +33,6 @@ class ReviewsViewModel(application: Application): AndroidViewModel(application) 
     private var db: FirebaseFirestore = FirebaseFirestore.getInstance()
 
     fun addReview(review: Review){
-
         db.collection("users").document(review.userToReview.id).update(mapOf("reviews" to FieldValue.arrayUnion(review.copy(published =true)))).addOnSuccessListener {
             Log.d("reviews_add","Successfully added")
         }.addOnFailureListener  { Log.d("reviews_add", "Error on adding") }

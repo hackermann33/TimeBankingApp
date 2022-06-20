@@ -1,6 +1,7 @@
 package it.polito.timebankingapp.ui.reviews
 
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -10,6 +11,7 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.snackbar.Snackbar
 import it.polito.timebankingapp.R
 import it.polito.timebankingapp.model.review.Review
 import it.polito.timebankingapp.model.timeslot.TimeSlot
@@ -51,25 +53,40 @@ class AddReviewFragment : Fragment(R.layout.fragment_add_review) {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        var msg: String = ""
         return when (item.itemId) {
             R.id.option1 -> {
-                val rating = ratingBar.rating
-                val text = reviewTextView.text.toString()
+                if(!review.published) {
+                    val rating = ratingBar.rating
+                    val text = reviewTextView.text.toString()
 
-                if (rating >= 1) {
-                    review.reviewText = text
-                    review.stars = rating.toInt()
-                    review.timestamp = java.util.Date()
-                    rvm.addReview(review)
-                    findNavController().navigateUp()
-                    Toast.makeText(activity, "Review successfully added!", Toast.LENGTH_SHORT)
-                        .show();
-                } else {
-                    warningLabel.visibility = View.VISIBLE //ERROR MESSAGE
+                    if (rating >= 1) {
+                        review.reviewText = text
+                        review.stars = rating.toInt()
+                        review.timestamp = java.util.Date()
+                        rvm.addReview(review)
+                        findNavController().navigateUp()
+
+                        msg = "Review succesfully added"
+                    } else {
+                        warningLabel.visibility = View.VISIBLE //ERROR MESSAGE
+                    }
                 }
+                else{
+                    msg = "You have already reviewed this completed timeSlot!"
+                }
+
+                val snackBar = Snackbar.make(
+                    v,
+                    msg,
+                    Snackbar.LENGTH_LONG
+                )
+                snackBar.setAction("DISMISS") { snackBar.dismiss() }.show()
                 true
             }
-            else -> super.onOptionsItemSelected(item)
+            else -> {
+
+                super.onOptionsItemSelected(item)}
         }
     }
 
@@ -80,18 +97,24 @@ class AddReviewFragment : Fragment(R.layout.fragment_add_review) {
         reviewTextView = v.findViewById(R.id.add_review_text)
         warningLabel = v.findViewById(R.id.ratingWarningLabel)
 
-        if (!review.published) {
-            submitBtn.setOnClickListener {
 
-            }
-        } else {
-            submitBtn.setOnClickListener {
-                warningLabel.visibility = View.VISIBLE //ERROR MESSAGE
-                warningLabel.text = "You've already reviewed this user!"
-                //Toast.makeText(activity,"You've already reviewed this user!", Toast.LENGTH_LONG).show();
-            }
+        if (review.published) {
+            Log.d("rev", "$review")
+            ratingBar.rating = review.stars.toFloat()
+            ratingBar.setIsIndicator(true)
+            reviewTextView.text = review.reviewText
+            reviewTextView.isEnabled = false
+
+            /*warningLabel.visibility = View.VISIBLE //ERROR MESSAGE
+            warningLabel.text = "You've already reviewed this user!"*/
         }
+        else {
+            ratingBar.rating = 0F
+            ratingBar.setIsIndicator(false)
+            reviewTextView.text = ""
+            reviewTextView.isEnabled = true
 
+        }
     }
 }
 
