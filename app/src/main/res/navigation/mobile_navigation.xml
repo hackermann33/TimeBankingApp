@@ -157,7 +157,7 @@
     <fragment
         android:id="@+id/nav_skillsList"
         android:name="it.polito.timebankingapp.ui.skillslist.SkillsListFragment"
-        android:label="All offers"
+        android:label="All available offers"
         tools:layout="@layout/fragment_skills_list">
         <action
             android:id="@+id/action_nav_skillsList_to_skillSpecificTimeSlotListFragment"

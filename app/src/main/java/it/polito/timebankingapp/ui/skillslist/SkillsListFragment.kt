@@ -7,9 +7,11 @@ import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.core.os.bundleOf
+import androidx.core.view.marginStart
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import com.google.android.flexbox.FlexboxLayout
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import it.polito.timebankingapp.R
@@ -30,7 +32,7 @@ class SkillsListFragment : Fragment(R.layout.fragment_skills_list) {
         v = view
 
         val chipGroup: ChipGroup = v.findViewById(R.id.skillsGroup)
-
+        val chipFlexGroup: FlexboxLayout = v.findViewById(R.id.skillsFlexGroup)
         val progressBar = view.findViewById<ProgressBar>(R.id.skill_list_progressBar)
 
 
@@ -38,7 +40,7 @@ class SkillsListFragment : Fragment(R.layout.fragment_skills_list) {
             progressBar.visibility = View.GONE
             if(it.isNotEmpty()){
                 it.forEach { skill ->
-                    val chip = layoutInflater.inflate(
+                    /*val chip = layoutInflater.inflate(
                         R.layout.chip_layout_show,
                         chipGroup.parent.parent as ViewGroup,
                         false
@@ -55,7 +57,26 @@ class SkillsListFragment : Fragment(R.layout.fragment_skills_list) {
                         if(findNavController().currentDestination?.id==R.id.nav_skillsList)
                             findNavController().navigate(R.id.action_nav_skillsList_to_skillSpecificTimeSlotListFragment, b)
                     }
-                    chipGroup.addView(chip)
+                    chipGroup.addView(chip)*/
+                    //
+                    val chip = layoutInflater.inflate(
+                        R.layout.chip_layout_show,
+                        chipFlexGroup.parent.parent as ViewGroup,
+                        false
+                    ) as Chip
+                    chip.text = skill
+                    chip.setOnClickListener { ch ->
+                        val text = (ch as Chip).text.toString()
+                        //vm.setType("skill")
+                        //vm.setType("skill", skill)
+                        vm.setFilteringSkill(skill)
+                        val b = bundleOf("point_of_origin" to "skill_specific")
+
+                        /* This check is useful to avoid crash on emulator*/
+                        if(findNavController().currentDestination?.id==R.id.nav_skillsList)
+                            findNavController().navigate(R.id.action_nav_skillsList_to_skillSpecificTimeSlotListFragment, b)
+                    }
+                    chipFlexGroup.addView(chip)
                 }
             }
 
