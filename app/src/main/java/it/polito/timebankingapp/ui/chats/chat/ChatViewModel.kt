@@ -53,6 +53,9 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
             updateChat(reqDocRef) //register listeners
         }
 
+        reqDocRef.update("lastMessage", message)
+
+
         msgsDocRef.set(message) //write message in db
     }
 
