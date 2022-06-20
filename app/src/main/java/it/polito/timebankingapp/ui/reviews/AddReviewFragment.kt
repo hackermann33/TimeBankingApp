@@ -12,7 +12,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
+import de.hdodenhof.circleimageview.CircleImageView
 import it.polito.timebankingapp.R
+import it.polito.timebankingapp.model.Helper
 import it.polito.timebankingapp.model.review.Review
 import it.polito.timebankingapp.model.timeslot.TimeSlot
 import it.polito.timebankingapp.model.user.User
@@ -34,6 +36,9 @@ class AddReviewFragment : Fragment(R.layout.fragment_add_review) {
     private lateinit var reviewTextView: TextView
     private lateinit var warningLabel: TextView
     private lateinit var review: Review
+    private lateinit var reviewedUserNick: TextView
+    private lateinit var reviewedUserProfilePic: CircleImageView
+    private lateinit var progressBar: ProgressBar
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -41,8 +46,14 @@ class AddReviewFragment : Fragment(R.layout.fragment_add_review) {
         setHasOptionsMenu(true)
         v = view
 
+        reviewedUserNick = v.findViewById(R.id.add_review_user_fullname)
+        reviewedUserProfilePic = v.findViewById(R.id.add_review_profile_pic)
+        progressBar = v.findViewById(R.id.progressBar3)
+
         rvm.review.observe(viewLifecycleOwner) {
             review = it
+            reviewedUserNick.text = review.userToReview.nick
+            Helper.loadImageIntoView(reviewedUserProfilePic, progressBar , review.userToReview.profilePicUrl)
             updateUi(view)
         }
     }
@@ -53,7 +64,7 @@ class AddReviewFragment : Fragment(R.layout.fragment_add_review) {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        var msg: String = ""
+        var msg: String = "Before publishing, set at least the rating score."
         return when (item.itemId) {
             R.id.option1 -> {
                 if(!review.published) {
@@ -96,7 +107,6 @@ class AddReviewFragment : Fragment(R.layout.fragment_add_review) {
         ratingBar = v.findViewById(R.id.add_review_rating_bar)
         reviewTextView = v.findViewById(R.id.add_review_text)
         warningLabel = v.findViewById(R.id.ratingWarningLabel)
-
 
         if (review.published) {
             Log.d("rev", "$review")
