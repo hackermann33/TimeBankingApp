@@ -35,6 +35,7 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
     private var isPersonal: Boolean = false
     private lateinit var userId: String
 
+    private lateinit var v: View
 
     private lateinit var timeSlot: TimeSlot
     private lateinit var btnAskInfo: Button
@@ -52,6 +53,7 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        v = view
         globalModel.selectedTimeSlot.observe(viewLifecycleOwner) {
             if(it!=null) {
                 timeSlot = it
@@ -215,7 +217,13 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
                         context, "Edit time slot",
                         Toast.LENGTH_SHORT
                     ).show()*/
-                    editTimeslot() //evoked when the pencil button is pressed
+                    if(timeSlot.status == 0)
+                        editTimeslot() //evoked when the pencil button is pressed
+                    else{
+                        val snackBar =
+                            Snackbar.make(v, "You're not allowed to edit an already assigned or completed task!", Snackbar.LENGTH_LONG)
+                        snackBar.setAction("DISMISS") { snackBar.dismiss() }.show()
+                    }
                 }
                 else{
                     /*Toast.makeText(
