@@ -36,6 +36,8 @@ class ReviewsViewModel(application: Application): AndroidViewModel(application) 
         db.collection("users").document(review.userToReview.id).update(mapOf("reviews" to FieldValue.arrayUnion(review.copy(published =true)))).addOnSuccessListener {
             Log.d("reviews_add","Successfully added")
         }.addOnFailureListener  { Log.d("reviews_add", "Error on adding") }
+
+        /* Update review references in CompactUser */
     }
 
     fun checkIfAlreadyReviewed(timeSlot: TimeSlot, reviewer: User, userToReview: User): Review?{

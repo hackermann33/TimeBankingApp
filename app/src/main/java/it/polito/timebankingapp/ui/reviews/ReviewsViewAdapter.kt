@@ -43,7 +43,7 @@ class ReviewsViewAdapter(
             timestamp.text = rw.timestamp.toString()
             reviewText.text = rw.reviewText
             reviewedTimeSlotTile.text = rw.referredTimeslotTitle
-            role.text = if (rw.type == Review.AS_OFFERER_TYPE) "offerer" else "requester"
+            role.text = if (rw.type == Review.TO_REQUESTER_TYPE) "offerer" else "requester"
 
             Helper.loadImageIntoView(civImagePic, pbOtherProfilePic , rw.reviewer.profilePicUrl)
         }

@@ -208,9 +208,9 @@ class Helper {
 
         fun getReviewType(timeSlot: TimeSlot): Int {
             if(timeSlot.offerer.id == Firebase.auth.uid)
-                return Review.AS_OFFERER_TYPE
+                return Review.TO_REQUESTER_TYPE
             else if(timeSlot.assignedTo.id == Firebase.auth.uid)
-                return Review.AS_REQUESTER_TYPE
+                return Review.TO_OFFERER_TYPE
             else{
                 throw IllegalStateException("Something is wrong..")
             }

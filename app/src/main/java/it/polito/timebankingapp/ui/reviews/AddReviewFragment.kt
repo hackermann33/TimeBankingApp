@@ -92,7 +92,6 @@ class AddReviewFragment : Fragment(R.layout.fragment_add_review) {
                         review.timestamp = java.util.Date()
                         rvm.addReview(review)
                         findNavController().navigateUp()
-
                         msg = "Review succesfully added"
                     } else {
                         warningLabel.visibility = View.VISIBLE //ERROR MESSAGE
