@@ -144,6 +144,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_timeslots_list) {
     }
 
 
+
     /* Prepare the review to review or take the already present one*/
     private fun setReview(timeSlot: TimeSlot) {
         val reviewType = Helper.getReviewType(timeSlot)

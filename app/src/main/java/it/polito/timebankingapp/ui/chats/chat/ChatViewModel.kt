@@ -48,6 +48,8 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
         val msgsDocRef =
             db.collection("requests").document(chat.requestId).collection("messages").document()
 
+        val currentTimeSlotDocRef = db.collection("timeSlots").document(chat.timeSlot.id)
+
         if (chat.status == Chat.STATUS_UNINTERESTED) { //first message
             reqDocRef.set(chat.copy(status = Chat.STATUS_INTERESTED)) //write chat/request for the first time
             updateChat(reqDocRef) //register listeners
@@ -55,6 +57,12 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
 
         reqDocRef.update("lastMessage", message)
         reqDocRef.update("unreadMsgs", FieldValue.increment(1))
+
+        Log.d(TAG, "sendMessageAndUpdate: $message $chat ${message.userId != Firebase.auth.uid}")
+        if(message.userId != chat.offerer.id) {
+            currentTimeSlotDocRef.update("offererUnreadMsgs", FieldValue.increment(1))
+            /* Here TimeSlot references should be updated, but actually the reference would never be used.. (sol: convert into CompactTimeSlot) */
+        }
 
         msgsDocRef.set(message) //write message in db
     }
@@ -258,7 +266,7 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
                     "requester.balance",
                     newBalance
                 ) //TODO(Delete if u have time)
-                transaction.update(currentChatDocRef, "timeSlot.requester.balance", newBalance)
+                transaction.update(currentChatDocRef, "timeSlot.assignedTo.balance", newBalance)
                 transaction.update(
                     currentChatDocRef,
                     "offerer.balance",
@@ -413,9 +421,12 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun resetUnreadMsgs() {
+        val currentTimeSlotDocRef = db.collection("timeSlots").document(_chat.value!!.timeSlot.id)
         db.collection("requests").document(_chat.value!!.requestId).update("unreadMsgs", 0)
-    }
 
+        if(_chat.value!!.offerer.id == Firebase.auth.uid)
+            currentTimeSlotDocRef.update("offererUnreadMsgs", 0)
+    }
 
     companion object {
         const val TAG = "ChatViewModel"

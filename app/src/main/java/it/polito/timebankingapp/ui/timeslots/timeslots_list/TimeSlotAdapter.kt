@@ -72,7 +72,7 @@ class TimeSlotAdapter(
 
                 /* Set badge options */
                 chatButton.setBadgePadding(2)
-                chatButton.badgeValue = 0//ts.offererUnreadChats
+                chatButton.badgeValue = ts.offererUnreadMsgs
                 chatButton.setOnClickListener(showRequestsAction)
 
 
@@ -175,7 +175,8 @@ class TimeSlotAdapter(
             setReview(item)
             Navigation.findNavController(it).navigate(R.id.action_nav_completedTimeSlotList_to_nav_addReview,
                 bundleOf("timeslot" to item))
-        })
+        }
+        )
 
 
         //Navigation.createNavigateOnClickListener(R.id.action_timeSlotListFragment_to_nav_timeSlotDetails, bundleOf("timeslot" to item)) )

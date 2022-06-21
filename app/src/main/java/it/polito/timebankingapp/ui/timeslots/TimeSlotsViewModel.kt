@@ -27,9 +27,8 @@ class TimeSlotsViewModel(application: Application) : AndroidViewModel(applicatio
     private val _selectedTimeSlot = MutableLiveData<TimeSlot?>()
     val selectedTimeSlot: LiveData<TimeSlot?> = _selectedTimeSlot
 
-    /*private val _unreadChats = MutableLiveData<Int>()
-    val unreadChats: LiveData<Int> = _unreadChats
-*/
+    private val _unreadTimeSlotsMessages = MutableLiveData<Map<String, Int>>()
+    val unreadTimeSlotsMessages: LiveData<Map<String, Int>> = _unreadTimeSlotsMessages
 
     lateinit var type: String
         private set
@@ -110,6 +109,7 @@ class TimeSlotsViewModel(application: Application) : AndroidViewModel(applicatio
                 //justUpdated = true
             }
     }
+
 
 
     fun updateInterestingTimeSlots() {
