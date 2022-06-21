@@ -73,7 +73,6 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
                 )
                 updateChatUi(view, currentChat)
             }
-
         }
 
         setRecyclerViewAdapter(view)
@@ -86,7 +85,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
                 chatVm.chat.value?.status == STATUS_COMPLETED
             )
 
-            if(currentChat.lastMessage.userId != Firebase.auth.uid){
+            if(!it.isNullOrEmpty() && it.last().userId != Firebase.auth.uid){
                 chatVm.resetUnreadMsgs()
             }
 
