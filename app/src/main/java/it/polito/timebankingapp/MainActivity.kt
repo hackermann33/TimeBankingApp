@@ -72,7 +72,7 @@ class MainActivity : AppCompatActivity() {
             if(it > 0){
                 chatsView.text = it.toString()
                 chatsView.visibility = View.VISIBLE
-                counterView.text = ""
+                counterView.text = "!"
                 counterView.visibility = View.VISIBLE
             }
             else {

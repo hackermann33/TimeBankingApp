@@ -104,14 +104,15 @@
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toEndOf="@+id/reviews_item_rating_bar"
                 app:layout_constraintTop_toTopOf="@+id/reviews_item_rating_bar" />
+
             <TextView
                 android:id="@+id/reviews_item_label2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Time Slot:"
-
-                android:textColor="#757575"
                 android:layout_marginTop="8dp"
+
+                android:text="Time slot:"
+                android:textColor="#757575"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/reviews_item_rating_bar" />
 
