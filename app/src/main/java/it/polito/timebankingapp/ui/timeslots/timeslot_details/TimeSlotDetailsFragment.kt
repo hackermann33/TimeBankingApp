@@ -166,7 +166,7 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
             Helper.setConfirmationOnButton(requireContext(), btn)
 
             */
-            chatVm.requestService(Chat(timeSlot = ts/*, requester = profileViewModel.user.value!!.toCompactUser(), offerer = ts.offerer*/))
+            chatVm.requestService(Chat(timeSlot = ts, requester = profileViewModel.user.value!!.toCompactUser(), offerer = ts.offerer))
             findNavController().navigate(R.id.action_nav_timeSlotDetails_to_nav_chat)
         }
 
@@ -250,10 +250,11 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
     fun showTimeSlotRequest(timeSlot: TimeSlot) {
         Log.d("showTimeSlotRequest", "ts: $timeSlot")
         val chatId = Helper.makeRequestId(timeSlot.id, Firebase.auth.uid!!)
-            val offerer = timeSlot.offerer
+        val offerer = timeSlot.offerer
 
         val otherUser = if (timeSlot.userId == Firebase.auth.uid) timeSlot.assignedTo else timeSlot.offerer
-        chatVm.selectChatFromTimeSlot(timeSlot, otherUser)
+
+        chatVm.selectChatFromTimeSlot(timeSlot,profileViewModel.user.value!!.toCompactUser())
     }
 
 

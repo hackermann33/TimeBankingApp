@@ -39,7 +39,7 @@ class ReviewsViewModel(application: Application): AndroidViewModel(application) 
         val offererRef = db.collection("requests").whereEqualTo("offerer.id", review.userToReview.id)
         val requesterRef = db.collection("requests").whereEqualTo("requester.id", review.userToReview.id)
 
-        var updatedCompactUser: CompactUser
+        var updatedCompactUser: CompactUser = CompactUser()
         userDocRef.update(mapOf("reviews" to FieldValue.arrayUnion(review.copy(published =true)))).addOnSuccessListener {
             Log.d("reviews_add","Successfully added")
             db.runTransaction {
@@ -48,14 +48,13 @@ class ReviewsViewModel(application: Application): AndroidViewModel(application) 
                     updatedCompactUser = transaction.get(userDocRef).toObject<User>()?.toCompactUser() ?: CompactUser()
 
                 offererRef.get().addOnSuccessListener {
-                    it.forEach { transaction.update(it.reference, "offerer",  updatedCompactUser, "timeSlot.offerer", updatedCompactUser)
-                    }
+                    it.forEach { transaction.update(it.reference, "offerer",  updatedCompactUser, "timeSlot.offerer", updatedCompactUser) }
                 }
+            }.addOnSuccessListener {
                 requesterRef.get().addOnSuccessListener {
-                    it.forEach { transaction.update(it.reference, "requester",  updatedCompactUser, "timeSlot.requester", updatedCompactUser)
-                    }
+                    db.runBatch {  batch -> it.forEach { batch.update(it.reference, "requester",  updatedCompactUser, "timeSlot.requester", updatedCompactUser)
+                    }}
                 }
-
             }
 
         }.addOnFailureListener  { Log.d("reviews_add", "Error on adding") }

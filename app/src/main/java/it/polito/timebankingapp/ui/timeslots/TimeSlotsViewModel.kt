@@ -269,8 +269,8 @@ class TimeSlotsViewModel(application: Application) : AndroidViewModel(applicatio
     fun makeTimeSlotRequest(ts: TimeSlot, currentUser: User): Task<Void> {
         val chatId = Helper.makeRequestId(ts.id, currentUser.id)
         val req = Chat(
-            timeSlot = ts/*, requester = currentUser.toCompactUser(),
-            offerer = ts.offerer*/, status = Chat.STATUS_INTERESTED, offererUnreadMsg = 0
+            timeSlot = ts, requester = currentUser.toCompactUser(),
+            offerer = ts.offerer, status = Chat.STATUS_INTERESTED, offererUnreadMsg = 0
         )
 
         /*
