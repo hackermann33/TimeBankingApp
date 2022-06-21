@@ -47,6 +47,7 @@ class TimeSlotAdapter(
         private val status: TextView = mainView.findViewById(R.id.time_slots_item_status)
         private val typeLabel: TextView = mainView.findViewById(R.id.ts_type_label)
         private val typeChip: Chip = mainView.findViewById(R.id.timeslot_item_ts_type)
+        private val statusChip: Chip = mainView.findViewById(R.id.time_slots_item_status)
         private lateinit var editButton: ImageView
         private lateinit var chatButton: ImageBadgeView
         private lateinit var addReviewButton: ImageView
@@ -78,9 +79,18 @@ class TimeSlotAdapter(
                 status.visibility = View.VISIBLE
 
                 status.text = when(ts.status) {
-                    0 -> "Available"
-                    1 -> "Assigned"
-                    2 -> "Completed"
+                    0 -> {
+                        statusChip.setChipBackgroundColorResource(R.color.accent)
+                        "Available"
+                    }
+                    1 -> {
+                        statusChip.setChipBackgroundColorResource(R.color.primary_dark)
+                        "Assigned"
+                    }
+                    2 -> {
+                        statusChip.setChipBackgroundColorResource(R.color.lighter_blue)
+                        "Completed"
+                    }
                     else -> ""
                 }
             }
