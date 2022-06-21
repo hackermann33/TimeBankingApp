@@ -40,9 +40,9 @@ import it.polito.timebankingapp.ui.timeslots.TimeSlotsViewModel
  */
 class TimeSlotListFragment : Fragment(R.layout.fragment_timeslots_list) {
 
-    private var filterParameter = "Title"
+    private var filterParameter = "Date"
     private var filterKeywords = ""
-    private var orderingDirection = false //false == ascending, true = descending
+    private var orderingDirection = true //false == ascending, true = descending
     private var openFilterSortMenu = false
 
     private val vm: TimeSlotsViewModel by activityViewModels()
@@ -114,8 +114,10 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_timeslots_list) {
 
         vm.isLoading.observe(viewLifecycleOwner) { isLoading ->
             if(!isLoading) {
-                if(vm.timeSlots.value!!.isEmpty())
+                if(vm.timeSlots.value!!.isEmpty()) {
                     setVoidMessage(view, true)
+                    rv.adapter = null
+                }
                 else {
                     setVoidMessage(view, false)
                     val adTmp = TimeSlotAdapter(
