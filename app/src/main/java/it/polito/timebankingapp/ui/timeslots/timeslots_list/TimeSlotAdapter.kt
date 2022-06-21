@@ -202,7 +202,7 @@ class TimeSlotAdapter(
             when(filterParameter){
                 "Title" -> newData.sortByDescending { it.title.lowercase().replace("\n", " ").trim() }
                 "Location" -> newData.sortByDescending { it.location.lowercase().replace("\n", " ").trim() }
-                "Date" -> newData.sortByDescending { it.date.lowercase().replace("\n", " ").trim() }
+                "Date" -> newData.sortByDescending { it.date.plus(" ").plus(it.time) }
                 "Duration" -> newData.sortByDescending { it.duration.lowercase().replace("\n", " ").trim() }
                 else -> {
                     data.toMutableList()
@@ -212,7 +212,7 @@ class TimeSlotAdapter(
             when(filterParameter){
                 "Title" -> newData.sortBy { it.title.lowercase().replace("\n", " ").trim() }
                 "Location" -> newData.sortBy { it.location.lowercase().replace("\n", " ").trim() }
-                "Date" -> newData.sortBy { it.date.lowercase().replace("\n", " ").trim() }
+                "Date" -> newData.sortBy { it.date.plus(" ").plus(it.time) }
                 "Duration" -> newData.sortBy { it.duration.lowercase().replace("\n", " ").trim() }
                 else -> {
                     data.toMutableList()
