@@ -17,163 +17,173 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:weightSum="3">
+            android:layout_marginBottom="124dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-            <ImageView
-                android:id="@+id/imageView2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:adjustViewBounds="true"
-                android:contentDescription="@string/timeslot_splash"
-                android:scaleType="centerCrop"
-                app:srcCompat="@drawable/addreview_splash"
-                tools:src="@tools:sample/backgrounds/scenic" />
-
-
-            <LinearLayout
-                android:id="@+id/linearLayout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
-                android:layout_marginBottom="32dp"
-                android:orientation="vertical"
-                app:layout_constraintBottom_toTopOf="@+id/addTimeSlotButton"
+            <RelativeLayout
+                android:id="@+id/relativeLayout"
+                android:layout_width="96dp"
+                android:layout_height="96dp"
+                android:layout_marginTop="50dp"
+                android:elevation="4dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.0">
+                app:layout_constraintTop_toTopOf="parent">
 
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/reviewer_profile_cl"
+                <ProgressBar
+                    android:id="@+id/progressBar3"
+                    style="?android:attr/progressBarStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true" />
+
+                <ImageView
+                    android:id="@+id/add_review_profile_pic"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:visibility="visible">
+                    android:padding="8dp"
+                    android:src="@drawable/default_avatar" />
 
-                    <RelativeLayout
-                        android:id="@+id/relativeLayout"
-                        android:layout_width="96dp"
-                        android:layout_height="96dp"
-                        android:layout_marginStart="8dp"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toStartOf="@+id/add_review_user_fullname"
-                        app:layout_constraintHorizontal_chainStyle="packed"
-                        app:layout_constraintHorizontal_weight="1"
+            </RelativeLayout>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="96dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="8dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:weightSum="3">
+
+                    <ImageView
+                        android:id="@+id/imageView2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:adjustViewBounds="true"
+                        android:contentDescription="@string/timeslot_splash"
+                        android:scaleType="centerCrop"
+                        android:visibility="gone"
+                        app:srcCompat="@drawable/addreview_splash"
+                        tools:src="@tools:sample/backgrounds/scenic" />
+
+
+                    <LinearLayout
+                        android:id="@+id/linearLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginRight="16dp"
+                        android:layout_marginBottom="32dp"
+                        android:orientation="vertical"
+                        app:layout_constraintBottom_toTopOf="@+id/addTimeSlotButton"
+                        app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent">
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="0.0">
 
-                        <ProgressBar
-                            android:id="@+id/progressBar3"
-                            style="?android:attr/progressBarStyle"
+
+                        <TextView
+                            android:id="@+id/fragment_add_review_tv_how_was"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_centerInParent="true" />
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginTop="56dp"
+                            android:layout_marginBottom="16dp"
+                            android:text="How was NICK?"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
-                        <de.hdodenhof.circleimageview.CircleImageView
-                            android:id="@+id/add_review_profile_pic"
+                        <TextView
+                            android:id="@+id/textView12"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginBottom="16dp"
+                            android:text="Rate your overall experience"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                            android:textColor="@color/divider" />
+
+                        <RatingBar
+                            android:id="@+id/add_review_rating_bar"
+                            style="@style/Widget.AppCompat.RatingBar.Indicator"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="12dp"
+                            android:layout_marginBottom="4dp"
+                            android:contentDescription="@string/rating_bar"
+                            android:isIndicator="false"
+                            android:numStars="5"
+                            android:stepSize="1"
+                            android:theme="@style/RatingBar" />
+
+                        <TextView
+                            android:id="@+id/ratingWarningLabel"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:layout_marginBottom="4dp"
+                            android:gravity="center"
+                            android:text="@string/rating_score_warning_label"
+                            android:textColor="#F44336"
+                            android:visibility="gone" />
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/add_review_textLay"
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:padding="8dp"
-                            android:src="@drawable/default_avatar" />
-                    </RelativeLayout>
+                            android:layout_marginTop="16dp"
+                            android:hint="Write something here (optional)"
+                            app:counterEnabled="true"
+                            app:counterMaxLength="500">
 
-                    <TextView
-                        android:id="@+id/textView10"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Review to:"
-                        app:layout_constraintBottom_toTopOf="@+id/add_review_user_fullname"
-                        app:layout_constraintEnd_toEndOf="@+id/add_review_user_fullname"
-                        app:layout_constraintHorizontal_bias="0.5"
-                        app:layout_constraintStart_toStartOf="@+id/add_review_user_fullname"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintVertical_chainStyle="packed" />
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/add_review_text"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:autofillHints=""
+                                android:ems="10"
+                                android:gravity="start"
+                                android:inputType="textMultiLine"
+                                android:minHeight="48dp"
+                                android:minLines="10"
+                                tools:ignore="TextContrastCheck,TextContrastCheck" />
 
-                    <TextView
-                        android:id="@+id/add_review_user_fullname"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="32dp"
-                        android:layout_marginEnd="32dp"
-                        android:text="Full Name"
-                        android:textSize="18sp"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.5"
-                        app:layout_constraintStart_toEndOf="@+id/relativeLayout"
-                        app:layout_constraintTop_toBottomOf="@+id/textView10" />
-                </androidx.constraintlayout.widget.ConstraintLayout>
+                        </com.google.android.material.textfield.TextInputLayout>
 
+                        <Button
+                            android:id="@+id/add_review_button"
+                            android:layout_width="wrap_content"
+                            android:layout_height="0dp"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginBottom="16dp"
+                            android:layout_weight="1"
+                            android:text="@string/add_review"
+                            android:visibility="gone" />
+                    </LinearLayout>
 
-                <View
-                    android:id="@+id/divider22"
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginBottom="8dp"
-                    android:layout_weight="1"
-                    android:background="?android:attr/listDivider" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
 
-                <RatingBar
-                    android:id="@+id/add_review_rating_bar"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="10dp"
-                    android:contentDescription="@string/rating_bar"
-                    android:isIndicator="false"
-                    android:numStars="5"
-                    android:stepSize="1"
-                    android:theme="@style/RatingBar" />
-
-                <TextView
-                    android:id="@+id/ratingWarningLabel"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:layout_marginBottom="4dp"
-                    android:gravity="center"
-                    android:text="@string/rating_score_warning_label"
-                    android:textColor="#F44336"
-                    android:visibility="gone" />
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/add_review_textLay"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    app:counterEnabled="true"
-                    app:counterMaxLength="500">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/add_review_text"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:autofillHints=""
-                        android:ems="10"
-                        android:hint="@string/add_review_text_hint"
-                        android:inputType="textMultiLine|textPersonName"
-                        android:minHeight="48dp"
-                        tools:ignore="TextContrastCheck,TextContrastCheck" />
-
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <Button
-                    android:id="@+id/add_review_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="0dp"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="16dp"
-                    android:layout_weight="1"
-                    android:text="@string/add_review"
-                    android:visibility="gone" />
-            </LinearLayout>
-
-        </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

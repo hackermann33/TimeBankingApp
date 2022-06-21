@@ -13,6 +13,7 @@ data class Chat(
     var lastMessage: ChatMessage = ChatMessage(),
     var status: Int = STATUS_UNINTERESTED,
     var offererUnreadMsg: Int = 0, var requesterUnreadMsg: Int = 0, //needed to check or condition (request is or as a requester or as an offerer)
+    var unreadMsgs: Int = 0,
     val requestId: String = timeSlot.id + "_" + requester.id
 )
 {
@@ -23,9 +24,6 @@ data class Chat(
     val users = listOf(requester.id, offerer.id)
     /*val users = mapOf(requester.id to true, offerer.id to true)*/
 
-    fun incUnreadMsg(): Chat {
-        return this.copy(offererUnreadMsg = offererUnreadMsg+1)
-    }
 
     fun sendFirstMessage(cm: ChatMessage) {
         this.status = STATUS_INTERESTED
@@ -44,39 +42,6 @@ data class Chat(
         return if(requester.id == Firebase.auth.uid) CHAT_TYPE_TO_OFFERER else CHAT_TYPE_TO_REQUESTER
     }
 
-    fun sendMessage(message: ChatMessage) {
-        if(status == STATUS_UNINTERESTED){ //FIRST MESSAGE, I am surely the Requester
-            this.status = STATUS_INTERESTED
-/*
-            timeSlot.offererUnreadChats++
-*/
-            offererUnreadMsg = 1
-        }
-        else{ /* Existing Chat, I can be requester or offerer */
-            if(this.lastMessage.userId != Firebase.auth.uid){ /* Have to update unreadChats */
-                if(this.timeSlot.offerer.id == Firebase.auth.uid) { /* I am offerer, and I am answering */
-/*
-                    this.timeSlot.requesterUnreadChats++
-*/
-                    this.requesterUnreadMsg++
-                }
-                else{ /* I am requester, and I'm answering */
-/*
-                    this.timeSlot.offererUnreadChats++
-*/
-                    this.offererUnreadMsg++
-                }
-            }
-            else{ /* don't have to update unreadChats, just unreadMsg */
-                if(this.timeSlot.offerer.id == Firebase.auth.uid) /* I'm offerer */
-                    this.requesterUnreadMsg++
-                else
-                    this.offererUnreadMsg++
-            }
-
-        }
-        lastMessage = message
-    }
 
     @Exclude
     fun isEmpty() = this.requestId == "_"

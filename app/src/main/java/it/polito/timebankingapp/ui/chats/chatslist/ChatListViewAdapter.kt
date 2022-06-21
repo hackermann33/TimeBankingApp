@@ -50,7 +50,7 @@ class ChatListViewAdapter(
 
         private val civImagePic: CircleImageView = itemView.findViewById(R.id.chat_profile_pic)
         private val nUnreadMsg: TextView = itemView.findViewById(R.id.n_unread_msg)
-        private val unreadMsgCard: CardView = itemView.findViewById(R.id.unread_msg_card)
+        private val cvUnreadMsg: CardView = itemView.findViewById(R.id.unread_msg_card)
         private val chipOffreq: Chip = itemView.findViewById(R.id.chipOffReq)
 
         fun bind(cli: Chat, openChatAction: (v: View) -> Unit) {
@@ -63,13 +63,13 @@ class ChatListViewAdapter(
             tvTimeSlotTitle.text = cli.timeSlot.title
             tvLastMessage.text = cli.lastMessage.messageText
             if(cli.lastMessage.userId != Firebase.auth.uid) {
-                if (cli.offererUnreadMsg > 0)
-                    nUnreadMsg.text = cli.offererUnreadMsg.toString()
+                if (cli.unreadMsgs > 0)
+                    nUnreadMsg.text = cli.unreadMsgs.toString()
                 else
-                    unreadMsgCard.visibility = View.GONE
+                    cvUnreadMsg.visibility = View.INVISIBLE
             }
             else
-                unreadMsgCard.visibility = View.GONE
+                cvUnreadMsg.visibility = View.INVISIBLE
             tvLastMessageTime.text = Helper.dateToDisplayString(cli.lastMessage.timestamp)
             otherUserNick.text =  otherUser.nick
             // sarebbe da mettere il last message della chat dentro il documento in userRooms (per l'anteprima)

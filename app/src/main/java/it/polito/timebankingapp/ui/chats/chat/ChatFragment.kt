@@ -73,17 +73,21 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
                 )
                 updateChatUi(view, currentChat)
             }
-
         }
 
         setRecyclerViewAdapter(view)
 
         chatVm.chatMessages.observe(viewLifecycleOwner) {
+
             adTmp = ChatViewAdapter(
                 it.toMutableList(),
                 ::sendMessage,
                 chatVm.chat.value?.status == STATUS_COMPLETED
             )
+
+            if(!it.isNullOrEmpty() && it.last().userId != Firebase.auth.uid){
+                chatVm.resetUnreadMsgs()
+            }
 
             rv.adapter = adTmp
             rv.scrollToPosition(adTmp.itemCount - 1)

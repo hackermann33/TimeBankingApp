@@ -131,17 +131,43 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
 
         val srcRef = db.collection("users").document(usr.id).set(usr)
         //Manage multiple updates !!!
-        val otherRef1 = db.collection("requests").whereEqualTo("requester.id", usr.id)
-        val otherRef2 = db.collection("requests").whereEqualTo("offerer.id", usr.id)
+        val otherRef1 = db.collection("requests").whereEqualTo("offerer.id", usr.id)
+        val otherRef2 = db.collection("requests").whereEqualTo("requester.id", usr.id)
+        val reviewerRef = db.collection("users").whereArrayContains("reviewer.id", usr.id)
+        val timeSlotRefOfferer = db.collection("timeSlots").whereEqualTo("userId", usr.id)
+        val timeSlotRefRequester = db.collection("timeSlots").whereEqualTo("assignedTo.id", usr.id)
 
-        otherRef1.get().addOnSuccessListener {
+        timeSlotRefOfferer.get().addOnSuccessListener {
             db.runBatch {
                 batch -> it.forEach{batch.update(it.reference, "offerer", usr.toCompactUser())}
             }
         }.addOnSuccessListener {
+            timeSlotRefRequester.get().addOnSuccessListener {
+                db.runBatch {
+                    batch -> it.forEach { batch.update(it.reference, "assignedTo", usr.toCompactUser()) }
+                }
+            }
+        }.addOnSuccessListener {
+        otherRef1.get().addOnSuccessListener {
+            db.runBatch {
+                batch -> it.forEach{batch.update(it.reference, "offerer", usr.toCompactUser());
+                batch.update(it.reference, "timeSlot.offerer", usr.toCompactUser())
+                }
+            }
+        }}.addOnSuccessListener {
             otherRef2.get().addOnSuccessListener {
                 db.runBatch { batch ->
-                    it.forEach { batch.update(it.reference, "requester", usr.toCompactUser()) }
+                    it.forEach { batch.update(it.reference, "requester", usr.toCompactUser());
+                        batch.update(it.reference, "timeSlot.assignedTo", usr.toCompactUser())
+                    } /* Controlla che assignedTo sia sempre sincronizzato */
+
+                }
+            }
+        }.addOnSuccessListener {
+            reviewerRef.get().addOnSuccessListener {
+                db.runBatch {
+                    batch ->
+                    it.forEach{batch.update(it.reference, "reviewer", usr.toCompactUser())}
                 }
             }
         }

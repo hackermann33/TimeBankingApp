@@ -2,6 +2,7 @@ package it.polito.timebankingapp.model
 
 import android.content.Context
 import android.graphics.drawable.Drawable
+import android.media.AudioRecord.MetricsConstants.SOURCE
 import android.text.format.DateUtils
 import android.util.Log
 import android.view.View
@@ -71,7 +72,7 @@ class Helper {
                                 progressBar.visibility = View.GONE
                                 return false
                             }
-                        }).diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true)
+                        }).diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)/*.diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true)*/
                         .into(view)
                 }
                 .addOnFailureListener { e ->

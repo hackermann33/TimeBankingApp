@@ -14,7 +14,9 @@ import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
 import it.polito.timebankingapp.model.review.Review
 import it.polito.timebankingapp.model.timeslot.TimeSlot
+import it.polito.timebankingapp.model.user.CompactUser
 import it.polito.timebankingapp.model.user.User
+import it.polito.timebankingapp.ui.profile.ProfileViewModel
 
 class ReviewsViewModel(application: Application): AndroidViewModel(application) {
 
@@ -33,11 +35,36 @@ class ReviewsViewModel(application: Application): AndroidViewModel(application) 
     private var db: FirebaseFirestore = FirebaseFirestore.getInstance()
 
     fun addReview(review: Review){
-        db.collection("users").document(review.userToReview.id).update(mapOf("reviews" to FieldValue.arrayUnion(review.copy(published =true)))).addOnSuccessListener {
+        val userDocRef = db.collection("users").document(review.userToReview.id)
+        val offererRef = db.collection("requests").whereEqualTo("offerer.id", review.userToReview.id)
+        val requesterRef = db.collection("requests").whereEqualTo("requester.id", review.userToReview.id)
+
+        var updatedCompactUser: CompactUser = CompactUser()
+        userDocRef.update(mapOf("reviews" to FieldValue.arrayUnion(review.copy(published =true)))).addOnSuccessListener {
             Log.d("reviews_add","Successfully added")
+
+            offererRef.get().addOnSuccessListener {
+                db.runTransaction {
+                        transaction ->
+
+                    updatedCompactUser = transaction.get(userDocRef).toObject<User>()?.toCompactUser() ?: CompactUser()
+
+                    it.forEach { transaction.update(it.reference, "offerer",  updatedCompactUser, "timeSlot.offerer", updatedCompactUser) }
+                }
+            }
+            .addOnSuccessListener {
+                requesterRef.get().addOnSuccessListener {
+                    db.runBatch {  batch -> it.forEach { batch.update(it.reference, "requester",  updatedCompactUser, "timeSlot.requester", updatedCompactUser)
+                    }}
+                }
+            }
+
         }.addOnFailureListener  { Log.d("reviews_add", "Error on adding") }
 
+
         /* Update review references in CompactUser */
+
+
     }
 
     fun checkIfAlreadyReviewed(timeSlot: TimeSlot, reviewer: User, userToReview: User): Review?{

@@ -54,7 +54,7 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
         }
 
         reqDocRef.update("lastMessage", message)
-
+        reqDocRef.update("unreadMsgs", FieldValue.increment(1))
 
         msgsDocRef.set(message) //write message in db
     }
@@ -410,6 +410,10 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
             e.printStackTrace()
             null
         }
+    }
+
+    fun resetUnreadMsgs() {
+        db.collection("requests").document(_chat.value!!.requestId).update("unreadMsgs", 0)
     }
 
 
