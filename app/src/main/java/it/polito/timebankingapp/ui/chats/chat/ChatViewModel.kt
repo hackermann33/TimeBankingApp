@@ -120,8 +120,8 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
 
         val tmpChat = Chat(
             timeSlot = timeSlot,
-            offerer = timeSlot.offerer,
-            requester = currentUser,
+            /*offerer = timeSlot.offerer,
+            requester = currentUser,*/
             status = Chat.STATUS_UNINTERESTED
         )
 

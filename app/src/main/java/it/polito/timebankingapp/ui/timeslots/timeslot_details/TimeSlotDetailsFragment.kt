@@ -166,7 +166,7 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
             Helper.setConfirmationOnButton(requireContext(), btn)
 
             */
-            chatVm.requestService(Chat(timeSlot = ts, requester = profileViewModel.user.value!!.toCompactUser(), offerer = ts.offerer))
+            chatVm.requestService(Chat(timeSlot = ts/*, requester = profileViewModel.user.value!!.toCompactUser(), offerer = ts.offerer*/))
             findNavController().navigate(R.id.action_nav_timeSlotDetails_to_nav_chat)
         }
 
