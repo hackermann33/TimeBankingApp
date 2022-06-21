@@ -42,15 +42,17 @@ class ReviewsViewModel(application: Application): AndroidViewModel(application) 
         var updatedCompactUser: CompactUser = CompactUser()
         userDocRef.update(mapOf("reviews" to FieldValue.arrayUnion(review.copy(published =true)))).addOnSuccessListener {
             Log.d("reviews_add","Successfully added")
-            db.runTransaction {
-                    transaction ->
+
+            offererRef.get().addOnSuccessListener {
+                db.runTransaction {
+                        transaction ->
 
                     updatedCompactUser = transaction.get(userDocRef).toObject<User>()?.toCompactUser() ?: CompactUser()
 
-                offererRef.get().addOnSuccessListener {
                     it.forEach { transaction.update(it.reference, "offerer",  updatedCompactUser, "timeSlot.offerer", updatedCompactUser) }
                 }
-            }.addOnSuccessListener {
+            }
+            .addOnSuccessListener {
                 requesterRef.get().addOnSuccessListener {
                     db.runBatch {  batch -> it.forEach { batch.update(it.reference, "requester",  updatedCompactUser, "timeSlot.requester", updatedCompactUser)
                     }}
