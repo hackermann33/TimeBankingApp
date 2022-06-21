@@ -21,21 +21,23 @@
             android:id="@+id/constraintLayout4"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/change_color_clicked">
+            android:background="@drawable/change_color_clicked"
+            android:paddingBottom="8dp">
 
 
             <RelativeLayout
                 android:id="@+id/fragment_chats_list_item_rl_profile_pic"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
                 app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintDimensionRatio="1:1"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/chat_profile_pic"
-                    android:layout_width="78dp"
-                    android:layout_height="78dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="8dp"
@@ -56,13 +58,17 @@
 
             <TextView
                 android:id="@+id/chat_list_item_time_slot_title"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
+                android:layout_marginEnd="72dp"
                 android:fontFamily="@font/roboto_medium"
+                android:singleLine="true"
                 android:text="@string/time_slot_title"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
                 app:layout_constraintBottom_toTopOf="@+id/chat_list_item_nick_name"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toEndOf="@+id/fragment_chats_list_item_rl_profile_pic"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.75"
@@ -121,7 +127,6 @@
                 android:backgroundTint="@color/primary"
                 android:minWidth="24dp"
                 android:minHeight="24dp"
-                android:visibility="invisible"
                 app:cardCornerRadius="16dp"
                 app:layout_constraintBottom_toBottomOf="@+id/chat_list_item_last_message"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -140,17 +145,18 @@
                 android:id="@+id/chipOffReq"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="8dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:textColor="@color/white"
                 android:textSize="14sp"
                 android:textStyle="bold"
                 app:chipMinHeight="24dp"
                 app:ensureMinTouchTargetSize="false"
-                app:layout_constraintBottom_toTopOf="@+id/chat_list_item_time_slot_title"
-                app:layout_constraintEnd_toEndOf="@+id/chat_list_item_time_slot_title"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="@+id/chat_list_item_time_slot_title"
-                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toEndOf="@+id/chat_list_item_time_slot_title"
+                app:layout_constraintTop_toTopOf="@+id/chat_list_item_time_slot_title"
                 tools:ignore="TouchTargetSizeCheck" />
 
 
