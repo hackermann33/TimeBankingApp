@@ -47,8 +47,8 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
         userId = arguments?.getString("userId").toString()
 
         isPersonal = arguments?.getBoolean("isPersonal") ?: false
+        Log.d("isPersonal", "isPersonal: $isPersonal")
         setHasOptionsMenu(true)
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -58,7 +58,7 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
             if(it!=null) {
                 timeSlot = it
 
-                isPersonal = (timeSlot.offerer.id == Firebase.auth.uid)
+                //isPersonal = (timeSlot.offerer.id == Firebase.auth.uid)
 
                 /* If it's not personal, retrieve request infos too */
                 if (!isPersonal)
@@ -125,8 +125,10 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
 
 
 
+
         Helper.loadImageIntoView(civOffererPic, pb, ts.offerer.profilePicUrl)
         tvOffererName.text = ts.offerer.nick
+
         rbOffererReviews.rating = ts.offerer.asOffererReview.score.toFloat()
         tvReviewsNumber.text = "${ts.offerer.asOffererReview.number} reviews (as offerer)"
 
@@ -135,7 +137,7 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
             profileViewModel.retrieveTimeSlotProfileData(ts.userId)
             findNavController().navigate(
                 R.id.action_nav_timeSlotDetails_to_nav_showProfile,
-                bundleOf("point_of_origin" to "skill_specific", "userId" to userId), /* TODO (Edit this bundle in order to avoid casini ) */
+                bundleOf("point_of_origin" to "skill_specific", "userId" to timeSlot.userId), /* TODO (Edit this bundle in order to avoid casini ) */
             )
         }
 
@@ -231,10 +233,10 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
                         Toast.LENGTH_SHORT
                     ).show()*/
 
-                    profileViewModel.retrieveTimeSlotProfileData(userId)
+                    profileViewModel.retrieveTimeSlotProfileData(timeSlot.userId)
                     findNavController().navigate(
                         R.id.action_nav_timeSlotDetails_to_nav_showProfile,
-                        bundleOf("point_of_origin" to "skill_specific", "userId" to userId) /* TODO (Edit this bundle in order to avoid casini ) */
+                        bundleOf("point_of_origin" to "skill_specific", "userId" to timeSlot.userId) /* TODO (Edit this bundle in order to avoid casini ) */
                     )
 
                 }
@@ -250,7 +252,8 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
         val chatId = Helper.makeRequestId(timeSlot.id, Firebase.auth.uid!!)
             val offerer = timeSlot.offerer
 
-            chatVm.selectChatFromTimeSlot(timeSlot, profileViewModel.user.value!!.toCompactUser() )
+        val otherUser = if (timeSlot.userId == Firebase.auth.uid) timeSlot.assignedTo else timeSlot.offerer
+        chatVm.selectChatFromTimeSlot(timeSlot, otherUser)
     }
 
 

@@ -122,6 +122,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         val tvTimeSlotTitle = view.findViewById<TextView>(R.id.fragment_chat_tv_time_slot_title)
         tvTimeSlotTitle.setOnClickListener {
             timeSlotVm.setSelectedTimeSlot(currentChat.timeSlot)
+            Log.d(TAG, "$currentChat ${currentChat.offerer}")
             findNavController().navigate(
                 R.id.action_nav_chat_to_nav_timeSlotDetails,
                 bundleOf("isPersonal" to (currentChat.offerer.id == Firebase.auth.uid))
@@ -373,11 +374,9 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
                     etMessageInput.hint = "Chat disabled"
 
                     btnAcceptRequest.isEnabled = false
-                    //btnAcceptRequest.isClickable = false
                     btnAcceptRequest.alpha = 0.6F
 
                     btnDiscardRequest.isEnabled = false
-                    //btnDiscardRequest.isClickable = false
                     btnDiscardRequest.alpha = 0.6F
                 }
 
@@ -417,13 +416,11 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         cvMessageChatStatus.visibility = View.VISIBLE
         btnRequestService.isEnabled = false
 
-        //btnAcceptRequest.isEnabled = false
-        btnAcceptRequest.isClickable = false
+        btnAcceptRequest.isEnabled = false
         btnAcceptRequest.alpha = 0.6F
 
-        //btnDiscardRequest.isEnabled = false
-        btnDiscardRequest.isClickable = false
-        btnAcceptRequest.alpha = 0.6F
+        btnDiscardRequest.isEnabled = false
+        btnDiscardRequest.alpha = 0.6F
 
     }
 
@@ -446,7 +443,6 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         btnRequestService.isEnabled = false
 
         btnAcceptRequest.isEnabled = false
-        //btnAcceptRequest.isClickable = false
         btnAcceptRequest.alpha = 0.6F
 
         btnDiscardRequest.isEnabled = false

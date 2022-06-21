@@ -93,6 +93,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:contentDescription="@string/rating_bar"
+                    android:max="5"
                     android:numStars="5"
                     android:theme="@style/RatingBar"
                     app:layout_constraintBottom_toBottomOf="parent"

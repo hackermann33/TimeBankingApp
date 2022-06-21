@@ -22,7 +22,7 @@ data class Review(
 
 
     companion object {
-        const val AS_OFFERER_TYPE = 0
-        const val AS_REQUESTER_TYPE = 1
+        const val TO_REQUESTER_TYPE = 0
+        const val TO_OFFERER_TYPE = 1
     }
 }

@@ -4,7 +4,6 @@ import android.content.res.Configuration
 import android.os.Bundle
 import android.view.*
 import android.widget.*
-import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResultListener
@@ -151,8 +150,8 @@ class ShowProfileFragment : Fragment(R.layout.fragment_showprofile) {
         val rvaReview = ReviewsViewAdapter(usr.reviews.toMutableList())
         rvLastReviews.layoutManager = LinearLayoutManager(context)
         rvLastReviews.adapter = rvaReview
-        rbAsOffererRating.rating = usr.getReviewsScore(Review.AS_OFFERER_TYPE).toFloat()
-        rbAsRequesterRating.rating = usr.getReviewsScore(Review.AS_REQUESTER_TYPE).toFloat()
+        rbAsOffererRating.rating = usr.getReviewsScore(Review.TO_OFFERER_TYPE).toFloat()
+        rbAsRequesterRating.rating = usr.getReviewsScore(Review.TO_REQUESTER_TYPE).toFloat()
 
     }
 

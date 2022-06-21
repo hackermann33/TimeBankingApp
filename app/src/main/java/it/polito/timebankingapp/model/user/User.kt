@@ -47,8 +47,8 @@ data class User(
     fun hasImage() = profilePicUrl.isNotEmpty()
 
     fun toCompactUser(): CompactUser {
-        val cr = CompactReview(getReviewsScore(Review.AS_OFFERER_TYPE), getReviews(Review.AS_OFFERER_TYPE).size)
-        val cr2 = CompactReview(getReviewsScore(Review.AS_REQUESTER_TYPE), getReviews(Review.AS_REQUESTER_TYPE).size)
+        val cr = CompactReview(getReviewsScore(Review.TO_OFFERER_TYPE), getReviews(Review.TO_OFFERER_TYPE).size)
+        val cr2 = CompactReview(getReviewsScore(Review.TO_REQUESTER_TYPE), getReviews(Review.TO_REQUESTER_TYPE).size)
 
         return CompactUser(
             id, profilePicUrl, nick, location, cr, cr2, balance = balance)

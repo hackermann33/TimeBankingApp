@@ -72,7 +72,7 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
         /* If the request already exists, download it, otherwise just download offerer profile and don't make the request. */
         chatRef.get().addOnSuccessListener { docSnapShot ->
             if (docSnapShot.exists())
-                updateChat(chatRef) //update (without registering) chat + messages
+                updateChat(chatRef) //update chat + messages
             else {
                 clearMessages()
                 createUninterestedChat(timeSlot, requester)
