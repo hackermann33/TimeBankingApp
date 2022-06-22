@@ -9,6 +9,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.*
 import androidx.core.os.bundleOf
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResultListener
@@ -112,9 +113,12 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_timeslots_list) {
             }
         }
 
-        vm.isLoading.observe(viewLifecycleOwner) { isLoading ->
-            if(!isLoading) {
-                if(vm.timeSlots.value!!.isEmpty()) {
+        val pbLoading = view.findViewById<ProgressBar>(R.id.fragment_time_slots_pb_loading)
+
+        vm.timeSlots.observe(viewLifecycleOwner) { timeSlots ->
+            if(timeSlots != null) {
+                pbLoading.visibility = View.GONE
+                if(timeSlots.isEmpty()) {
                     setVoidMessage(view, true)
                     rv.adapter = null
                 }
@@ -140,6 +144,8 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_timeslots_list) {
                     //}
                 }
             }
+            else if(!pbLoading.isVisible)
+                pbLoading.visibility = View.VISIBLE
         }
     }
 
@@ -288,11 +294,9 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_timeslots_list) {
         vm.setSelectedTimeSlot(ts)
     }
 
-    override fun onDetach() {
+    override fun onDestroy() {
         vm.clearTimeSlots()
-        vm.setIsEmptyFlag(false)
-        //vm.justUpdated = false
-        super.onDetach()
+        super.onDestroy()
     }
 
 

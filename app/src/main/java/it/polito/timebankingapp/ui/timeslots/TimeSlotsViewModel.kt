@@ -18,8 +18,8 @@ import it.polito.timebankingapp.model.user.User
 
 class TimeSlotsViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val _timeSlots = MutableLiveData<List<TimeSlot>>()
-    val timeSlots: LiveData<List<TimeSlot>> = _timeSlots
+    private val _timeSlots = MutableLiveData<List<TimeSlot>?>(null)
+    val timeSlots: LiveData<List<TimeSlot>?> = _timeSlots
 
     private val _skillList = MutableLiveData<List<String>>()
     val skillList: LiveData<List<String>> = _skillList
@@ -90,91 +90,58 @@ class TimeSlotsViewModel(application: Application) : AndroidViewModel(applicatio
 
 
     fun updatePersonalTimeSlots() {
-        _isLoading.postValue(true)
-        clearTimeSlots()
         l = db.collection("timeSlots").whereEqualTo("userId", Firebase.auth.uid)
             .addSnapshotListener { v, e ->
                 if (e == null) {
-                    _timeSlots.value = v!!.mapNotNull { d -> d.toObject<TimeSlot>() }
-                    _isLoading.postValue(false)
-                    var cnt = 0
-                    /*_timeSlots.value!!.forEach { ts -> if (ts.offererUnreadChats > 0) cnt++ }*/
-                    /*_unreadChats.postValue(cnt)*/
-                    _isEmpty.value = _timeSlots.value!!.isEmpty()
+                    _timeSlots.postValue(v!!.mapNotNull { d -> d.toObject<TimeSlot>() })
                 } else {
-                    _timeSlots.value = emptyList()
-                    _isLoading.postValue(false)
-                    _isEmpty.value = true
+                    _timeSlots.postValue( listOf())
                 }
-                //justUpdated = true
             }
     }
 
 
 
     fun updateInterestingTimeSlots() {
-        _isLoading.postValue(true)
-        clearTimeSlots()
-
         val myUid = Firebase.auth.uid!!
         db.collection("requests").whereEqualTo("requester.id", myUid)
             .whereEqualTo("status", Chat.STATUS_INTERESTED).addSnapshotListener { v, e ->
                 if (e == null) {
                     val req = v!!.mapNotNull { d -> d.toObject<Chat>() }
-                    _timeSlots.value = req.map { r -> r.timeSlot }
-                    _isLoading.postValue(false)
-                    _isEmpty.value = _timeSlots.value!!.isEmpty()
+                    _timeSlots.postValue( req.map { r -> r.timeSlot } )
                 } else {
                     _timeSlots.value = emptyList()
-                    _isLoading.postValue(false)
-                    _isEmpty.value = true
                 }
             }
     }
     // db.collection("requests").whereArrayContains("users", myuid).whereEqualTo("status", Chat.STATUS_COMPLETED)
 
     fun updateCompletedTimeSlots() {
-        _isLoading.postValue(true)
-        clearTimeSlots()
-
         val myUid = Firebase.auth.uid!!
         l = db.collection("timeSlots").whereArrayContains("users", myUid)
-            //.whereIn("status", listOf(Chat.STATUS_ACCEPTED)).addSnapshotListener{ v, e ->
             .whereEqualTo("status", TimeSlot.TIME_SLOT_STATUS_COMPLETED).addSnapshotListener { v, e ->
                 if (e == null) {
                     val assignedTimeSlots = v!!.mapNotNull { d -> d.toObject<TimeSlot>() }
                     _timeSlots.postValue(assignedTimeSlots)
-                    _isLoading.postValue(false)
-                    _isEmpty.value = _timeSlots.value!!.isEmpty()
                 } else {
                     Log.d("TimeSlotsViewModel", "$e")
                     _timeSlots.value = emptyList()
-                    _isLoading.postValue(false)
-                    _isEmpty.value = true
                 }
             }
     }
 
     fun updateAssignedTimeSlots() {
         _isLoading.postValue(true)
-        clearTimeSlots()
-
         val myUid = Firebase.auth.uid!!
-        //db.collection("requests").whereEqualTo("requester.id", myUid)
         l = db.collection("timeSlots").whereArrayContains("users", myUid)
-            //.whereIn("status", listOf(Chat.STATUS_ACCEPTED)).addSnapshotListener{ v, e ->
             .whereEqualTo("status", TimeSlot.TIME_SLOT_STATUS_ASSIGNED).addSnapshotListener { v, e ->
                 if (e == null) {
                     Log.d("TimeSlotsViewModel", "$v")
                     val assignedTimeSlots = v!!.mapNotNull { d -> d.toObject<TimeSlot>() }
                     _timeSlots.postValue(assignedTimeSlots)
-                    _isLoading.postValue(false)
-                    _isEmpty.value = _timeSlots.value!!.isEmpty()
                 } else {
                     Log.d("TimeSlotsViewModel", "$e")
                     _timeSlots.value = emptyList()
-                    _isLoading.postValue(false)
-                    _isEmpty.value = true
                 }
             }
     }
@@ -199,7 +166,7 @@ class TimeSlotsViewModel(application: Application) : AndroidViewModel(applicatio
     }
 
     fun clearTimeSlots() {
-        _timeSlots.postValue(listOf())
+        _timeSlots.postValue(null)
     }
 
 
@@ -321,20 +288,4 @@ class TimeSlotsViewModel(application: Application) : AndroidViewModel(applicatio
         _selectedTimeSlot.postValue(null)
     }
 }
-/*
-private fun DocumentSnapshot.toChat(): Chat? {
-        return try {
-            val timeSlot = get("timeSlot") as TimeSlot
-            val requester = get("requester") as CompactUser
-            val offerer = get("offerer") as CompactUser
-            val lastMessage = get("lastMessage") as ChatMessage
-            val status = get("status") as Long
-            val unreadMsgs= get("unreadMsgs") as Long
 
-            Chat(timeSlot, requester, offerer, lastMessage, status.toInt(), unreadMsgs.toInt())
-        } catch (e: Exception) {
-            e.printStackTrace()
-            null
-        }
-
-}*/

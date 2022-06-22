@@ -1,6 +1,5 @@
 package it.polito.timebankingapp.model
 
-import android.text.format.Time
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.Exclude
 import com.google.firebase.ktx.Firebase

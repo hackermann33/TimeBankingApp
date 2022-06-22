@@ -100,10 +100,10 @@ class TimeSlotMonthCalendar : Fragment(R.layout.fragment_time_slot_month_calenda
 
         vm.timeSlots.observe(viewLifecycleOwner) { it ->
             events.clear()
-            if (it.isNotEmpty()) {
+            if (!it.isNullOrEmpty()) {
                 Log.d("CalendarFragment", "Rendering...$it")
                 //setVoidMessage(view, false)
-                val acceptedTimeSlots = it
+                val acceptedTimeSlots = it!!
 
                 for (i in it.indices) {
                     val values = acceptedTimeSlots[i].date.split("/")
