@@ -4,9 +4,7 @@ import android.os.Bundle
 import android.text.InputType
 import android.text.format.DateFormat.is24HourFormat
 import android.util.Log
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.Button
@@ -42,7 +40,7 @@ import java.util.*
 /** TODO: When edit is confirmed, global view model should be updated (DB)
  **/
 
-val DEBUG = true //DA DISATTIVARE QUANDO SI CONSEGNA IL LAB
+val DEBUG = false //DA DISATTIVARE QUANDO SI CONSEGNA IL LAB
 
 
 
@@ -101,8 +99,8 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
         buildTimePicker()
 
 
-        val addButton = view.findViewById<Button>(R.id.addTimeSlotButton)
-        addButton.isVisible = addMode
+        //val addButton = view.findViewById<Button>(R.id.addTimeSlotButton)
+        //addButton.isVisible = addMode
 
         if (!addMode) {
             requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
@@ -115,11 +113,11 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
                 }
             }
 
-        } else {
+        }/* else {
             addButton.setOnClickListener {
                 handleTimeSlotConfirmation()
             }
-        }
+        }*/
 
         //skills
         val addSkillButton = view.findViewById<Button>(R.id.addSkillButton)
@@ -193,8 +191,18 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
         newSkillView.setAdapter(adapter)
     }
 
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        if(addMode)
+            inflater.inflate(R.menu.menu_add_timeslot, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
+            R.id.option1 -> {
+                handleTimeSlotConfirmation();
+                true
+            }
             android.R.id.home -> {
                 if (!addMode) {
                     handleTimeSlotConfirmation()?.addOnSuccessListener {
