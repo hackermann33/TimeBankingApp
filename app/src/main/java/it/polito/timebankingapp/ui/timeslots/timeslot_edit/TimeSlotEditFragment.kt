@@ -42,7 +42,7 @@ import java.util.*
 /** TODO: When edit is confirmed, global view model should be updated (DB)
  **/
 
-val DEBUG = true //DA DISATTIVARE QUANDO SI CONSEGNA IL LAB
+val DEBUG = false //DA DISATTIVARE QUANDO SI CONSEGNA IL LAB
 
 
 

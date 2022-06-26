@@ -65,9 +65,10 @@ class ChatListFragment : Fragment(R.layout.fragment_chat_list) {
             //else
                 if(!isLoading) {
                     val chatList = if(chatListType == Type.GLOBAL) chatListViewModel.allChatList.value!! else chatListViewModel.timeSlotChatList.value!!
-                    if (chatList.isEmpty())
+                    if (chatList.isEmpty()) {
                         showNoChatsMessage(view, /*true*/ true)
-                    else {
+                        rv.adapter = null
+                    }else {
                         showNoChatsMessage(view, false)
                         adTmp =
                             ChatListViewAdapter(

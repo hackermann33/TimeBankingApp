@@ -21,10 +21,16 @@
             android:title="@string/menu_drawer_timeslots_list"
             app:actionLayout="@layout/nav_counter"
             />
+
         <item
             android:id="@+id/nav_interestingTimeSlotList"
             android:icon="@drawable/ic_baseline_local_offer_24"
             android:title="@string/ads_you_re_interested_in"
+            />
+        <item
+            android:id="@+id/nav_timeSlotMonthCalendar"
+            android:icon="@drawable/ic_baseline_calendar_month_24"
+            android:title="@string/time_slots_calendar"
             />
         <item
             android:id="@+id/nav_completedTimeSlotList"
@@ -42,11 +48,7 @@
             android:icon="@drawable/ic_baseline_rate_review_24"
             android:title="Add review (TEMP LINK)"
             />-->
-        <item
-            android:id="@+id/nav_timeSlotMonthCalendar"
-            android:icon="@drawable/ic_baseline_calendar_month_24"
-            android:title="@string/time_slots_calendar"
-            />
+
 
     </group>
 </menu>

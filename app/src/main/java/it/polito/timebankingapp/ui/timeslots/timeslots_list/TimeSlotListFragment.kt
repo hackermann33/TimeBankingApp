@@ -41,7 +41,7 @@ import it.polito.timebankingapp.ui.timeslots.TimeSlotsViewModel
  */
 class TimeSlotListFragment : Fragment(R.layout.fragment_timeslots_list) {
 
-    private var filterParameter = "Date"
+    private var filterParameter = "Title"
     private var filterKeywords = ""
     private var orderingDirection = true //false == ascending, true = descending
     private var openFilterSortMenu = false
