@@ -269,7 +269,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
                         val msg =
                             "Offerer tried to accept your request but your balance was not enough." +
                                     "Your request has been deleted"
-                        val snackBar = Snackbar.make(v, msg, Snackbar.LENGTH_LONG)
+                        val snackBar = Snackbar.make(v, msg, Snackbar.LENGTH_INDEFINITE)
                         snackBar.setAction("DISMISS") { snackBar.dismiss() }.show()
 
                         cvMessageChatStatus.visibility = View.GONE
