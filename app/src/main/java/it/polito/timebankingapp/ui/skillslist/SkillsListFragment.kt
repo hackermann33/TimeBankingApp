@@ -36,7 +36,7 @@ class SkillsListFragment : Fragment(R.layout.fragment_skills_list) {
         when (nightModeFlags) {
             Configuration.UI_MODE_NIGHT_YES -> chipFlexGroup.setDividerDrawable( ResourcesCompat.getDrawable( resources, R.drawable.flexbox_divider_dark_mode, null))
             Configuration.UI_MODE_NIGHT_NO -> chipFlexGroup.setDividerDrawable( ResourcesCompat.getDrawable( resources, R.drawable.flexbox_divider, null))
-            Configuration.UI_MODE_NIGHT_UNDEFINED -> chipFlexGroup.setDividerDrawable( ResourcesCompat.getDrawable( resources, R.drawable.flexbox_divider_dark_mode, null))
+            Configuration.UI_MODE_NIGHT_UNDEFINED -> chipFlexGroup.setDividerDrawable( ResourcesCompat.getDrawable( resources, R.drawable.flexbox_divider, null))
         }
 
         vm.skillList.observe(viewLifecycleOwner){

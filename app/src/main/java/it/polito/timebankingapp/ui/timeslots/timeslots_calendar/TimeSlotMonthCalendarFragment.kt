@@ -2,15 +2,19 @@ package it.polito.timebankingapp.ui.timeslots.timeslots_calendar
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.res.Configuration
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
 import androidx.annotation.LayoutRes
 import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.children
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -90,6 +94,8 @@ class TimeSlotMonthCalendar : Fragment(R.layout.fragment_time_slot_month_calenda
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+
         binding = FragmentTimeSlotMonthCalendarBinding.bind(view)
         binding.exThreeRv.apply {
             layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
@@ -97,6 +103,16 @@ class TimeSlotMonthCalendar : Fragment(R.layout.fragment_time_slot_month_calenda
             addItemDecoration(DividerItemDecoration(requireContext(), RecyclerView.VERTICAL))
         }
 
+
+        val nightModeFlags = requireContext().resources.configuration.uiMode and
+                Configuration.UI_MODE_NIGHT_MASK
+        when (nightModeFlags) {
+            Configuration.UI_MODE_NIGHT_YES -> {
+                binding.exThreeSelectedDateText.setTextColor(Color.parseColor("#ffffff"));
+                binding.exThreeSelectedDateText.setBackgroundColor(Color.parseColor("#333333"));
+                //binding.exThreeCalendar.setBackgroundColor(Color.parseColor("#2c2c2c"))
+            }
+        }
 
         vm.timeSlots.observe(viewLifecycleOwner) { it ->
             events.clear()
@@ -123,33 +139,6 @@ class TimeSlotMonthCalendar : Fragment(R.layout.fragment_time_slot_month_calenda
             }
 
         }
-
-        //dati statici
-        //isOffered == true  --> offered
-//                  == false --> requested
-        /*
-        var tempDate = LocalDate.now().plusDays(1)
-        for (i in 0..4) {
-            val ts = TimeSlot("","","Time slot Title ".plus(i+1),"",tempDate.toString(),"1".plus(i).plus(":00"),"3","Turin","","")
-            tempDate?.let {
-                events[it] = events[it].orEmpty().plus(Event(UUID.randomUUID().toString(), ts, it, i%2 == 0))
-                //updateAdapterForDate(it)
-            }
-        }
-        tempDate = LocalDate.now().minusDays(1)
-        val ts2 = TimeSlot("","","Time slot Title","",tempDate.toString(),"8:00","3","Turin","","")
-        tempDate?.let {
-            events[it] = events[it].orEmpty().plus(Event(UUID.randomUUID().toString(), ts2, it, false))
-            //updateAdapterForDate(it)
-        }
-
-        tempDate = LocalDate.now()
-        val ts3 = TimeSlot("","","Time slot Title","",tempDate.toString(),"12:00","3","Turin","","")
-        tempDate?.let {
-            events[it] = events[it].orEmpty().plus(Event(UUID.randomUUID().toString(), ts3, it, true))
-            updateAdapterForDate(it) //lasciata solo qui per chiamare notifyDataSetChanged solo a fine inserimento dati statici
-        }
-        //fine dati statici*/
 
         val daysOfWeek = daysOfWeekFromLocale()
         val currentMonth = YearMonth.now()
@@ -200,7 +189,13 @@ class TimeSlotMonthCalendar : Fragment(R.layout.fragment_time_slot_month_calenda
                             dotView.makeInVisible()
                         }
                         else -> {
-                            textView.setTextColorRes(R.color.opaque_black)
+                            when (nightModeFlags) {
+                                Configuration.UI_MODE_NIGHT_YES -> {
+                                    textView.setTextColorRes(R.color.white)
+                                }
+                                Configuration.UI_MODE_NIGHT_NO -> { textView.setTextColorRes(R.color.opaque_black) }
+                                Configuration.UI_MODE_NIGHT_UNDEFINED -> { textView.setTextColorRes(R.color.opaque_black) }
+                            }
                             textView.background = null
                             dotView.isVisible = events[day.date].orEmpty().isNotEmpty()
                         }
@@ -231,7 +226,14 @@ class TimeSlotMonthCalendar : Fragment(R.layout.fragment_time_slot_month_calenda
                     container.legendLayout.tag = month.yearMonth
                     container.legendLayout.children.map { it as TextView }.forEachIndexed { index, tv ->
                         tv.text = daysOfWeek[index].name.first().toString()
-                        tv.setTextColorRes(R.color.opaque_black)
+                        when (nightModeFlags) {
+                            Configuration.UI_MODE_NIGHT_YES -> {
+                                tv.setTextColorRes(R.color.white)
+                            }
+                            Configuration.UI_MODE_NIGHT_NO -> { tv.setTextColorRes(R.color.opaque_black) }
+                            Configuration.UI_MODE_NIGHT_UNDEFINED -> { tv.setTextColorRes(R.color.opaque_black) }
+                        }
+
                     }
                 }
             }
