@@ -50,7 +50,7 @@ class ChatListFragment : Fragment(R.layout.fragment_chat_list) {
                     "The request has been deleted"
             if(result) {
                 val snackBar =
-                    Snackbar.make(view, msg, Snackbar.LENGTH_LONG)
+                    Snackbar.make(view, msg, Snackbar.LENGTH_INDEFINITE)
                 snackBar.setAction("DISMISS") { snackBar.dismiss() }.show()
             }
 
